@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>여행 완벽 준비 가이드 | 리치온</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+:root{
+  --f:"Pretendard",-apple-system,sans-serif;
+  --bg:#f0f7ff;--card:#ffffff;--bd:rgba(14,165,233,.15);
+  --ink:#0c2340;--ink2:#2d5a8a;--ink3:#6b9ab8;
+  --sky:#0ea5e9;--deep:#0c4a6e;--mid:#0369a1;
+  --teal:#0891b2;--gold:#d4af37;--gold2:#f5e06e;
+  --skbg:rgba(14,165,233,.07);--skbd:rgba(14,165,233,.25);
+  --dpbg:rgba(12,74,110,.07);--dpbd:rgba(12,74,110,.25);
+  --mtbg:rgba(8,145,178,.07);--mtbd:rgba(8,145,178,.25);
+  --redbg:rgba(239,68,68,.07);--redbd:rgba(239,68,68,.25);
+  --grenbg:rgba(34,197,94,.07);--grenbd:rgba(34,197,94,.25);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);font-family:var(--f);color:var(--ink);overflow-x:hidden;}
+.hdr{background:linear-gradient(160deg,#0c4a6e 0%,#0369a1 50%,#0ea5e9 100%);
+  padding:30px 16px 42px;text-align:center;position:relative;overflow:hidden;}
+.hdr::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(255,255,255,.08),transparent);}
+.hdr::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:30px;
+  background:var(--bg);clip-path:ellipse(55% 100% at 50% 100%);}
+.mk{width:48px;height:48px;position:relative;margin:0 auto 8px;}
+.mkr{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(255,255,255,.55);}
+.mkr2{position:absolute;inset:5px;border-radius:50%;border:.5px solid rgba(255,255,255,.2);}
+.mkd{position:absolute;top:50%;left:50%;width:22px;height:22px;
+  background:linear-gradient(135deg,#f5e06e,#d4af37,#b8860b);
+  transform:translate(-50%,-50%) rotate(45deg);border-radius:3px;}
+.mkd2{position:absolute;top:50%;left:50%;width:14px;height:14px;
+  background:#0c4a6e;opacity:.6;transform:translate(-50%,-50%) rotate(45deg);border-radius:2px;}
+.mkrr{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:Georgia,serif;font-size:15px;font-weight:700;color:#f5e06e;}
+.mkdot{position:absolute;width:2px;height:2px;border-radius:50%;background:rgba(255,255,255,.6);}
+.rn{font-family:Georgia,serif;font-size:8.5px;letter-spacing:7px;
+  color:rgba(255,255,255,.75);margin-bottom:3px;}
+.sl-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:14px;}
+.sll{width:16px;height:1px;background:rgba(255,255,255,.35);}
+.slt{font-size:7px;color:rgba(255,255,255,.5);letter-spacing:1.5px;}
+.hook{font-size:16px;font-weight:900;color:#fff;
+  letter-spacing:-.3px;line-height:1.5;word-break:keep-all;margin-bottom:3px;}
+.hook em{font-style:normal;color:#bae6fd;}
+.hook-sub{font-size:10px;color:rgba(255,255,255,.7);margin-bottom:12px;}
+.hdr-title{font-size:22px;font-weight:900;color:#fff;
+  letter-spacing:-.6px;line-height:1.3;margin-bottom:6px;word-break:keep-all;}
+.hdr-title em{font-style:normal;color:#bae6fd;}
+.hdr-sub{font-size:10px;color:rgba(255,255,255,.65);line-height:1.9;word-break:keep-all;}
+.main{max-width:480px;margin:0 auto;padding:18px 12px 60px;}
+.pt-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:5px;}
+.pt-btn{display:flex;align-items:center;justify-content:center;gap:6px;
+  border-radius:10px;padding:10px 6px;text-decoration:none;
+  font-family:var(--f);font-size:11px;font-weight:800;border:1.5px solid;transition:.18s;}
+.pt-btn:hover{transform:translateY(-1px);filter:brightness(1.05);}
+.disc-box{background:rgba(14,165,233,.05);border:1px solid rgba(14,165,233,.18);
+  border-radius:10px;padding:9px 13px;text-align:center;margin-bottom:18px;}
+.disc-box p{font-size:9px;color:var(--ink3);line-height:2;word-break:keep-all;}
+.disc-box strong{color:var(--mid);}
+.sec-wrap{margin-bottom:22px;}
+.sec-hdr{display:flex;align-items:center;gap:10px;padding:12px 15px;
+  border-radius:14px;margin-bottom:10px;border:1px solid;}
+.sec-icon{font-size:22px;flex-shrink:0;}
+.sec-num{font-size:7.5px;font-weight:700;letter-spacing:2px;margin-bottom:2px;}
+.sec-name{font-size:14px;font-weight:800;letter-spacing:-.3px;
+  line-height:1.35;word-break:keep-all;}
+.c1 .sec-hdr{background:var(--skbg);border-color:var(--skbd);}
+.c1 .sec-num,.c1 .sec-name{color:var(--sky);}
+.c2 .sec-hdr{background:var(--dpbg);border-color:var(--dpbd);}
+.c2 .sec-num,.c2 .sec-name{color:var(--deep);}
+.c3 .sec-hdr{background:var(--mtbg);border-color:var(--mtbd);}
+.c3 .sec-num,.c3 .sec-name{color:var(--teal);}
+.c4 .sec-hdr{background:var(--grenbg);border-color:var(--grenbd);}
+.c4 .sec-num,.c4 .sec-name{color:#16a34a;}
+.c5 .sec-hdr{background:rgba(245,158,11,.07);border-color:rgba(245,158,11,.25);}
+.c5 .sec-num,.c5 .sec-name{color:#b45309;}
+.tip{background:var(--card);border:1px solid var(--bd);
+  border-radius:13px;overflow:hidden;margin-bottom:7px;
+  cursor:pointer;transition:all .18s;
+  box-shadow:0 2px 8px rgba(14,165,233,.05);}
+.tip:hover{border-color:rgba(14,165,233,.3);transform:translateY(-1px);}
+.tip.on{border-color:var(--sky);}
+.tip-head{display:flex;align-items:flex-start;gap:9px;padding:13px;}
+.t-e{font-size:20px;flex-shrink:0;margin-top:1px;}
+.t-mid{flex:1;min-width:0;}
+.t-name{font-size:13px;font-weight:700;color:var(--ink);
+  line-height:1.4;letter-spacing:-.2px;word-break:keep-all;}
+.t-kw{font-size:9.5px;color:var(--ink3);margin-top:3px;
+  line-height:1.5;word-break:keep-all;}
+.t-arr{font-size:9px;color:var(--ink3);transition:transform .3s;
+  flex-shrink:0;margin-top:4px;}
+.tip.on .t-arr{transform:rotate(180deg);color:var(--sky);}
+.tip-body{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+.tip.on .tip-body{max-height:900px;}
+.tip-cnt{padding:12px 13px 14px;border-top:1px solid rgba(14,165,233,.1);
+  display:flex;flex-direction:column;gap:10px;}
+.irow{display:flex;flex-direction:column;gap:4px;}
+.ilb{font-size:7.5px;font-weight:700;padding:2.5px 10px;border-radius:20px;
+  white-space:nowrap;display:inline-block;letter-spacing:.3px;margin-bottom:1px;}
+.lb-sky{background:var(--skbg);color:var(--sky);border:1px solid var(--skbd);}
+.lb-deep{background:var(--dpbg);color:var(--deep);border:1px solid var(--dpbd);}
+.lb-teal{background:var(--mtbg);color:var(--teal);border:1px solid var(--mtbd);}
+.lb-green{background:var(--grenbg);color:#16a34a;border:1px solid var(--grenbd);}
+.lb-red{background:var(--redbg);color:#dc2626;border:1px solid var(--redbd);}
+.lb-amber{background:rgba(245,158,11,.07);color:#b45309;
+  border:1px solid rgba(245,158,11,.25);}
+.ival{font-size:12px;color:var(--ink2);line-height:1.9;word-break:keep-all;}
+.ival strong{color:var(--deep);font-weight:700;}
+.chk-box{background:var(--skbg);border:1px solid var(--skbd);
+  border-radius:10px;padding:10px 12px;}
+.chk-title{font-size:9.5px;font-weight:700;color:var(--sky);
+  letter-spacing:.5px;margin-bottom:8px;}
+.chk-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;}
+.chk-item{display:flex;align-items:center;gap:5px;
+  font-size:11px;color:var(--ink2);}
+.chk-dot{width:5px;height:5px;border-radius:50%;
+  background:var(--sky);flex-shrink:0;}
+.tip-box{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);
+  border-radius:10px;padding:9px 12px;}
+.tip-box-title{font-size:9px;font-weight:700;color:#b45309;
+  letter-spacing:.5px;margin-bottom:6px;}
+.tip-box p{font-size:11.5px;color:#78350f;line-height:1.85;word-break:keep-all;}
+.tip-box p strong{color:#92400e;font-weight:700;}
+.warn-box{background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.18);
+  border-radius:10px;padding:9px 12px;}
+.warn-box p{font-size:11.5px;color:#991b1b;line-height:1.85;word-break:keep-all;}
+.src-box{background:rgba(255,255,255,.8);border:1px solid rgba(14,165,233,.12);
+  border-radius:8px;padding:7px 11px;}
+.src-box p{font-size:9px;color:var(--ink3);line-height:1.85;word-break:keep-all;}
+.src-box span{color:var(--sky);}
+.shop-tag{display:flex;flex-direction:column;gap:6px;
+  background:rgba(14,165,233,.05);border:1px solid rgba(14,165,233,.2);
+  border-radius:10px;padding:9px 11px;}
+.shop-tag-top{display:flex;align-items:center;gap:8px;}
+.shop-tag-ico{font-size:18px;flex-shrink:0;}
+.shop-tag-name{font-size:11px;font-weight:700;color:var(--deep);word-break:keep-all;}
+.shop-tag-kw{font-size:9px;color:var(--ink3);margin-top:1px;}
+.shop-tag-btn{background:linear-gradient(135deg,#0369a1,#0ea5e9);
+  border:none;color:#fff;border-radius:8px;padding:9px 12px;
+  font-size:11px;font-weight:800;width:100%;text-align:center;
+  text-decoration:none;font-family:var(--f);display:block;transition:.18s;}
+.shop-tag-btn:hover{filter:brightness(1.08);}
+.shop-row{display:flex;gap:5px;}
+.shlk{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+  border-radius:9px;padding:10px 6px;text-decoration:none;
+  border:1px solid;font-family:var(--f);transition:.18s;}
+.shlk:hover{transform:translateY(-1px);}
+.shlk-ico{font-size:16px;}.shlk-txt{font-size:11px;font-weight:800;}
+.shC{background:rgba(200,48,64,.07);border-color:rgba(200,48,64,.28);color:#dc2626;}
+.shT{background:rgba(14,165,233,.07);border-color:rgba(14,165,233,.28);color:var(--sky);}
+.shA{background:rgba(8,145,178,.07);border-color:rgba(8,145,178,.28);color:var(--teal);}
+@keyframes up{from{opacity:0;transform:translateY(12px);}
+  to{opacity:1;transform:translateY(0);}}
+.sec-wrap:nth-child(1){animation:up .35s ease both;}
+.sec-wrap:nth-child(2){animation:up .35s .07s ease both;}
+.sec-wrap:nth-child(3){animation:up .35s .14s ease both;}
+.sec-wrap:nth-child(4){animation:up .35s .21s ease both;}
+.sec-wrap:nth-child(5){animation:up .35s .28s ease both;}
+.ftr{text-align:center;padding:20px 14px 48px;
+  border-top:1px solid rgba(14,165,233,.15);max-width:480px;margin:0 auto;}
+.ftr-brand{font-size:9px;color:var(--ink3);margin-bottom:4px;}
+.ftr-disc{font-size:8.5px;color:var(--ink3);line-height:2;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="mk">
+    <div class="mkr"></div><div class="mkr2"></div>
+    <div class="mkd"></div><div class="mkd2"></div><div class="mkrr">R</div>
+    <div class="mkdot" style="top:1px;left:50%;transform:translateX(-50%);"></div>
+    <div class="mkdot" style="bottom:1px;left:50%;transform:translateX(-50%);"></div>
+    <div class="mkdot" style="left:1px;top:50%;transform:translateY(-50%);"></div>
+    <div class="mkdot" style="right:1px;top:50%;transform:translateY(-50%);"></div>
+  </div>
+  <div class="rn">RICH-ON</div>
+  <div class="sl-row"><div class="sll"></div>
+    <div class="slt">풍요로운 일상이 켜지다</div>
+    <div class="sll"></div></div>
+  <div class="hook">짐 싸기 전에 <em>이것부터</em> 읽어요 ✈️</div>
+  <div class="hook-sub">안 챙기면 꼭 후회하는 것들 총정리</div>
+  <div class="hdr-title">여행 완벽<br><em>준비 가이드</em></div>
+  <div class="hdr-sub">🧳 국내여행 · ✈️ 해외여행 · 🗂️ 사전준비<br>
+    🚗 주차 꿀팁 · 🍜 현지인 맛집 찾기 · 📱 필수 앱</div>
+</div>
+
+<div class="main">
+  <div class="pt-grid">
+    <a href="https://link.coupang.com/a/ek5cwF"
+      onclick="window.location.href='https://link.coupang.com/a/ek5cwF';return false;"
+      class="pt-btn" style="background:rgba(200,48,64,.07);
+      border-color:rgba(200,48,64,.3);color:#dc2626;">🚀 쿠팡</a>
+    <a href="https://kr.trip.com/?Allianceid=8001792&SID=302477743&trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&trip_sub3=D14461428"
+      onclick="window.location.href='https://kr.trip.com/?Allianceid=8001792&SID=302477743&trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&trip_sub3=D14461428';return false;"
+      class="pt-btn" style="background:rgba(14,165,233,.07);
+      border-color:rgba(14,165,233,.3);color:#0ea5e9;">✈️ 트립닷컴</a>
+    <a href="https://bitl.bz/fjcH9p"
+      onclick="window.location.href='https://bitl.bz/fjcH9p';return false;"
+      class="pt-btn" style="background:rgba(8,145,178,.07);
+      border-color:rgba(8,145,178,.3);color:#0891b2;">🛍️ 알리익스프레스</a>
+    <a href="https://bitl.bz/qQEIlA"
+      onclick="window.location.href='https://bitl.bz/qQEIlA';return false;"
+      class="pt-btn" style="background:rgba(124,58,237,.07);
+      border-color:rgba(124,58,237,.3);color:#7c3aed;">🏷️ 테무</a>
+  </div>
+  <div class="disc-box">
+    <p>📌 본 포스팅은 <strong>쿠팡 · 트립닷컴 · 알리익스프레스 · 테무</strong>
+      파트너스 활동의 일환으로<br>일정 수수료를 제공받습니다.
+      구매 고객님께 추가 비용은 전혀 없습니다.</p>
+  </div>
+  <div id="wrap"></div>
+</div>
+
+<div style="max-width:480px;margin:0 auto;padding:8px 14px 0;">
+  <div class="disc-box">
+    <p>📌 본 포스팅은 <strong>쿠팡 · 트립닷컴 · 알리익스프레스 · 테무</strong>
+      파트너스 활동의 일환으로<br>일정 수수료를 제공받습니다.
+      구매 고객님께 추가 비용은 전혀 없습니다.</p>
+  </div>
+</div>
+<div class="ftr">
+  <div class="ftr-brand">에이로그원 A-Log One × 리치온 Rich-On · 2026</div>
+  <div class="ftr-disc">짐 싸기 전에 이것부터 — 여행 완벽 준비 가이드 ✈️</div>
+</div>
+
+<script>
+const C='https://link.coupang.com/a/ek5cwF';
+const TR='https://kr.trip.com/?Allianceid=8001792&SID=302477743&trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&trip_sub3=D14461428';
+const A='https://bitl.bz/fjcH9p';
+const M='https://bitl.bz/qQEIlA';
+
+const DATA=[
+{cls:'c1',icon:'🧳',num:'SECTION 01',name:'국내여행 짐 체크리스트',tips:[
+  {e:'📋',name:'국내여행 절대 잊으면 안 되는 기본템',
+   kw:'신분증 충전기 보조배터리 상비약 / 출발 전 체크리스트',
+   rows:[
+     {lb:'lb-sky',t:'필수 서류',v:'<strong>신분증</strong>(주민등록증·운전면허증) · 교통카드 · 숙소·교통 예약 확인서 — 캡처 저장 권장'},
+     {lb:'lb-deep',t:'전자기기',v:'<strong>충전기·보조배터리</strong> 필수 (잊기 쉬운 1위!) · 이어폰 · 카메라 배터리 완충'},
+     {lb:'lb-teal',t:'상비약',v:'진통제 · 소화제 · 감기약 · <strong>멀미약(출발 30분 전 복용)</strong> · 반창고'},
+     {lb:'lb-green',t:'의류 팁',v:'계절 상관없이 <strong>얇은 겉옷 필수</strong> — 실내 냉방 강한 곳 많음. 활동 많으면 운동화 필수'},
+   ],
+   chk:{title:'✅ 출발 전 최종 확인 리스트',
+     items:['신분증','충전기','보조배터리','상비약','여분 속옷','세면도구','숙소예약확인','교통카드']},
+   src:'출처: 트립닷컴 국내여행 준비물 가이드 · 국내여행 체크리스트 63가지 (실사용 검증)',
+   shop:{ico:'🎒',name:'여행용 파우치 세트',kw:'여행 파우치 세트 멀티',url:C},
+   lk:[{t:'C',e:'🚀',n:'쿠팡',url:C}]},
+
+  {e:'🏨',name:'숙소 유형별 추가 챙길 것',
+   kw:'호텔 펜션 캠핑 글램핑 숙소별 짐 차이',
+   rows:[
+     {lb:'lb-sky',t:'호텔·리조트',v:'어메니티 대부분 제공. 단 <strong>개인 취향 용품</strong>(수면안대·목베개·개인 샴푸)은 직접 챙기기'},
+     {lb:'lb-deep',t:'펜션·에어비앤비',v:'<strong>세면도구·수건</strong> 직접 챙기기 필수. 슬리퍼 챙기면 편함. 예약 전 비품 리뷰 꼭 확인'},
+     {lb:'lb-teal',t:'캠핑·글램핑',v:'<strong>방충제·핫팩·랜턴</strong> 필수. 우비·여분 양말·일회용 세면도구 챙기기'},
+   ],
+   tip:{title:'꿀팁',text:'예약 전 숙소 후기에서 <strong>"수건 없음" "드라이기 없음"</strong> 리뷰 반드시 체크!'},
+   src:'출처: KKday 국내여행 준비물 체크리스트 · 트립닷컴 숙소 가이드 2026',
+   shop:{ico:'🛏️',name:'여행용 슬리퍼·수면안대 세트',kw:'여행용 접이식 슬리퍼',url:C},
+   lk:[{t:'C',e:'🚀',n:'쿠팡',url:C},{t:'A',e:'🛍️',n:'알리',url:A}]},
+
+  {e:'👨‍👩‍👧',name:'아이 동반 여행 추가 준비물',
+   kw:'아이랑 국내여행 가족여행 짐싸기 / 아이 멀미약',
+   rows:[
+     {lb:'lb-sky',t:'필수 추가',v:'<strong>아이 상비약</strong>(해열제·소화제·연고) · 여분 옷 최소 2벌 · 물티슈 넉넉히'},
+     {lb:'lb-deep',t:'이동 중',v:'<strong>멀미약</strong> 출발 30분 전 복용 · 간식 · 소형 장난감 · 보조배터리 여유있게'},
+     {lb:'lb-green',t:'안전',v:'<strong>카시트</strong> 사전 확인 · 아이 신발 편한 것으로 · 긴팔 여분(냉방 강한 곳 多)'},
+   ],
+   tip:{title:'엄마들 꿀팁',text:'숙소 도착 후 <strong>아이 짐 먼저 풀기</strong> — 약·간식 위치 파악해두면 밤에 당황 안 해요'},
+   src:'출처: 국내여행 준비물 체크리스트 실사용 커뮤니티 · 여행 짐싸기 가이드',
+   shop:{ico:'👶',name:'아동 여행 가방·멀미약',kw:'아이 멀미약 키즈',url:C},
+   lk:[{t:'C',e:'🚀',n:'쿠팡',url:C}]},
+]},
+
+{cls:'c2',icon:'✈️',num:'SECTION 02',name:'해외여행 짐 체크리스트',tips:[
+  {e:'🌏',name:'해외여행 절대 잊으면 안 되는 것',
+   kw:'여권 유효기간 / 기내 액체류 100ml / 수하물 무게 / 멀티어댑터',
+   rows:[
+     {lb:'lb-red',t:'최우선 확인',v:'<strong>여권 유효기간</strong> — 입국 시 잔여 6개월 이상 필수! 만료 임박 시 갱신 먼저'},
+     {lb:'lb-deep',t:'기내 액체류',v:'<strong>개별 용기 100ml 이하 → 1L 지퍼백</strong>에 담아야 기내 반입 가능. 초과분 위탁수하물'},
+     {lb:'lb-sky',t:'수하물 무게',v:'이코노미 <strong>20~23kg</strong> (저비용항공사 더 적음). 항공사별 규정 출발 전 반드시 확인'},
+     {lb:'lb-teal',t:'전압·어댑터',v:'나라마다 전압·콘센트 다름 — <strong>멀티어댑터 필수</strong>. 고데기·드라이어는 두고 가기'},
+   ],
+   warn:{text:'⚠️ <strong>보조배터리는 위탁수하물 절대 불가</strong> — 반드시 기내 직접 소지. 리튬배터리 규정 위반 시 압수'},
+   src:'출처: 스카이스캐너 해외여행 짐싸기 꿀팁 · KKday 해외여행 준비물 체크리스트 2026 · 국제선 보안규정',
+   shop:{ico:'🔌',name:'해외 멀티어댑터·보조배터리',kw:'해외 멀티어댑터 전세계',url:C},
+   lk:[{t:'C',e:'🚀',n:'쿠팡',url:C},{t:'A',e:'🛍️',n:'알리',url:A}]},
+
+  {e:'🗾',name:'단거리(일본·동남아) vs 장거리(유럽·미주) 차이',
+   kw:'일본여행 동남아여행 유럽여행 준비물 차이',
+   rows:[
+     {lb:'lb-sky',t:'공통 필수',v:'<strong>유심·이심</strong> 미리 구매(공항 현장 대비 30~50% 저렴) · 소액권 현금'},
+     {lb:'lb-deep',t:'유럽·장거리',v:'<strong>여행자보험 필수</strong>(유럽 의료비 매우 비쌈) · 필터 샤워기(석회질 물) · 국제운전면허증'},
+     {lb:'lb-teal',t:'동남아 특화',v:'<strong>방충제·선크림·위장약</strong> 넉넉히 · 얇은 긴팔(실내 냉방 매우 강함)'},
+     {lb:'lb-green',t:'일본 특화',v:'<strong>현금 필수</strong>(현금 위주 가게 多) · IC카드(교통카드) 있으면 편함 · 소액권 준비'},
+   ],
+   tip:{title:'절약 꿀팁',text:'유심·이심은 <strong>쿠팡·알리</strong>에서 미리 구매하면 공항 대비 훨씬 저렴해요 😊'},
+   src:'출처: 호라플라이 유럽여행 준비물 체크리스트 2026 · KKday 유럽여행 필수 준비물 · 호라플라이 태국·대만 체크리스트 2026',
+   shop:{ico:'🌐',name:'해외 유심·이심 (일본·동남아·유럽)',kw:'해외 이심 eSIM 일본',url:A},
+   lk:[{t:'C',e:'🚀',n:'쿠팡',url:C},{t:'A',e:'🛍️',n:'알리',url:A}]},
+]},
+
+{cls:'c3',icon:'🗂️',num:'SECTION 03',name:'여행 전 사전 준비 완벽 가이드',tips:[
+  {e:'💱',name:'환전 — 손해 없이 똑똑하게',
+   kw:'해외여행 환전 꿀팁 / 환율 좋은 곳 / 트래블카드',
+   rows:[
+     {lb:'lb-teal',t:'환전 타이밍',v:'<strong>환율 낮을 때 미리</strong>가 핵심. 은행 앱에서 환율 알림 설정해두기'},
+     {lb:'lb-sky',t:'환전 방법',v:'<strong>시중은행 앱</strong>에서 환전 예약 → 공항 수령이 편리. 공항 환전소는 수수료 높음'},
+     {lb:'lb-deep',t:'금액 구성',v:'<strong>소액권 넉넉히</strong> 준비. 큰 지폐만 있으면 거스름돈 문제. 비상금은 경비의 10~20%'},
+     {lb:'lb-green',t:'트래블카드',v:'<strong>트래블월렛·트래블로그</strong> — 현지 ATM 인출 시 수수료 절감. 렌터카·호텔 보증금은 신용카드 별도'},
+   ],
+   src:'출처: 찾기쉬운 생활법령정보(법제처) 해외환전 · 2026 해외환전 꿀팁 · 뱅크샐러드 여행자보험',
+   shop:{ico:'👜',name:'여행용 목걸이 지갑·여권 파우치',kw:'여행 목걸이 지갑 도난방지',url:C},
+   lk:[{t:'C',e:'🚀',n:'쿠팡',url:C},{t:'A',e:'🛍️',n:'알리',url:A}]},
+
+  {e:'🛡️',name:'여행자보험 — 이것만 알면 됩니다',
+   kw:'해외 여행자보험 가입 / 보험 보장 범위 / 언제 가입',
+   rows:[
+     {lb:'lb-red',t:'왜 필수?',v:'유럽 단순 감기 진료도 수십만원. <strong>1~2만원대 보험</strong>으로 최대 수백만원 보장 가능'},
+     {lb:'lb-teal',t:'언제 가입?',v:'<strong>출발 전 반드시</strong> 가입 — 공항 출국 후 가입 불가! 일부 보험사는 출발 5일 전까지'},
+     {lb:'lb-sky',t:'보장 범위',v:'신체상해 · 질병치료 · <strong>휴대품 손해</strong> · 항공 결항·지연 · 배상책임'},
+     {lb:'lb-deep',t:'제외 항목',v:'통화·신용카드·항공권은 <strong>보상 제외</strong>. 방치·분실도 보상 안됨 — 약관 꼭 확인'},
+   ],
+   warn:{text:'⚠️ 외교부 지정 <strong>🔴적색경보(철수권고)·⚫흑색경보(여행금지) 지역</strong>은 여행자보험 가입 불가'},
+   src:'출처: 찾기쉬운 생활법령정보(법제처) 여행자보험 · 나무위키 여행자보험 · 뱅크샐러드 2025',
+   shop:{ico:'✈️',name:'트립닷컴 — 항공+숙박 예약',kw:'트립닷컴 여행 예약',url:TR},
+   lk:[{t:'T',e:'✈️',n:'트립닷컴',url:TR}]},
+
+  {e:'📡',name:'로밍 vs 유심 vs 이심 — 뭐가 제일 좋아?',
+   kw:'해외 로밍 유심 이심 차이 / 어느게 저렴 / eSIM',
+   rows:[
+     {lb:'lb-sky',t:'통신사 로밍',v:'<strong>가장 간편</strong> — 설정만 하면 OK. 하루 9,900~12,000원. 3일 이내 단기 여행 추천'},
+     {lb:'lb-deep',t:'현지 유심',v:'<strong>가장 저렴</strong> — 장기 여행 추천. 단, 기존 번호로 문자·전화 수신 불가'},
+     {lb:'lb-teal',t:'이심(eSIM)',v:'유심 교체 없이 <strong>앱으로 간편 설치</strong> · 분실 위험 없음 · 아이폰 XS 이상 지원'},
+     {lb:'lb-green',t:'추천 선택',v:'단기 3일↓ → 로밍 / 1~2주 → <strong>이심 추천</strong> / 한 달 이상 → 현지 유심'},
+   ],
+   tip:{title:'절약 꿀팁',text:'이심은 <strong>알리·쿠팡</strong>에서 미리 구매 시 공항 대비 훨씬 저렴. QR코드로 설치만 하면 끝!'},
+   src:'출처: KKday 유럽여행 필수 준비물 2025 · 호라플라이 여행 체크리스트 2026',
+   shop:{ico:'📱',name:'해외 이심(eSIM)·포켓와이파이',kw:'해외 이심 eSIM 유럽',url:A},
+   lk:[{t:'C',e:'🚀',n:'쿠팡',url:C},{t:'A',e:'🛍️',n:'알리',url:A}]},
+]},
+
+{cls:'c4',icon:'💡',num:'SECTION 04',name:'현지인만 아는 꿀팁 모음',tips:[
+  {e:'🚗',name:'여행지 주차 스트레스 없애는 법',
+   kw:'국내여행 주차 꿀팁 / 아이파킹 모두의주차장 / 제주 주차',
+   rows:[
+     {lb:'lb-green',t:'주차 앱',v:'<strong>아이파킹·모두의주차장</strong> 앱 — 목적지 주변 주차장 사전 예약 가능. 현장보다 저렴'},
+     {lb:'lb-sky',t:'관광지 꿀팁',v:'<strong>관광지 바로 앞 대신 500m 이상 떨어진 공영주차장</strong> — 요금 절반, 주차 여유'},
+     {lb:'lb-deep',t:'제주 꿀팁',v:'제주공항 근처 공영주차장 <strong>4,000원/12시간</strong> 이용 가능 (2026 기준)'},
+     {lb:'lb-teal',t:'숙박객 혜택',v:'체크인 시 <strong>주차 무료 여부 먼저 확인</strong> — 대부분 숙박객 주차 무료 또는 할인'},
+   ],
+   tip:{title:'모르면 손해',text:'네이버지도·카카오맵에서 목적지 검색 후 <strong>주차 탭</strong> 클릭 — 실시간 만차 여부 확인 가능'},
+   src:'출처: 제주도 여행 주차 꿀팁 2026 (triplife.triplog.co.kr) · 아이파킹 공식 · 네이버지도 주차정보',
+   shop:{ico:'🚗',name:'차량용 주차번호판·차량용 방향제',kw:'차량 주차번호판 보관함',url:C},
+   lk:[{t:'C',e:'🚀',n:'쿠팡',url:C}]},
+
+  {e:'🍽️',name:'현지인 맛집 찾는 법 — 관광객 덫 피하기',
+   kw:'현지인 맛집 검색법 / 네이버지도 카카오맵 구글맵 활용',
+   rows:[
+     {lb:'lb-green',t:'네이버지도',v:'검색 후 <strong>최근 리뷰 날짜</strong> 확인 — 현지인 후기 많고 최근 리뷰 많은 곳 선택'},
+     {lb:'lb-sky',t:'카카오맵',v:'<strong>즐겨찾기 수</strong> 높은 곳이 현지인 단골 확률 UP. 관광객 맛집은 즐겨찾기 낮은 편'},
+     {lb:'lb-deep',t:'인스타그램',v:'<strong>지역명+맛집</strong> 해시태그 검색 — 최근 릴스 많은 곳이 진짜 핫플'},
+     {lb:'lb-teal',t:'덫 피하기',v:'메뉴판이 <strong>여러 언어</strong>로 된 곳·호객행위 하는 곳 피하기. 현지인이 줄 선 곳 따라가기'},
+   ],
+   tip:{title:'해외 맛집 꿀팁',text:'구글맵에서 <strong>별점 4.5 이상 + 리뷰 500개 이상</strong> 필터링. 현지어 리뷰 비율 높을수록 현지인 맛집!'},
+   src:'출처: 한국 여행 필수 앱 10선 (haniseoul.com 2026.03) · 트립닷컴 2026 여행 트렌드',
+   shop:{ico:'📱',name:'대용량 보조배터리 (앱 오래 쓰기)',kw:'보조배터리 20000mah 급속충전',url:C},
+   lk:[{t:'C',e:'🚀',n:'쿠팡',url:C}]},
+
+  {e:'🚇',name:'교통패스 — 알면 이득 모르면 손해',
+   kw:'서울 기후동행카드 / KTX 할인 예매 / 일본 JR패스',
+   rows:[
+     {lb:'lb-sky',t:'기후동행카드',v:'서울 지하철·버스 <strong>1~30일 무제한</strong> 이용. 1일권부터 구매 가능'},
+     {lb:'lb-deep',t:'KTX 할인',v:'<strong>코레일 앱</strong> 30일 전 예매할수록 저렴. 청소년·경로 추가 할인 적용'},
+     {lb:'lb-teal',t:'일본 JR패스',v:'신칸센 포함 <strong>7일·14일·21일 무제한</strong>. 반드시 한국에서 미리 구매'},
+     {lb:'lb-green',t:'인천공항 이동',v:'공항철도 일반 <strong>서울역까지 약 43분·4,150원</strong>. 공항버스보다 빠르고 저렴'},
+   ],
+   tip:{title:'트립닷컴 활용',text:'<strong>트립닷컴</strong>에서 항공+숙박 묶음 예약 시 추가 할인 + 회원 특가 적용 가능 ✈️'},
+   src:'출처: 한국 여행 필수 팁 교통패스 (한국관광공사그랜드세일 2025) · 코레일 공식 · 트립닷컴',
+   shop:{ico:'✈️',name:'트립닷컴 — 항공·숙박·교통패스',kw:'트립닷컴 교통패스',url:TR},
+   lk:[{t:'T',e:'✈️',n:'트립닷컴',url:TR},{t:'C',e:'🚀',n:'쿠팡',url:C}]},
+]},
+
+{cls:'c5',icon:'📱',num:'SECTION 05',name:'여행 필수 앱 & 사이트 7선',tips:[
+  {e:'🗺️',name:'이것만 깔면 여행 완벽 — 필수 앱 7선',
+   kw:'여행 필수 앱 / 네이버지도 구글맵 파파고 트립닷컴',
+   rows:[
+     {lb:'lb-amber',t:'지도·교통',v:'<strong>네이버지도</strong>(국내 최강) · <strong>구글맵</strong>(해외 필수) · 카카오맵(국내 맛집)'},
+     {lb:'lb-sky',t:'번역',v:'<strong>파파고</strong>(한·일·중 강함) · 구글번역(유럽어 강함) — 둘 다 설치 추천'},
+     {lb:'lb-deep',t:'여행 예약',v:'<strong>트립닷컴</strong>(항공+숙박 묶음 할인) · 야놀자·여기어때(국내)'},
+     {lb:'lb-teal',t:'환율·결제',v:'<strong>은행 앱</strong>(환전 예약) · 트래블월렛(해외 수수료 절감) · 네이버페이'},
+   ],
+   tip:{title:'트립닷컴 꿀팁',text:'로그인 후 검색하면 비회원 대비 추가 할인. <strong>항공+숙박 묶음</strong>이 가장 저렴해요 ✈️'},
+   src:'출처: 한국 여행 필수 앱 10선 (haniseoul.com 2026.03) · 트립닷컴 공식',
+   shop:{ico:'✈️',name:'트립닷컴 — 항공·숙박 예약',kw:'항공 숙박 예약',url:TR},
+   lk:[{t:'T',e:'✈️',n:'트립닷컴',url:TR},{t:'C',e:'🚀',n:'쿠팡',url:C}]},
+]},
+];
+
+const wrap=document.getElementById('wrap');
+DATA.forEach(sec=>{
+  const sEl=document.createElement('div');
+  sEl.className=`sec-wrap ${sec.cls}`;
+  sEl.innerHTML=`<div class="sec-hdr">
+    <div class="sec-icon">${sec.icon}</div>
+    <div><div class="sec-num">${sec.num}</div>
+    <div class="sec-name">${sec.name}</div></div>
+  </div><div class="tip-list"></div>`;
+  wrap.appendChild(sEl);
+  const tList=sEl.querySelector('.tip-list');
+
+  sec.tips.forEach(t=>{
+    const el=document.createElement('div');el.className='tip';
+    const rows=(t.rows||[]).map(r=>`<div class="irow">
+      <span class="ilb ${r.lb}">${r.t}</span>
+      <div class="ival">${r.v}</div></div>`).join('');
+    const chk=t.chk?`<div class="chk-box">
+      <div class="chk-title">${t.chk.title}</div>
+      <div class="chk-grid">${t.chk.items.map(i=>`
+        <div class="chk-item"><div class="chk-dot"></div>${i}</div>`).join('')}
+      </div></div>`:'';
+    const tip=t.tip?`<div class="tip-box">
+      <div class="tip-box-title">💡 ${t.tip.title}</div>
+      <p>${t.tip.text}</p></div>`:'';
+    const warn=t.warn?`<div class="warn-box"><p>${t.warn.text}</p></div>`:'';
+    const shop=t.shop?`<div class="shop-tag">
+      <div class="shop-tag-top">
+        <div class="shop-tag-ico">${t.shop.ico}</div>
+        <div class="shop-tag-info">
+          <div class="shop-tag-name">🛒 ${t.shop.name}</div>
+          <div class="shop-tag-kw">검색어: ${t.shop.kw}</div>
+        </div>
+      </div>
+      <a href="${t.shop.url}" onclick="window.location.href='${t.shop.url}';return false;"
+        class="shop-tag-btn">🚀 쿠팡에서 보기</a></div>`:'';
+    const lks=t.lk.map(l=>{
+      const cls=l.t==='C'?'shC':l.t==='T'?'shT':'shA';
+      return `<a href="${l.url}" onclick="window.location.href='${l.url}';return false;"
+        class="shlk ${cls}"><span class="shlk-ico">${l.e}</span>
+        <span class="shlk-txt">${l.n}</span></a>`;}).join('');
+
+    el.innerHTML=`<div class="tip-head" onclick="tog(this)">
+      <div class="t-e">${t.e}</div>
+      <div class="t-mid">
+        <div class="t-name">${t.name}</div>
+        <div class="t-kw">🔍 ${t.kw}</div>
+      </div>
+      <span class="t-arr">▼</span>
+    </div>
+    <div class="tip-body"><div class="tip-cnt">
+      ${rows}${chk}${tip}${warn}
+      <div class="src-box"><p><span>📚 출처</span> ${t.src}</p></div>
+      ${shop}
+      <div class="shop-row">${lks}</div>
+    </div></div>`;
+    tList.appendChild(el);
+  });
+});
+
+function tog(h){
+  const c=h.parentElement,on=c.classList.contains('on');
+  document.querySelectorAll('.tip.on').forEach(x=>x.classList.remove('on'));
+  if(!on)c.classList.add('on');
+}
+</script>
+</body>
+</html>

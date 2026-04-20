@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>한국요리 기본 비법 100선 | 리치온</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+:root{
+  --f:"Pretendard",-apple-system,sans-serif;
+  --bg:#0a1a0e;--card:#112210;--bd:rgba(46,139,87,.18);
+  --ink:#f5f0e8;--ink2:#c8b898;--ink3:#8a7a60;
+  --gold:#2e8b57;--gold2:#a8d878;
+  --red:#c83040;--mint:#20a870;--sky:#2080c8;--grape:#9050d0;
+  --gobg:rgba(46,139,87,.08);--gobd:rgba(46,139,87,.3);
+  --rdbg:rgba(200,48,64,.1);--rdbd:rgba(200,48,64,.35);
+  --mtbg:rgba(32,168,112,.08);--mtbd:rgba(32,168,112,.3);
+  --skbg:rgba(32,128,200,.08);--skbd:rgba(32,128,200,.3);
+  --gpbg:rgba(144,80,208,.08);--gpbd:rgba(144,80,208,.3);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);font-family:var(--f);color:var(--ink);overflow-x:hidden;}
+.hdr{background:linear-gradient(170deg,#0d2418 0%,#0a1a0e 60%);
+  border-bottom:1px solid var(--bd);padding:28px 16px 24px;text-align:center;position:relative;}
+.hdr::before{content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 50% at 50% 0%,rgba(0,100,40,.15),transparent);}
+.mk{width:50px;height:50px;position:relative;margin:0 auto 10px;}
+.mkr{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(212,175,55,.55);}
+.mkr2{position:absolute;inset:5px;border-radius:50%;border:.5px solid rgba(212,175,55,.2);}
+.mkd{position:absolute;top:50%;left:50%;width:24px;height:24px;
+  background:linear-gradient(135deg,#a8d878,#2e8b57,#1a5c34);
+  transform:translate(-50%,-50%) rotate(45deg);border-radius:3px;}
+.mkd2{position:absolute;top:50%;left:50%;width:16px;height:16px;
+  background:#0a1a0e;opacity:.65;transform:translate(-50%,-50%) rotate(45deg);border-radius:2px;}
+.mkrr{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:Georgia,serif;font-size:16px;font-weight:700;color:#a8d878;}
+.mkdot{position:absolute;width:2.5px;height:2.5px;border-radius:50%;background:#2e8b57;opacity:.6;}
+.rn{font-family:Georgia,serif;font-size:9px;letter-spacing:7px;
+  background:linear-gradient(90deg,#a8d878,#2e8b57);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;}
+.sl-row{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:14px;}
+.sll{width:18px;height:1px;background:linear-gradient(90deg,transparent,#2e8b57);}
+.slr{width:18px;height:1px;background:linear-gradient(270deg,transparent,#2e8b57);}
+.slt{font-size:7.5px;color:rgba(212,175,55,.6);letter-spacing:1.5px;}
+.hook{font-size:17px;font-weight:900;color:#a8d878;
+  letter-spacing:-.4px;line-height:1.5;word-break:keep-all;margin-bottom:4px;}
+.hook-sub{font-size:10.5px;color:var(--ink2);margin-bottom:12px;}
+.hdr-title{font-size:22px;font-weight:900;color:var(--ink);
+  letter-spacing:-.6px;line-height:1.3;margin-bottom:6px;word-break:keep-all;}
+.hdr-title em{font-style:normal;color:#a8d878;}
+.hdr-sub{font-size:10px;color:var(--ink3);line-height:2;word-break:keep-all;}
+.main{max-width:480px;margin:0 auto;padding:16px 12px 56px;}
+.pt-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:5px;}
+.pt-btn{display:flex;align-items:center;justify-content:center;gap:6px;
+  border-radius:10px;padding:10px 6px;text-decoration:none;
+  font-family:var(--f);font-size:11px;font-weight:800;border:1.5px solid;transition:.18s;}
+.pt-btn:hover{transform:translateY(-1px);filter:brightness(1.1);}
+.disc-box{background:rgba(46,139,87,.05);border:1px solid rgba(46,139,87,.15);
+  border-radius:10px;padding:9px 13px;text-align:center;margin-bottom:16px;}
+.disc-box p{font-size:9px;color:var(--ink3);line-height:2;word-break:keep-all;}
+.sec-wrap{margin-bottom:24px;}
+.sec-hdr{display:flex;align-items:center;gap:10px;padding:11px 14px;
+  border-radius:14px;border:1px solid;margin-bottom:10px;}
+.sec-icon{font-size:22px;flex-shrink:0;}
+.sec-num{font-size:7.5px;font-weight:700;letter-spacing:2px;margin-bottom:2px;}
+.sec-name{font-size:13.5px;font-weight:800;letter-spacing:-.3px;line-height:1.35;word-break:keep-all;}
+.jang-card{background:var(--card);border:1px solid var(--bd);
+  border-radius:14px;padding:14px 15px;margin-bottom:8px;}
+.jc-top{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.jc-e{font-size:20px;flex-shrink:0;}
+.jc-name{font-size:14px;font-weight:800;color:#a8d878;letter-spacing:-.3px;line-height:1.3;}
+.jc-brand{font-size:9.5px;color:var(--ink3);margin-top:3px;line-height:1.5;}
+.rows{display:flex;flex-direction:column;gap:9px;}
+.irow{display:flex;flex-direction:column;gap:4px;}
+.ilb{font-size:7.5px;font-weight:700;padding:2.5px 10px;border-radius:20px;
+  white-space:nowrap;display:inline-block;letter-spacing:.3px;margin-bottom:1px;}
+.lb-g{background:rgba(46,139,87,.1);color:#a8d878;border:1px solid rgba(46,139,87,.35);}
+.lb-m{background:var(--mtbg);color:#60d8a0;border:1px solid var(--mtbd);}
+.lb-r{background:var(--rdbg);color:#e87080;border:1px solid var(--rdbd);}
+.lb-s{background:var(--skbg);color:#70c0f8;border:1px solid var(--skbd);}
+.lb-p{background:var(--gpbg);color:#c090f8;border:1px solid var(--gpbd);}
+.ival{font-size:12px;color:var(--ink2);line-height:1.9;word-break:keep-all;}
+.ival strong{color:var(--gold2);font-weight:700;}
+.src-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);
+  border-radius:8px;padding:7px 11px;}
+.src-box p{font-size:9px;color:var(--ink3);line-height:1.85;word-break:keep-all;}
+.src-box span{color:rgba(120,200,120,.5);}
+.shop-row{display:flex;gap:5px;margin-top:2px;}
+.shlk{flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
+  border-radius:9px;padding:10px 6px;text-decoration:none;
+  border:1px solid;font-family:var(--f);transition:.18s;}
+.shlk:hover{transform:translateY(-1px);filter:brightness(1.1);}
+.shlk-ico{font-size:16px;} .shlk-txt{font-size:11px;font-weight:800;}
+.shC{background:rgba(200,48,64,.1);border-color:rgba(200,48,64,.35);color:#e87080;}
+.shA{background:rgba(32,168,112,.08);border-color:rgba(32,168,112,.3);color:#60d8a0;}
+.shT{background:rgba(144,80,208,.08);border-color:rgba(144,80,208,.3);color:#c090f8;}
+.tip{background:var(--card);border:1px solid var(--bd);
+  border-radius:13px;overflow:hidden;margin-bottom:6px;cursor:pointer;transition:all .18s;}
+.tip:hover{border-color:rgba(46,139,87,.35);transform:translateY(-1px);}
+.tip.on{border-color:#2e8b57;}
+.tip-head{display:flex;align-items:flex-start;gap:9px;padding:13px 13px;}
+.t-e{font-size:20px;flex-shrink:0;margin-top:1px;}
+.t-mid{flex:1;min-width:0;}
+.t-name{font-size:13px;font-weight:700;color:#e8f5e8;
+  white-space:normal;line-height:1.4;letter-spacing:-.2px;word-break:keep-all;}
+.t-kw{font-size:9.5px;color:var(--ink3);margin-top:3px;line-height:1.5;word-break:keep-all;}
+.t-arr{font-size:9px;color:var(--ink3);transition:transform .3s;flex-shrink:0;}
+.tip.on .t-arr{transform:rotate(180deg);color:#a8d878;}
+.tip-body{max-height:0;overflow:hidden;transition:max-height .4s ease;}
+.tip.on .tip-body{max-height:700px;}
+.tip-cnt{padding:12px 13px 14px;border-top:1px solid var(--bd);display:flex;flex-direction:column;gap:10px;}
+.ratio-box{background:rgba(46,139,87,.06);border:1px solid rgba(46,139,87,.2);
+  border-radius:9px;padding:9px 11px;}
+.ratio-title{font-size:9.5px;font-weight:700;color:rgba(120,200,120,.7);
+  letter-spacing:.5px;margin-bottom:8px;}
+.ratio-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.ratio-ing{font-size:10px;font-weight:700;color:var(--gold2);min-width:80px;}
+.ratio-bar{flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden;}
+.ratio-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#2e8b57,#a8d878);}
+.ratio-val{font-size:9px;color:var(--ink3);min-width:20px;text-align:right;}
+.c1 .sec-hdr{background:var(--rdbg);border-color:var(--rdbd);}
+.c1 .sec-num,.c1 .sec-name{color:#e87080;}
+.c2 .sec-hdr{background:rgba(46,139,87,.08);border-color:rgba(46,139,87,.3);}
+.c2 .sec-num,.c2 .sec-name{color:#a8d878;}
+.c3 .sec-hdr{background:var(--mtbg);border-color:var(--mtbd);}
+.c3 .sec-num,.c3 .sec-name{color:#60d8a0;}
+.c4 .sec-hdr{background:var(--skbg);border-color:var(--skbd);}
+.c4 .sec-num,.c4 .sec-name{color:#70c0f8;}
+.c5 .sec-hdr{background:var(--gpbg);border-color:var(--gpbd);}
+.c5 .sec-num,.c5 .sec-name{color:#c090f8;}
+.ca .sec-hdr{background:rgba(46,139,87,.08);border-color:rgba(46,139,87,.3);}
+.ca .sec-num,.ca .sec-name{color:#a8d878;}
+@keyframes up{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.sec-wrap:nth-child(1){animation:up .35s ease both;}
+.sec-wrap:nth-child(2){animation:up .35s .06s ease both;}
+.sec-wrap:nth-child(3){animation:up .35s .12s ease both;}
+.sec-wrap:nth-child(4){animation:up .35s .18s ease both;}
+.sec-wrap:nth-child(5){animation:up .35s .24s ease both;}
+.sec-wrap:nth-child(6){animation:up .35s .30s ease both;}
+.ftr{text-align:center;padding:20px 14px 48px;border-top:1px solid rgba(46,139,87,.18);max-width:480px;margin:0 auto;}
+.ftr-brand{font-size:9px;color:var(--ink3);margin-bottom:5px;}
+.ftr-disc{font-size:8.5px;color:var(--ink3);line-height:2;}
+.jang-sub{font-size:9px;font-weight:700;color:rgba(120,200,120,.5);
+  letter-spacing:2px;margin-bottom:6px;padding-left:2px;}
+
+.shop-tag{display:flex;flex-direction:column;gap:6px;
+  background:rgba(46,139,87,.06);border:1px solid rgba(46,139,87,.25);
+  border-radius:10px;padding:9px 11px;margin-top:2px;}
+.shop-tag-ico{font-size:18px;flex-shrink:0;}
+.shop-tag-info{flex:1;min-width:0;}
+.shop-tag-label{font-size:7.5px;font-weight:700;color:rgba(200,100,100,.7);
+  letter-spacing:1px;margin-bottom:2px;}
+.shop-tag-name{font-size:11px;font-weight:700;color:#a8d878;
+  white-space:normal;word-break:keep-all;}
+.shop-tag-kw{font-size:9px;color:rgba(120,200,120,.6);margin-top:1px;}
+.shop-tag-btn{background:rgba(46,139,87,.15);border:1px solid rgba(46,139,87,.35);
+  color:#a8d878;border-radius:8px;padding:8px 12px;font-size:10.5px;font-weight:800;
+  text-decoration:none;font-family:var(--f);width:100%;text-align:center;transition:.18s;display:block;}
+.shop-tag-btn:hover{background:rgba(46,139,87,.25);transform:translateY(-1px);}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="mk">
+    <div class="mkr"></div><div class="mkr2"></div><div class="mkd"></div><div class="mkd2"></div><div class="mkrr">R</div>
+    <div class="mkdot" style="top:1px;left:50%;transform:translateX(-50%);"></div>
+    <div class="mkdot" style="bottom:1px;left:50%;transform:translateX(-50%);"></div>
+    <div class="mkdot" style="left:1px;top:50%;transform:translateY(-50%);"></div>
+    <div class="mkdot" style="right:1px;top:50%;transform:translateY(-50%);"></div>
+  </div>
+  <div class="rn">RICH-ON</div>
+  <div class="sl-row"><div class="sll"></div><div class="slt">풍요로운 일상이 켜지다</div><div class="slr"></div></div>
+  <div class="hook">맛집이 따로 없어 🍲</div>
+  <div class="hook-sub">알고 나면 다르게 보이는 한국요리 기본 비법</div>
+  <div class="hdr-title">한국요리 기본<br><em>비법 100선</em></div>
+  <div class="hdr-sub">🥬 나물 · 🍲 찌개·국 · 🥗 잡채 · 🏆 장류 선택법 · 🧂 양념 순서</div>
+</div>
+
+<div class="main">
+  <div class="pt-grid">
+    <a href="https://link.coupang.com/a/ek5cwF" onclick="window.location.href='https://link.coupang.com/a/ek5cwF';return false;" class="pt-btn" style="background:rgba(200,48,64,.1);border-color:rgba(200,48,64,.35);color:#e87080;">🚀 쿠팡</a>
+    <a href="https://kr.trip.com/?Allianceid=8001792&SID=302477743&trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&trip_sub3=D14461428" onclick="window.location.href='https://kr.trip.com/?Allianceid=8001792&SID=302477743&trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&trip_sub3=D14461428';return false;" class="pt-btn" style="background:rgba(32,128,200,.08);border-color:rgba(32,128,200,.3);color:#70c0f8;">✈️ 트립닷컴</a>
+    <a href="https://bitl.bz/fjcH9p" onclick="window.location.href='https://bitl.bz/fjcH9p';return false;" class="pt-btn" style="background:rgba(32,168,112,.08);border-color:rgba(32,168,112,.3);color:#60d8a0;">🛍️ 알리익스프레스</a>
+    <a href="https://bitl.bz/qQEIlA" onclick="window.location.href='https://bitl.bz/qQEIlA';return false;" class="pt-btn" style="background:rgba(144,80,208,.08);border-color:rgba(144,80,208,.3);color:#c090f8;">🏷️ 테무</a>
+  </div>
+  <div class="disc-box">
+    <p>📌 본 포스팅은 <strong style="color:rgba(212,175,55,.6);">쿠팡 · 트립닷컴 · 알리익스프레스 · 테무</strong> 파트너스 활동의 일환으로<br>일정 수수료를 제공받습니다. 구매 고객님께 추가 비용은 전혀 없습니다.</p>
+  </div>
+  <div id="wrap"></div>
+</div>
+
+<div style="max-width:480px;margin:0 auto;padding:8px 14px 0;">
+  <div class="disc-box">
+    <p>📌 본 포스팅은 <strong style="color:rgba(212,175,55,.6);">쿠팡 · 트립닷컴 · 알리익스프레스 · 테무</strong> 파트너스 활동의 일환으로<br>일정 수수료를 제공받습니다. 구매 고객님께 추가 비용은 전혀 없습니다.</p>
+  </div>
+</div>
+<div class="ftr">
+  <div class="ftr-brand">에이로그원 A-Log One × 리치온 Rich-On · 2026</div>
+  <div class="ftr-disc">맛집이 따로 없어 — 알고 나면 다르게 보이는 한국요리 비법 🍲</div>
+</div>
+
+<script>
+const C='https://link.coupang.com/a/ek5cwF';
+const A='https://bitl.bz/fjcH9p';
+const M='https://bitl.bz/qQEIlA';
+const coup=()=>({t:'C',e:'🚀',n:'쿠팡',url:C});
+const ali=()=>({t:'A',e:'🛍️',n:'알리',url:A});
+const temu=()=>({t:'T',e:'🏷️',n:'테무',url:M});
+
+// ═══ SECTION A: 장류 ═══
+const JANG=[
+  {sub:'간장 — 양조간장 제대로 고르는 법',items:[
+    {e:'🥇',name:'샘표 양조간장 701',brand:'샘표식품 공식 제품',
+     feat:'국내 최고 수준 TN(총질소함량) <strong>1.7% 특급 양조간장</strong>. 6개월 5단계 발효숙성. 갈비찜·전복장·새우장 등 고급 요리에 최적.',
+     tip:'501보다 맛이 부드럽고 짠맛이 덜해 생채·비가열 요리에도 훌륭. 조림에도 색다른 풍미.',
+     src:'출처: 샘표 공식몰 sempio.com · TN 수치: 나무위키 샘표 항목 · 82cook 커뮤니티 실사용 검증',lk:[coup()]},
+    {e:'🥈',name:'샘표 양조간장 501',brand:'샘표식품 공식 제품',
+     feat:'TN <strong>1.5% 프리미엄 양조간장</strong>. 시중 간장 중 상위 등급. 조림·볶음·나물 양념 전반에 활용 가능.',
+     tip:'701보다 저렴하고 조리 시 감칠맛이 진해 볶음·조림 요리에 특히 잘 맞아요.',
+     src:'출처: 샘표 공식몰 sempio.com · 더농부 간장 성분 분석 · 식품공전 TN 등급 기준',lk:[coup()]},
+  ]},
+  {sub:'고추장 — 국산 재료 제대로 고르는 법',items:[
+    {e:'🥇',name:'청정원 순창 태양초 찹쌀고추장',brand:'대상 청정원 공식 제품',
+     feat:'<strong>국산 찹쌀 + 태양초</strong> 사용. HACCP 인증 공정. 텁텁함 없이 자연스러운 단맛.',
+     tip:'찌개·비빔·쌈·떡볶이 모두 활용 가능. 첨가물이 최소화된 라인.',
+     src:'출처: 청정원 공식몰 chungjungone.com · 다나와 실판매 확인',lk:[coup()]},
+  ]},
+  {sub:'된장 — 전통 숙성 제대로 고르는 법',items:[
+    {e:'🥇',name:'청정원 순창 재래식 숙성된장',brand:'대상 청정원 공식 제품',
+     feat:'<strong>전통 재래식 방식으로 숙성</strong>한 된장. 구수하고 깊은 맛. 과도한 첨가물 없음.',
+     tip:'찌개에 너무 오래 끓이면 향이 날아가므로 마지막 10분에 풀어 넣는 것이 핵심.',
+     src:'출처: 청정원 공식몰 chungjungone.com · 한국민족문화대백과사전 된장 항목',lk:[coup()]},
+  ]},
+];
+
+// ═══ SECTION 01~05: 비법 ═══
+const TIPS=[
+{cls:'c2',icon:'🧂',num:'SECTION 01',name:'양념 투입 황금 순서 — 설소식간된',tips:[
+  {e:'📊',name:'설소식간된 — 양념 넣는 순서의 과학',kw:'설탕→소금→식초→간장→된장 / 설소식간된',
+   point:'<strong>설소식간된</strong> — 설탕·소금·식초·간장·된장 순서로 기억하세요. 분자 크기가 큰 순서로 넣어야 재료 속까지 간이 배어요. (설탕 분자량 342 → 소금 58.5)',
+   reason:'설탕을 나중에 넣으면 이미 소금이 차지한 조직 틈으로 들어가지 못해 겉돌게 됩니다.',
+   src:'출처: 식품조리학 원리 (백산출판사 등 대학교재) · 한국식 암기법: 설소식간된',
+   ratio:{title:'양념 투입 황금 순서',rows:[
+     {name:'① 설탕',w:90,label:'가장 먼저'},
+     {name:'② 소금',w:75,label:'두 번째'},
+     {name:'③ 식초',w:60,label:'세 번째'},
+     {name:'④ 간장·액젓',w:45,label:'네 번째'},
+     {name:'⑤ 된장·고추장',w:30,label:'마지막'},
+   ]},shopTag:{ico:'🧂',name:'요리 계량스푼 세트',kw:'스테인리스 계량스푼 세트'},lk:[coup()]},
+  {e:'🛢️',name:'참기름·들기름 — 열 주의사항 필수',kw:'참기름 들기름 발연점 / 열에 약한 기름 / 나물 투입 타이밍',
+   point:'⚠️ <strong>참기름·들기름은 발연점이 낮아 고온 가열 시 유해성분이 생성됩니다.</strong> 반드시 불을 끄거나 약불 상태에서 마지막에 넣으세요. 볶음 요리에는 처음부터 사용하지 않는 것이 좋습니다.',
+   reason:'참기름 발연점 약 160℃, 들기름 약 170℃로 시중 식용유(약 210~230℃)보다 훨씬 낮습니다. 고온에서 산화되면 향도 날아가고 영양소(오메가-3 등)도 파괴됩니다. <strong>볶음·튀김용 기름으로는 절대 사용 금지.</strong>',
+   src:'출처: 농촌진흥청 국가표준식품성분 DB 10.0 기름 발연점 분석 · 한국민족문화대백과사전 나물 항목 · 위키백과 나물 조리법',shopTag:{ico:'🫙',name:'국산 참기름·들기름',kw:'국산 참깨 참기름'},lk:[coup()]},
+  {e:'🌿',name:'다진 마늘 — 국물이냐 무침이냐',kw:'마늘 투입 시점 / 국물 vs 무침',
+   point:'<strong>국물 요리</strong>: 처음에 넣어 시원한 맛 / <strong>무침 나물</strong>: 마지막에 넣어 알싸한 향 살리기.',
+   reason:'마늘의 알리신 성분이 열에 오래 노출되면 향이 날아가고 단맛만 남습니다.',
+   src:'출처: 식품조리학 · 한식진흥원 기본 레시피',shopTag:{ico:'🧄',name:'냉동 다진마늘',kw:'냉동 다진마늘 1kg'},lk:[coup()]},
+  {e:'🌶️',name:'고추장·된장은 마지막 10분에',kw:'된장찌개 투입 시점 / 장류 끓이는 시간',
+   point:'발효 식품의 <strong>향과 영양소는 열에 약합니다</strong>. 너무 오래 끓이면 텁텁해지고 영양이 파괴됩니다.',
+   reason:'완성 10분 전에 된장을 풀면 구수한 향이 살아있고 국물이 깔끔하게 완성됩니다.',
+   src:'출처: 식품발효학 · 청정원 요리 가이드',shopTag:{ico:'🌶️',name:'청정원 순창 된장·고추장',kw:'청정원 순창 된장'},lk:[coup()]},
+  {e:'🫒',name:'올리고당·꿀은 불 끈 뒤',kw:'윤기 내는 법 / 조림 마무리',
+   point:'조림 마무리 시 <strong>불을 끈 뒤 올리고당을 둘러야 윤기</strong>가 살아납니다.',
+   reason:'가열 중 올리고당을 넣으면 수분이 날아가 끈적해지고 탈 수 있습니다.',
+   src:'출처: 한식 조리 실무서 · 요리 커뮤니티 82cook 다수 검증',shopTag:{ico:'🍯',name:'올리고당 / 아카시아꿀',kw:'올리고당 프락토 1kg'},lk:[coup()]},
+]},
+{cls:'c3',icon:'🥬',num:'SECTION 02',name:'나물 기름·액젓·간장 황금 비율',tips:[
+  {e:'🌿',name:'생나물 무침 황금 비율',kw:'시금치·미나리·참나물 / 생나물 양념',
+   point:'<strong>국간장 1 : 참기름 1 : 다진 마늘 0.5</strong>. 봄나물 색을 살리려면 소금 한 꼬집 추가.',
+   reason:'간장보다 소금을 쓰면 나물 색이 변하지 않습니다. 데친 후 물기를 꼭 짜야 간이 싱거워지지 않아요.',
+   src:'출처: 한국민족문화대백과사전 나물 항목 · 한식진흥원 (대한급식신문 2020.07)',
+   ratio:{title:'생나물 무침 비율 (밥숟가락 기준)',rows:[
+     {name:'국간장',w:80,label:'1'},
+     {name:'참기름',w:80,label:'1'},
+     {name:'다진 마늘',w:40,label:'0.5'},
+     {name:'소금',w:15,label:'약간'},
+   ]},shopTag:{ico:'🥬',name:'국산 시금치·미나리 신선채소',kw:'국내산 시금치 신선'},lk:[coup()]},
+  {e:'🍂',name:'볶음 나물 황금 비율 (고사리·취나물)',kw:'고사리 양념 / 들기름 액젓 비율',
+   point:'<strong>들기름 2 : 멸치액젓 1 : 국간장 0.5</strong>. 팬 달구기 전에 나물과 양념을 먼저 버무려 속까지 간이 배게.',
+   reason:'말린 나물은 들기름이 섬유질 조직을 부드럽게 만들고 액젓의 감칠맛이 구수한 맛을 더합니다.',
+   src:'출처: 한국민족문화대백과사전 나물 조리법 · 위키백과 나물 항목',
+   ratio:{title:'볶음 나물 비율 (밥숟가락 기준)',rows:[
+     {name:'들기름',w:80,label:'2'},
+     {name:'멸치액젓',w:40,label:'1'},
+     {name:'국간장',w:20,label:'0.5'},
+   ]},shopTag:{ico:'🍂',name:'국산 건고사리·건취나물',kw:'국내산 건고사리 나물'},lk:[coup()]},
+  {e:'🌾',name:'쓴맛 산나물 비율 (머위·씀바귀·곤드레)',kw:'산나물 쓴맛 / 들깨가루 활용',
+   point:'<strong>들기름 1 : 들깨가루 2 : 국간장 1 : 액젓 0.5</strong>. 들깨가루가 쓴맛과 거친 식감을 부드럽게 중화합니다.',
+   reason:'나무위키·한국민족문화대백과에 따르면 향이 강하거나 쓴맛 나물에는 들깨 계열 사용이 전통적입니다.',
+   src:'출처: 나무위키 나물 항목 · 한국민족문화대백과사전 · 위키백과 나물 조리법',
+   ratio:{title:'산나물 비율 (밥숟가락 기준)',rows:[
+     {name:'들깨가루',w:80,label:'2'},
+     {name:'국간장',w:40,label:'1'},
+     {name:'들기름',w:40,label:'1'},
+     {name:'액젓',w:20,label:'0.5'},
+   ]},shopTag:{ico:'🌿',name:'들깨가루 / 국산 산나물',kw:'국산 들깨가루 볶은'},lk:[coup()]},
+  {e:'🥒',name:'식초 무침 황금 비율 (오이·도라지)',kw:'오이무침 양념 / 도라지무침 비율',
+   point:'<strong>설탕 1 : 식초 2 : 액젓 1 : 고춧가루 1</strong>. 참기름은 먹기 직전 한 방울만.',
+   reason:'식초의 산미가 참기름과 만나면 향이 죽을 수 있어요. 식초는 마지막에 넣어야 합니다.',
+   src:'출처: 한국민족문화대백과사전 나물 항목 · 조리과학 기초',
+   ratio:{title:'식초 무침 비율 (밥숟가락 기준)',rows:[
+     {name:'식초',w:80,label:'2'},
+     {name:'설탕',w:40,label:'1'},
+     {name:'액젓',w:40,label:'1'},
+     {name:'고춧가루',w:40,label:'1'},
+   ]},shopTag:{ico:'🥒',name:'오이 / 도라지 신선채소',kw:'국내산 오이 OR 도라지'},lk:[coup()]},
+  {e:'🫙',name:'국간장 vs 소금 — 나물 색 살리는 법',kw:'나물 색 보존 / 국간장 소금 차이',
+   point:'<strong>색을 살리려면 소금</strong>, 맛을 살리려면 국간장. 반씩 섞으면 색과 맛 둘 다 잡을 수 있어요.',
+   reason:'간장은 나물을 검게 변색시킬 수 있습니다. 봄나물·시금치처럼 색이 예쁜 나물은 소금 위주로.',
+   src:'출처: 한국민족문화대백과사전 · 한식진흥원 기본 조리 원칙',shopTag:{ico:'🫙',name:'샘표 국간장',kw:'샘표 양조국간장'},lk:[coup()]},
+  {e:'🌱',name:'나물 데칠 때 소금 한 꼬집',kw:'시금치 데치기 / 나물 색 선명하게',
+   point:'끓는 물에 <strong>소금 한 꼬집을 넣고 데치면</strong> 나물이 선명한 초록색을 유지합니다.',
+   reason:'소금이 클로로필 분해 효소의 활성화를 억제해 색이 오래 유지됩니다.',
+   src:'출처: 식품과학 클로로필 보존 원리 · 조리과학 기초',shopTag:{ico:'🥦',name:'스테인리스 편수냄비 / 찜냄비',kw:'스테인리스 편수냄비'},lk:[coup()]},
+  {e:'💧',name:'데친 나물 물기 꼭 짜기',kw:'나물 간 싱겁지 않게 / 물기 제거',
+   point:'데친 나물의 <strong>물기를 꼭 짜야</strong> 간이 묽어지지 않고 양념이 잘 배어듭니다.',
+   reason:'물기가 남으면 간장·소금이 희석되어 아무리 양념해도 맛이 싱거워집니다.',
+   src:'출처: 한국민족문화대백과사전 나물 조리법 · 대한급식신문 한식이야기',shopTag:{ico:'🧤',name:'나물 면보 / 실리콘 조리장갑',kw:'무명 면보 나물 짜기'},lk:[coup()]},
+  {e:'🔥',name:'볶음 나물 — 양념 먼저 버무리고 볶기',kw:'나물 양념 배는 법 / 볶음 나물 순서',
+   point:'팬을 달구기 <strong>전에 나물과 양념을 먼저 버무린 뒤</strong> 볶아야 속까지 간이 고르게 배어듭니다.',
+   reason:'팬이 뜨거운 상태에서 양념을 넣으면 표면만 익고 속에 간이 안 배게 됩니다.',
+   src:'출처: 한국민족문화대백과사전 · 나무위키 나물 항목',shopTag:{ico:'🥢',name:'도자기 샐러드볼 / 나물 무침볼',kw:'도자기 샐러드볼'},lk:[coup()]},
+]},
+{cls:'c1',icon:'🍲',num:'SECTION 03',name:'찌개·국 — 깊은 맛 내는 핵심 비법',tips:[
+  {e:'🥬',name:'신김치 신맛 줄이는 5가지 방법',kw:'신김치 신맛 잡기 / 묵은지 김치찌개',
+   point:'① <strong>들기름에 충분히 볶기</strong> — 지방이 산미를 감싸 풍미로 승화 ② 양파 많이 넣기 ③ 쌀뜨물 사용 ④ 설탕 한 꼬집 ⑤ 최소 40분 이상 끓이기',
+   reason:'묵은지의 신맛 원인인 젖산을 지방·당분·전분·열이 중화합니다.',
+   src:'출처: 한국민족문화대백과사전 김치찌개 항목 · 식품과학 젖산 중화 원리',shopTag:{ico:'🥬',name:'국내산 묵은지 (신선배송)',kw:'묵은지'},lk:[coup()]},
+  {e:'🐟',name:'참치액 한 스푼 — 감칠맛 치트키',kw:'국물 감칠맛 / 참치액 활용법',
+   point:'국간장 대신 <strong>참치액 한 스푼</strong>으로 조미료 없이 깊은 감칠맛을 낼 수 있어요.',
+   reason:'참치액의 이노신산이 글루탐산과 상승 작용해 감칠맛을 폭발적으로 높여줍니다.',
+   src:'출처: 한국식품연구원 어패류 발효 성분 분석 · 82cook 커뮤니티 다수 검증',shopTag:{ico:'🐟',name:'한라 참치액 / 멸치액젓',kw:'참치액젓 500ml'},lk:[coup()]},
+  {e:'🎣',name:'멸치 육수 — 내장 제거가 핵심',kw:'멸치 육수 쓴맛 / 국물 맑게 하는 법',
+   point:'멸치의 <strong>내장을 반드시 제거</strong>해야 쓴맛 없이 깔끔한 육수가 완성됩니다.',
+   reason:'멸치 내장에는 쓴맛 성분이 집중되어 있어 제거하지 않으면 국물이 탁하고 쌉쌀해집니다.',
+   src:'출처: 한국식품연구원 · 82cook 실검증 다수',shopTag:{ico:'🐠',name:'국산 멸치 (다시용 대멸)',kw:'다시멸치 국물용 대멸'},lk:[coup()]},
+  {e:'🌊',name:'다시마는 끓기 직전에 꺼내기',kw:'다시마 육수 / 육수 시원하게 내는 법',
+   point:'다시마는 <strong>물이 끓기 시작할 때 바로 꺼내야</strong> 국물이 시원합니다.',
+   reason:'다시마를 너무 오래 끓이면 끈끈한 점질 성분이 나와 국물이 걸쭉해지고 맛이 탁해집니다.',
+   src:'출처: 한식진흥원 기본 육수 조리 원칙 · 식품조리학',shopTag:{ico:'🌊',name:'완도 다시마 (건다시마)',kw:'완도 건다시마 육수용'},lk:[coup()]},
+  {e:'🫘',name:'된장찌개 — 고추장 0.5 섞기 비법',kw:'된장찌개 비법 / 텁텁함 없애는 법',
+   point:'된장 2 : <strong>고추장 0.5 비율</strong>로 섞으면 텁텁함이 사라지고 칼칼하게 완성됩니다.',
+   reason:'고추장의 찹쌀 성분이 된장의 텁텁한 맛을 잡아주고 칼칼한 맛을 더해줍니다.',
+   src:'출처: 요리 커뮤니티 82cook · 한식 조리 실무서',shopTag:{ico:'🍲',name:'뚝배기 / 무쇠 냄비',kw:'돌솥 뚝배기 된장찌개'},lk:[coup()]},
+  {e:'🧅',name:'무를 먼저 참기름에 볶기',kw:'된장찌개 시원한 맛 / 무 볶는 이유',
+   point:'된장찌개에 무를 먼저 <strong>참기름에 볶다가 물 부으면</strong> 시원하고 깊은 맛이 납니다.',
+   reason:'무의 당분이 참기름과 볶이며 마이야르 반응이 일어나 단맛과 풍미가 국물에 녹아듭니다.',
+   src:'출처: 식품화학 마이야르 반응 · 한식 조리 실무',shopTag:{ico:'🧅',name:'국내산 무 (신선배송)',kw:'무 신선 국내산 kg'},lk:[coup()]},
+  {e:'🌶️',name:'청양고추 씨 빼고 넣기',kw:'깔끔한 매운맛 / 청양고추 활용법',
+   point:'<strong>씨를 제거</strong>하면 화끈한 매운맛이 줄고 깔끔한 칼칼함만 남습니다.',
+   reason:'청양고추의 씨와 흰 막 부분에 캡사이신이 집중되어 있어 씨를 빼면 맵기가 조절됩니다.',
+   src:'출처: 식품성분 분석 · 농촌진흥청 국가표준식품성분 DB 10.0',shopTag:{ico:'🌶️',name:'국내산 청양고추',kw:'청양고추 신선 국내산'},lk:[coup()]},
+  {e:'🥚',name:'두부는 소금물에 담갔다가 넣기',kw:'두부 안 깨지는 법 / 된장찌개 두부',
+   point:'두부를 <strong>소금물에 10분 담갔다가 넣으면</strong> 잘 깨지지 않고 간도 더 잘 배어요.',
+   reason:'소금이 두부의 조직을 약간 단단하게 만들어 찌개 속에서 형태가 유지됩니다.',
+   src:'출처: 식품과학 기초 · 요리 커뮤니티 다수 검증',shopTag:{ico:'🥛',name:'국산콩 두부 (순두부·찌개용)',kw:'국산콩 찌개용 두부'},lk:[coup()]},
+  {e:'🍄',name:'표고버섯 가루 — 천연 감칠맛',kw:'천연 조미료 / 표고버섯 가루',
+   point:'말린 표고버섯을 갈아 보관해두면 <strong>어떤 국·찌개에도</strong> 천연 감칠맛 폭발.',
+   reason:'표고버섯의 구아닐산이 멸치의 이노신산, 다시마의 글루탐산과 상승작용해 감칠맛을 높입니다.',
+   src:'출처: 한국식품연구원 감칠맛 성분 분석 · 농촌진흥청 식품성분 DB',shopTag:{ico:'🍄',name:'국산 건표고버섯',kw:'국산 건표고버섯 슬라이스'},lk:[coup()]},
+  {e:'🌾',name:'쌀뜨물 활용 — 국물이 깊어진다',kw:'쌀뜨물 활용법 / 국물 깊게 내는 법',
+   point:'쌀뜨물의 <strong>전분 성분이 국물의 점도를 높여</strong> 맛을 모아주고 신맛·잡냄새를 흡수합니다.',
+   reason:'쌀뜨물은 특히 김치찌개·된장찌개에서 깊고 걸쭉한 국물 맛을 내는 데 효과적입니다.',
+   src:'출처: 한국민족문화대백과사전 · 식품조리과학',shopTag:{ico:'🍚',name:'국산 쌀 (신선배송)',kw:'국산 쌀 햅쌀 10kg'},lk:[coup()]},
+]},
+{cls:'c4',icon:'🥗',num:'SECTION 04',name:'잡채 — 탱글탱글·깊은 맛 두 가지 비법',tips:[
+  {e:'💎',name:'[셰프 비법] 불지 않는 당면 코팅법',kw:'잡채 당면 안 불리는 법 / 기름 코팅',
+   point:'당면을 삶지 않고 <strong>미지근한 물에 3시간 불린 뒤</strong> 볶기. 뜨거울 때 식용유+간장으로 기름 코팅하면 탱글함 유지.',
+   reason:'기름 코팅이 당면 표면의 수분 흡수를 막아 오래 두어도 불지 않습니다.',
+   src:'출처: 백종원 요리비책 YouTube · 이연복 셰프 조리법 기반 커뮤니티 검증',lk:[coup()]},
+  {e:'🏺',name:'[전통 비법] 재료별 따로 볶기',kw:'잡채 채소 따로 볶기 / 전통 잡채',
+   point:'모든 채소를 <strong>각각 다른 팬에서 따로 볶아야</strong> 고유의 향과 색이 살아납니다.',
+   reason:'함께 볶으면 수분이 나와 찜 요리가 되어버립니다. 따로 볶기가 전통 잡채의 핵심입니다.',
+   src:'출처: 한식진흥원 전통 잡채 조리서 · 한국민족문화대백과사전',lk:[coup()]},
+  {e:'🥩',name:'소고기는 배즙에 재우기',kw:'잡채 소고기 양념 / 육향 극대화',
+   point:'간장+설탕+<strong>배즙</strong>으로 소고기를 30분 이상 재우면 육향이 극대화되고 고기가 부드러워집니다.',
+   reason:'배의 단백질 분해 효소가 고기 근섬유를 연하게 만들어줍니다.',
+   src:'출처: 식품화학 단백질 분해효소 · 한식 조리 실무서',shopTag:{ico:'🥩',name:'잡채용 불고기 소고기',kw:'불고기용 소고기 국내산 한우'},lk:[coup()]},
+  {e:'🛢️',name:'참기름은 불 끈 뒤 듬뿍',kw:'잡채 참기름 / 향 날아가지 않는 법',
+   point:'모든 재료를 섞은 뒤 <strong>불을 완전히 끄고 참기름을 듬뿍</strong> 두르는 것이 전통 방식.',
+   reason:'참기름의 향 성분은 열에 약해 가열 중에 넣으면 대부분 날아갑니다.',
+   src:'출처: 식품화학 기름 성분 분석 · 한식진흥원 전통 잡채 레시피',shopTag:{ico:'🌿',name:'국산 생들기름 (압착)',kw:'국산 생들기름 압착'},lk:[coup()]},
+  {e:'🎨',name:'당근은 마지막에 살짝만',kw:'잡채 채소 순서 / 당근 색 보존',
+   point:'당근은 <strong>색과 아삭함을 살리기 위해</strong> 가장 마지막에 넣어 30초~1분만 볶아요.',
+   reason:'당근의 베타카로틴 색소는 과열하면 칙칙해집니다.',
+   src:'출처: 식품성분 분석 · 농촌진흥청 국가표준식품성분 DB',shopTag:{ico:'🥕',name:'당근 신선채소 (국내산)',kw:'당근 국내산 신선'},lk:[coup()]},
+]},
+{cls:'c5',icon:'🍯',num:'SECTION 05',name:'간장 조림·볶음 핵심 비법',tips:[
+  {e:'🍶',name:'맛술 — 잡내 제거의 핵심',kw:'맛술 활용법 / 고기 잡내 제거',
+   point:'조림 요리에 <strong>맛술(청주)을 미리 넣으면</strong> 고기 잡내를 효과적으로 제거하고 윤기가 납니다.',
+   reason:'맛술의 알코올 성분이 잡내 원인인 트리메틸아민과 결합해 가열 시 함께 날아갑니다.',
+   src:'출처: 식품화학 · 일본식 조리 원리 맛술(미림) 성분 분석',shopTag:{ico:'🍶',name:'미향 요리청주 / 미림',kw:'미향 요리청주'},lk:[coup()]},
+  {e:'🫚',name:'생강 한 편 — 고급 조림의 비밀',kw:'간장 조림 비법 / 생강 활용',
+   point:'간장 베이스 조림에 <strong>생강 한 편</strong>을 넣으면 맛이 한층 고급스러워집니다.',
+   reason:'생강의 진저롤 성분이 잡냄새를 제거하고 칼칼한 향을 더해 조림 맛을 깊게 만듭니다.',
+   src:'출처: 식품성분 진저롤 분석 · 한식 조리 실무서',shopTag:{ico:'🫚',name:'국내산 생강 / 생강청',kw:'국내산 생강 신선 500g'},lk:[coup()]},
+  {e:'⚗️',name:'조림에는 양조간장 — 색·맛의 차이',kw:'조림 간장 선택 / 양조간장 vs 국간장',
+   point:'조림에는 <strong>양조간장(샘표 501·701)</strong>이 국간장보다 짠맛이 덜하고 자연스러운 단맛이 있어 적합.',
+   reason:'국간장은 짜고 색이 진해 조림 요리에 쓰면 과도하게 짜지거나 색이 어두워집니다.',
+   src:'출처: 샘표 공식몰 간장 선택 가이드 · 나무위키 샘표 항목 · 82cook 실사용 리뷰',shopTag:{ico:'🫙',name:'샘표 양조간장 701',kw:'샘표 양조간장 701'},lk:[coup()]},
+  {e:'🧅',name:'파 기름 먼저 내기 — 깊은 볶음 맛',kw:'볶음 요리 파기름 / 향기 내는 법',
+   point:'볶음 요리 전 <strong>대파를 먼저 기름에 충분히 볶아 파 기름</strong>을 내면 향이 배가됩니다.',
+   reason:'대파의 황화합물 성분이 기름과 결합해 깊고 구수한 향을 만들어냅니다.',
+   src:'출처: 식품화학 황화합물 분석 · 한식 볶음 기본 원리',shopTag:{ico:'🧅',name:'대파 신선채소 (국내산)',kw:'대파 신선 국내산'},lk:[coup()]},
+  {e:'🫙',name:'간장 조림 황금 비율',kw:'간장 조림 비율 / 달콤 짭조름 황금 비율',
+   point:'<strong>간장 3 : 설탕 1 : 맛술 2 : 물 5</strong>. 윤기는 불 끈 뒤 올리고당으로 마무리.',
+   reason:'이 비율은 단·짠·구수한 맛의 균형이 잡혀 어떤 재료에도 응용 가능한 기본 베이스.',
+   src:'출처: 한식 조리 실무서 조림 기본 비율 · 82cook 다수 검증',
+   ratio:{title:'간장 조림 황금 비율 (밥숟가락 기준)',rows:[
+     {name:'물',w:80,label:'5'},
+     {name:'간장',w:48,label:'3'},
+     {name:'맛술',w:32,label:'2'},
+     {name:'설탕',w:16,label:'1'},
+   ]},shopTag:{ico:'🍖',name:'요리 계량컵 세트 / 계량스푼',kw:'계량컵 스테인리스 세트'},lk:[coup()]},
+  {e:'🥢',name:'조림 양념 — 재료 넣는 순서',kw:'조림 순서 / 양념 배는 법',
+   point:'<strong>단단한 재료 먼저</strong> 넣고 양념 후 끓이다가, 부드러운 재료는 나중에 추가.',
+   reason:'감자·당근은 오래 조려야 익고, 두부·어묵은 오래 조리면 퍼집니다.',
+   src:'출처: 식품조리학 · 한식 기본 조림 원칙',shopTag:{ico:'👨‍🍳',name:'방수 요리 앞치마',kw:'방수 주방 앞치마 요리용'},lk:[coup()]},
+  {e:'⏱️',name:'뚜껑 여닫기 — 조림 농도 조절',kw:'조림 뚜껑 사용법 / 국물 농도 조절',
+   point:'처음엔 <strong>뚜껑 닫고 끓여 간이 배게</strong>. 마지막엔 뚜껑 열고 국물을 졸여 농도 맞추기.',
+   reason:'뚜껑을 처음부터 열면 수분이 너무 빨리 날아가 간이 배기 전에 타버립니다.',
+   src:'출처: 식품조리학 기초 · 한식 조리 실무서',shopTag:{ico:'🍳',name:'유리뚜껑 냄비 / 실리콘 냄비뚜껑',kw:'실리콘 냄비뚜껑 유리'},lk:[coup()]},
+]},
+];
+
+const wrap=document.getElementById('wrap');
+
+// 장류 섹션
+const jSec=document.createElement('div');
+jSec.className='sec-wrap ca';
+jSec.innerHTML=`<div class="sec-hdr">
+  <div class="sec-icon">🏆</div>
+  <div><div class="sec-num">SECTION A</div><div class="sec-name">장류 제대로 고르는 법 — 엄선 추천</div></div>
+</div><div class="jang-list"></div>`;
+wrap.appendChild(jSec);
+const jList=jSec.querySelector('.jang-list');
+JANG.forEach(g=>{
+  const gEl=document.createElement('div');gEl.style.marginBottom='12px';
+  gEl.innerHTML=`<div class="jang-sub">${g.sub}</div>`;
+  g.items.forEach(it=>{
+    const c=document.createElement('div');c.className='jang-card';
+    const shops=it.lk.map(l=>`<a href="${l.url}" onclick="window.location.href='${l.url}';return false;" class="shlk sh${l.t}"><span class="shlk-ico">${l.e}</span><span class="shlk-txt">${l.n}에서 보기</span></a>`).join('');
+    c.innerHTML=`
+      <div class="jc-top"><div class="jc-e">${it.e}</div>
+        <div><div class="jc-name">${it.name}</div><div class="jc-brand">${it.brand}</div></div>
+      </div>
+      <div class="rows">
+        <div class="irow"><span class="ilb lb-g">특징</span><div class="ival">${it.feat}</div></div>
+        <div class="irow"><span class="ilb lb-m">활용 팁</span><div class="ival">${it.tip}</div></div>
+        <div class="src-box"><p><span>📚 출처</span> ${it.src}</p></div>
+        <div class="shop-row">${shops}</div>
+      </div>`;
+    gEl.appendChild(c);
+  });
+  jList.appendChild(gEl);
+});
+
+
+// 성분표시 보는 법 카드 추가
+const guideEl = document.createElement('div');
+guideEl.style.marginBottom = '8px';
+guideEl.innerHTML = `
+  <div class="jang-sub">✅ 성분표시 보는 법 — 사기 안 당하는 장류 선택 가이드</div>
+
+  <div class="jang-card" style="border-color:rgba(46,139,87,.4);">
+    <div class="jc-top"><div class="jc-e">🔍</div>
+      <div><div class="jc-name">간장 성분표시 보는 법</div>
+      <div class="jc-brand">출처: 나무위키 간장 항목 · 샘표 공식 가이드 · KS 규격 기준</div></div>
+    </div>
+    <div class="rows">
+      <div class="irow"><span class="ilb lb-g">① 식품유형 확인</span>
+        <div class="ival"><strong>양조간장</strong> = 미생물 발효 ✅ 향·맛 풍부<br>
+        <strong>혼합간장</strong> = 양조+산분해 혼합 (저렴하지만 풍미 부족)<br>
+        <strong>산분해간장</strong> = 화학 분해 ⚠️ 맛·향 떨어짐, 첨가물 多</div>
+      </div>
+      <div class="irow"><span class="ilb lb-m">② TN(총질소) 수치</span>
+        <div class="ival">병 뒷면 <strong>T.N 수치</strong> 반드시 확인!<br>
+        1.0% 표준 / 1.3% 고급 / <strong>1.5% 이상 = 특급</strong><br>
+        샘표 501(1.5%) · 701(1.7%) → 특급 ✅</div>
+      </div>
+      <div class="irow"><span class="ilb lb-r">③ 원재료 확인</span>
+        <div class="ival"><strong>대두(콩)</strong> 표기 → 통콩 사용 고급 ✅<br>
+        <strong>탈지대두</strong>만 있으면 → 기름 짜고 남은 찌꺼기 ⚠️<br>
+        국산 콩 + 양조 방식 + TN 1.3 이상 = 합격!</div>
+      </div>
+      <div class="src-box"><p><span>📚 출처</span> 나무위키 간장 항목 · 샘표 공식몰 간장 가이드 · KS 규격 TN 등급 기준</p></div>
+      <div class="shop-row">
+        <a href="${C}" onclick="window.location.href='${C}';return false;" class="shlk shC"><span class="shlk-ico">🚀</span><span class="shlk-txt">쿠팡에서 재료 보기</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="jang-card" style="border-color:rgba(46,139,87,.4);">
+    <div class="jc-top"><div class="jc-e">🔍</div>
+      <div><div class="jc-name">된장 성분표시 보는 법</div>
+      <div class="jc-brand">출처: 식품공전 장류 분류 기준 · 나무위키 된장 항목</div></div>
+    </div>
+    <div class="rows">
+      <div class="irow"><span class="ilb lb-g">① 식품유형 확인</span>
+        <div class="ival"><strong>한식된장</strong> = 메주+소금물만 사용, 전통 방식 ✅<br>
+        <strong>된장</strong> = 개량 방식 발효 (맛은 무난)<br>
+        <strong>조미된장</strong> = 첨가물 多 ⚠️ 피하는 게 좋음</div>
+      </div>
+      <div class="irow"><span class="ilb lb-m">② 원재료 확인</span>
+        <div class="ival">원재료명에 <strong>대두(국산)</strong> 또는 <strong>메주</strong> 표기 ✅<br>
+        <strong>탈지대두</strong>만 표기 → 저급 원료 ⚠️<br>
+        MSG·카라멜색소 多 = 첨가물 의존도 높음</div>
+      </div>
+      <div class="irow"><span class="ilb lb-r">③ 숙성 기간</span>
+        <div class="ival">전통 한식된장 최소 <strong>6개월~1년 이상 숙성</strong><br>
+        패키지에 숙성 기간 표기 있으면 신뢰도 UP ✅<br>
+        유통기한이 너무 짧으면 발효 부족 신호 ⚠️</div>
+      </div>
+      <div class="src-box"><p><span>📚 출처</span> 식품공전 장류 분류 기준 · 나무위키 된장 항목 · 청정원 공식몰</p></div>
+      <div class="shop-row">
+        <a href="${C}" onclick="window.location.href='${C}';return false;" class="shlk shC"><span class="shlk-ico">🚀</span><span class="shlk-txt">쿠팡에서 재료 보기</span></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="jang-card" style="border-color:rgba(46,139,87,.4);">
+    <div class="jc-top"><div class="jc-e">🔍</div>
+      <div><div class="jc-name">고추장 성분표시 보는 법</div>
+      <div class="jc-brand">출처: 나무위키 고추장 항목 · 식품공전 고추장 기준</div></div>
+    </div>
+    <div class="rows">
+      <div class="irow"><span class="ilb lb-g">① 식품유형 확인</span>
+        <div class="ival"><strong>고추장</strong> = 전통 방식 ✅<br>
+        <strong>조미고추장</strong> = 첨가물 多 ⚠️ 피하는 것 추천</div>
+      </div>
+      <div class="irow"><span class="ilb lb-m">② 원재료 확인</span>
+        <div class="ival"><strong>찹쌀</strong> 표기 → 전통 방식 ✅ 단맛 자연스러움<br>
+        <strong>밀가루</strong>만 표기 → 저렴한 대체 원료 ⚠️<br>
+        <strong>태양초</strong> 표기 → 햇빛에 말린 고춧가루 고급 ✅</div>
+      </div>
+      <div class="irow"><span class="ilb lb-r">③ 색 변화로 판별</span>
+        <div class="ival">유통기한 가까워도 <strong>빨간색 그대로</strong>면 방부제·색소 의심 ⚠️<br>
+        정상 고추장은 시간 지나면 <strong>검붉은색</strong>으로 변함 ✅<br>
+        자연 발효 중이라는 신호!</div>
+      </div>
+      <div class="src-box"><p><span>📚 출처</span> 나무위키 고추장 항목 · 식품공전 고추장 분류 기준 · 청정원 공식몰</p></div>
+      <div class="shop-row">
+        <a href="${C}" onclick="window.location.href='${C}';return false;" class="shlk shC"><span class="shlk-ico">🚀</span><span class="shlk-txt">쿠팡에서 재료 보기</span></a>
+      </div>
+    </div>
+  </div>
+`;
+jList.appendChild(guideEl);
+
+
+// 비법 섹션
+TIPS.forEach(sec=>{
+  const sEl=document.createElement('div');sEl.className=`sec-wrap ${sec.cls}`;
+  sEl.innerHTML=`<div class="sec-hdr">
+    <div class="sec-icon">${sec.icon}</div>
+    <div><div class="sec-num">${sec.num}</div><div class="sec-name">${sec.name}</div></div>
+  </div><div class="tip-list"></div>`;
+  wrap.appendChild(sEl);
+  const tList=sEl.querySelector('.tip-list');
+  sec.tips.forEach(t=>{
+    const el=document.createElement('div');el.className='tip';
+    const shops=t.lk.map(l=>`<a href="${l.url}" onclick="window.location.href='${l.url}';return false;" class="shlk sh${l.t}"><span class="shlk-ico">${l.e}</span><span class="shlk-txt">재료 보기</span></a>`).join('');
+    const ratioHtml=t.ratio?`<div class="ratio-box">
+      <div class="ratio-title">${t.ratio.title}</div>
+      ${t.ratio.rows.map(r=>`<div class="ratio-row">
+        <div class="ratio-ing">${r.name}</div>
+        <div class="ratio-bar"><div class="ratio-fill" style="width:${r.w}%"></div></div>
+        <div class="ratio-val">${r.label}</div>
+      </div>`).join('')}
+    </div>`:'';
+    el.innerHTML=`
+      <div class="tip-head" onclick="tog(this)">
+        <div class="t-e">${t.e}</div>
+        <div class="t-mid">
+          <div class="t-name">${t.name}</div>
+          <div class="t-kw">🔍 ${t.kw}</div>
+        </div>
+        <span class="t-arr">▼</span>
+      </div>
+      <div class="tip-body"><div class="tip-cnt">
+        <div class="irow"><span class="ilb lb-g">핵심 비법</span><div class="ival">${t.point}</div></div>
+        <div class="irow"><span class="ilb lb-m">이유</span><div class="ival">${t.reason}</div></div>
+        ${ratioHtml}
+        <div class="src-box"><p><span>📚 출처</span> ${t.src}</p></div>
+        ${t.shopTag ? `<div class="shop-tag">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+            <div class="shop-tag-ico">${t.shopTag.ico}</div>
+            <div class="shop-tag-info">
+              <div class="shop-tag-name">🛒 ${t.shopTag.name}</div>
+              <div class="shop-tag-kw">검색어: ${t.shopTag.kw}</div>
+            </div>
+          </div>
+          <a href="${t.lk[0].url}" onclick="window.location.href='${t.lk[0].url}';return false;" class="shop-tag-btn">🚀 쿠팡에서 재료 보기</a>
+        </div>` : ''}
+        <div class="shop-row">${shops}</div>
+      </div></div>`;
+    tList.appendChild(el);
+  });
+});
+
+function tog(h){
+  const c=h.parentElement,on=c.classList.contains('on');
+  document.querySelectorAll('.tip.on').forEach(x=>x.classList.remove('on'));
+  if(!on)c.classList.add('on');
+}
+</script>
+</body>
+</html>

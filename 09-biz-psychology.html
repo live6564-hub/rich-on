@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>비즈니스 심리 기술 12선 | 리치온</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+:root{--f:"Pretendard",-apple-system,"Apple SD Gothic Neo",sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0c0c18;font-family:var(--f);min-height:100vh;}
+.site-header{background:linear-gradient(160deg,#08081c,#12102e);border-bottom:1px solid rgba(99,102,241,.14);padding:18px 20px 14px;text-align:center;}
+.mk{width:44px;height:44px;position:relative;margin:0 auto 8px;}
+.mkr{position:absolute;inset:0;border-radius:50%;border:1.4px solid rgba(212,175,55,.55);}
+.mkr2{position:absolute;inset:4px;border-radius:50%;border:.5px solid rgba(212,175,55,.18);}
+.mkd{position:absolute;top:50%;left:50%;width:22px;height:22px;background:linear-gradient(135deg,#f5e06e,#d4af37,#b8860b);transform:translate(-50%,-50%) rotate(45deg);border-radius:3px;}
+.mkd2{position:absolute;top:50%;left:50%;width:15px;height:15px;background:#08081c;opacity:.55;transform:translate(-50%,-50%) rotate(45deg);border-radius:2px;}
+.mkrr{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:15px;font-weight:700;color:#f5e06e;}
+.mkdot{position:absolute;width:3px;height:3px;border-radius:50%;background:#d4af37;opacity:.6;}
+.site-rn{font-family:Georgia,serif;font-size:10px;letter-spacing:7px;background:linear-gradient(90deg,#f5e06e,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:3px;}
+.site-sl{display:flex;align-items:center;justify-content:center;gap:5px;margin-bottom:10px;}
+.sll{width:14px;height:1px;background:rgba(212,175,55,.35);}
+.slt{font-size:7.5px;color:rgba(212,175,55,.42);letter-spacing:1.5px;}
+.site-title{font-size:18px;font-weight:800;color:#fff;letter-spacing:-.5px;margin-bottom:4px;}
+.site-title em{font-style:normal;background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.site-sub{font-size:10px;color:rgba(255,255,255,.3);letter-spacing:.3px;}
+.main{display:flex;flex-direction:column;align-items:center;padding:20px 16px 48px;gap:20px;max-width:800px;margin:0 auto;}
+
+/* 캐러셀 */
+.viewer{position:relative;width:min(320px,88vw);}
+.track{display:flex;overflow:hidden;border-radius:18px;box-shadow:0 16px 50px rgba(0,0,0,.75);}
+.slide{min-width:100%;aspect-ratio:1/1;overflow:hidden;flex-shrink:0;position:relative;}
+.cnav{position:absolute;top:50%;transform:translateY(-50%);z-index:20;width:28px;height:28px;border-radius:50%;border:1px solid rgba(255,255,255,.15);background:rgba(0,0,0,.65);color:#fff;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:.2s;}
+.cnav:hover{background:rgba(0,0,0,.85);}
+.cnl{left:-12px;}.cnr{right:-12px;}
+.dots{display:flex;gap:4px;justify-content:center;margin-top:8px;}
+.dot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.15);transition:.3s;cursor:pointer;}
+.dot.on{width:14px;border-radius:2px;background:#6366f1;}
+.pg-txt{font-size:9.5px;color:rgba(255,255,255,.2);text-align:center;margin-top:4px;}
+
+/* 슬라이드 공통 */
+.s0-bg{position:absolute;inset:0;background:#080818;}
+.s0-glow{position:absolute;top:50%;left:50%;width:260px;height:260px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.2),transparent 65%);}
+.s0-ring{position:absolute;border-radius:50%;border:1px solid rgba(99,102,241,.1);}
+.s0-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 22px;gap:5px;}
+.smk{width:48px;height:48px;position:relative;}
+.smkr{position:absolute;inset:0;border-radius:50%;border:1.4px solid rgba(212,175,55,.55);}
+.smkr2{position:absolute;inset:4px;border-radius:50%;border:.5px solid rgba(212,175,55,.18);}
+.smkd{position:absolute;top:50%;left:50%;width:24px;height:24px;background:linear-gradient(135deg,#f5e06e,#d4af37,#b8860b);transform:translate(-50%,-50%) rotate(45deg);border-radius:3px;}
+.smkd2{position:absolute;top:50%;left:50%;width:16px;height:16px;background:#080818;opacity:.55;transform:translate(-50%,-50%) rotate(45deg);border-radius:2px;}
+.smkrr{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:Georgia,serif;font-size:16px;font-weight:700;color:#f5e06e;}
+.smkdot{position:absolute;width:3px;height:3px;border-radius:50%;background:#d4af37;opacity:.6;}
+.s-rn{font-family:Georgia,serif;font-size:9.5px;letter-spacing:6px;background:linear-gradient(90deg,#f5e06e,#d4af37);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.s-sl{display:flex;align-items:center;gap:4px;}
+.ssll{width:12px;height:1px;background:rgba(212,175,55,.35);}
+.sslt{font-size:7px;color:rgba(212,175,55,.42);letter-spacing:1.5px;}
+.s-prof{background:rgba(99,102,241,.12);border:1px solid rgba(99,102,241,.28);border-radius:999px;padding:3px 9px;font-size:8.5px;font-weight:600;color:#a5b4fc;}
+.s-title{font-size:19px;font-weight:800;color:#fff;text-align:center;line-height:1.3;letter-spacing:-.5px;}
+.s-title em{font-style:normal;background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.s-note{font-size:8px;color:rgba(255,255,255,.28);text-align:center;line-height:1.6;}
+.s-tags{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;}
+.stag{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:999px;padding:2px 7px;font-size:7.5px;color:rgba(255,255,255,.44);}
+.s-swipe{font-size:8px;color:rgba(255,255,255,.16);}
+.hd{position:absolute;top:0;left:0;right:0;height:38%;display:flex;flex-direction:column;justify-content:flex-end;padding:0 14px 10px;}
+.bd{position:absolute;bottom:0;left:0;right:0;height:64%;background:#fff;border-radius:14px 14px 0 0;padding:11px 14px 9px;display:flex;flex-direction:column;gap:5px;}
+.hd-bar{position:absolute;top:9px;left:12px;right:12px;display:flex;align-items:center;justify-content:space-between;}
+.hd-logo{font-family:Georgia,serif;font-size:7px;letter-spacing:3px;color:rgba(255,255,255,.35);}
+.hd-num{font-size:8px;font-weight:700;padding:2px 6px;border-radius:999px;border:1px solid rgba(255,255,255,.14);color:rgba(255,255,255,.4);}
+.hd-ghost{position:absolute;bottom:-4px;right:7px;font-size:58px;font-weight:900;line-height:1;color:rgba(255,255,255,.055);letter-spacing:-2px;}
+.hd-cat{font-size:7px;font-weight:700;letter-spacing:1.8px;color:rgba(255,255,255,.46);margin-bottom:1px;}
+.hd-title{font-size:20px;font-weight:800;color:#fff;line-height:1.1;letter-spacing:-.5px;}
+.hd-eng{font-size:7.5px;color:rgba(255,255,255,.3);}
+.bd-q{font-size:10.5px;font-weight:700;color:#111;line-height:1.5;padding-left:7px;border-left:2.5px solid;flex-shrink:0;letter-spacing:-.3px;word-break:keep-all;}
+.bd-desc{font-size:9px;color:#3d3d3d;line-height:1.7;flex:1;letter-spacing:-.15px;word-break:keep-all;}
+.bd-desc strong{font-weight:700;color:#111;}
+.bd-tip{border-radius:7px;padding:6px 9px;flex-shrink:0;}
+.bd-tip-l{font-size:7px;font-weight:700;letter-spacing:1.3px;margin-bottom:2px;}
+.bd-tip-t{font-size:9px;font-weight:700;line-height:1.5;letter-spacing:-.2px;word-break:keep-all;}
+.bd-src{font-size:7px;color:#c0c0c0;text-align:right;flex-shrink:0;}
+.s11-bg{position:absolute;inset:0;background:#080818;}
+.s11-glow{position:absolute;top:50%;left:50%;width:230px;height:230px;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.14),transparent 65%);}
+.s11-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 18px;gap:6px;}
+.s11-warn{background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:8px;padding:8px 11px;width:100%;text-align:center;}
+.s11-wt{font-size:10px;font-weight:700;color:#818cf8;margin-bottom:2px;}
+.s11-wd{font-size:8px;color:rgba(255,255,255,.5);line-height:1.6;word-break:keep-all;}
+.s11-q{font-size:11px;font-weight:700;color:rgba(255,255,255,.85);line-height:1.7;text-align:center;letter-spacing:-.3px;word-break:keep-all;}
+.s11-attr{font-size:8px;color:rgba(99,102,241,.5);}
+.s11-list{display:flex;flex-direction:column;gap:4px;width:100%;}
+.s11-item{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:7px;padding:5px 9px;}
+.s11-ci{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;flex-shrink:0;}
+.s11-ct{font-size:9px;font-weight:500;color:rgba(255,255,255,.65);line-height:1.4;letter-spacing:-.2px;}
+.s11-foot{font-size:7.5px;color:rgba(255,255,255,.12);letter-spacing:.8px;}
+
+/* 아코디언 */
+.acc-wrap{width:100%;display:flex;flex-direction:column;gap:6px;}
+.acc-item{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden;transition:border-color .2s;}
+.acc-item.active{border-color:rgba(99,102,241,.4);}
+.acc-head{display:flex;align-items:center;justify-content:space-between;padding:11px 14px;cursor:pointer;user-select:none;transition:background .2s;}
+.acc-head:hover{background:rgba(255,255,255,.03);}
+.acc-head-left{display:flex;align-items:center;gap:10px;}
+.acc-num{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;}
+.acc-name{font-size:12px;font-weight:700;color:#e2e8f0;letter-spacing:-.2px;}
+.acc-cat{font-size:9px;color:rgba(255,255,255,.35);margin-top:1px;}
+.acc-right{display:flex;align-items:center;gap:8px;}
+.acc-go{font-size:9px;font-weight:600;padding:3px 8px;border-radius:999px;border:1px solid rgba(99,102,241,.25);color:rgba(99,102,241,.7);background:rgba(99,102,241,.08);cursor:pointer;white-space:nowrap;transition:.2s;}
+.acc-go:hover{background:rgba(99,102,241,.2);color:#a5b4fc;}
+.acc-arrow{font-size:12px;color:rgba(255,255,255,.3);transition:transform .3s;}
+.acc-item.active .acc-arrow{transform:rotate(180deg);}
+.acc-body{max-height:0;overflow:hidden;transition:max-height .35s ease;}
+.acc-item.active .acc-body{max-height:400px;}
+.acc-content{padding:12px 14px 14px;border-top:1px solid rgba(255,255,255,.06);}
+.acc-q{font-size:12px;font-weight:700;color:#fff;line-height:1.6;margin-bottom:8px;padding-left:8px;border-left:2px solid;letter-spacing:-.2px;word-break:keep-all;}
+.acc-desc{font-size:11px;color:rgba(255,255,255,.65);line-height:1.8;margin-bottom:10px;letter-spacing:-.1px;word-break:keep-all;}
+.acc-desc strong{color:#fff;font-weight:700;}
+.acc-tip{border-radius:8px;padding:9px 12px;}
+.acc-tip-l{font-size:9px;font-weight:700;letter-spacing:1.2px;margin-bottom:4px;}
+.acc-tip-t{font-size:11px;font-weight:700;line-height:1.6;letter-spacing:-.2px;word-break:keep-all;}
+.acc-src{font-size:9px;color:rgba(255,255,255,.25);margin-top:8px;text-align:right;}
+
+/* 다운로드 */
+.dl-area{width:100%;display:flex;flex-direction:column;gap:7px;}
+.dl-stitle{font-size:11px;font-weight:600;color:rgba(255,255,255,.35);letter-spacing:1px;text-align:center;padding-top:4px;}
+.dl-btn{display:flex;align-items:center;justify-content:space-between;background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.15);border-radius:9px;padding:8px 12px;cursor:pointer;transition:all .2s;}
+.dl-btn:hover{background:rgba(99,102,241,.15);border-color:rgba(99,102,241,.35);}
+.dl-btn.done .dl-btn-arrow{color:#34d399;}
+.dl-btn.loading{opacity:.55;pointer-events:none;}
+.dl-btn-left{display:flex;align-items:center;gap:8px;}
+.dl-btn-icon{width:22px;height:22px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;}
+.dl-btn-name{font-size:10.5px;font-weight:700;color:#e2e8f0;}
+.dl-btn-sub{font-size:8.5px;color:rgba(255,255,255,.3);margin-top:1px;}
+.dl-btn-arrow{font-size:13px;color:rgba(99,102,241,.55);}
+.dl-all{display:flex;align-items:center;justify-content:center;gap:7px;background:linear-gradient(135deg,#4f46e5,#7c3aed);border:none;border-radius:11px;padding:12px;cursor:pointer;font-size:12px;font-weight:700;color:#fff;transition:all .2s;width:100%;font-family:var(--f);}
+.dl-all:hover{filter:brightness(1.1);}
+.dl-all:disabled{opacity:.45;cursor:not-allowed;}
+.status-bar{text-align:center;font-size:10px;color:rgba(99,102,241,.55);min-height:15px;}
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<div class="site-header">
+  <div class="mk">
+    <div class="mkr"></div><div class="mkr2"></div><div class="mkd"></div><div class="mkd2"></div><div class="mkrr">R</div>
+    <div class="mkdot" style="top:1px;left:50%;transform:translateX(-50%);"></div>
+    <div class="mkdot" style="bottom:1px;left:50%;transform:translateX(-50%);"></div>
+    <div class="mkdot" style="left:1px;top:50%;transform:translateY(-50%);"></div>
+    <div class="mkdot" style="right:1px;top:50%;transform:translateY(-50%);"></div>
+  </div>
+  <div class="site-rn">RICH-ON</div>
+  <div class="site-sl"><div class="sll"></div><div class="slt">풍요로운 일상이 켜지다</div><div class="sll"></div></div>
+  <div class="site-title">돈이 되는 <em>비즈니스 심리 기술</em> 12가지</div>
+  <div class="site-sub">💼 협상·마케팅·영업·리더십에 바로 쓰는 검증된 심리학 원리</div>
+</div>
+
+<div class="main">
+
+<!-- 캐러셀 -->
+<div class="viewer">
+  <button class="cnav cnl" onclick="go(cur-1)">&#8249;</button>
+  <div class="track" id="tk">
+
+  <!-- S0 표지 -->
+  <div class="slide" id="slide-0">
+    <div class="s0-bg"></div><div class="s0-glow"></div>
+    <div class="s0-ring" style="width:240px;height:240px;top:50%;left:50%;transform:translate(-50%,-50%);"></div>
+    <div class="s0-ring" style="width:165px;height:165px;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.5;"></div>
+    <div class="s0-inner">
+      <div class="smk">
+        <div class="smkr"></div><div class="smkr2"></div><div class="smkd"></div><div class="smkd2"></div><div class="smkrr">R</div>
+        <div class="smkdot" style="top:1px;left:50%;transform:translateX(-50%);"></div>
+        <div class="smkdot" style="bottom:1px;left:50%;transform:translateX(-50%);"></div>
+        <div class="smkdot" style="left:1px;top:50%;transform:translateY(-50%);"></div>
+        <div class="smkdot" style="right:1px;top:50%;transform:translateY(-50%);"></div>
+      </div>
+      <div class="s-rn">RICH-ON</div>
+      <div class="s-sl"><div class="ssll"></div><div class="sslt">풍요로운 일상이 켜지다</div><div class="ssll"></div></div>
+      <div class="s-prof">💼 비즈니스 심리학 · 검증된 원리</div>
+      <div class="s-title">돈이 되는<br><em>비즈니스 심리</em> 12가지</div>
+      <div class="s-note">협상·마케팅·영업·리더십에<br>바로 써먹는 심리학 기술</div>
+      <div class="s-tags"><span class="stag">비즈니스심리학</span><span class="stag">협상</span><span class="stag">마케팅</span><span class="stag">영업</span><span class="stag">리더십</span></div>
+      <div class="s-swipe">▷ 제목 클릭하거나 옆으로 넘기세요</div>
+    </div>
+  </div>
+
+  <!-- S1 귀납법의 오류 -->
+  <div class="slide" id="slide-1" style="background:#001a14;">
+    <div class="hd" style="background:linear-gradient(155deg,#005540,#001a14);">
+      <div class="hd-bar"><span class="hd-logo">RICH-ON</span><span class="hd-num">01/12</span></div>
+      <div class="hd-ghost">01</div>
+      <div class="hd-cat" style="color:rgba(52,211,153,.6);">의사결정 · 판단</div>
+      <div class="hd-title">귀납법의 오류</div>
+      <div class="hd-eng">Inductive Fallacy</div>
+    </div>
+    <div class="bd">
+      <div class="bd-q" style="border-color:#10b981;">"지금까지 잘 됐으니까<br>앞으로도 잘 되겠지"<br>이 생각이 왜 위험할까요?</div>
+      <div class="bd-desc">과거 사례 몇 가지로 <strong>전체를 일반화</strong>하는 사고방식이에요. "성공한 사람들은 다 새벽 5시에 일어난다"처럼 <strong>생존자만 보고 전체를 판단</strong>하면 치명적 오류가 생깁니다.</div>
+      <div class="bd-tip" style="background:#f0fdf4;border:1px solid rgba(16,185,129,.2);">
+        <div class="bd-tip-l" style="color:#14532d;">💡 비즈니스 활용</div>
+        <div class="bd-tip-t" style="color:#166534;">성공 사례만 보지 말고<br>실패 사례도 반드시 분석하세요.<br>보이지 않는 실패가 판단을 왜곡합니다.</div>
+      </div>
+      <div class="bd-src">생존자 편향 연구 · 통계적 귀납 오류 이론</div>
+    </div>
+  </div>
+
+  <!-- S2 매몰비용 함정 -->
+  <div class="slide" id="slide-2" style="background:#180010;">
+    <div class="hd" style="background:linear-gradient(155deg,#550030,#180010);">
+      <div class="hd-bar"><span class="hd-logo">RICH-ON</span><span class="hd-num">02/12</span></div>
+      <div class="hd-ghost">02</div>
+      <div class="hd-cat" style="color:rgba(249,168,212,.6);">의사결정 · 투자</div>
+      <div class="hd-title">매몰비용 함정</div>
+      <div class="hd-eng">Sunk Cost Fallacy</div>
+    </div>
+    <div class="bd">
+      <div class="bd-q" style="border-color:#ec4899;">재미없는 영화인데<br>돈 아까워서 끝까지 본 적<br>있으신가요?</div>
+      <div class="bd-desc">이미 쓴 돈·시간·노력 때문에 <strong>잘못된 결정을 계속 유지</strong>하는 심리예요. 비즈니스에서 가장 많은 손실을 만드는 함정입니다. <strong>과거 비용은 미래 결정의 근거가 될 수 없어요.</strong></div>
+      <div class="bd-tip" style="background:#fff0f7;border:1px solid rgba(236,72,153,.2);">
+        <div class="bd-tip-l" style="color:#831843;">💡 비즈니스 활용</div>
+        <div class="bd-tip-t" style="color:#9d174d;">"지금 처음 시작한다면<br>다시 선택하겠는가?"<br>이 질문 하나가 매몰비용 함정을 막습니다.</div>
+      </div>
+      <div class="bd-src">카너먼 손실 회피 · 아리엘리 비합리적 행동경제학</div>
+    </div>
+  </div>
+
+  <!-- S3 프레이밍 효과 -->
+  <div class="slide" id="slide-3" style="background:#0a0018;">
+    <div class="hd" style="background:linear-gradient(155deg,#2d0060,#0a0018);">
+      <div class="hd-bar"><span class="hd-logo">RICH-ON</span><span class="hd-num">03/12</span></div>
+      <div class="hd-ghost">03</div>
+      <div class="hd-cat" style="color:rgba(167,139,250,.6);">협상 · 설득</div>
+      <div class="hd-title">프레이밍 효과</div>
+      <div class="hd-eng">Framing Effect</div>
+    </div>
+    <div class="bd">
+      <div class="bd-q" style="border-color:#8b5cf6;">"90% 생존율"과<br>"10% 사망률"은 같은 말인데<br>왜 느낌이 다를까요?</div>
+      <div class="bd-desc">똑같은 사실도 <strong>어떤 틀로 표현하느냐</strong>에 따라 사람의 판단이 달라져요. 손실로 표현하면 더 강하게 작동합니다. <strong>말의 틀이 곧 설득의 무기</strong>입니다.</div>
+      <div class="bd-tip" style="background:#f5f3ff;border:1px solid rgba(139,92,246,.2);">
+        <div class="bd-tip-l" style="color:#4c1d95;">💡 비즈니스 활용</div>
+        <div class="bd-tip-t" style="color:#5b21b6;">"할인 혜택"보다 "지금 안 하면<br>손해"로 표현하면 행동률이 높아집니다.</div>
+      </div>
+      <div class="bd-src">카너먼 & 트버스키 프레이밍 이론 (1979)</div>
+    </div>
+  </div>
+
+  <!-- S4 피크엔드 법칙 -->
+  <div class="slide" id="slide-4" style="background:#001a10;">
+    <div class="hd" style="background:linear-gradient(155deg,#005530,#001a10);">
+      <div class="hd-bar"><span class="hd-logo">RICH-ON</span><span class="hd-num">04/12</span></div>
+      <div class="hd-ghost">04</div>
+      <div class="hd-cat" style="color:rgba(52,211,153,.6);">고객 경험 · CS</div>
+      <div class="hd-title">피크엔드 법칙</div>
+      <div class="hd-eng">Peak-End Rule</div>
+    </div>
+    <div class="bd">
+      <div class="bd-q" style="border-color:#10b981;">불친절했던 식당인데<br>마지막에 서비스 한 가지로<br>기억이 좋아진 적 있나요?</div>
+      <div class="bd-desc">사람은 경험 전체가 아닌 <strong>가장 강렬했던 순간(피크)과 마지막(엔드)</strong>만 기억해요. 중간 과정보다 <strong>마무리 인상</strong>이 평가를 결정합니다.</div>
+      <div class="bd-tip" style="background:#f0fdf4;border:1px solid rgba(16,185,129,.2);">
+        <div class="bd-tip-l" style="color:#14532d;">💡 비즈니스 활용</div>
+        <div class="bd-tip-t" style="color:#166534;">미팅·서비스 마지막에<br>작은 감동 하나를 반드시 준비하세요.<br>그것이 전체 평가를 바꿉니다.</div>
+      </div>
+      <div class="bd-src">다니엘 카너먼 피크엔드 법칙 연구</div>
+    </div>
+  </div>
+
+  <!-- S5 문전박대 기법 -->
+  <div class="slide" id="slide-5" style="background:#1a0800;">
+    <div class="hd" style="background:linear-gradient(155deg,#5c2000,#1a0800);">
+      <div class="hd-bar"><span class="hd-logo">RICH-ON</span><span class="hd-num">05/12</span></div>
+      <div class="hd-ghost">05</div>
+      <div class="hd-cat" style="color:rgba(251,146,60,.6);">협상 · 영업</div>
+      <div class="hd-title">문전박대 기법</div>
+      <div class="hd-eng">Door-in-the-Face</div>
+    </div>
+    <div class="bd">
+      <div class="bd-q" style="border-color:#f97316;">큰 부탁을 거절한 후<br>작은 부탁을 들어주고 싶은<br>느낌이 든 적 있으신가요?</div>
+      <div class="bd-desc">먼저 <strong>크고 거절할 만한 요청</strong>을 한 뒤 진짜 원하는 작은 것을 요청하면 수락률이 높아져요. <strong>상대적 비교 효과</strong>가 작동하기 때문입니다.</div>
+      <div class="bd-tip" style="background:#fff7ed;border:1px solid rgba(249,115,22,.2);">
+        <div class="bd-tip-l" style="color:#7c2d12;">💡 비즈니스 활용</div>
+        <div class="bd-tip-t" style="color:#9a3412;">협상 시 처음 제안을<br>원하는 것보다 크게 시작하세요.<br>양보 후 실제 목표를 제시하면 효과적입니다.</div>
+      </div>
+      <div class="bd-src">치알디니 (1975) 상호성 기반 협상 연구</div>
+    </div>
+  </div>
+
+  <!-- S6 선택의 역설 -->
+  <div class="slide" id="slide-6" style="background:#001218;">
+    <div class="hd" style="background:linear-gradient(155deg,#003d50,#001218);">
+      <div class="hd-bar"><span class="hd-logo">RICH-ON</span><span class="hd-num">06/12</span></div>
+      <div class="hd-ghost">06</div>
+      <div class="hd-cat" style="color:rgba(56,189,248,.6);">마케팅 · UX</div>
+      <div class="hd-title">선택의 역설</div>
+      <div class="hd-eng">Paradox of Choice</div>
+    </div>
+    <div class="bd">
+      <div class="bd-q" style="border-color:#0ea5e9;">메뉴가 너무 많으면<br>오히려 주문이 어려워진<br>경험 해보셨나요?</div>
+      <div class="bd-desc">선택지가 많아질수록 <strong>결정 피로</strong>가 쌓이고 아무것도 선택하지 않는 확률이 높아져요. <strong>선택지를 줄이면 구매율이 오릅니다.</strong></div>
+      <div class="bd-tip" style="background:#f0f9ff;border:1px solid rgba(14,165,233,.2);">
+        <div class="bd-tip-l" style="color:#0c4a6e;">💡 비즈니스 활용</div>
+        <div class="bd-tip-t" style="color:#075985;">상품·서비스 옵션을 3개 이하로<br>줄여보세요. "추천" 하나를 강조하면<br>전환율이 올라갑니다.</div>
+      </div>
+      <div class="bd-src">베리 슈워츠 『선택의 역설』· 잼 실험 (2000)</div>
+    </div>
+  </div>
+
+  <!-- S7 피그말리온 효과 -->
+  <div class="slide" id="slide-7" style="background:#150a00;">
+    <div class="hd" style="background:linear-gradient(155deg,#4a2200,#150a00);">
+      <div class="hd-bar"><span class="hd-logo">RICH-ON</span><span class="hd-num">07/12</span></div>
+      <div class="hd-ghost">07</div>
+      <div class="hd-cat" style="color:rgba(251,191,36,.6);">리더십 · HR</div>
+      <div class="hd-title">피그말리온 효과</div>
+      <div class="hd-eng">Pygmalion Effect</div>
+    </div>
+    <div class="bd">
+      <div class="bd-q" style="border-color:#f59e0b;">"저 사람은 잘할 거야"라는<br>기대가 실제로 그 사람을<br>성장시킨다면 믿겠어요?</div>
+      <div class="bd-desc">리더의 <strong>높은 기대를 받은 사람</strong>은 실제로 더 높은 성과를 냅니다. 반대로 낮은 기대는 성과를 떨어뜨려요. <strong>기대가 현실을 만듭니다.</strong></div>
+      <div class="bd-tip" style="background:#fffbeb;border:1px solid rgba(245,158,11,.2);">
+        <div class="bd-tip-l" style="color:#92400e;">💡 비즈니스 활용</div>
+        <div class="bd-tip-t" style="color:#78350f;">팀원에게 구체적인 기대를<br>말로 표현해 주세요.<br>"너는 이걸 잘할 수 있어"가<br>실제 성과를 바꿉니다.</div>
+      </div>
+      <div class="bd-src">로젠탈 & 야콥슨 (1968) 학습 기대 효과 연구</div>
+    </div>
+  </div>
+
+  <!-- S8 FOMO 전략 -->
+  <div class="slide" id="slide-8" style="background:#0a0018;">
+    <div class="hd" style="background:linear-gradient(155deg,#300060,#0a0018);">
+      <div class="hd-bar"><span class="hd-logo">RICH-ON</span><span class="hd-num">08/12</span></div>
+      <div class="hd-ghost">08</div>
+      <div class="hd-cat" style="color:rgba(192,132,252,.6);">마케팅 · 콘텐츠</div>
+      <div class="hd-title">FOMO 전략</div>
+      <div class="hd-eng">Fear of Missing Out</div>
+    </div>
+    <div class="bd">
+      <div class="bd-q" style="border-color:#a855f7;">남들은 다 누리는데<br>나만 모르는 것 같은 불안,<br>느껴보신 적 있나요?</div>
+      <div class="bd-desc">소외되는 것에 대한 두려움이 <strong>구매 결정을 가속</strong>시켜요. SNS에서 누군가가 쓰는 걸 보면 나도 갖고 싶어지는 것이 <strong>FOMO 마케팅의 핵심</strong>입니다.</div>
+      <div class="bd-tip" style="background:#faf5ff;border:1px solid rgba(168,85,247,.2);">
+        <div class="bd-tip-l" style="color:#4c1d95;">💡 비즈니스 활용</div>
+        <div class="bd-tip-t" style="color:#5b21b6;">"○○○명이 오늘 구매했습니다"<br>"지금 ○명이 보고 있어요"<br>실시간 데이터가 FOMO를 자극합니다.</div>
+      </div>
+      <div class="bd-src">행동경제학 소비자 심리 연구</div>
+    </div>
+  </div>
+
+  <!-- S9 권위 효과 -->
+  <div class="slide" id="slide-9" style="background:#000e1c;">
+    <div class="hd" style="background:linear-gradient(155deg,#002858,#000e1c);">
+      <div class="hd-bar"><span class="hd-logo">RICH-ON</span><span class="hd-num">09/12</span></div>
+      <div class="hd-ghost">09</div>
+      <div class="hd-cat" style="color:rgba(96,165,250,.6);">브랜딩 · 신뢰</div>
+      <div class="hd-title">권위 효과</div>
+      <div class="hd-eng">Authority Bias</div>
+    </div>
+    <div class="bd">
+      <div class="bd-q" style="border-color:#3b82f6;">같은 말인데 의사가 하면<br>더 믿게 되는 건 왜일까요?</div>
+      <div class="bd-desc">인간은 <strong>전문가·권위자의 말</strong>을 더 신뢰해요. 자격증·수상·미디어 노출이 이 심리를 작동시킵니다. <strong>신뢰는 내용이 아니라 출처로 결정</strong>됩니다.</div>
+      <div class="bd-tip" style="background:#eff6ff;border:1px solid rgba(59,130,246,.2);">
+        <div class="bd-tip-l" style="color:#1e40af;">💡 비즈니스 활용</div>
+        <div class="bd-tip-t" style="color:#1d4ed8;">자격증·수상·언론 보도·전문가 추천을<br>적극 노출하세요.<br>콘텐츠보다 신뢰 지표가 먼저 보입니다.</div>
+      </div>
+      <div class="bd-src">밀그램 복종 실험 (1963) · 치알디니 권위 원칙</div>
+    </div>
+  </div>
+
+  <!-- S10 컬러 심리학 -->
+  <div class="slide" id="slide-10" style="background:#100010;">
+    <div class="hd" style="background:linear-gradient(155deg,#400040,#100010);">
+      <div class="hd-bar"><span class="hd-logo">RICH-ON</span><span class="hd-num">10/12</span></div>
+      <div class="hd-ghost">10</div>
+      <div class="hd-cat" style="color:rgba(240,171,252,.6);">브랜딩 · 디자인</div>
+      <div class="hd-title">컬러 심리학</div>
+      <div class="hd-eng">Color Psychology</div>
+    </div>
+    <div class="bd">
+      <div class="bd-q" style="border-color:#c026d3;">빨간색 "구매하기"와<br>파란색 "구매하기" 중<br>어느 쪽이 더 클릭될까요?</div>
+      <div class="bd-desc">색깔은 <strong>무의식적 감정 반응과 구매 결정</strong>에 영향을 줘요. 빨강=긴박·열정, 파랑=신뢰·안정, 초록=자연·안심. <strong>색 하나가 전환율을 바꿉니다.</strong></div>
+      <div class="bd-tip" style="background:#fdf4ff;border:1px solid rgba(192,38,211,.2);">
+        <div class="bd-tip-l" style="color:#701a75;">💡 비즈니스 활용</div>
+        <div class="bd-tip-t" style="color:#86198f;">행동 유도(CTA) 버튼은 빨강·오렌지,<br>신뢰·안정은 파랑·네이비,<br>친환경·건강은 초록을 쓰세요.</div>
+      </div>
+      <div class="bd-src">컬러 마케팅 연구 · 행동경제학 색채 심리</div>
+    </div>
+  </div>
+
+  <!-- S11 스토리텔링 효과 -->
+  <div class="slide" id="slide-11" style="background:#001808;">
+    <div class="hd" style="background:linear-gradient(155deg,#005220,#001808);">
+      <div class="hd-bar"><span class="hd-logo">RICH-ON</span><span class="hd-num">11/12</span></div>
+      <div class="hd-ghost">11</div>
+      <div class="hd-cat" style="color:rgba(74,222,128,.6);">마케팅 · 콘텐츠</div>
+      <div class="hd-title">스토리텔링 효과</div>
+      <div class="hd-eng">Narrative Transportation</div>
+    </div>
+    <div class="bd">
+      <div class="bd-q" style="border-color:#22c55e;">스펙보다 성공 사례 하나가<br>더 설득력 있는 건 왜일까요?</div>
+      <div class="bd-desc">이야기에 빠져들면 뇌는 <strong>비판적 사고가 낮아지고 감정이 개입</strong>돼요. 숫자와 스펙보다 스토리가 <strong>10배 더 기억</strong>에 남고 행동을 이끕니다.</div>
+      <div class="bd-tip" style="background:#f0fdf4;border:1px solid rgba(34,197,94,.2);">
+        <div class="bd-tip-l" style="color:#14532d;">💡 비즈니스 활용</div>
+        <div class="bd-tip-t" style="color:#166534;">제품 기능 설명보다<br>"이 고객은 이렇게 바뀌었어요"<br>실제 변화 스토리로 설득하세요.</div>
+      </div>
+      <div class="bd-src">멜라니에 그린 서사 전이 이론 · 뇌과학 연구</div>
+    </div>
+  </div>
+
+  <!-- S12 손실 회피 가격 전략 -->
+  <div class="slide" id="slide-12" style="background:#180800;">
+    <div class="hd" style="background:linear-gradient(155deg,#5a1500,#180800);">
+      <div class="hd-bar"><span class="hd-logo">RICH-ON</span><span class="hd-num">12/12</span></div>
+      <div class="hd-ghost">12</div>
+      <div class="hd-cat" style="color:rgba(251,146,60,.6);">가격 · 영업</div>
+      <div class="hd-title">손실 회피 가격</div>
+      <div class="hd-eng">Loss Aversion Pricing</div>
+    </div>
+    <div class="bd">
+      <div class="bd-q" style="border-color:#ea580c;">"무료 체험 후 결제"가<br>"처음부터 유료"보다<br>왜 해지율이 낮을까요?</div>
+      <div class="bd-desc">한 번 경험한 것을 <strong>잃는 고통</strong>이 처음부터 없었던 것보다 훨씬 강해요. 무료 체험은 소유감을 먼저 만들어 <strong>해지를 어렵게</strong> 만드는 전략입니다.</div>
+      <div class="bd-tip" style="background:#fff7ed;border:1px solid rgba(234,88,12,.2);">
+        <div class="bd-tip-l" style="color:#7c2d12;">💡 비즈니스 활용</div>
+        <div class="bd-tip-t" style="color:#9a3412;">무료 체험·샘플·시범 서비스를<br>먼저 제공하세요.<br>경험 후 결제 전환율이 훨씬 높습니다.</div>
+      </div>
+      <div class="bd-src">카너먼 손실 회피 이론 · 행동경제학</div>
+    </div>
+  </div>
+
+  <!-- S13 마무리 -->
+  <div class="slide" id="slide-13">
+    <div class="s11-bg"></div><div class="s11-glow"></div>
+    <div class="s11-inner">
+      <div class="smk" style="width:40px;height:40px;"><div class="smkr"></div><div class="smkr2"></div><div class="smkd" style="width:20px;height:20px;"></div><div class="smkd2" style="width:14px;height:14px;background:#080818;"></div><div class="smkrr" style="font-size:13px;">R</div></div>
+      <div class="s-rn" style="font-size:8.5px;">RICH-ON</div>
+      <div class="s11-warn">
+        <div class="s11-wt">💼 비즈니스에 윤리적으로 사용하세요</div>
+        <div class="s11-wd">이 기술들은 <strong style="color:#a5b4fc;">고객에게 진짜 가치를 줄 때</strong><br>가장 강력하게 작동합니다.<br>기만·조종 목적 사용 시 반드시 역효과가 납니다</div>
+      </div>
+      <div class="s11-q">"심리학을 아는 사람과<br>모르는 사람의 비즈니스 결과는<br>같은 상품으로도 달라집니다"</div>
+      <div class="s11-attr">— 비즈니스 심리학의 핵심 —</div>
+      <div class="s11-list">
+        <div class="s11-item"><div class="s11-ci" style="background:rgba(99,102,241,.2);color:#818cf8;">1</div><span class="s11-ct">설득은 조종이 아닌 가치 전달입니다</span></div>
+        <div class="s11-item"><div class="s11-ci" style="background:rgba(52,211,153,.2);color:#34d399;">2</div><span class="s11-ct">신뢰가 쌓이면 수익이 따라옵니다</span></div>
+        <div class="s11-item"><div class="s11-ci" style="background:rgba(251,191,36,.2);color:#fbbf24;">3</div><span class="s11-ct">알면 써먹고, 더 알면 방어도 됩니다</span></div>
+      </div>
+      <div class="s11-foot">A-Log One × RICH-ON · 2026</div>
+    </div>
+  </div>
+
+  </div>
+  <button class="cnav cnr" onclick="go(cur+1)">&#8250;</button>
+</div>
+<div class="dots" id="dots"></div>
+<div class="pg-txt" id="pg">1 / 14</div>
+
+<!-- 아코디언 -->
+<div class="acc-wrap" id="acc-wrap"></div>
+
+<!-- 다운로드 -->
+<div class="dl-area">
+  <div class="dl-stitle">⬇ PNG 다운로드</div>
+  <div id="dl-list"></div>
+  <div class="status-bar" id="status"></div>
+  <button class="dl-all" id="btn-all" onclick="downloadAll()">💜 전체 12장 순서대로 다운로드</button>
+</div>
+
+</div>
+
+<script>
+const DATA=[
+  {id:'slide-0',  name:'표지', cat:'', color:'#6366f1', q:'', desc:'', tip:'', src:''},
+  {id:'slide-1',  name:'01 귀납법의 오류',   cat:'의사결정 · 판단',  color:'#10b981',
+    q:'"지금까지 잘 됐으니까 앞으로도 잘 되겠지" 이 생각이 왜 위험할까요?',
+    desc:'과거 사례 몇 가지로 <strong>전체를 일반화</strong>하는 사고방식이에요. "성공한 사람들은 다 새벽 5시에 일어난다"처럼 <strong>생존자만 보고 전체를 판단</strong>하면 치명적 오류가 생깁니다.',
+    tip:'성공 사례만 보지 말고 실패 사례도 반드시 분석하세요. 보이지 않는 실패가 판단을 왜곡합니다. 생존자 편향을 항상 의심해야 합니다.',
+    src:'생존자 편향 연구 · 통계적 귀납 오류 이론'},
+  {id:'slide-2',  name:'02 매몰비용 함정',   cat:'의사결정 · 투자',  color:'#ec4899',
+    q:'재미없는 영화인데 돈 아까워서 끝까지 본 적 있으신가요?',
+    desc:'이미 쓴 돈·시간·노력 때문에 <strong>잘못된 결정을 계속 유지</strong>하는 심리예요. 비즈니스에서 가장 많은 손실을 만드는 함정입니다. <strong>과거 비용은 미래 결정의 근거가 될 수 없어요.</strong>',
+    tip:'"지금 처음 시작한다면 다시 선택하겠는가?" 이 질문 하나가 매몰비용 함정을 막습니다. 손절 타이밍을 놓치게 만드는 심리입니다.',
+    src:'카너먼 손실 회피 · 아리엘리 비합리적 행동경제학'},
+  {id:'slide-3',  name:'03 프레이밍 효과',   cat:'협상 · 설득',     color:'#8b5cf6',
+    q:'"90% 생존율"과 "10% 사망률"은 같은 말인데 왜 느낌이 다를까요?',
+    desc:'똑같은 사실도 <strong>어떤 틀로 표현하느냐</strong>에 따라 사람의 판단이 달라져요. 손실로 표현하면 더 강하게 작동합니다. <strong>말의 틀이 곧 설득의 무기</strong>입니다.',
+    tip:'"할인 혜택"보다 "지금 안 하면 손해"로 표현하면 행동률이 높아집니다. 제안서·상품 설명에서 손실 프레임을 활용해 보세요.',
+    src:'카너먼 & 트버스키 프레이밍 이론 (1979)'},
+  {id:'slide-4',  name:'04 피크엔드 법칙',   cat:'고객 경험 · CS',  color:'#10b981',
+    q:'불친절했던 식당인데 마지막 서비스 하나로 기억이 좋아진 적 있나요?',
+    desc:'사람은 경험 전체가 아닌 <strong>가장 강렬했던 순간(피크)과 마지막(엔드)</strong>만 기억해요. 중간 과정보다 <strong>마무리 인상</strong>이 전체 평가를 결정합니다.',
+    tip:'미팅·서비스 마지막에 작은 감동 하나를 반드시 준비하세요. 마무리 선물·감사 메시지·예상치 못한 보너스가 고객 재방문율을 높입니다.',
+    src:'다니엘 카너먼 피크엔드 법칙 연구'},
+  {id:'slide-5',  name:'05 문전박대 기법',   cat:'협상 · 영업',     color:'#f97316',
+    q:'큰 부탁을 거절한 후 작은 부탁을 들어주고 싶은 느낌이 든 적 있으신가요?',
+    desc:'먼저 <strong>크고 거절할 만한 요청</strong>을 한 뒤 진짜 원하는 작은 것을 요청하면 수락률이 높아져요. <strong>상대적 비교 효과</strong>가 작동하기 때문입니다.',
+    tip:'협상 시 처음 제안을 원하는 것보다 크게 시작하세요. 양보 후 실제 목표를 제시하면 상대방이 합리적인 선택을 했다고 느낍니다.',
+    src:'치알디니 (1975) 상호성 기반 협상 연구'},
+  {id:'slide-6',  name:'06 선택의 역설',     cat:'마케팅 · UX',     color:'#0ea5e9',
+    q:'메뉴가 너무 많으면 오히려 주문이 어려워진 경험 해보셨나요?',
+    desc:'선택지가 많아질수록 <strong>결정 피로</strong>가 쌓이고 아무것도 선택하지 않는 확률이 높아져요. <strong>선택지를 줄이면 구매율이 오릅니다.</strong>',
+    tip:'상품·서비스 옵션을 3개 이하로 줄여보세요. "추천" 하나를 강조하면 전환율이 올라갑니다. 잼 실험에서 6종이 24종보다 구매율이 10배 높았습니다.',
+    src:'베리 슈워츠 『선택의 역설』 · 잼 실험 (2000)'},
+  {id:'slide-7',  name:'07 피그말리온 효과', cat:'리더십 · HR',      color:'#f59e0b',
+    q:'"저 사람은 잘할 거야"라는 기대가 실제로 그 사람을 성장시킨다면 믿겠어요?',
+    desc:'리더의 <strong>높은 기대를 받은 사람</strong>은 실제로 더 높은 성과를 냅니다. 반대로 낮은 기대는 성과를 떨어뜨려요. <strong>기대가 현실을 만듭니다.</strong>',
+    tip:'팀원에게 구체적인 기대를 말로 표현해 주세요. "너는 이걸 잘할 수 있어"라는 말 한 마디가 실제 성과를 바꿉니다.',
+    src:'로젠탈 & 야콥슨 (1968) 학습 기대 효과 연구'},
+  {id:'slide-8',  name:'08 FOMO 전략',       cat:'마케팅 · 콘텐츠', color:'#a855f7',
+    q:'남들은 다 누리는데 나만 모르는 것 같은 불안, 느껴보신 적 있나요?',
+    desc:'소외되는 것에 대한 두려움이 <strong>구매 결정을 가속</strong>시켜요. SNS에서 누군가가 쓰는 걸 보면 나도 갖고 싶어지는 것이 <strong>FOMO 마케팅의 핵심</strong>입니다.',
+    tip:'"○○○명이 오늘 구매했습니다", "지금 ○명이 보고 있어요" 같은 실시간 데이터가 FOMO를 자극합니다. 한정판·멤버십 전략과 결합하면 효과가 극대화됩니다.',
+    src:'행동경제학 소비자 심리 연구'},
+  {id:'slide-9',  name:'09 권위 효과',        cat:'브랜딩 · 신뢰',  color:'#3b82f6',
+    q:'같은 말인데 의사가 하면 더 믿게 되는 건 왜일까요?',
+    desc:'인간은 <strong>전문가·권위자의 말</strong>을 더 신뢰해요. 자격증·수상·미디어 노출이 이 심리를 작동시킵니다. <strong>신뢰는 내용이 아니라 출처로 결정</strong>됩니다.',
+    tip:'자격증·수상·언론 보도·전문가 추천을 적극 노출하세요. 콘텐츠보다 신뢰 지표가 먼저 보이는 구조가 전환율을 높입니다.',
+    src:'밀그램 복종 실험 (1963) · 치알디니 권위 원칙'},
+  {id:'slide-10', name:'10 컬러 심리학',      cat:'브랜딩 · 디자인', color:'#c026d3',
+    q:'빨간색 "구매하기"와 파란색 "구매하기" 중 어느 쪽이 더 클릭될까요?',
+    desc:'색깔은 <strong>무의식적 감정 반응과 구매 결정</strong>에 영향을 줘요. 빨강=긴박·열정, 파랑=신뢰·안정, 초록=자연·안심. <strong>색 하나가 전환율을 바꿉니다.</strong>',
+    tip:'행동 유도(CTA) 버튼은 빨강·오렌지, 신뢰·안정은 파랑·네이비, 친환경·건강은 초록을 쓰세요. 색상 하나 바꾸는 A/B 테스트가 큰 차이를 만듭니다.',
+    src:'컬러 마케팅 연구 · 행동경제학 색채 심리'},
+  {id:'slide-11', name:'11 스토리텔링 효과', cat:'마케팅 · 콘텐츠',  color:'#22c55e',
+    q:'스펙보다 성공 사례 하나가 더 설득력 있는 건 왜일까요?',
+    desc:'이야기에 빠져들면 뇌는 <strong>비판적 사고가 낮아지고 감정이 개입</strong>돼요. 숫자와 스펙보다 스토리가 <strong>10배 더 기억</strong>에 남고 행동을 이끕니다.',
+    tip:'제품 기능 설명보다 "이 고객은 이렇게 바뀌었어요" 같은 실제 변화 스토리로 설득하세요. 고객 인터뷰·후기·성공 사례가 가장 강력한 콘텐츠입니다.',
+    src:'멜라니에 그린 서사 전이 이론 · 뇌과학 연구'},
+  {id:'slide-12', name:'12 손실 회피 가격',  cat:'가격 · 영업',      color:'#ea580c',
+    q:'"무료 체험 후 결제"가 "처음부터 유료"보다 왜 해지율이 낮을까요?',
+    desc:'한 번 경험한 것을 <strong>잃는 고통</strong>이 처음부터 없었던 것보다 훨씬 강해요. 무료 체험은 소유감을 먼저 만들어 <strong>해지를 어렵게</strong> 만드는 전략입니다.',
+    tip:'무료 체험·샘플·시범 서비스를 먼저 제공하세요. 경험 후 결제 전환율이 처음부터 유료보다 훨씬 높습니다. 넷플릭스·쿠팡와우가 이 전략의 대표 사례입니다.',
+    src:'카너먼 손실 회피 이론 · 행동경제학'},
+  {id:'slide-13', name:'마무리', cat:'', color:'#6366f1', q:'', desc:'', tip:'', src:''},
+];
+
+let cur=0,tot=14;
+const tk=document.getElementById('tk');
+const dotsEl=document.getElementById('dots');
+const pgEl=document.getElementById('pg');
+for(let i=0;i<tot;i++){const d=document.createElement('div');d.className='dot'+(i===0?' on':'');d.onclick=()=>go(i);dotsEl.appendChild(d);}
+
+function go(n){
+  cur=Math.max(0,Math.min(tot-1,n));
+  tk.scrollTo({left:cur*tk.offsetWidth,behavior:'smooth'});
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===cur));
+  pgEl.textContent=(cur+1)+' / '+tot;
+  if(n>=1&&n<=12){openAcc(n-1);}
+}
+tk.addEventListener('scroll',()=>{const n=Math.round(tk.scrollLeft/tk.offsetWidth);if(n!==cur){cur=n;document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('on',i===cur));pgEl.textContent=(cur+1)+' / '+tot;}},{passive:true});
+
+/* 아코디언 */
+const accWrap=document.getElementById('acc-wrap');
+DATA.slice(1,13).forEach((d,i)=>{
+  const item=document.createElement('div');
+  item.className='acc-item';item.id='acc-'+i;
+  item.innerHTML=`
+    <div class="acc-head" onclick="toggleAcc(${i},${i+1})">
+      <div class="acc-head-left">
+        <div class="acc-num" style="background:${d.color}22;color:${d.color};">${String(i+1).padStart(2,'0')}</div>
+        <div><div class="acc-name">${d.name.replace(/^\d+\s/,'')}</div><div class="acc-cat">${d.cat}</div></div>
+      </div>
+      <div class="acc-right">
+        <span class="acc-go" onclick="event.stopPropagation();go(${i+1})">슬라이드 보기 ↑</span>
+        <span class="acc-arrow">▼</span>
+      </div>
+    </div>
+    <div class="acc-body"><div class="acc-content">
+      <div class="acc-q" style="border-color:${d.color};">${d.q}</div>
+      <div class="acc-desc">${d.desc}</div>
+      <div class="acc-tip" style="background:${d.color}11;border:1px solid ${d.color}22;">
+        <div class="acc-tip-l" style="color:${d.color};">💡 비즈니스 활용</div>
+        <div class="acc-tip-t" style="color:${d.color}cc;">${d.tip}</div>
+      </div>
+      <div class="acc-src">${d.src}</div>
+    </div></div>`;
+  accWrap.appendChild(item);
+});
+
+function toggleAcc(idx,slideIdx){
+  const item=document.getElementById('acc-'+idx);
+  const isOpen=item.classList.contains('active');
+  document.querySelectorAll('.acc-item').forEach(el=>el.classList.remove('active'));
+  if(!isOpen){item.classList.add('active');go(slideIdx);setTimeout(()=>item.scrollIntoView({behavior:'smooth',block:'nearest'}),200);}
+}
+function openAcc(idx){
+  document.querySelectorAll('.acc-item').forEach(el=>el.classList.remove('active'));
+  const item=document.getElementById('acc-'+idx);if(item)item.classList.add('active');
+}
+
+/* 다운로드 */
+const dlList=document.getElementById('dl-list');
+DATA.forEach((d,i)=>{
+  const btn=document.createElement('div');btn.className='dl-btn';btn.id='dlbtn-'+i;
+  btn.innerHTML=`<div class="dl-btn-left"><div class="dl-btn-icon" style="background:${d.color}20;color:${d.color};">📄</div><div><div class="dl-btn-name">${d.name}</div><div class="dl-btn-sub">PNG 저장</div></div></div><span class="dl-btn-arrow">↓</span>`;
+  btn.onclick=()=>downloadOne(i);dlList.appendChild(btn);
+});
+
+async function downloadOne(idx){
+  const btn=document.getElementById('dlbtn-'+idx);
+  const el=document.getElementById(DATA[idx].id);
+  if(!el||!btn)return;
+  btn.classList.add('loading');btn.querySelector('.dl-btn-arrow').textContent='⏳';setStatus('캡처 중… '+DATA[idx].name);
+  try{
+    const canvas=await html2canvas(el,{scale:3,useCORS:true,allowTaint:true,backgroundColor:null,width:el.offsetWidth,height:el.offsetHeight,logging:false});
+    const link=document.createElement('a');
+    link.download='richon_비즈니스심리_'+(idx+1).toString().padStart(2,'0')+'_'+DATA[idx].name+'.png';
+    link.href=canvas.toDataURL('image/png');link.click();
+    btn.classList.remove('loading');btn.classList.add('done');btn.querySelector('.dl-btn-arrow').textContent='✓';
+    setStatus('✅ 저장 완료 · '+DATA[idx].name);
+  }catch(e){btn.classList.remove('loading');btn.querySelector('.dl-btn-arrow').textContent='↓';setStatus('⚠️ 다시 시도해 주세요');}
+}
+async function downloadAll(){
+  const ab=document.getElementById('btn-all');ab.disabled=true;ab.textContent='⏳ 저장 중…';
+  for(let i=0;i<DATA.length;i++){setStatus((i+1)+'/'+DATA.length+' 처리 중… '+DATA[i].name);await downloadOne(i);await new Promise(r=>setTimeout(r,600));}
+  ab.disabled=false;ab.textContent='✅ 전체 다운로드 완료!';setStatus('🎉 12장 모두 저장됐어요! 인스타에 올려보세요 💜');
+}
+function setStatus(msg){document.getElementById('status').textContent=msg;}
+</script>
+</body>
+</html>
