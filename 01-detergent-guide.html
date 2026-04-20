@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>세제 알고 쓰자 | 리치온</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Black+Han+Sans&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Noto Sans KR',sans-serif;background:#0f1a0f;color:#fff;overflow-x:hidden;}
+
+/* HERO */
+.hero{
+  background:linear-gradient(160deg,#0d3d22,#1a5c34,#0a2e18);
+  padding:40px 20px 36px;text-align:center;position:relative;overflow:hidden;
+}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 30%,rgba(212,175,55,.08),transparent 60%);}
+.logo{display:inline-flex;align-items:center;gap:14px;margin-bottom:18px;position:relative;}
+.logo-mark{width:52px;height:52px;position:relative;flex-shrink:0;}
+.logo-mark-outer{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(212,175,55,.5);}
+.logo-mark-inner{position:absolute;top:50%;left:50%;width:28px;height:28px;background:linear-gradient(135deg,#f5e06e,#d4af37,#b8860b);transform:translate(-50%,-50%) rotate(45deg);border-radius:4px;}
+.logo-mark-r{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:20px;font-weight:900;color:#0d3d22;letter-spacing:0;}
+.logo-text-col{display:flex;flex-direction:column;gap:4px;}
+.logo-name{font-family:'Cinzel',serif;font-size:28px;font-weight:900;letter-spacing:7px;line-height:1;background:linear-gradient(160deg,#f5e06e 0%,#d4af37 50%,#c9a227 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.logo-slogan{display:flex;align-items:center;gap:7px;}
+.logo-slogan-line{width:22px;height:1px;background:rgba(212,175,55,.5);}
+.logo-slogan-text{font-family:'Noto Sans KR',sans-serif;font-size:10px;font-weight:300;color:rgba(212,175,55,.65);letter-spacing:3px;}
+.hero h1{font-family:'Black Han Sans',sans-serif;font-size:clamp(38px,10vw,68px);color:#fff;margin-bottom:6px;line-height:1.1;}
+.hero h1 em{font-style:normal;color:#d4af37;}
+.hero-sub{font-size:13px;color:rgba(255,255,255,.6);margin-bottom:20px;}
+.danger-strip{
+  display:inline-flex;align-items:center;gap:10px;
+  background:rgba(198,40,40,.9);border-radius:12px;
+  padding:10px 20px;font-size:13px;font-weight:700;color:#fff;
+  border:1px solid rgba(255,120,120,.4);margin-bottom:20px;
+}
+.cp-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,#d4af37,#b8860b);
+  color:#0d3d22;font-size:14px;font-weight:900;
+  padding:13px 28px;border-radius:999px;text-decoration:none;
+  box-shadow:0 6px 20px rgba(212,175,55,.35);
+}
+
+/* GRID */
+.sec{padding:28px 16px 8px;text-align:center;}
+.sec h2{font-family:'Black Han Sans',sans-serif;font-size:20px;color:#d4af37;margin-bottom:4px;}
+.sec p{font-size:12px;color:rgba(255,255,255,.5);}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;padding:12px 16px 28px;max-width:1100px;margin:0 auto;}
+
+/* CARD */
+.card{
+  border-radius:20px;overflow:hidden;
+  background:#1a2a1a;border:1.5px solid rgba(255,255,255,.08);
+  transition:transform .25s,box-shadow .25s;
+  animation:up .5s ease both;
+}
+.card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,.4);}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* 카드 상단 컬러 헤더 */
+.c-top{
+  padding:18px 18px 14px;
+  display:flex;align-items:center;gap:14px;
+}
+.c-emoji-wrap{
+  width:64px;height:64px;border-radius:18px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:36px;flex-shrink:0;position:relative;
+}
+.c-badge{
+  position:absolute;bottom:-4px;right:-4px;
+  width:22px;height:22px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;font-weight:900;color:#fff;
+  border:2px solid #1a2a1a;
+}
+.c-title-wrap{}
+.c-num{font-size:10px;font-weight:700;letter-spacing:2px;opacity:.6;margin-bottom:2px;}
+.c-title{font-size:20px;font-weight:900;line-height:1.1;margin-bottom:2px;}
+.c-sub{font-size:10px;opacity:.55;letter-spacing:.5px;}
+
+/* pH 바 */
+.ph-bar-wrap{padding:0 18px 14px;}
+.ph-label-row{display:flex;justify-content:space-between;font-size:10px;color:rgba(255,255,255,.45);margin-bottom:5px;}
+.ph-track{height:8px;border-radius:999px;background:rgba(255,255,255,.08);position:relative;overflow:hidden;}
+.ph-fill{height:100%;border-radius:999px;position:absolute;left:0;top:0;}
+.ph-marker{
+  position:absolute;top:-4px;
+  width:16px;height:16px;border-radius:50%;
+  border:2.5px solid #fff;
+  transform:translateX(-50%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:7px;font-weight:900;color:#fff;
+}
+.ph-value{text-align:center;font-size:11px;font-weight:700;margin-top:6px;}
+
+/* 핵심 장점 — 아이콘+텍스트 */
+.pros{padding:0 18px 12px;display:flex;flex-direction:column;gap:7px;}
+.pro-item{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(255,255,255,.04);border-radius:10px;
+  padding:8px 12px;
+}
+.pro-icon{font-size:20px;width:28px;text-align:center;flex-shrink:0;}
+.pro-text{font-size:12px;line-height:1.4;color:rgba(255,255,255,.85);}
+.pro-text strong{font-weight:700;display:block;font-size:13px;color:#fff;}
+
+/* 사용처 칩 */
+.use-wrap{display:flex;flex-wrap:wrap;gap:5px;padding:0 18px 12px;}
+.use-chip{font-size:11px;font-weight:600;padding:4px 10px;border-radius:999px;border:1px solid;}
+/* ★ 고수 비법 */
+.tips-wrap{padding:0 18px 12px;}
+.tips-title{font-size:10px;font-weight:700;color:#d4af37;letter-spacing:1px;margin-bottom:7px;display:flex;align-items:center;gap:5px;}
+.tip-item{display:flex;align-items:flex-start;gap:8px;background:linear-gradient(135deg,rgba(212,175,55,.1),rgba(212,175,55,.04));border:1px solid rgba(212,175,55,.25);border-radius:10px;padding:8px 11px;margin-bottom:6px;}
+.tip-item:last-child{margin-bottom:0;}
+.tip-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.tip-text{font-size:11px;line-height:1.55;color:rgba(255,255,255,.82);}
+.tip-text strong{color:#f5e06e;font-weight:700;display:block;font-size:12px;margin-bottom:1px;}
+
+/* 주의 + 금지 */
+.bottom-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 18px 16px;}
+.warn-box{border-radius:12px;padding:10px 12px;}
+.warn-box .wb-title{font-size:10px;font-weight:700;margin-bottom:5px;display:flex;align-items:center;gap:4px;}
+.warn-box .wb-item{font-size:10px;color:rgba(255,255,255,.7);line-height:1.7;display:flex;gap:4px;}
+
+/* 구매 버튼 */
+.buy-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  margin:0 18px 18px;padding:11px;border-radius:13px;
+  font-size:12px;font-weight:800;text-decoration:none;
+  transition:filter .2s;
+}
+.buy-btn:hover{filter:brightness(1.1);}
+
+/* ══ 혼합금지 섹션 ══ */
+.nomix-section{padding:0 16px 28px;max-width:1100px;margin:0 auto;}
+.nomix-header{
+  background:linear-gradient(135deg,#7b0000,#c62828);
+  border-radius:16px 16px 0 0;padding:16px 20px;
+  display:flex;align-items:center;gap:10px;
+}
+.nomix-header h3{font-family:'Black Han Sans',sans-serif;font-size:18px;color:#fff;}
+.nomix-grid{
+  background:#1a0a0a;border:1.5px solid rgba(255,100,100,.15);
+  border-radius:0 0 16px 16px;padding:16px;
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;
+}
+.nomix-item{
+  background:rgba(198,40,40,.12);border:1px solid rgba(255,100,100,.2);
+  border-radius:12px;padding:12px;
+}
+.nomix-combo{font-size:13px;font-weight:800;color:#ff8080;margin-bottom:4px;}
+.nomix-result{font-size:11px;color:rgba(255,200,200,.75);line-height:1.6;}
+.nomix-skull{font-size:16px;margin-bottom:4px;}
+
+/* ══ 비교 인포그래픽 ══ */
+.compare-section{padding:0 16px 28px;max-width:1100px;margin:0 auto;}
+.compare-card{background:#1a2a1a;border-radius:16px;padding:20px;border:1.5px solid rgba(212,175,55,.15);}
+.compare-card h3{font-family:'Black Han Sans',sans-serif;font-size:18px;color:#d4af37;margin-bottom:16px;text-align:center;}
+.compare-row{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 12px;border-radius:10px;margin-bottom:6px;
+  background:rgba(255,255,255,.03);
+}
+.cr-emoji{font-size:22px;width:32px;text-align:center;flex-shrink:0;}
+.cr-name{font-size:13px;font-weight:700;width:90px;flex-shrink:0;}
+.cr-bars{flex:1;display:flex;flex-direction:column;gap:3px;}
+.bar-row{display:flex;align-items:center;gap:6px;}
+.bar-label{font-size:9px;color:rgba(255,255,255,.4);width:28px;flex-shrink:0;}
+.bar-track{flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:999px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:999px;}
+.cr-use{font-size:10px;color:rgba(255,255,255,.4);width:80px;text-align:right;flex-shrink:0;}
+
+/* FOOTER */
+.footer{
+  background:linear-gradient(160deg,#061a0e,#0d3d22);
+  text-align:center;padding:28px 20px 48px;
+  border-top:1px solid rgba(212,175,55,.15);
+}
+.footer h3{font-family:'Black Han Sans',sans-serif;font-size:15px;color:#d4af37;margin-bottom:10px;}
+.footer-cp{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,#d4af37,#b8860b);
+  color:#0d3d22;font-size:13px;font-weight:900;
+  padding:12px 24px;border-radius:999px;text-decoration:none;margin-bottom:12px;
+}
+.footer-disc{font-size:10px;color:rgba(212,175,55,.35);line-height:2;}
+.footer-disc strong{color:rgba(212,175,55,.55);}
+
+@media(max-width:480px){
+  .grid,.nomix-section,.compare-section{padding-left:10px;padding-right:10px;}
+  .grid{grid-template-columns:1fr;}
+  .bottom-row{grid-template-columns:1fr;}
+  .nomix-grid{grid-template-columns:1fr 1fr;}
+}
+
+
+/* ═══ 사용 방법 가이드 박스 ═══ */
+.guide-box{
+  max-width:1100px;
+  margin:20px auto 0;
+  padding:0 16px;
+}
+.guide-inner{
+  background:linear-gradient(135deg, rgba(212,175,55,.12), rgba(212,175,55,.06));
+  border:1.5px solid rgba(212,175,55,.3);
+  border-radius:16px;
+  padding:20px 22px;
+}
+.guide-title{
+  font-family:'Black Han Sans',sans-serif;
+  font-size:17px;
+  color:#d4af37;
+  text-align:center;
+  margin-bottom:14px;
+  letter-spacing:1px;
+}
+.guide-steps{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  max-width:360px;
+  margin:0 auto;
+}
+.guide-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.guide-num{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:30px;height:30px;
+  background:linear-gradient(135deg,#d4af37,#b8860b);
+  color:#0d3d22;
+  border-radius:50%;
+  font-family:'Black Han Sans',sans-serif;
+  font-size:15px;
+  flex-shrink:0;
+  box-shadow:0 3px 8px rgba(212,175,55,.35);
+}
+.guide-text{
+  font-size:13px;
+  color:rgba(255,255,255,.88);
+  font-weight:500;
+  letter-spacing:-.3px;
+}
+
+/* ═══ 검색어 박스 ═══ */
+.search-box{
+  margin:0 18px 12px;
+  background:rgba(212,175,55,.08);
+  border:1px dashed rgba(212,175,55,.35);
+  border-radius:12px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.search-label{
+  font-size:10px;
+  font-weight:700;
+  color:#d4af37;
+  letter-spacing:1px;
+  flex-shrink:0;
+}
+.search-keyword{
+  flex:1;
+  font-size:12px;
+  color:#fff;
+  font-weight:600;
+  line-height:1.3;
+  word-break:keep-all;
+}
+.copy-btn{
+  background:linear-gradient(135deg,#d4af37,#b8860b);
+  color:#0d3d22;
+  border:none;
+  padding:7px 10px;
+  border-radius:8px;
+  font-size:13px;
+  font-weight:700;
+  cursor:pointer;
+  flex-shrink:0;
+  transition:all .2s;
+  min-width:36px;
+}
+.copy-btn:hover{filter:brightness(1.15);transform:translateY(-1px)}
+.copy-btn.copied{
+  background:linear-gradient(135deg,#4caf50,#2e7d32);
+  color:#fff;
+}
+
+/* ═══ 구매 버튼 2개 (쿠팡+알리) ═══ */
+.buy-btn-row{
+  display:flex;
+  gap:8px;
+  margin:0 18px 18px;
+}
+.buy-btn-small{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  padding:11px 6px;
+  border-radius:13px;
+  font-size:11.5px;
+  font-weight:800;
+  text-decoration:none;
+  transition:filter .2s;
+}
+.buy-btn-small:hover{filter:brightness(1.1)}
+.buy-cp{
+  background:linear-gradient(135deg,#ff6b35,#e55a2b);
+  color:#fff;
+}
+.buy-ali{
+  background:linear-gradient(135deg,#ff4747,#d32f2f);
+  color:#fff;
+}
+
+/* ═══ 푸터 경고 박스 (가격비교 필수) ═══ */
+.footer-warning{
+  max-width:500px;
+  margin:0 auto 24px;
+  background:linear-gradient(135deg, rgba(212,175,55,.15), rgba(212,175,55,.05));
+  border:1.5px solid rgba(212,175,55,.4);
+  border-radius:14px;
+  padding:16px 20px;
+  font-size:15px;
+  font-weight:700;
+  color:#f5e06e;
+  line-height:1.6;
+}
+.footer-warning strong{
+  color:#ffd700;
+  font-size:17px;
+  font-family:'Black Han Sans',sans-serif;
+  letter-spacing:.5px;
+}
+.footer-warning-sub{
+  display:block;
+  font-size:11px;
+  font-weight:500;
+  color:rgba(255,255,255,.65);
+  margin-top:6px;
+  letter-spacing:-.3px;
+}
+
+/* ═══ 파트너스 4개 그리드 ═══ */
+.partner-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(140px, 1fr));
+  gap:10px;
+  max-width:640px;
+  margin:0 auto;
+}
+.partner-btn{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  padding:16px 10px;
+  border-radius:14px;
+  text-decoration:none;
+  color:#fff;
+  font-weight:700;
+  transition:all .25s;
+  box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+.partner-btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 8px 20px rgba(0,0,0,.35);
+  filter:brightness(1.1);
+}
+.partner-btn .partner-icon{font-size:28px}
+.partner-btn .partner-name{
+  font-family:'Black Han Sans',sans-serif;
+  font-size:15px;
+  letter-spacing:.5px;
+}
+.partner-btn .partner-desc{
+  font-size:10px;
+  font-weight:500;
+  opacity:.85;
+  letter-spacing:-.2px;
+  text-align:center;
+  line-height:1.3;
+}
+.partner-btn.cp{background:linear-gradient(135deg,#ff6b35,#e55a2b)}
+.partner-btn.ali{background:linear-gradient(135deg,#ff4747,#d32f2f)}
+.partner-btn.temu{background:linear-gradient(135deg,#ff8a00,#ff5722)}
+.partner-btn.trip{background:linear-gradient(135deg,#2196f3,#1565c0)}
+
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <!-- 리치온 로고 -->
+  <div class="logo">
+    <div class="logo-mark">
+      <div class="logo-mark-outer"></div>
+      <div class="logo-mark-inner"></div>
+      <div class="logo-mark-r">R</div>
+    </div>
+    <div class="logo-text-col">
+      <div class="logo-name">RICH-ON</div>
+      <div class="logo-slogan">
+        <div class="logo-slogan-line"></div>
+        <div class="logo-slogan-text">풍요로운 일상이 켜지다</div>
+        <div class="logo-slogan-line"></div>
+      </div>
+    </div>
+  </div>
+  <h1>세제 <em>알고</em> 쓰자</h1>
+
+</div>
+
+<!-- ═══ 사용 방법 4단계 ═══ -->
+<div class="guide-box">
+  <div class="guide-inner">
+    <div class="guide-title">🔍 최저가로 찾아가는 방법</div>
+    <div class="guide-steps">
+      <div class="guide-row"><span class="guide-num">1</span><span class="guide-text">마음에 드는 세제 확인</span></div>
+      <div class="guide-row"><span class="guide-num">2</span><span class="guide-text">📋 버튼으로 검색어 복사</span></div>
+      <div class="guide-row"><span class="guide-num">3</span><span class="guide-text">링크 타고 가서 붙여넣기</span></div>
+      <div class="guide-row"><span class="guide-num">4</span><span class="guide-text">가격·품질 비교 후 구매하기</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="sec"><h2>세제 6가지 완전 정복</h2><p>핵심 기능 · 사용처 · 주의사항 한눈에</p></div>
+
+<div class="grid">
+
+<!-- ══ 01 락스 ══ -->
+<div class="card" style="animation-delay:.04s">
+  <div class="c-top" style="background:linear-gradient(135deg,rgba(198,40,40,.35),rgba(183,28,28,.15))">
+    <div class="c-emoji-wrap" style="background:rgba(198,40,40,.2)">
+      🧴
+      <div class="c-badge" style="background:#c62828;">01</div>
+    </div>
+    <div class="c-title-wrap">
+      <div class="c-num" style="color:#ff8080;">염소계 표백제</div>
+      <div class="c-title" style="color:#ff6b6b;">락스</div>
+      <div class="c-sub">NaClO · 강알칼리</div>
+    </div>
+  </div>
+  <!-- pH 바 -->
+  <div class="ph-bar-wrap">
+    <div class="ph-label-row"><span>산성 pH1</span><span>중성 pH7</span><span>알칼리 pH14</span></div>
+    <div class="ph-track">
+      <div class="ph-fill" style="width:100%;background:linear-gradient(90deg,#ff6b6b,#c62828,#7b0000);opacity:.6;"></div>
+      <div class="ph-marker" style="left:86%;background:#c62828;">12</div>
+    </div>
+    <div class="ph-value" style="color:#ff6b6b;">pH 12 · 강알칼리</div>
+  </div>
+  <!-- 핵심 장점 -->
+  <div class="pros">
+    <div class="pro-item"><div class="pro-icon">🦠</div><div class="pro-text"><strong>살균·소독 최강</strong>세균·바이러스·곰팡이 99.9% 제거</div></div>
+    <div class="pro-item"><div class="pro-icon">🚽</div><div class="pro-text"><strong>욕실 곰팡이 제거</strong>타일·변기·실리콘 확실히</div></div>
+    <div class="pro-item"><div class="pro-icon">👕</div><div class="pro-text"><strong>흰 옷 표백</strong>누런 흰 옷 → 다시 하얗게</div></div>
+  </div>
+  <!-- 사용처 -->
+  <div class="use-wrap">
+    <span class="use-chip" style="background:rgba(198,40,40,.15);color:#ff8080;border-color:rgba(198,40,40,.3);">🚿 욕실</span>
+    <span class="use-chip" style="background:rgba(198,40,40,.15);color:#ff8080;border-color:rgba(198,40,40,.3);">🍽️ 도마</span>
+    <span class="use-chip" style="background:rgba(198,40,40,.15);color:#ff8080;border-color:rgba(198,40,40,.3);">🚽 변기</span>
+  </div>
+  <div class="tips-wrap">
+    <div class="tips-title">⭐ 고수의 비법</div>
+    <div class="tip-item"><div class="tip-icon">💧</div><div class="tip-text"><strong>용도별 정확한 희석 비율</strong>일반소독·변기 = 물 1L + 락스 10mL (100배) / 곰팡이 제거 = 물 1L + 락스 20mL (50배) / 흰 옷 표백 = 물 1L + 락스 1mL (1000배)</div></div>
+    <div class="tip-item"><div class="tip-icon">🧻</div><div class="tip-text"><strong>화장지 습포법</strong>곰팡이 위에 화장지 올리고 락스 희석액 적셔 10~15분 밀착 방치 → 브러시 없이도 깔끔하게 제거</div></div>
+    <div class="tip-item"><div class="tip-icon">⏰</div><div class="tip-text"><strong>오염 제거 후 락스 사용</strong>세제로 오염 먼저 제거 → 헹군 후 락스 사용 (잔류 세제가 있으면 효과 반감, 유한락스 공식 안내)</div></div>
+  </div>
+  <!-- 주의 + 금지 -->
+  <div class="bottom-row">
+    <div class="warn-box" style="background:rgba(255,152,0,.1);border:1px solid rgba(255,152,0,.2);">
+      <div class="wb-title" style="color:#ffb74d;">⚠️ 주의</div>
+      <div class="wb-item">💧 찬물만 희석</div>
+      <div class="wb-item">🧤 장갑 필수</div>
+      <div class="wb-item">🌬️ 환기 필수</div>
+    </div>
+    <div class="warn-box" style="background:rgba(198,40,40,.1);border:1px solid rgba(198,40,40,.2);">
+      <div class="wb-title" style="color:#ff6b6b;">🚫 절대 금지</div>
+      <div class="wb-item">☠️ 구연산·식초</div>
+      <div class="wb-item">☠️ 과탄산소다</div>
+      <div class="wb-item">☠️ 주방세제</div>
+    </div>
+  </div>
+  <!-- 검색어 박스 -->
+  <div class="search-box">
+    <span class="search-label">🔎 검색어</span>
+    <div class="search-keyword" id="kw-01">유한락스 레귤러 세정제</div>
+    <button class="copy-btn" onclick="copyKw('kw-01', this)">📋</button>
+  </div>
+  <!-- 구매 버튼 2개 (쿠팡+알리) -->
+  <div class="buy-btn-row">
+    <a href="https://link.coupang.com/a/ek5cwF" onclick="window.location.href='https://link.coupang.com/a/ek5cwF';return false;" class="buy-btn-small buy-cp">🛒 쿠팡에서 검색</a>
+    <a href="https://bitl.bz/fjcH9p" onclick="window.location.href='https://bitl.bz/fjcH9p';return false;" class="buy-btn-small buy-ali">🛍️ 알리에서 검색</a>
+  </div>
+</div>
+
+<!-- ══ 02 과탄산소다 ══ -->
+<div class="card" style="animation-delay:.08s">
+  <div class="c-top" style="background:linear-gradient(135deg,rgba(46,125,50,.35),rgba(27,94,32,.15))">
+    <div class="c-emoji-wrap" style="background:rgba(46,125,50,.2)">
+      🌿
+      <div class="c-badge" style="background:#2e7d32;">02</div>
+    </div>
+    <div class="c-title-wrap">
+      <div class="c-num" style="color:#81c784;">산소계 표백제</div>
+      <div class="c-title" style="color:#a5d6a7;">과탄산소다</div>
+      <div class="c-sub">Na₂CO₃·1.5H₂O₂ · 중알칼리</div>
+    </div>
+  </div>
+  <div class="ph-bar-wrap">
+    <div class="ph-label-row"><span>산성 pH1</span><span>중성 pH7</span><span>알칼리 pH14</span></div>
+    <div class="ph-track">
+      <div class="ph-fill" style="width:100%;background:linear-gradient(90deg,#81c784,#2e7d32);opacity:.5;"></div>
+      <div class="ph-marker" style="left:64%;background:#2e7d32;">10</div>
+    </div>
+    <div class="ph-value" style="color:#81c784;">pH 10 · 중알칼리 · 60℃ 이상 활성화!</div>
+  </div>
+  <div class="pros">
+    <div class="pro-item"><div class="pro-icon">🫧</div><div class="pro-text"><strong>세탁조 청소 최강</strong>세탁기 냄새·곰팡이 제거</div></div>
+    <div class="pro-item"><div class="pro-icon">🎨</div><div class="pro-text"><strong>색깔 옷 표백 가능</strong>락스와 달리 색상 손상 없음</div></div>
+    <div class="pro-item"><div class="pro-icon">🍲</div><div class="pro-text"><strong>냄비·식기 불림</strong>찌든 때 손쉽게 제거</div></div>
+  </div>
+  <div class="use-wrap">
+    <span class="use-chip" style="background:rgba(46,125,50,.15);color:#81c784;border-color:rgba(46,125,50,.3);">🫧 세탁조</span>
+    <span class="use-chip" style="background:rgba(46,125,50,.15);color:#81c784;border-color:rgba(46,125,50,.3);">👕 색깔옷</span>
+    <span class="use-chip" style="background:rgba(46,125,50,.15);color:#81c784;border-color:rgba(46,125,50,.3);">🍲 냄비</span>
+  </div>
+  <div class="tips-wrap">
+    <div class="tips-title">⭐ 고수의 비법</div>
+    <div class="tip-item"><div class="tip-icon">🌡️</div><div class="tip-text"><strong>60℃ 물 + 1시간 방치</strong>세탁조에 과탄산소다 3~4큰술 넣고 1시간 → 시커먼 때 둥둥</div></div>
+    <div class="tip-item"><div class="tip-icon">🫙</div><div class="tip-text"><strong>냄비 찌든때 비법</strong>물 가득 + 과탄산소다 2큰술 끓이기 → 식으면 찌든때가 녹아있음</div></div>
+    <div class="tip-item"><div class="tip-icon">👗</div><div class="tip-text"><strong>흰 수건 삶는 효과</strong>60℃ 물 + 과탄산소다 2큰술에 30분 담가두면 삶은 것과 동일 효과</div></div>
+  </div>
+  <div class="bottom-row">
+    <div class="warn-box" style="background:rgba(255,152,0,.1);border:1px solid rgba(255,152,0,.2);">
+      <div class="wb-title" style="color:#ffb74d;">⚠️ 주의</div>
+      <div class="wb-item">🔥 60℃ 이상 물</div>
+      <div class="wb-item">❌ 울·실크 금지</div>
+      <div class="wb-item">🌬️ 환기 필수</div>
+    </div>
+    <div class="warn-box" style="background:rgba(198,40,40,.1);border:1px solid rgba(198,40,40,.2);">
+      <div class="wb-title" style="color:#ff6b6b;">🚫 절대 금지</div>
+      <div class="wb-item">☠️ 락스</div>
+      <div class="wb-item">⚠️ 구연산</div>
+      <div class="wb-item">⚠️ 식초</div>
+    </div>
+  </div>
+  <!-- 검색어 박스 -->
+  <div class="search-box">
+    <span class="search-label">🔎 검색어</span>
+    <div class="search-keyword" id="kw-02">과탄산소다 1kg 대용량</div>
+    <button class="copy-btn" onclick="copyKw('kw-02', this)">📋</button>
+  </div>
+  <!-- 구매 버튼 2개 (쿠팡+알리) -->
+  <div class="buy-btn-row">
+    <a href="https://link.coupang.com/a/ek5cwF" onclick="window.location.href='https://link.coupang.com/a/ek5cwF';return false;" class="buy-btn-small buy-cp">🛒 쿠팡에서 검색</a>
+    <a href="https://bitl.bz/fjcH9p" onclick="window.location.href='https://bitl.bz/fjcH9p';return false;" class="buy-btn-small buy-ali">🛍️ 알리에서 검색</a>
+  </div>
+</div>
+
+<!-- ══ 03 워싱소다 ══ -->
+<div class="card" style="animation-delay:.12s">
+  <div class="c-top" style="background:linear-gradient(135deg,rgba(2,119,189,.35),rgba(1,87,155,.15))">
+    <div class="c-emoji-wrap" style="background:rgba(2,119,189,.2)">
+      🧊
+      <div class="c-badge" style="background:#0277bd;">03</div>
+    </div>
+    <div class="c-title-wrap">
+      <div class="c-num" style="color:#81d4fa;">탄산나트륨</div>
+      <div class="c-title" style="color:#b3e5fc;">워싱소다</div>
+      <div class="c-sub">Na₂CO₃ · 강알칼리 · 찬물 OK</div>
+    </div>
+  </div>
+  <div class="ph-bar-wrap">
+    <div class="ph-label-row"><span>산성 pH1</span><span>중성 pH7</span><span>알칼리 pH14</span></div>
+    <div class="ph-track">
+      <div class="ph-fill" style="width:100%;background:linear-gradient(90deg,#81d4fa,#0277bd);opacity:.5;"></div>
+      <div class="ph-marker" style="left:71%;background:#0277bd;">11</div>
+    </div>
+    <div class="ph-value" style="color:#81d4fa;">pH 11 · 강알칼리 · 표백력 없음 (색옷 안전)</div>
+  </div>
+  <div class="pros">
+    <div class="pro-item"><div class="pro-icon">👃</div><div class="pro-text"><strong>쉰내 빨래 해결사</strong>수건·운동복 퀴퀴한 냄새 제거</div></div>
+    <div class="pro-item"><div class="pro-icon">🍳</div><div class="pro-text"><strong>기름때 분해 강력</strong>후드·가스레인지 기름때 녹임</div></div>
+    <div class="pro-item"><div class="pro-icon">❄️</div><div class="pro-text"><strong>찬물에도 효과</strong>과탄산소다와 차별화 포인트</div></div>
+  </div>
+  <div class="use-wrap">
+    <span class="use-chip" style="background:rgba(2,119,189,.15);color:#81d4fa;border-color:rgba(2,119,189,.3);">🧺 쉰내 빨래</span>
+    <span class="use-chip" style="background:rgba(2,119,189,.15);color:#81d4fa;border-color:rgba(2,119,189,.3);">🍳 후드</span>
+    <span class="use-chip" style="background:rgba(2,119,189,.15);color:#81d4fa;border-color:rgba(2,119,189,.3);">🫙 스텐냄비</span>
+  </div>
+  <div class="tips-wrap">
+    <div class="tips-title">⭐ 고수의 비법</div>
+    <div class="tip-item"><div class="tip-icon">👕</div><div class="tip-text"><strong>쉰내 빨래 비법</strong>세탁기 돌리기 전 워싱소다 2큰술 + 찬물에 30분 담가두기만 해도 냄새 제거</div></div>
+    <div class="tip-item"><div class="tip-icon">🍳</div><div class="tip-text"><strong>후드필터 세척</strong>뜨거운 물 + 워싱소다 풀어서 필터 30분 담그기 → 기름이 둥둥 뜸</div></div>
+    <div class="tip-item"><div class="tip-icon">🧽</div><div class="tip-text"><strong>묵은때 반죽법</strong>워싱소다 + 물 소량 섞어 반죽처럼 → 묵은때에 바르고 10분 후 닦기</div></div>
+  </div>
+  <div class="bottom-row">
+    <div class="warn-box" style="background:rgba(255,152,0,.1);border:1px solid rgba(255,152,0,.2);">
+      <div class="wb-title" style="color:#ffb74d;">⚠️ 주의</div>
+      <div class="wb-item">🧤 장갑 필수</div>
+      <div class="wb-item">❌ 알루미늄 금지</div>
+      <div class="wb-item">❌ 울·실크 금지</div>
+    </div>
+    <div class="warn-box" style="background:rgba(198,40,40,.1);border:1px solid rgba(198,40,40,.2);">
+      <div class="wb-title" style="color:#ff6b6b;">🚫 금지</div>
+      <div class="wb-item">☠️ 락스</div>
+      <div class="wb-item">⚠️ 구연산</div>
+      <div class="wb-item">⚠️ 식초</div>
+    </div>
+  </div>
+  <!-- 검색어 박스 -->
+  <div class="search-box">
+    <span class="search-label">🔎 검색어</span>
+    <div class="search-keyword" id="kw-03">워싱소다 탄산나트륨 1kg</div>
+    <button class="copy-btn" onclick="copyKw('kw-03', this)">📋</button>
+  </div>
+  <!-- 구매 버튼 2개 (쿠팡+알리) -->
+  <div class="buy-btn-row">
+    <a href="https://link.coupang.com/a/ek5cwF" onclick="window.location.href='https://link.coupang.com/a/ek5cwF';return false;" class="buy-btn-small buy-cp">🛒 쿠팡에서 검색</a>
+    <a href="https://bitl.bz/fjcH9p" onclick="window.location.href='https://bitl.bz/fjcH9p';return false;" class="buy-btn-small buy-ali">🛍️ 알리에서 검색</a>
+  </div>
+</div>
+
+<!-- ══ 04 베이킹소다 ══ -->
+<div class="card" style="animation-delay:.16s">
+  <div class="c-top" style="background:linear-gradient(135deg,rgba(21,101,192,.35),rgba(13,71,161,.15))">
+    <div class="c-emoji-wrap" style="background:rgba(21,101,192,.2)">
+      🥄
+      <div class="c-badge" style="background:#1565c0;">04</div>
+    </div>
+    <div class="c-title-wrap">
+      <div class="c-num" style="color:#90caf9;">탄산수소나트륨</div>
+      <div class="c-title" style="color:#bbdefb;">베이킹소다</div>
+      <div class="c-sub">NaHCO₃ · 약알칼리 · 식용등급</div>
+    </div>
+  </div>
+  <div class="ph-bar-wrap">
+    <div class="ph-label-row"><span>산성 pH1</span><span>중성 pH7</span><span>알칼리 pH14</span></div>
+    <div class="ph-track">
+      <div class="ph-fill" style="width:100%;background:linear-gradient(90deg,#90caf9,#1565c0);opacity:.4;"></div>
+      <div class="ph-marker" style="left:53%;background:#1565c0;">8</div>
+    </div>
+    <div class="ph-value" style="color:#90caf9;">pH 8~9 · 약알칼리 · 가장 순한 소다</div>
+  </div>
+  <div class="pros">
+    <div class="pro-item"><div class="pro-icon">👶</div><div class="pro-text"><strong>가장 안전한 세제</strong>아이·반려동물 가정 안심</div></div>
+    <div class="pro-item"><div class="pro-icon">💨</div><div class="pro-text"><strong>탈취 최고</strong>냉장고·신발장·쓰레기통</div></div>
+    <div class="pro-item"><div class="pro-icon">✨</div><div class="pro-text"><strong>연마 세정</strong>부드러운 스크럽 효과</div></div>
+  </div>
+  <div class="use-wrap">
+    <span class="use-chip" style="background:rgba(21,101,192,.15);color:#90caf9;border-color:rgba(21,101,192,.3);">❄️ 냉장고</span>
+    <span class="use-chip" style="background:rgba(21,101,192,.15);color:#90caf9;border-color:rgba(21,101,192,.3);">👟 신발</span>
+    <span class="use-chip" style="background:rgba(21,101,192,.15);color:#90caf9;border-color:rgba(21,101,192,.3);">🪥 치아</span>
+  </div>
+  <div class="tips-wrap">
+    <div class="tips-title">⭐ 고수의 비법</div>
+    <div class="tip-item"><div class="tip-icon">❄️</div><div class="tip-text"><strong>냉장고 탈취 비법</strong>작은 컵에 베이킹소다 담아 냉장고 안에 → 한 달에 한 번 교체만 해도 냄새 제로</div></div>
+    <div class="tip-item"><div class="tip-icon">🚿</div><div class="tip-text"><strong>배수구 탈취</strong>베이킹소다 뿌리고 → 뜨거운 물 부으면 거품과 함께 냄새 제거</div></div>
+    <div class="tip-item"><div class="tip-icon">🍳</div><div class="tip-text"><strong>냄비 눌음 제거</strong>물+베이킹소다 넣고 5분 끓이기 → 식은 후 수세미로 쓱 닦으면 깨끗</div></div>
+  </div>
+  <div class="bottom-row">
+    <div class="warn-box" style="background:rgba(255,152,0,.1);border:1px solid rgba(255,152,0,.2);">
+      <div class="wb-title" style="color:#ffb74d;">⚠️ 주의</div>
+      <div class="wb-item">❌ 살균력 없음</div>
+      <div class="wb-item">❌ 알루미늄</div>
+      <div class="wb-item">❌ 대리석</div>
+    </div>
+    <div class="warn-box" style="background:rgba(198,40,40,.1);border:1px solid rgba(198,40,40,.2);">
+      <div class="wb-title" style="color:#ff6b6b;">🚫 금지</div>
+      <div class="wb-item">☠️ 락스</div>
+      <div class="wb-item">⚠️ 구연산 동시</div>
+    </div>
+  </div>
+  <!-- 검색어 박스 -->
+  <div class="search-box">
+    <span class="search-label">🔎 검색어</span>
+    <div class="search-keyword" id="kw-04">베이킹소다 식용 대용량 1kg</div>
+    <button class="copy-btn" onclick="copyKw('kw-04', this)">📋</button>
+  </div>
+  <!-- 구매 버튼 2개 (쿠팡+알리) -->
+  <div class="buy-btn-row">
+    <a href="https://link.coupang.com/a/ek5cwF" onclick="window.location.href='https://link.coupang.com/a/ek5cwF';return false;" class="buy-btn-small buy-cp">🛒 쿠팡에서 검색</a>
+    <a href="https://bitl.bz/fjcH9p" onclick="window.location.href='https://bitl.bz/fjcH9p';return false;" class="buy-btn-small buy-ali">🛍️ 알리에서 검색</a>
+  </div>
+</div>
+
+<!-- ══ 05 구연산 ══ -->
+<div class="card" style="animation-delay:.20s">
+  <div class="c-top" style="background:linear-gradient(135deg,rgba(245,127,23,.35),rgba(230,81,0,.15))">
+    <div class="c-emoji-wrap" style="background:rgba(245,127,23,.2)">
+      🍋
+      <div class="c-badge" style="background:#f57f17;">05</div>
+    </div>
+    <div class="c-title-wrap">
+      <div class="c-num" style="color:#ffcc02;">유기산</div>
+      <div class="c-title" style="color:#ffe082;">구연산</div>
+      <div class="c-sub">Citric Acid · pH2~3 · 산성</div>
+    </div>
+  </div>
+  <div class="ph-bar-wrap">
+    <div class="ph-label-row"><span>산성 pH1</span><span>중성 pH7</span><span>알칼리 pH14</span></div>
+    <div class="ph-track">
+      <div class="ph-fill" style="width:100%;background:linear-gradient(90deg,#ffe082,#f57f17);opacity:.5;"></div>
+      <div class="ph-marker" style="left:14%;background:#f57f17;">2</div>
+    </div>
+    <div class="ph-value" style="color:#ffe082;">pH 2~3 · 산성 · 식품 첨가물 등급</div>
+  </div>
+  <div class="pros">
+    <div class="pro-item"><div class="pro-icon">🚿</div><div class="pro-text"><strong>물때·석회 제거 최강</strong>수도꼭지·욕조·전기포트</div></div>
+    <div class="pro-item"><div class="pro-icon">🧺</div><div class="pro-text"><strong>섬유유연제 대체</strong>헹굼 시 소량→ 보들보들</div></div>
+    <div class="pro-item"><div class="pro-icon">☕</div><div class="pro-text"><strong>전기포트 세척</strong>내부 석회 찌꺼기 제거</div></div>
+  </div>
+  <div class="use-wrap">
+    <span class="use-chip" style="background:rgba(245,127,23,.15);color:#ffe082;border-color:rgba(245,127,23,.3);">🚿 물때</span>
+    <span class="use-chip" style="background:rgba(245,127,23,.15);color:#ffe082;border-color:rgba(245,127,23,.3);">☕ 포트</span>
+    <span class="use-chip" style="background:rgba(245,127,23,.15);color:#ffe082;border-color:rgba(245,127,23,.3);">🪞 거울</span>
+  </div>
+  <div class="tips-wrap">
+    <div class="tips-title">⭐ 고수의 비법</div>
+    <div class="tip-item"><div class="tip-icon">☕</div><div class="tip-text"><strong>전기포트 석회 제거</strong>물 가득 + 구연산 1큰술 끓이기 → 식힌 후 버리면 석회 말끔히 제거</div></div>
+    <div class="tip-item"><div class="tip-icon">🧺</div><div class="tip-text"><strong>섬유유연제 대체</strong>마지막 헹굼물에 구연산 반 큰술 → 보들보들+정전기 방지 (천연 유연제)</div></div>
+    <div class="tip-item"><div class="tip-icon">🚿</div><div class="tip-text"><strong>샤워기 물때 비법</strong>비닐봉투에 구연산 물 담아 샤워기 헤드 통째로 30분 담가두면 깨끗</div></div>
+  </div>
+  <div class="bottom-row">
+    <div class="warn-box" style="background:rgba(255,152,0,.1);border:1px solid rgba(255,152,0,.2);">
+      <div class="wb-title" style="color:#ffb74d;">⚠️ 주의</div>
+      <div class="wb-item">❌ 대리석 금지</div>
+      <div class="wb-item">❌ 알루미늄</div>
+    </div>
+    <div class="warn-box" style="background:rgba(198,40,40,.1);border:1px solid rgba(198,40,40,.2);">
+      <div class="wb-title" style="color:#ff6b6b;">🚫 절대 금지</div>
+      <div class="wb-item">☠️ 락스 (사망위험)</div>
+      <div class="wb-item">⚠️ 알칼리 세제류</div>
+    </div>
+  </div>
+  <!-- 검색어 박스 -->
+  <div class="search-box">
+    <span class="search-label">🔎 검색어</span>
+    <div class="search-keyword" id="kw-05">식용 구연산 1kg 천연 청소</div>
+    <button class="copy-btn" onclick="copyKw('kw-05', this)">📋</button>
+  </div>
+  <!-- 구매 버튼 2개 (쿠팡+알리) -->
+  <div class="buy-btn-row">
+    <a href="https://link.coupang.com/a/ek5cwF" onclick="window.location.href='https://link.coupang.com/a/ek5cwF';return false;" class="buy-btn-small buy-cp">🛒 쿠팡에서 검색</a>
+    <a href="https://bitl.bz/fjcH9p" onclick="window.location.href='https://bitl.bz/fjcH9p';return false;" class="buy-btn-small buy-ali">🛍️ 알리에서 검색</a>
+  </div>
+</div>
+
+<!-- ══ 06 주방세제 ══ -->
+<div class="card" style="animation-delay:.24s">
+  <div class="c-top" style="background:linear-gradient(135deg,rgba(0,105,92,.35),rgba(0,77,64,.15))">
+    <div class="c-emoji-wrap" style="background:rgba(0,105,92,.2)">
+      🍶
+      <div class="c-badge" style="background:#00695c;">06</div>
+    </div>
+    <div class="c-title-wrap">
+      <div class="c-num" style="color:#80cbc4;">계면활성제</div>
+      <div class="c-title" style="color:#b2dfdb;">주방세제</div>
+      <div class="c-sub">Surfactant · 중성 · 매일 사용</div>
+    </div>
+  </div>
+  <div class="ph-bar-wrap">
+    <div class="ph-label-row"><span>산성 pH1</span><span>중성 pH7</span><span>알칼리 pH14</span></div>
+    <div class="ph-track">
+      <div class="ph-fill" style="width:100%;background:linear-gradient(90deg,#80cbc4,#00695c);opacity:.4;"></div>
+      <div class="ph-marker" style="left:43%;background:#00695c;">7</div>
+    </div>
+    <div class="ph-value" style="color:#80cbc4;">pH 6~8 · 중성 · 피부 자극 최소</div>
+  </div>
+  <div class="pros">
+    <div class="pro-item"><div class="pro-icon">🍽️</div><div class="pro-text"><strong>식기 세척 전용</strong>거품 풍부 · 기름기 확실히</div></div>
+    <div class="pro-item"><div class="pro-icon">🥦</div><div class="pro-text"><strong>채소·과일 세척</strong>잔류 농약 제거 가능</div></div>
+    <div class="pro-item"><div class="pro-icon">🤲</div><div class="pro-text"><strong>피부 자극 적음</strong>중성 계열 손 보호</div></div>
+  </div>
+  <div class="use-wrap">
+    <span class="use-chip" style="background:rgba(0,105,92,.15);color:#80cbc4;border-color:rgba(0,105,92,.3);">🍽️ 식기</span>
+    <span class="use-chip" style="background:rgba(0,105,92,.15);color:#80cbc4;border-color:rgba(0,105,92,.3);">🥦 채소</span>
+    <span class="use-chip" style="background:rgba(0,105,92,.15);color:#80cbc4;border-color:rgba(0,105,92,.3);">🚿 싱크대</span>
+  </div>
+  <div class="tips-wrap">
+    <div class="tips-title">⭐ 고수의 비법</div>
+    <div class="tip-item"><div class="tip-icon">🥦</div><div class="tip-text"><strong>채소 농약 제거</strong>물 2L + 주방세제 2~3방울로 1분 담금 → 흐르는 물에 30초 헹굼</div></div>
+    <div class="tip-item"><div class="tip-icon">🍳</div><div class="tip-text"><strong>기름때 전처리</strong>설거지 전 기름진 그릇에 세제 직접 바르고 30초 방치 → 기름이 쉽게 분리</div></div>
+    <div class="tip-item"><div class="tip-icon">🧽</div><div class="tip-text"><strong>수세미 살균</strong>물 1컵 + 주방세제 1방울 넣고 전자레인지 1분 → 수세미 세균 99% 제거</div></div>
+  </div>
+  <div class="bottom-row">
+    <div class="warn-box" style="background:rgba(255,152,0,.1);border:1px solid rgba(255,152,0,.2);">
+      <div class="wb-title" style="color:#ffb74d;">⚠️ 주의</div>
+      <div class="wb-item">❌ 살균 효과 없음</div>
+      <div class="wb-item">💧 충분히 헹굼</div>
+    </div>
+    <div class="warn-box" style="background:rgba(198,40,40,.1);border:1px solid rgba(198,40,40,.2);">
+      <div class="wb-title" style="color:#ff6b6b;">🚫 금지</div>
+      <div class="wb-item">☠️ 락스 절대 금지</div>
+      <div class="wb-item">⚠️ 과탄산소다</div>
+    </div>
+  </div>
+  <!-- 검색어 박스 -->
+  <div class="search-box">
+    <span class="search-label">🔎 검색어</span>
+    <div class="search-keyword" id="kw-06">주방세제 대용량 리필 식기세척</div>
+    <button class="copy-btn" onclick="copyKw('kw-06', this)">📋</button>
+  </div>
+  <!-- 구매 버튼 2개 (쿠팡+알리) -->
+  <div class="buy-btn-row">
+    <a href="https://link.coupang.com/a/ek5cwF" onclick="window.location.href='https://link.coupang.com/a/ek5cwF';return false;" class="buy-btn-small buy-cp">🛒 쿠팡에서 검색</a>
+    <a href="https://bitl.bz/fjcH9p" onclick="window.location.href='https://bitl.bz/fjcH9p';return false;" class="buy-btn-small buy-ali">🛍️ 알리에서 검색</a>
+  </div>
+</div>
+
+
+</div>
+
+<!-- ══ 혼합 금지 ══ -->
+<div class="nomix-section">
+  <div class="nomix-header">
+    <span style="font-size:28px;">☠️</span>
+    <h3>절대 섞으면 안 되는 조합</h3>
+  </div>
+  <div class="nomix-grid">
+    <div class="nomix-item"><div class="nomix-skull">💀</div><div class="nomix-combo">락스 + 구연산·식초</div><div class="nomix-result">염소가스 발생<br>→ 실제 사망 사례 있음</div></div>
+    <div class="nomix-item"><div class="nomix-skull">💀</div><div class="nomix-combo">락스 + 과탄산소다</div><div class="nomix-result">발열+염소가스<br>→ 응급실 이송 사례</div></div>
+    <div class="nomix-item"><div class="nomix-skull">💀</div><div class="nomix-combo">락스 + 주방세제</div><div class="nomix-result">염소가스 발생<br>→ 호흡기 손상</div></div>
+    <div class="nomix-item"><div class="nomix-skull">💀</div><div class="nomix-combo">락스 + 뜨거운 물</div><div class="nomix-result">60℃↑ 염소가스<br>→ 반드시 찬물 사용</div></div>
+    <div class="nomix-item"><div class="nomix-skull">⚠️</div><div class="nomix-combo">구연산 + 베이킹소다</div><div class="nomix-result">산-알칼리 중화<br>→ 거품만, 효과 없음</div></div>
+    <div class="nomix-item"><div class="nomix-skull">⚠️</div><div class="nomix-combo">과탄산소다 + 구연산</div><div class="nomix-result">표백·세정 모두 상쇄<br>→ 단독 사용할 것</div></div>
+  </div>
+</div>
+
+<!-- ══ 강도 비교 ══ -->
+<div class="compare-section">
+<div class="compare-card">
+  <h3>⚡ 세정력·살균력 한눈에 비교</h3>
+  <div class="compare-row"><div class="cr-emoji">🧴</div><div class="cr-name" style="color:#ff6b6b;">락스</div><div class="cr-bars"><div class="bar-row"><div class="bar-label" style="color:#ff6b6b;">살균</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,#ff6b6b,#c62828);"></div></div></div><div class="bar-row"><div class="bar-label" style="color:#ff6b6b;">표백</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,#ff6b6b,#c62828);"></div></div></div></div><div class="cr-use" style="color:#ff6b6b;">소독·표백</div></div>
+  <div class="compare-row"><div class="cr-emoji">🌿</div><div class="cr-name" style="color:#a5d6a7;">과탄산소다</div><div class="cr-bars"><div class="bar-row"><div class="bar-label" style="color:#a5d6a7;">살균</div><div class="bar-track"><div class="bar-fill" style="width:60%;background:linear-gradient(90deg,#a5d6a7,#2e7d32);"></div></div></div><div class="bar-row"><div class="bar-label" style="color:#a5d6a7;">표백</div><div class="bar-track"><div class="bar-fill" style="width:80%;background:linear-gradient(90deg,#a5d6a7,#2e7d32);"></div></div></div></div><div class="cr-use" style="color:#a5d6a7;">세탁표백</div></div>
+  <div class="compare-row"><div class="cr-emoji">🧊</div><div class="cr-name" style="color:#b3e5fc;">워싱소다</div><div class="cr-bars"><div class="bar-row"><div class="bar-label" style="color:#b3e5fc;">기름때</div><div class="bar-track"><div class="bar-fill" style="width:85%;background:linear-gradient(90deg,#b3e5fc,#0277bd);"></div></div></div><div class="bar-row"><div class="bar-label" style="color:#b3e5fc;">탈취</div><div class="bar-track"><div class="bar-fill" style="width:80%;background:linear-gradient(90deg,#b3e5fc,#0277bd);"></div></div></div></div><div class="cr-use" style="color:#b3e5fc;">기름·냄새</div></div>
+  <div class="compare-row"><div class="cr-emoji">🥄</div><div class="cr-name" style="color:#bbdefb;">베이킹소다</div><div class="cr-bars"><div class="bar-row"><div class="bar-label" style="color:#bbdefb;">탈취</div><div class="bar-track"><div class="bar-fill" style="width:75%;background:linear-gradient(90deg,#bbdefb,#1565c0);"></div></div></div><div class="bar-row"><div class="bar-label" style="color:#bbdefb;">안전도</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,#bbdefb,#1565c0);"></div></div></div></div><div class="cr-use" style="color:#bbdefb;">탈취·안전</div></div>
+  <div class="compare-row"><div class="cr-emoji">🍋</div><div class="cr-name" style="color:#ffe082;">구연산</div><div class="cr-bars"><div class="bar-row"><div class="bar-label" style="color:#ffe082;">물때</div><div class="bar-track"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,#ffe082,#f57f17);"></div></div></div><div class="bar-row"><div class="bar-label" style="color:#ffe082;">유연</div><div class="bar-track"><div class="bar-fill" style="width:70%;background:linear-gradient(90deg,#ffe082,#f57f17);"></div></div></div></div><div class="cr-use" style="color:#ffe082;">물때·유연</div></div>
+</div>
+</div>
+
+<!-- FOOTER ═══ 리치온 4대 파트너스 링크 ═══ -->
+<div class="footer">
+  <div class="footer-warning">
+    💡 <strong>항상 가격비교는 필수!</strong><br>
+    <span class="footer-warning-sub">같은 상품도 플랫폼마다 가격이 달라요 · 꼼꼼히 비교하고 구매하세요</span>
+  </div>
+  
+  <h3>🛒 리치온 추천 쇼핑 플랫폼</h3>
+  <div class="partner-grid">
+    <a href="https://link.coupang.com/a/ek5cwF" onclick="window.location.href='https://link.coupang.com/a/ek5cwF';return false;" class="partner-btn cp">
+      <span class="partner-icon">🛒</span>
+      <span class="partner-name">쿠팡</span>
+      <span class="partner-desc">로켓배송·국내 최저가</span>
+    </a>
+    <a href="https://bitl.bz/fjcH9p" onclick="window.location.href='https://bitl.bz/fjcH9p';return false;" class="partner-btn ali">
+      <span class="partner-icon">🛍️</span>
+      <span class="partner-name">알리익스프레스</span>
+      <span class="partner-desc">해외직구·국내배송</span>
+    </a>
+    <a href="https://bitl.bz/qQEIlA" onclick="window.location.href='https://bitl.bz/qQEIlA';return false;" class="partner-btn temu">
+      <span class="partner-icon">🛒</span>
+      <span class="partner-name">테무</span>
+      <span class="partner-desc">초저가 글로벌 쇼핑</span>
+    </a>
+    <a href="https://kr.trip.com/?Allianceid=8001792&SID=302477743&trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&trip_sub3=D14461428" onclick="window.location.href='https://kr.trip.com/?Allianceid=8001792&SID=302477743&trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&trip_sub3=D14461428';return false;" class="partner-btn trip">
+      <span class="partner-icon">✈️</span>
+      <span class="partner-name">트립닷컴</span>
+      <span class="partner-desc">여행·호텔 예약</span>
+    </a>
+  </div>
+  
+  <div style="font-size:11px;color:rgba(212,175,55,.45);margin-top:16px;">에이로그원 A-Log One × 리치온 Rich-On · 2026.04</div>
+  <div class="footer-disc">이 페이지는 쿠팡/알리/테무/트립닷컴 파트너스 활동의 일환으로 링크를 통한 구매 시 수수료가 지급됩니다.<br><strong>고객님께 추가 비용은 전혀 없습니다.</strong></div>
+</div>
+<script>
+// 카드 애니메이션
+document.querySelectorAll('.card').forEach((c,i)=>{c.style.animationDelay=(i*.06)+'s';});
+
+// 📋 검색어 복사 기능
+function copyKw(id, btn){
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(()=>{
+    const originalText = btn.innerText;
+    btn.innerText = '✓';
+    btn.classList.add('copied');
+    setTimeout(()=>{
+      btn.innerText = originalText;
+      btn.classList.remove('copied');
+    }, 1500);
+  }).catch(err=>{
+    // 폴백: 구식 브라우저 대응
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    const originalText = btn.innerText;
+    btn.innerText = '✓';
+    btn.classList.add('copied');
+    setTimeout(()=>{
+      btn.innerText = originalText;
+      btn.classList.remove('copied');
+    }, 1500);
+  });
+}
+</script>
+</body>
+</html>
