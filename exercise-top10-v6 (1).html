@@ -1,0 +1,3254 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>운동별 필수템 가이드 | 리치온 RICH·ON</title>
+<meta name="description" content="에어로빅·수영·배드민턴·골프 등 10대 운동별 필수 기능성 의류·소품과 부상 예방 가이드">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&family=Noto+Sans+KR:wght@300;400;500;600&family=Noto+Serif+KR:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  
+  :root {
+    --bg: #fafaf7;
+    --card-bg: #ffffff;
+    --ink: #2a2a2a;
+    --sub: #666;
+    --line: #ececea;
+    --danger: #d64545;
+    --warn: #e8a838;
+    --ok: #4a9d7f;
+    --hospital: #5a7fa4;
+    
+    /* 리치온 브랜드 컬러 */
+    --richon-green: #1f4a3a;
+    --richon-green-dark: #143026;
+    --richon-gold: #c9a961;
+    --richon-gold-light: #e4c988;
+    
+    /* 운동별 파스텔 컬러 */
+    --c-aerobic: #ff9ab8;
+    --c-swim: #7cc4ed;
+    --c-badminton: #7dd4b0;
+    --c-golf: #b5d972;
+    --c-yoga: #d4a4e8;
+    --c-run: #ffab7a;
+    --c-hike: #8ab078;
+    --c-cycle: #f5d157;
+    --c-tennis: #ee8a9e;
+    --c-weight: #8a8db0;
+  }
+  
+  html { scroll-behavior: smooth; }
+  
+  body {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-weight: 400;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    letter-spacing: -0.2px;
+  }
+  
+  /* ============ 상단 파트너스 공지 (확대) ============ */
+  .top-notice {
+    background: linear-gradient(135deg, #fff4d6 0%, #ffeaa8 100%);
+    border-bottom: 2px solid #e8cf7a;
+    padding: 16px 20px;
+    text-align: center;
+    font-size: 14px;
+    color: #6b4f10;
+    font-family: 'Gowun Dodum', sans-serif;
+    line-height: 1.6;
+    font-weight: 500;
+  }
+  
+  .top-notice .icon { font-size: 16px; margin-right: 4px; }
+  .top-notice strong { color: #4a3500; font-weight: 600; }
+  
+  /* ============ 리치온 브랜드 헤더 ============ */
+  .brand-header {
+    background: linear-gradient(180deg, #faf8fc 0%, #ffffff 100%);
+    border-bottom: 1px solid #ebe5f3;
+    padding: 16px 20px 18px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+    background: rgba(252, 250, 254, 0.96);
+  }
+  
+  /* 원본 로고 이미지 (도장 찍힌 느낌) */
+  .richon-brand-full {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    position: relative;
+  }
+  
+  .richon-logo-img {
+    max-width: 95px;
+    width: 95px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    border-radius: 8px;
+    /* 도장 찍힌 느낌: 살짝 회전 + 다층 그림자 */
+    transform: rotate(-3deg);
+    box-shadow:
+      0 1px 2px rgba(74, 45, 122, 0.2),
+      0 4px 8px rgba(74, 45, 122, 0.25),
+      0 8px 20px rgba(74, 45, 122, 0.35),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    filter: 
+      drop-shadow(0 2px 4px rgba(74, 45, 122, 0.4))
+      contrast(1.05)
+      saturate(1.1);
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+    transition: transform 0.4s ease;
+  }
+  
+  /* 호버 시 도장 눌러지는 느낌 */
+  .richon-logo-img:hover {
+    transform: rotate(-3deg) scale(1.05);
+  }
+  
+  @media (min-width: 768px) {
+    .richon-logo-img { max-width: 115px; width: 115px; }
+  }
+  
+  /* 도장 아래 희미한 잉크 번짐 효과 */
+  .richon-brand-full::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 6px;
+    background: radial-gradient(ellipse, rgba(74, 45, 122, 0.25) 0%, transparent 70%);
+    filter: blur(3px);
+    z-index: -1;
+    pointer-events: none;
+  }
+  
+  /* ============ HERO (럭셔리 퍼플 표지) ============ */
+  .hero-luxury {
+    position: relative;
+    padding: 40px 24px 50px;
+    margin: 0;
+    overflow: hidden;
+    background: 
+      radial-gradient(ellipse at top left, #6b4aa3 0%, transparent 50%),
+      radial-gradient(ellipse at bottom right, #8b5cf6 0%, transparent 50%),
+      linear-gradient(135deg, #2d1b4e 0%, #4a2d7a 35%, #6b3fa0 70%, #3d2366 100%);
+    color: #fff;
+    text-align: center;
+    isolation: isolate;
+  }
+  
+  /* 배경 장식 원·선 */
+  .hero-bg-deco {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  .deco-circle {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(40px);
+    opacity: 0.35;
+  }
+  .deco-circle.c1 {
+    width: 180px;
+    height: 180px;
+    top: -50px;
+    left: -30px;
+    background: #c4a6ff;
+  }
+  .deco-circle.c2 {
+    width: 220px;
+    height: 220px;
+    bottom: -70px;
+    right: -40px;
+    background: #a78bfa;
+  }
+  .deco-circle.c3 {
+    width: 140px;
+    height: 140px;
+    top: 40%;
+    right: 20%;
+    background: #d8b4fe;
+    opacity: 0.2;
+  }
+  
+  /* 메인 콘텐츠 */
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  
+  /* ============ HERO 로고 프레임 (중앙 배치) ============ */
+  .hero-logo-frame {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 24px;
+    width: 100%;
+  }
+  
+  .logo-frame-inner {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.04) 100%);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  }
+  
+  .hero-logo-stamp {
+    width: 86px;
+    height: 86px;
+    display: block;
+    margin: 0 auto;
+    border-radius: 6px;
+    object-fit: contain;
+    object-position: center center;
+    /* 원본 이미지 자체가 왼쪽 치우침 → transform으로 미세 보정 (프레임 중앙 유지) */
+    transform: translateX(2px);
+    filter: 
+      drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3))
+      contrast(1.1)
+      saturate(1.1);
+  }
+  
+  @media (min-width: 768px) {
+    .logo-frame-inner { width: 130px; height: 130px; }
+    .hero-logo-stamp { 
+      width: 104px; 
+      height: 104px;
+      transform: translateX(3px);
+    }
+  }
+  
+  /* 메인 타이틀 */
+  .hero-main-title {
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: clamp(24px, 6vw, 34px);
+    font-weight: 600;
+    line-height: 1.4;
+    letter-spacing: -0.5px;
+    margin-bottom: 22px;
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+  }
+  
+  .title-highlight {
+    display: inline-block;
+    background: linear-gradient(135deg, #fde047 0%, #facc15 50%, #eab308 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 700;
+    position: relative;
+    padding: 0 4px;
+  }
+  
+  .title-wave {
+    color: #fde047;
+    font-size: 0.9em;
+  }
+  
+  /* 중앙 구분선 */
+  .hero-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 20px 0 22px;
+  }
+  
+  .divider-dot {
+    width: 4px;
+    height: 4px;
+    background: #fde047;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #fde047;
+  }
+  
+  .divider-line {
+    width: 40px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e9d5ff, transparent);
+  }
+  
+  .divider-diamond {
+    color: #fde047;
+    font-size: 10px;
+    text-shadow: 0 0 10px rgba(253, 224, 71, 0.6);
+  }
+  
+  /* 서브 텍스트 */
+  .hero-sub {
+    font-family: 'Gowun Dodum', sans-serif;
+    font-size: 15px;
+    line-height: 1.75;
+    color: #e9d5ff;
+    margin-bottom: 24px;
+    letter-spacing: 0.2px;
+  }
+  
+  .hero-sub strong {
+    display: inline-block;
+    margin-top: 6px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 2px 0;
+  }
+  
+  /* 하단 태그 */
+  .hero-tags {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 14px;
+    background: rgba(255, 255, 255, 0.14);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: 0.3px;
+  }
+  
+  /* ============ 사용방법 박스 ============ */
+  .guide-box {
+    max-width: 680px;
+    margin: 20px auto 30px;
+    background: var(--card-bg);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 22px 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.03);
+  }
+  
+  .guide-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 14px;
+    color: var(--ink);
+  }
+  
+  .guide-steps { display: grid; gap: 10px; }
+  
+  .guide-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--bg);
+    border-radius: 10px;
+    font-size: 13.5px;
+    color: var(--sub);
+  }
+  
+  .step-num {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    background: var(--richon-green);
+    color: #fff;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: 500;
+    font-size: 12px;
+  }
+  
+  /* ===== 사용법 박스 안 구분선 ===== */
+  .guide-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--line), transparent);
+    margin: 18px 0 16px;
+  }
+  
+  /* ===== 사용법 박스 안 공통 주의사항 ===== */
+  .guide-caution {
+    background: #fff8ec;
+    border: 1px solid #f0dfa8;
+    border-radius: 10px;
+    padding: 14px 14px;
+  }
+  
+  .guide-caution-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #8a6416;
+    margin-bottom: 10px;
+  }
+  
+  .guide-caution-list {
+    list-style: none;
+    display: grid;
+    gap: 7px;
+    font-size: 12.5px;
+    color: #6b5318;
+    line-height: 1.55;
+  }
+  
+  .guide-caution-list li {
+    padding-left: 16px;
+    position: relative;
+  }
+  
+  .guide-caution-list li::before {
+    content: '⚠️';
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-size: 11px;
+  }
+  
+  .guide-caution-list strong {
+    color: #5a4510;
+    font-weight: 600;
+  }
+  
+  /* ============ 캐러셀 (세로 스크롤, 9:16 비율) ============ */
+  .carousel-section { padding: 20px 0 10px; }
+  
+  .carousel-title {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 6px;
+    padding: 0 20px;
+  }
+  
+  .carousel-hint {
+    text-align: center;
+    font-family: 'Gowun Dodum', sans-serif;
+    font-size: 13px;
+    color: var(--sub);
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .hint-line {
+    display: inline-block;
+    padding: 3px 12px;
+    background: rgba(139, 92, 246, 0.08);
+    border-radius: 999px;
+    color: #6b4aa3;
+    font-size: 12.5px;
+    font-weight: 500;
+  }
+  
+  .carousel-wrap { position: relative; overflow: visible; }
+  
+  /* 세로 배치 (상하로 스크롤) */
+  .carousel {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px 20px 20px;
+    overflow: visible;
+    scroll-snap-type: none;
+    max-width: 440px;
+    margin: 0 auto;
+  }
+  
+  .carousel::-webkit-scrollbar { display: none; }
+  
+  /* 각 종목 카드: 세로 전체 폭 */
+  .sport {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    background: var(--card-bg);
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    box-shadow: 0 6px 24px rgba(0,0,0,.06);
+    scroll-snap-align: none;
+    transition: transform .3s;
+  }
+  
+  @media (min-width: 768px) {
+    .sport { max-width: 420px; }
+  }
+  
+  /* 카드 헤더 */
+  .sport-head {
+    padding: 24px 22px 20px;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .sport-head::before {
+    content: '';
+    position: absolute;
+    right: -30px;
+    top: -30px;
+    width: 120px;
+    height: 120px;
+    background: rgba(255,255,255,.15);
+    border-radius: 50%;
+  }
+  
+  .sport-head-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .sport-num {
+    font-size: 11px;
+    letter-spacing: 2px;
+    opacity: .9;
+    font-weight: 500;
+  }
+  
+  .sport-icon { font-size: 36px; line-height: 1; }
+  
+  .sport-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 10px 0 4px;
+    position: relative;
+    z-index: 1;
+    letter-spacing: -0.5px;
+  }
+  
+  .sport-en {
+    font-size: 12px;
+    opacity: .92;
+    font-weight: 400;
+    position: relative;
+    z-index: 1;
+    font-family: 'Gowun Dodum', sans-serif;
+  }
+  
+  /* 카드 본문 */
+  .sport-body { padding: 20px 22px 22px; }
+  
+  .block-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--sub);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .block-title::before {
+    content: '';
+    width: 3px;
+    height: 13px;
+    background: var(--ink);
+    border-radius: 2px;
+  }
+  
+  .item-list {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+    margin-bottom: 18px;
+  }
+  
+  .item-list li {
+    padding: 11px 12px;
+    background: var(--bg);
+    border-radius: 10px;
+    font-size: 13.5px;
+    border-left: 3px solid currentColor;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .item-text { flex: 1; min-width: 0; color: var(--ink); }
+  
+  .item-text .name { 
+    font-weight: 500; 
+    display: block;
+    line-height: 1.4;
+  }
+  
+  .item-text .ko {
+    display: block;
+    color: var(--sub);
+    font-size: 11.5px;
+    margin-top: 2px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  
+  .item-copy {
+    flex-shrink: 0;
+    background: #fff;
+    color: var(--ink);
+    border: 1px solid var(--line);
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .2s;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .item-copy:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .item-copy.copied { background: var(--ok); color: #fff; border-color: var(--ok); }
+  
+  /* ===== 중급자용 태그 (레벨 배지) ===== */
+  .level-tag {
+    display: inline-block;
+    font-size: 9.5px;
+    font-weight: 600;
+    font-style: normal;
+    padding: 2px 7px;
+    border-radius: 999px;
+    margin-left: 5px;
+    background: linear-gradient(135deg, #ff9a56, #ff6b35);
+    color: #fff;
+    letter-spacing: 0.3px;
+    vertical-align: middle;
+    text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+  }
+  
+  /* 부상예방 태그 (파란·민트 계열) */
+  .level-tag.helpful {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  }
+  
+  /* ===== 쿠팡에서 구매하기 버튼 (종목 카드 컬러 매칭) ===== */
+  .coupang-buy-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin: 12px 0 16px;
+    padding: 14px 12px;
+    border-radius: 12px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: -0.3px;
+    transition: all .2s;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+  }
+  
+  .coupang-buy-btn:active {
+    transform: scale(0.97);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  }
+  
+  .coupang-buy-btn .cb-icon {
+    font-size: 20px;
+  }
+  
+  .coupang-buy-btn .cb-text {
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+  }
+  
+  .reason {
+    background: #fffbeb;
+    border: 1px dashed #e6c66a;
+    border-radius: 10px;
+    padding: 11px 13px;
+    font-size: 12.5px;
+    margin-bottom: 14px;
+    line-height: 1.65;
+    color: #6b5318;
+  }
+  
+  .reason-label {
+    display: block;
+    font-weight: 600;
+    font-size: 11px;
+    color: #9a7418;
+    margin-bottom: 4px;
+  }
+  
+  /* 부상 경고 */
+  .injury-alert {
+    background: #fff5f5;
+    border: 1px solid #f5c6c6;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 12px;
+  }
+  
+  .injury-label {
+    display: block;
+    font-weight: 600;
+    font-size: 11.5px;
+    color: var(--danger);
+    margin-bottom: 8px;
+    letter-spacing: -0.2px;
+  }
+  
+  .injury-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  
+  .injury-tag {
+    background: #fff;
+    border: 1px solid #f0b8b8;
+    color: var(--danger);
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  
+  /* 병원 전 우선조치 */
+  .first-aid {
+    background: #f0f6fc;
+    border: 1px solid #c9dcf0;
+    border-radius: 12px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+  }
+  
+  .first-aid-label {
+    display: block;
+    font-weight: 600;
+    font-size: 11.5px;
+    color: var(--hospital);
+    margin-bottom: 6px;
+  }
+  
+  .first-aid-list {
+    list-style: none;
+    font-size: 12px;
+    color: #3a5270;
+    line-height: 1.7;
+  }
+  
+  .first-aid-list li::before {
+    content: '▸ ';
+    color: var(--hospital);
+    font-weight: 600;
+  }
+  
+  /* ===== 종목별 판매처 링크 (NEW) ===== */
+  .shop-section {
+    border-top: 1px solid var(--line);
+    padding-top: 14px;
+    margin-top: 4px;
+  }
+  
+  /* ===== 전문 쇼핑몰 (에어로빅복 등) ===== */
+  .specialty-shop {
+    margin: 14px 0;
+    padding: 12px 12px;
+    background: #fef7ff;
+    border: 1px solid #e9c8f7;
+    border-radius: 12px;
+  }
+  
+  .specialty-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #9158b0;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px dashed #d4a4e8;
+    text-align: center;
+  }
+  
+  .specialty-card {
+    display: block;
+    padding: 7px 10px;
+    background: #fff;
+    border: 1px solid #e9c8f7;
+    border-left: 3px solid #c77dff;
+    border-radius: 8px;
+    color: var(--ink);
+    margin-bottom: 5px;
+  }
+  
+  .specialty-card:last-child {
+    margin-bottom: 0;
+  }
+  
+  .sp-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 2px;
+    line-height: 1.3;
+  }
+  
+  .sp-desc {
+    font-size: 11.5px;
+    color: var(--sub);
+    line-height: 1.4;
+  }
+  
+  /* ===== 이런 분께 추천해요 (전문가 추천) ===== */
+  .recommendation {
+    margin: 14px 0 16px;
+    padding: 14px 14px;
+    background: linear-gradient(135deg, #f5efff 0%, #e9dffd 100%);
+    border: 1px solid #c8b5ed;
+    border-radius: 12px;
+    position: relative;
+  }
+  
+  .recommendation::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 12px;
+    right: 12px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #8b5cf6, transparent);
+  }
+  
+  .rec-label {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b3fa0;
+    background: #fff;
+    padding: 3px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+    letter-spacing: 0.3px;
+    border: 1px solid #c8b5ed;
+  }
+  
+  .rec-who {
+    font-size: 13px;
+    color: #3d2366;
+    line-height: 1.6;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  
+  .rec-who strong {
+    color: #4a2d7a;
+    font-weight: 700;
+  }
+  
+  .rec-why {
+    font-size: 12.5px;
+    color: #4a3568;
+    line-height: 1.65;
+    margin-bottom: 8px;
+  }
+  
+  .rec-why strong {
+    color: #6b3fa0;
+    background: #fff;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: 600;
+  }
+  
+  .rec-expert {
+    font-size: 11.5px;
+    color: #5a4510;
+    background: #fff9e6;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border-left: 3px solid #e8a838;
+    line-height: 1.55;
+    margin-top: 8px;
+  }
+  
+  .rec-expert em {
+    font-style: normal;
+    font-weight: 500;
+  }
+  
+  .shop-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--sub);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    letter-spacing: 0.3px;
+  }
+  
+  .shop-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+  
+  .shop-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 9px 8px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    transition: transform .15s;
+    white-space: nowrap;
+  }
+  .shop-link:active { transform: scale(.95); }
+  .shop-link .ic { font-size: 13px; }
+  
+  .sl-coupang { background: #e63946; }
+  .sl-temu    { background: #ff7b1a; }
+  .sl-ali     { background: #cc0000; }
+  .sl-trip    { background: #1d7af2; }
+  
+  /* ===== 쿠팡 단일 버튼 (종목별) - 중앙 정렬 + 큰 글씨 ===== */
+  .coupang-single-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 16px 16px;
+    color: #fff;
+    border-radius: 12px;
+    text-decoration: none;
+    font-family: inherit;
+    transition: all .2s;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .15);
+  }
+  
+  .coupang-single-btn:active {
+    transform: scale(.97);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .2);
+  }
+  
+  .coupang-single-btn .cs-icon {
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  
+  .coupang-single-btn .cs-main {
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* ===== 정보 출처 + 사용방법 2칼럼 그리드 ===== */
+  .info-grid {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  
+  @media (min-width: 720px) {
+    .info-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+  }
+  
+  .info-grid .sources-section,
+  .info-grid .guide-box {
+    margin: 0;
+    max-width: none;
+    height: 100%;
+  }
+  
+  /* ===== 신뢰 출처 섹션 ===== */
+  .sources-section {
+    max-width: 680px;
+    margin: 20px auto;
+    background: #f7faf8;
+    border: 1px solid #d4e4dc;
+    border-radius: 16px;
+    padding: 22px 20px;
+  }
+  
+  .sources-section h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--richon-green);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .sources-section .sources-sub {
+    font-family: 'Gowun Dodum', sans-serif;
+    font-size: 12px;
+    color: var(--sub);
+    margin-bottom: 14px;
+  }
+  
+  .sources-footnote {
+    font-size: 11px;
+    color: var(--sub);
+    margin-top: 12px;
+    text-align: center;
+    font-family: 'Gowun Dodum', sans-serif;
+    line-height: 1.5;
+  }
+  
+  .sources-list {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+  
+  .sources-list li {
+    padding: 10px 12px;
+    background: #fff;
+    border-radius: 8px;
+    border-left: 3px solid var(--richon-green);
+    color: var(--sub);
+  }
+  
+  .sources-list li strong {
+    color: var(--ink);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+    font-size: 13px;
+  }
+  
+  /* 운동별 컬러 */
+  .s1 .sport-head { background: var(--c-aerobic); }
+  .s1 .item-list li { color: #c8486f; }
+  .s1 .coupang-buy-btn { background: linear-gradient(135deg, #ff9ab8, #c8486f); }
+  .s1 .coupang-single-btn { background: linear-gradient(135deg, #ff9ab8, #c8486f); }
+  
+  .s2 .sport-head { background: var(--c-swim); }
+  .s2 .item-list li { color: #3a7eb8; }
+  .s2 .coupang-buy-btn { background: linear-gradient(135deg, #7cc4ed, #3a7eb8); }
+  .s2 .coupang-single-btn { background: linear-gradient(135deg, #7cc4ed, #3a7eb8); }
+  
+  .s3 .sport-head { background: var(--c-badminton); }
+  .s3 .item-list li { color: #3a9b75; }
+  .s3 .coupang-buy-btn { background: linear-gradient(135deg, #7dd4b0, #3a9b75); }
+  .s3 .coupang-single-btn { background: linear-gradient(135deg, #7dd4b0, #3a9b75); }
+  
+  .s4 .sport-head { background: var(--c-golf); }
+  .s4 .item-list li { color: #6b8f38; }
+  .s4 .coupang-buy-btn { background: linear-gradient(135deg, #b5d972, #6b8f38); }
+  .s4 .coupang-single-btn { background: linear-gradient(135deg, #b5d972, #6b8f38); }
+  
+  .s5 .sport-head { background: var(--c-yoga); }
+  .s5 .item-list li { color: #9158b0; }
+  .s5 .coupang-buy-btn { background: linear-gradient(135deg, #d4a4e8, #9158b0); }
+  .s5 .coupang-single-btn { background: linear-gradient(135deg, #d4a4e8, #9158b0); }
+  
+  .s6 .sport-head { background: var(--c-run); }
+  .s6 .item-list li { color: #c96d3a; }
+  .s6 .coupang-buy-btn { background: linear-gradient(135deg, #ffab7a, #c96d3a); }
+  .s6 .coupang-single-btn { background: linear-gradient(135deg, #ffab7a, #c96d3a); }
+  
+  .s7 .sport-head { background: var(--c-hike); }
+  .s7 .item-list li { color: #587a48; }
+  .s7 .coupang-buy-btn { background: linear-gradient(135deg, #8ab078, #587a48); }
+  .s7 .coupang-single-btn { background: linear-gradient(135deg, #8ab078, #587a48); }
+  
+  .s8 .sport-head { background: var(--c-cycle); color: #5a4800; }
+  .s8 .item-list li { color: #9a7a00; }
+  .s8 .coupang-buy-btn { background: linear-gradient(135deg, #f5d157, #9a7a00); }
+  .s8 .coupang-single-btn { background: linear-gradient(135deg, #f5d157, #9a7a00); }
+  
+  .s9 .sport-head { background: var(--c-tennis); }
+  .s9 .item-list li { color: #c04a60; }
+  .s9 .coupang-buy-btn { background: linear-gradient(135deg, #ee8a9e, #c04a60); }
+  .s9 .coupang-single-btn { background: linear-gradient(135deg, #ee8a9e, #c04a60); }
+  
+  .s10 .sport-head { background: var(--c-weight); }
+  .s10 .item-list li { color: #5a5d80; }
+  .s10 .coupang-buy-btn { background: linear-gradient(135deg, #8a8db0, #5a5d80); }
+  .s10 .coupang-single-btn { background: linear-gradient(135deg, #8a8db0, #5a5d80); }
+  
+  /* 인디케이터 (세로 스크롤에서는 숨김) */
+  .indicator-wrap {
+    display: none;
+  }
+  
+  /* 좌우 화살표 버튼 (세로 스크롤에서는 숨김) */
+  .carousel-nav {
+    display: none !important;
+  }
+  
+  /* ============ 공통 주의 ============ */
+  .caution {
+    max-width: 680px;
+    margin: 20px auto;
+    padding: 22px;
+    background: #fffaeb;
+    border: 1px solid #f0dfb0;
+    border-radius: 16px;
+  }
+  
+  .caution h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #7a5a1a;
+  }
+  
+  .caution ul {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+    font-size: 13.5px;
+    color: #6b5318;
+  }
+  
+  .caution li::before { content: '⚠️ '; }
+  
+  /* ============ 제휴 링크 (통합 섹션) ============ */
+  .affiliate {
+    max-width: 680px;
+    margin: 30px auto 20px;
+    background: var(--card-bg);
+    border-radius: 18px;
+    padding: 26px 22px;
+    border: 1px solid var(--line);
+    box-shadow: 0 4px 20px rgba(0,0,0,.04);
+  }
+  
+  .affiliate h3 {
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 6px;
+  }
+  
+  .affiliate .sub {
+    text-align: center;
+    color: var(--sub);
+    font-size: 13px;
+    margin-bottom: 18px;
+    font-family: 'Gowun Dodum', sans-serif;
+  }
+  
+  .aff-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  
+  /* 해외직구 3칸 그리드 */
+  .aff-grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  
+  @media (max-width: 480px) {
+    .aff-grid-3 {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* 4칸 파트너스 균등 그리드 */
+  .aff-grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  
+  @media (max-width: 540px) {
+    .aff-grid-4 {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  .aff-grid-4 .aff-btn {
+    padding: 16px 6px;
+  }
+  .aff-grid-4 .aff-btn .ic { font-size: 22px; margin-bottom: 4px; }
+  .aff-grid-4 .aff-btn .nm { font-size: 13px; font-weight: 600; }
+  .aff-grid-4 .aff-btn .dc { font-size: 10px; opacity: .9; margin-top: 2px; }
+  
+  /* ============ 스포츠용품 할인 매장 카드 (컴팩트) ============ */
+  
+  /* 온라인+오프라인 2칼럼 그리드 */
+  .stores-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 16px 0 0;
+  }
+  
+  @media (max-width: 480px) {
+    .stores-grid {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+  }
+  
+  .store-section {
+    margin: 0;
+  }
+  
+  .store-section-title {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1.5px solid var(--richon-green);
+  }
+  
+  .store-label-icon {
+    font-size: 14px;
+  }
+  
+  .store-list {
+    display: grid;
+    gap: 5px;
+  }
+  
+  .store-card {
+    display: block;
+    padding: 7px 10px;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--ink);
+    transition: all .15s;
+  }
+  
+  .store-card.online {
+    border-left: 3px solid #4a9d7f;
+    cursor: pointer;
+  }
+  
+  .store-card.online:hover {
+    background: #f0f9f5;
+  }
+  
+  .store-card.offline {
+    border-left: 3px solid #6b4aa3;
+  }
+  
+  .store-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 2px;
+    line-height: 1.3;
+  }
+  
+  .store-info {
+    font-size: 11px;
+    color: var(--sub);
+    line-height: 1.4;
+    margin-bottom: 2px;
+  }
+  
+  .store-info strong {
+    color: #d64545;
+    font-weight: 600;
+  }
+  
+  .store-link {
+    font-size: 10px;
+    color: #4a9d7f;
+    font-weight: 500;
+    font-family: 'Gowun Dodum', sans-serif;
+  }
+  
+  .store-address {
+    font-size: 10.5px;
+    color: #6b4aa3;
+    font-weight: 500;
+    margin-top: 2px;
+    line-height: 1.4;
+  }
+  
+  .store-disclaimer {
+    margin-top: 14px;
+    padding: 8px 12px;
+    background: #fff9e6;
+    border: 1px dashed #e8a838;
+    border-radius: 8px;
+    font-size: 10.5px;
+    color: #8a6416;
+    text-align: center;
+    font-family: 'Gowun Dodum', sans-serif;
+    line-height: 1.5;
+  }
+  
+  /* ============ 쿠팡 스포츠 할인 행사 ============ */
+  .coupang-sale-section {
+    margin: 24px 0 16px;
+    padding: 20px 18px;
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe5e5 100%);
+    border: 2px solid #ff4b4b;
+    border-radius: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .coupang-sale-section::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    right: -20px;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, rgba(255, 75, 75, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  
+  .sale-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #d62828;
+    margin-bottom: 4px;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .sale-fire {
+    font-size: 20px;
+    animation: flicker 1.5s ease-in-out infinite alternate;
+  }
+  
+  @keyframes flicker {
+    0% { transform: scale(1) rotate(-3deg); }
+    100% { transform: scale(1.1) rotate(3deg); }
+  }
+  
+  .sale-live {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #d62828;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-left: auto;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  
+  .sale-live::before {
+    content: '●';
+    font-size: 8px;
+    animation: blink 1s ease-in-out infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.85; }
+  }
+  
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  
+  .sale-sub {
+    font-size: 11.5px;
+    color: #8a2525;
+    margin-bottom: 14px;
+    font-family: 'Gowun Dodum', sans-serif;
+    line-height: 1.5;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .sale-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+  }
+  
+  @media (max-width: 480px) {
+    .sale-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .sale-card {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid #ffcccc;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all .2s;
+  }
+  
+  .sale-card:hover {
+    background: #ff4b4b;
+    border-color: #ff4b4b;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 75, 75, 0.25);
+  }
+  
+  .sale-card:hover .sale-name,
+  .sale-card:hover .sale-period,
+  .sale-card:hover .sale-arrow {
+    color: #fff;
+  }
+  
+  .sale-emoji {
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  
+  .sale-info {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .sale-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 2px;
+    line-height: 1.3;
+    transition: color .2s;
+  }
+  
+  .sale-period {
+    font-size: 10.5px;
+    color: #888;
+    font-family: 'Gowun Dodum', sans-serif;
+    line-height: 1.3;
+    transition: color .2s;
+  }
+  
+  .sale-arrow {
+    font-size: 18px;
+    color: #ff4b4b;
+    flex-shrink: 0;
+    transition: all .2s;
+    opacity: 0.85;
+  }
+  
+  .sale-card:hover .sale-arrow {
+    color: #fff;
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  
+  .sale-notice {
+    margin-top: 14px;
+    padding: 10px 12px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(4px);
+    border-radius: 8px;
+    font-size: 10.5px;
+    color: #8a2525;
+    text-align: center;
+    font-family: 'Gowun Dodum', sans-serif;
+    line-height: 1.6;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .sale-notice strong {
+    color: #d62828;
+    font-weight: 700;
+  }
+  
+  .aff-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 18px 10px;
+    border-radius: 14px;
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    transition: transform .2s;
+    text-align: center;
+  }
+  .aff-btn:active { transform: scale(.96); }
+  .aff-btn .ic { font-size: 26px; margin-bottom: 6px; }
+  .aff-btn .nm { font-size: 14px; font-weight: 600; }
+  .aff-btn .dc { font-size: 11px; opacity: .9; margin-top: 2px; }
+  
+  .aff-coupang { background: linear-gradient(135deg, #ff4b4b, #e63946); }
+  .aff-temu    { background: linear-gradient(135deg, #ff7b1a, #ff9500); }
+  .aff-trip    { background: linear-gradient(135deg, #1d7af2, #0050b3); }
+  .aff-ali     { background: linear-gradient(135deg, #ff4747, #cc0000); }
+  
+  .coupang-search-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 12px;
+    padding: 14px;
+    background: #fff;
+    border: 2px solid #e63946;
+    color: #e63946;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all .2s;
+  }
+  .coupang-search-btn:hover {
+    background: #e63946;
+    color: #fff;
+  }
+  
+  /* ============ 푸터 (심플) ============ */
+  footer {
+    padding: 24px 20px 40px;
+    text-align: center;
+  }
+  
+  .footer-simple {
+    font-size: 11px;
+    color: #aaa;
+    letter-spacing: 2px;
+    font-family: 'Gowun Dodum', sans-serif;
+  }
+  
+  /* 토스트 */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--ok);
+    color: #fff;
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-weight: 500;
+    font-size: 13.5px;
+    transition: transform .3s;
+    z-index: 999;
+    box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    max-width: 90vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  
+  /* ============ 수동 복사 모달 (복사 실패 시 표시) ============ */
+  .manual-copy-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.6);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    animation: fadeIn .2s;
+  }
+  
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .manual-copy-box {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px 22px;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: 0 20px 60px rgba(0,0,0,.3);
+    animation: slideUp .25s;
+  }
+  
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  
+  .manual-copy-title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 14px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  
+  .manual-copy-input {
+    width: 100%;
+    padding: 14px 14px;
+    font-size: 15px;
+    font-family: inherit;
+    border: 2px solid var(--richon-green);
+    border-radius: 10px;
+    background: #f5f9f7;
+    color: var(--ink);
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 10px;
+    outline: none;
+    -webkit-user-select: all;
+    user-select: all;
+  }
+  
+  .manual-copy-input:focus {
+    background: #fff;
+    border-color: #2d7a5f;
+  }
+  
+  .manual-copy-hint {
+    font-size: 12px;
+    color: var(--sub);
+    text-align: center;
+    margin-bottom: 16px;
+    font-family: 'Gowun Dodum', sans-serif;
+  }
+  
+  .manual-copy-close {
+    width: 100%;
+    padding: 12px;
+    background: var(--richon-green);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  
+  .manual-copy-close:hover {
+    background: #143026;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ 상단 파트너스 공지 (확대) ============ -->
+<div class="top-notice">
+  <span class="icon">📢</span>
+  <strong>쿠팡 파트너스 활동 안내</strong> —
+  본 페이지는 쿠팡 파트너스 활동의 일환으로,<br>
+  링크를 통한 구매 시 일정 수수료를 제공받습니다.
+</div>
+
+<!-- ============ HERO (럭셔리 퍼플 표지) ============ -->
+<section class="hero-luxury">
+  <!-- 배경 장식 -->
+  <div class="hero-bg-deco">
+    <div class="deco-circle c1"></div>
+    <div class="deco-circle c2"></div>
+    <div class="deco-circle c3"></div>
+  </div>
+  
+  <!-- 메인 콘텐츠 -->
+  <div class="hero-content">
+    <div class="hero-logo-frame">
+      <div class="logo-frame-inner">
+        <img src="data:image/png;base64,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" alt="RICH·ON 리치온" class="hero-logo-stamp">
+      </div>
+    </div>
+    
+    <h1 class="hero-main-title">
+      운동을 시작할 때<br>
+      <span class="title-highlight">이거 모르면 안돼요</span>
+      <span class="title-wave">~</span>
+    </h1>
+    
+    <div class="hero-divider">
+      <span class="divider-dot"></span>
+      <span class="divider-line"></span>
+      <span class="divider-diamond">◆</span>
+      <span class="divider-line"></span>
+      <span class="divider-dot"></span>
+    </div>
+    
+    <p class="hero-sub">
+      에어로빅 · 수영 · 배드민턴 · 골프 · 요가<br>
+      러닝 · 등산 · 자전거 · 테니스 · 헬스<br>
+      <strong>10가지 운동별 기능성 의류·소품 완벽 가이드</strong>
+    </p>
+    
+    <div class="hero-tags">
+      <span class="hero-tag">💜 #추천</span>
+      <span class="hero-tag">🎽 장비빨</span>
+      <span class="hero-tag">🛡️ 부상 예방</span>
+      <span class="hero-tag">🏥 응급 처치</span>
+    </div>
+  </div>
+</section>
+
+<!-- 사용방법 박스는 아래 신뢰출처와 함께 2칼럼 배치 -->
+
+<!-- ============ 캐러셀 ============ -->
+<section class="carousel-section">
+  <div class="carousel-title">🎯 운동별 완벽 가이드</div>
+  <div class="carousel-hint">
+    <span class="hint-line">👉 관심있는 운동 카드를 좌우로 넘겨보기</span>
+    <span class="hint-line">👇 상하로 스크롤하기</span>
+  </div>
+  
+  <div class="carousel-wrap">
+    <button class="carousel-nav prev" onclick="scrollCarousel(-1)" aria-label="이전">‹</button>
+    <button class="carousel-nav next" onclick="scrollCarousel(1)" aria-label="다음">›</button>
+    
+    <div class="carousel" id="carousel">
+      
+      <!-- ========== 1. 에어로빅 ========== -->
+      <article class="sport s1">
+        <div class="sport-head">
+          <div class="sport-head-top">
+            <span class="sport-num">NO. 01</span>
+            <span class="sport-icon">💃</span>
+          </div>
+          <div class="sport-title">에어로빅</div>
+          <div class="sport-en">Aerobics [에어로빅] = 유산소 율동 운동</div>
+        </div>
+        <div class="sport-body">
+          <div class="recommendation">
+            <span class="rec-label">✨ 이런 분께 추천해요</span>
+            <div class="rec-who">👥 <strong>음악을 좋아하는 분 · 체중감량 목표 · 우울감 개선 필요</strong></div>
+            <div class="rec-why">💡 음악에 맞춰 움직이는 리듬감이 <strong>기분 개선·스트레스 해소</strong>에 탁월. 유산소+근력 복합 운동으로 효율적인 체지방 감소 효과</div>
+            <div class="rec-expert">👨‍⚕️ <em>재활의학과 권장: 고혈압·관절염 경증 환자에게 저강도 에어로빅 권장 (의사 상담 후)</em></div>
+          </div>
+          <div class="block-title">🎽 운동도 장비빨! 이것을 준비하면 좋아요</div>
+          <ul class="item-list">
+            <li>
+              <div class="item-text">
+                <span class="name">컴프레션 타이즈</span>
+                <span class="ko">Compression Tights [컴프레션 타이즈] = 압박 레깅스</span>
+              </div>
+              <button class="item-copy" data-copy="컴프레션 타이즈 여성">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">쿠션 에어로빅화 (Ryka·Bloch)</span>
+                <span class="ko">Ryka [라이카] · Bloch [블로크] = 댄스·에어로빅 전문</span>
+              </div>
+              <button class="item-copy" data-copy="라이카 에어로빅화">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">흡습속건 티셔츠</span>
+                <span class="ko">Moisture-wicking [모이스처 위킹] = 땀 빨리 흡수·건조</span>
+              </div>
+              <button class="item-copy" data-copy="흡습속건 티셔츠 여성">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">하이임팩트 스포츠 브라</span>
+                <span class="ko">High-impact [하이 임팩트] = 고강도 충격 대응</span>
+              </div>
+              <button class="item-copy" data-copy="하이임팩트 스포츠브라">📋</button>
+            </li>
+                      <li>
+              <div class="item-text">
+                <span class="name">발목 보호대 <em class="level-tag helpful">✨ 도움돼요</em></span>
+                <span class="ko">Ankle Brace [앵클 브레이스] = 발목 염좌 예방, 측면 이동 보호</span>
+              </div>
+              <button class="item-copy" data-copy="발목 보호대 운동용">📋</button>
+            </li>
+          </ul>
+          <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-buy-btn">
+            <span class="cb-icon">🛒</span>
+            <span class="cb-text">복사한 상품명 검색 (쿠팡)</span>
+          </a>
+          <div class="injury-alert">
+            <span class="injury-label">🔴 부상 위험 부위</span>
+            <div class="injury-tags">
+              <span class="injury-tag">무릎 (반월상연골)</span>
+              <span class="injury-tag">발목 염좌</span>
+              <span class="injury-tag">허리</span>
+            </div>
+          </div>
+          <div class="first-aid">
+            <span class="first-aid-label">🏥 병원 가기 전 우선조치 (RICE)</span>
+            <ul class="first-aid-list">
+              <li><strong>R</strong>est 휴식 — 즉시 중단, 체중 싣지 않기</li>
+              <li><strong>I</strong>ce 냉찜질 — 15~20분 / 1시간 간격</li>
+              <li><strong>C</strong>ompression 압박 — 탄력 붕대</li>
+              <li><strong>E</strong>levation 거상 — 심장보다 높게</li>
+            </ul>
+          </div>
+                    
+          <!-- 에어로빅 전문 쇼핑몰 (NEW) -->
+          <div class="specialty-shop">
+            <div class="specialty-label">👗 에어로빅복 전문 쇼핑몰</div>
+            <div class="specialty-card">
+              <div class="sp-name">🍎 애플댄스</div>
+              <div class="sp-desc">국산 댄스복·에어로빅복 전문 (주문제작 가능)</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">🐰 부랑바니</div>
+              <div class="sp-desc">Since 2003 · 에어로빅복·무대의상·어린이댄스복</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">💃 댄스도매몰</div>
+              <div class="sp-desc">라틴·모던·밸리·스포츠댄스복 전문 도매</div>
+            </div>
+          </div>
+                    <div class="shop-section">
+            <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-single-btn">
+              <span class="cs-icon">🛒</span>
+              <span class="cs-main">쿠팡에서 구매하기</span>
+            </a>
+          </div>
+        </div>
+      </article>
+      
+      <!-- ========== 2. 수영 ========== -->
+      <article class="sport s2">
+        <div class="sport-head">
+          <div class="sport-head-top">
+            <span class="sport-num">NO. 02</span>
+            <span class="sport-icon">🏊‍♀️</span>
+          </div>
+          <div class="sport-title">수영</div>
+          <div class="sport-en">Swimming [스위밍] = 물에서 헤엄치는 운동</div>
+        </div>
+        <div class="sport-body">
+          <div class="recommendation">
+            <span class="rec-label">✨ 이런 분께 추천해요</span>
+            <div class="rec-who">👥 <strong>관절염·디스크 환자 · 수술 후 회복기 · 임산부 · 비만인</strong></div>
+            <div class="rec-why">💡 물의 부력으로 <strong>관절 부담 90% 감소</strong>. 무릎·허리 통증 환자에게 최적. 전신 근육 사용으로 재활 효과 우수</div>
+            <div class="rec-expert">👨‍⚕️ <em>정형외과·재활의학과 추천: 척추 수술 후 회복기, 인공관절 수술 후 재활에 1순위 권장 (접영 제외)</em></div>
+          </div>
+          <div class="block-title">🎽 운동도 장비빨! 이것을 준비하면 좋아요</div>
+          <ul class="item-list">
+            <li>
+              <div class="item-text">
+                <span class="name">전용 수영복</span>
+                <span class="ko">폴리우레탄 혼방, 염소 저항성</span>
+              </div>
+              <button class="item-copy" data-copy="여성 수영복 실내">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">안티포그 수경</span>
+                <span class="ko">Anti-fog [안티 포그] = 김서림 방지</span>
+              </div>
+              <button class="item-copy" data-copy="수경 안티포그">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">실리콘 수모</span>
+                <span class="ko">Swim Cap [스윔 캡] = 두피 보호, 물저항 감소</span>
+              </div>
+              <button class="item-copy" data-copy="실리콘 수모">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">귀마개·코마개</span>
+                <span class="ko">중이염 예방 필수품</span>
+              </div>
+              <button class="item-copy" data-copy="수영 귀마개 코마개">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">아쿠아슈즈·실리콘 덧신</span>
+                <span class="ko">Aqua Shoes [아쿠아 슈즈] = 풀사이드 미끄럼 방지</span>
+              </div>
+              <button class="item-copy" data-copy="아쿠아슈즈 여성">📋</button>
+            </li>
+                      <li>
+              <div class="item-text">
+                <span class="name">워터프루프 선크림 <em class="level-tag helpful">✨ 도움돼요</em></span>
+                <span class="ko">Waterproof Sunscreen [워터프루프 선크린] = 수영장·야외 자외선 차단</span>
+              </div>
+              <button class="item-copy" data-copy="워터프루프 선크림 수영">📋</button>
+            </li>
+          </ul>
+          <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-buy-btn">
+            <span class="cb-icon">🛒</span>
+            <span class="cb-text">복사한 상품명 검색 (쿠팡)</span>
+          </a>
+          <div class="injury-alert">
+            <span class="injury-label">🔴 부상 위험 부위</span>
+            <div class="injury-tags">
+              <span class="injury-tag">어깨 (회전근개)</span>
+              <span class="injury-tag">목 디스크</span>
+              <span class="injury-tag">중이염</span>
+            </div>
+          </div>
+          <div class="first-aid">
+            <span class="first-aid-label">🏥 병원 가기 전 우선조치</span>
+            <ul class="first-aid-list">
+              <li>어깨 통증 — 즉시 중단, 냉찜질 20분</li>
+              <li>귀 통증 — 귀 안 건조, 면봉 금지</li>
+              <li>쥐 — 스트레칭 + 수분·전해질 섭취</li>
+              <li>48시간 내 호전 없으면 이비인후과·정형외과</li>
+            </ul>
+          </div>
+                    
+          <!-- 수영 전문 쇼핑몰 (동호인 선호 TOP 3) -->
+          <div class="specialty-shop">
+            <div class="specialty-label">🏊‍♀️ 수영 동호인 TOP 3 전문 쇼핑몰</div>
+            <div class="specialty-card">
+              <div class="sp-name">💧 수영사랑 (swimlove)</div>
+              <div class="sp-desc">국내 1위 수영 전문 편집샵 · 아레나·스피도·펑키타 올인원</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">🌊 수영복나라</div>
+              <div class="sp-desc">아레나·스피도 정품 · 트렌디 수영복 여름 필수템</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">🏊 남도스포츠</div>
+              <div class="sp-desc">수영·훈련용품·철인경기 · 수구·레저 종합몰</div>
+            </div>
+          </div>
+                    <div class="shop-section">
+            <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-single-btn">
+              <span class="cs-icon">🛒</span>
+              <span class="cs-main">쿠팡에서 구매하기</span>
+            </a>
+          </div>
+        </div>
+      </article>
+      
+      <!-- ========== 3. 배드민턴 ========== -->
+      <article class="sport s3">
+        <div class="sport-head">
+          <div class="sport-head-top">
+            <span class="sport-num">NO. 03</span>
+            <span class="sport-icon">🏸</span>
+          </div>
+          <div class="sport-title">배드민턴</div>
+          <div class="sport-en">Badminton [배드민턴] = 셔틀콕 라켓 운동</div>
+        </div>
+        <div class="sport-body">
+          <div class="recommendation">
+            <span class="rec-label">✨ 이런 분께 추천해요</span>
+            <div class="rec-who">👥 <strong>중·장년층 실버스포츠 · 동체시력 개선 · 사회성 증진</strong></div>
+            <div class="rec-why">💡 순발력·반사신경 자극으로 <strong>치매 예방 효과</strong>. 셔틀콕을 쫓는 동안 자연스러운 유산소 운동</div>
+            <div class="rec-expert">👨‍⚕️ <em>노인의학 추천: 65세 이상 인지기능 유지에 탁월, 단 무릎·어깨 부상 주의</em></div>
+          </div>
+          <div class="block-title">🎽 운동도 장비빨! 이것을 준비하면 좋아요</div>
+          <ul class="item-list">
+            <li>
+              <div class="item-text">
+                <span class="name">배드민턴화 (요넥스·빅터)</span>
+                <span class="ko">Yonex Power Cushion · Victor P9200 인기 모델</span>
+              </div>
+              <button class="item-copy" data-copy="요넥스 배드민턴화 여성">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">손목 보호대</span>
+                <span class="ko">Wrist Guard [리스트 가드] = 손목 지지대</span>
+              </div>
+              <button class="item-copy" data-copy="손목 보호대 배드민턴">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">흡한속건 상하의</span>
+                <span class="ko">Moisture-wicking [모이스처 위킹] = 땀 빨리 흡수·건조</span>
+              </div>
+              <button class="item-copy" data-copy="배드민턴복 여성">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">그립테이프</span>
+                <span class="ko">Over Grip [오버 그립] = 라켓 손잡이 감개</span>
+              </div>
+              <button class="item-copy" data-copy="배드민턴 오버그립">📋</button>
+            </li>
+                      <li>
+              <div class="item-text">
+                <span class="name">무릎 보호대 <em class="level-tag helpful">✨ 도움돼요</em></span>
+                <span class="ko">Knee Brace [니 브레이스] = 측면 급이동 · 점프 착지 충격 흡수</span>
+              </div>
+              <button class="item-copy" data-copy="무릎 보호대 운동">📋</button>
+            </li>
+          </ul>
+          <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-buy-btn">
+            <span class="cb-icon">🛒</span>
+            <span class="cb-text">복사한 상품명 검색 (쿠팡)</span>
+          </a>
+          <div class="injury-alert">
+            <span class="injury-label">🔴 부상 위험 부위</span>
+            <div class="injury-tags">
+              <span class="injury-tag">아킬레스건</span>
+              <span class="injury-tag">어깨 (스매시)</span>
+              <span class="injury-tag">테니스 엘보</span>
+            </div>
+          </div>
+          <div class="first-aid">
+            <span class="first-aid-label">🏥 병원 가기 전 우선조치</span>
+            <ul class="first-aid-list">
+              <li>아킬레스건 찌릿 — 즉시 중단, 체중 싣지 않기</li>
+              <li>냉찜질 20분 + 탄력 붕대 압박</li>
+              <li>발을 심장보다 높게 거상</li>
+              <li>발 딛기 불가능 시 즉시 정형외과</li>
+            </ul>
+          </div>
+                    
+          <!-- 배드민턴 전문 쇼핑몰 (동호인 선호 TOP 3) -->
+          <div class="specialty-shop">
+            <div class="specialty-label">🏸 배드민턴 동호인 TOP 3 전문 쇼핑몰</div>
+            <div class="specialty-card">
+              <div class="sp-name">🏆 배드민턴마켓</div>
+              <div class="sp-desc">요넥스·빅터·미즈노 공식 · 목동 직영매장 + 온라인</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">⚡ 민턴로그</div>
+              <div class="sp-desc">빅터·요넥스 정품 보장 · 입문자 패키지 라켓 특화</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">🎯 요넥스코리아 공식몰</div>
+              <div class="sp-desc">요넥스 본사 직영 · 배드민턴·테니스·골프 정품</div>
+            </div>
+          </div>
+                    <div class="shop-section">
+            <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-single-btn">
+              <span class="cs-icon">🛒</span>
+              <span class="cs-main">쿠팡에서 구매하기</span>
+            </a>
+          </div>
+        </div>
+      </article>
+      
+      <!-- ========== 4. 골프 ========== -->
+      <article class="sport s4">
+        <div class="sport-head">
+          <div class="sport-head-top">
+            <span class="sport-num">NO. 04</span>
+            <span class="sport-icon">⛳</span>
+          </div>
+          <div class="sport-title">골프</div>
+          <div class="sport-en">Golf [골프] = 공을 홀에 넣는 스포츠</div>
+        </div>
+        <div class="sport-body">
+          <div class="recommendation">
+            <span class="rec-label">✨ 이런 분께 추천해요</span>
+            <div class="rec-who">👥 <strong>3대가 함께 즐기는 가족 스포츠 · 사업가 네트워킹 · 은퇴 후 취미</strong></div>
+            <div class="rec-why">💡 걷기 + 코어 근육 사용으로 <strong>저강도 장시간 운동 효과</strong>. 자연 속 정서적 치유 동반</div>
+            <div class="rec-expert">👨‍⚕️ <em>헬스경향 추천: 체력 수준과 무관하게 고령자도 안전하게 즐길 수 있는 몇 안 되는 종목</em></div>
+          </div>
+          <div class="block-title">🎽 운동도 장비빨! 이것을 준비하면 좋아요</div>
+          <ul class="item-list">
+            <li>
+              <div class="item-text">
+                <span class="name">골프화 (FootJoy·Ecco)</span>
+                <span class="ko">FootJoy [풋조이] · Ecco [에코] = 골프화 양대 브랜드</span>
+              </div>
+              <button class="item-copy" data-copy="풋조이 골프화 여성">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">골프장갑</span>
+                <span class="ko">한쪽 착용, 양가죽·합성</span>
+              </div>
+              <button class="item-copy" data-copy="골프장갑 여성">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">신축성 폴로 셔츠·팬츠</span>
+                <span class="ko">Polo Shirt [폴로 셔츠] = 카라티 골프 정장</span>
+              </div>
+              <button class="item-copy" data-copy="여성 골프웨어 세트">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">모자·UV 선글라스</span>
+                <span class="ko">UV [유브이] = 자외선 차단</span>
+              </div>
+              <button class="item-copy" data-copy="골프 선바이저 여성">📋</button>
+            </li>
+                      <li>
+              <div class="item-text">
+                <span class="name">자외선 차단 선크림 <em class="level-tag helpful">✨ 도움돼요</em></span>
+                <span class="ko">Sunscreen [선크린] SPF50+ · 장시간 라운드 필수</span>
+              </div>
+              <button class="item-copy" data-copy="골프 선크림 spf50">📋</button>
+            </li>
+          </ul>
+          <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-buy-btn">
+            <span class="cb-icon">🛒</span>
+            <span class="cb-text">복사한 상품명 검색 (쿠팡)</span>
+          </a>
+          <div class="injury-alert">
+            <span class="injury-label">🔴 부상 위험 부위</span>
+            <div class="injury-tags">
+              <span class="injury-tag">허리 (회전)</span>
+              <span class="injury-tag">골프 엘보</span>
+              <span class="injury-tag">손목 건초염</span>
+            </div>
+          </div>
+          <div class="first-aid">
+            <span class="first-aid-label">🏥 병원 가기 전 우선조치</span>
+            <ul class="first-aid-list">
+              <li>허리 삐끗 — 움직임 최소화, 평지에 눕기</li>
+              <li>부기 부위 냉찜질 20분</li>
+              <li>통증 심하면 무리한 스트레칭 금지</li>
+              <li>팔·다리 저림 동반 시 즉시 정형외과</li>
+            </ul>
+          </div>
+                    
+          <!-- 골프 전문 쇼핑몰 (동호인 선호 TOP 3) -->
+          <div class="specialty-shop">
+            <div class="specialty-label">⛳ 골프 동호인 TOP 3 전문 쇼핑몰</div>
+            <div class="specialty-card">
+              <div class="sp-name">🏌️ 골프존 골핑</div>
+              <div class="sp-desc">골프존 공식 플랫폼 · 매장픽업 O2O 서비스</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">🏆 베스트바이골프</div>
+              <div class="sp-desc">타이틀리스트·혼마·마루망·테일러메이드 특가</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">🛍️ 버킷스토어</div>
+              <div class="sp-desc">핑·팬텀·파리게이츠·마스터바니에디션 골프웨어</div>
+            </div>
+          </div>
+                    <div class="shop-section">
+            <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-single-btn">
+              <span class="cs-icon">🛒</span>
+              <span class="cs-main">쿠팡에서 구매하기</span>
+            </a>
+          </div>
+        </div>
+      </article>
+      
+      <!-- ========== 5. 필라테스·요가 ========== -->
+      <article class="sport s5">
+        <div class="sport-head">
+          <div class="sport-head-top">
+            <span class="sport-num">NO. 05</span>
+            <span class="sport-icon">🧘‍♀️</span>
+          </div>
+          <div class="sport-title">필라테스·요가</div>
+          <div class="sport-en">Pilates &amp; Yoga [필라테스 요가] = 유연성·코어</div>
+        </div>
+        <div class="sport-body">
+          <div class="recommendation">
+            <span class="rec-label">✨ 이런 분께 추천해요</span>
+            <div class="rec-who">👥 <strong>허리 통증 · 자세 교정 필요 · 스트레스 많은 직장인 · 출산 후 산모</strong></div>
+            <div class="rec-why">💡 <strong>코어 근육 강화</strong>로 척추 안정성 향상. 호흡법과 명상 효과로 자율신경 안정</div>
+            <div class="rec-expert">👨‍⚕️ <em>재활의학과 권장: 허리 디스크·거북목 환자 초기 재활에 필라테스 강력 추천</em></div>
+          </div>
+          <div class="block-title">🎽 운동도 장비빨! 이것을 준비하면 좋아요</div>
+          <ul class="item-list">
+            <li>
+              <div class="item-text">
+                <span class="name">스쿼트프루프 레깅스</span>
+                <span class="ko">Squat-proof [스쿼트 프루프] = 비침 방지</span>
+              </div>
+              <button class="item-copy" data-copy="비침방지 레깅스">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">논슬립 요가양말 (신발 대용)</span>
+                <span class="ko">Grip Socks [그립 삭스] = 맨발 대용, 발바닥 실리콘 돌기</span>
+              </div>
+              <button class="item-copy" data-copy="필라테스 논슬립 양말">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">요가 매트 (6mm+)</span>
+                <span class="ko">쿠션 두께 부족 시 관절 통증</span>
+              </div>
+              <button class="item-copy" data-copy="요가매트 6mm">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">브라탑</span>
+                <span class="ko">탈부착 패드 내장형</span>
+              </div>
+              <button class="item-copy" data-copy="요가 브라탑 패드">📋</button>
+            </li>
+                      <li>
+              <div class="item-text">
+                <span class="name">요가 블록 <em class="level-tag helpful">✨ 도움돼요</em></span>
+                <span class="ko">Yoga Block [요가 블록] = 자세 보조, 무리한 동작 부상 예방</span>
+              </div>
+              <button class="item-copy" data-copy="요가 블록 필라테스">📋</button>
+            </li>
+          </ul>
+          <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-buy-btn">
+            <span class="cb-icon">🛒</span>
+            <span class="cb-text">복사한 상품명 검색 (쿠팡)</span>
+          </a>
+          <div class="injury-alert">
+            <span class="injury-label">🔴 부상 위험 부위</span>
+            <div class="injury-tags">
+              <span class="injury-tag">손목 관절</span>
+              <span class="injury-tag">허리 디스크</span>
+              <span class="injury-tag">무릎</span>
+            </div>
+          </div>
+          <div class="first-aid">
+            <span class="first-aid-label">🏥 병원 가기 전 우선조치</span>
+            <ul class="first-aid-list">
+              <li>손목 통증 — 중립 자세 유지, 부하 중단</li>
+              <li>허리 삐끗 — 평지 누워 무릎 굽히기</li>
+              <li>냉찜질 20분 후 간격 두고 반복</li>
+              <li>저림·마비 증상 시 즉시 병원</li>
+            </ul>
+          </div>
+                    
+          <!-- 필라테스·요가 전문 쇼핑몰 (동호인 선호 TOP 3) -->
+          <div class="specialty-shop">
+            <div class="specialty-label">🧘‍♀️ 요가·필라테스 동호인 TOP 3 쇼핑몰</div>
+            <div class="specialty-card">
+              <div class="sp-name">💜 안다르 (Andar)</div>
+              <div class="sp-desc">국내 요가복 1위 · 레깅스·브라탑 퀄리티 검증</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">🔱 젝시믹스 (XEXYMIX)</div>
+              <div class="sp-desc">가성비 운동복 · 다양한 컬러·사이즈</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">🌿 룰루레몬 코리아</div>
+              <div class="sp-desc">글로벌 프리미엄 · Align 레깅스 · 필라테스인 성지</div>
+            </div>
+          </div>
+                    <div class="shop-section">
+            <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-single-btn">
+              <span class="cs-icon">🛒</span>
+              <span class="cs-main">쿠팡에서 구매하기</span>
+            </a>
+          </div>
+        </div>
+      </article>
+      
+      <!-- ========== 6. 러닝 ========== -->
+      <article class="sport s6">
+        <div class="sport-head">
+          <div class="sport-head-top">
+            <span class="sport-num">NO. 06</span>
+            <span class="sport-icon">🏃‍♀️</span>
+          </div>
+          <div class="sport-title">러닝·조깅</div>
+          <div class="sport-en">Running [러닝] = 달리기 유산소 운동</div>
+        </div>
+        <div class="sport-body">
+          <div class="recommendation">
+            <span class="rec-label">✨ 이런 분께 추천해요</span>
+            <div class="rec-who">👥 <strong>심폐지구력 향상 목표 · 체중감량 · 우울감 개선 · 새벽형 인간</strong></div>
+            <div class="rec-why">💡 엔돌핀 [엔돌핀] = 행복 호르몬 분비로 <strong>러너스 하이</strong> 기분 상승. 가장 저렴하고 효율적인 유산소</div>
+            <div class="rec-expert">👨‍⚕️ <em>스포츠의학회 추천: 주 3회, 1회 30분 이상 러닝 시 우울증 개선 효과 입증</em></div>
+          </div>
+          <div class="block-title">🎽 운동도 장비빨! 이것을 준비하면 좋아요</div>
+          <ul class="item-list">
+            <li>
+              <div class="item-text">
+                <span class="name">쿠셔닝 러닝화 (나이키·호카·아식스)</span>
+                <span class="ko">나이키 페가수스 · 호카 본디 · 아식스 젤카야노 3대장</span>
+              </div>
+              <button class="item-copy" data-copy="나이키 페가수스 러닝화">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">무봉제 양말</span>
+                <span class="ko">Seamless [심리스] = 봉제선 없는 양말</span>
+              </div>
+              <button class="item-copy" data-copy="러닝 무봉제 양말">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">윈드브레이커 재킷</span>
+                <span class="ko">Wind-breaker [윈드 브레이커] = 바람막이</span>
+              </div>
+              <button class="item-copy" data-copy="러닝 바람막이 여성">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">하이임팩트 스포츠 브라</span>
+                <span class="ko">달리기 충격 완화</span>
+              </div>
+              <button class="item-copy" data-copy="러닝 스포츠브라">📋</button>
+            </li>
+                      <li>
+              <div class="item-text">
+                <span class="name">자외선 차단 선크림 <em class="level-tag helpful">✨ 도움돼요</em></span>
+                <span class="ko">Sunscreen [선크린] SPF50+ · 야외 장시간 러닝 필수</span>
+              </div>
+              <button class="item-copy" data-copy="러닝 선크림 워터프루프">📋</button>
+            </li>
+          </ul>
+          <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-buy-btn">
+            <span class="cb-icon">🛒</span>
+            <span class="cb-text">복사한 상품명 검색 (쿠팡)</span>
+          </a>
+          <div class="injury-alert">
+            <span class="injury-label">🔴 부상 위험 부위</span>
+            <div class="injury-tags">
+              <span class="injury-tag">러너스 니 (무릎)</span>
+              <span class="injury-tag">족저근막염</span>
+              <span class="injury-tag">정강이 통증</span>
+            </div>
+          </div>
+          <div class="first-aid">
+            <span class="first-aid-label">🏥 병원 가기 전 우선조치</span>
+            <ul class="first-aid-list">
+              <li>발목 삐었을 때 — 즉시 주저앉아 멈추기</li>
+              <li>냉찜질 20분 + 탄력 붕대 압박</li>
+              <li>발을 베개 위로 올려 거상</li>
+              <li>체중 싣기 어려우면 48시간 내 정형외과</li>
+            </ul>
+          </div>
+                    
+          <!-- 러닝·조깅 전문 쇼핑몰 (동호인 선호 TOP 3) -->
+          <div class="specialty-shop">
+            <div class="specialty-label">🏃‍♀️ 러닝 동호인 TOP 3 쇼핑몰</div>
+            <div class="specialty-card">
+              <div class="sp-name">👟 나이키 공식몰</div>
+              <div class="sp-desc">페가수스·에어줌 등 러닝화 최다 선호</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">🔵 아식스 공식몰</div>
+              <div class="sp-desc">젤카야노·누사 · 장거리 러너 1순위</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">🏃 호카 (HOKA)</div>
+              <div class="sp-desc">본디·클리프톤 모델 · 푹신한 쿠션으로 마라토너가 선호</div>
+            </div>
+          </div>
+                    <div class="shop-section">
+            <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-single-btn">
+              <span class="cs-icon">🛒</span>
+              <span class="cs-main">쿠팡에서 구매하기</span>
+            </a>
+          </div>
+        </div>
+      </article>
+      
+      <!-- ========== 7. 등산 ========== -->
+      <article class="sport s7">
+        <div class="sport-head">
+          <div class="sport-head-top">
+            <span class="sport-num">NO. 07</span>
+            <span class="sport-icon">🥾</span>
+          </div>
+          <div class="sport-title">등산</div>
+          <div class="sport-en">Hiking [하이킹] = 산행·트레킹</div>
+        </div>
+        <div class="sport-body">
+          <div class="recommendation">
+            <span class="rec-label">✨ 이런 분께 추천해요</span>
+            <div class="rec-who">👥 <strong>자연을 사랑하는 분 · 고혈압·당뇨 개선 · 하체근력 강화 · 정신 힐링</strong></div>
+            <div class="rec-why">💡 오르내리는 동작으로 <strong>하체 근력·심폐지구력 동시</strong> 향상. 숲속 피톤치드 효과</div>
+            <div class="rec-expert">👨‍⚕️ <em>예방의학 권장: 주 1회 중강도 등산은 심혈관 질환 발병률 40% 감소 (단 하산 시 무릎 주의)</em></div>
+          </div>
+          <div class="block-title">🎽 운동도 장비빨! 이것을 준비하면 좋아요</div>
+          <ul class="item-list">
+            <li>
+              <div class="item-text">
+                <span class="name">방수 등산화 (K2·블랙야크·살로몬)</span>
+                <span class="ko">Gore-Tex [고어텍스] · Salomon X Ultra · K2 인기</span>
+              </div>
+              <button class="item-copy" data-copy="고어텍스 등산화 여성">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">등산 스틱</span>
+                <span class="ko">무릎 하중 30% 감소</span>
+              </div>
+              <button class="item-copy" data-copy="등산 스틱 접이식">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">메리노 울 양말</span>
+                <span class="ko">Merino Wool [메리노 울] = 양모 섬유</span>
+              </div>
+              <button class="item-copy" data-copy="메리노울 등산양말">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">허리 벨트형 배낭</span>
+                <span class="ko">Mesh [메쉬] = 등판 통풍 그물망</span>
+              </div>
+              <button class="item-copy" data-copy="등산 배낭 30L 허리벨트">📋</button>
+            </li>
+                      <li>
+              <div class="item-text">
+                <span class="name">고산용 선크림 <em class="level-tag helpful">✨ 도움돼요</em></span>
+                <span class="ko">Sunscreen [선크린] SPF50+ PA+++ · 고산 자외선은 평지의 2배</span>
+              </div>
+              <button class="item-copy" data-copy="등산 선크림 spf50">📋</button>
+            </li>
+          </ul>
+          <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-buy-btn">
+            <span class="cb-icon">🛒</span>
+            <span class="cb-text">복사한 상품명 검색 (쿠팡)</span>
+          </a>
+          <div class="injury-alert">
+            <span class="injury-label">🔴 부상 위험 부위</span>
+            <div class="injury-tags">
+              <span class="injury-tag">무릎 (하산 시)</span>
+              <span class="injury-tag">발목 염좌</span>
+              <span class="injury-tag">허리</span>
+            </div>
+          </div>
+          <div class="first-aid">
+            <span class="first-aid-label">🏥 병원 가기 전 우선조치</span>
+            <ul class="first-aid-list">
+              <li>산에서 삐었을 때 — 억지로 내려오지 말기</li>
+              <li>119 신고 or 동료 도움 받아 하산</li>
+              <li>차가운 계곡물로 임시 냉찜질</li>
+              <li>하산 후 즉시 정형외과 방문</li>
+            </ul>
+          </div>
+                    
+          <!-- 등산 전문 쇼핑몰 (동호인 선호 TOP 3) -->
+          <div class="specialty-shop">
+            <div class="specialty-label">🥾 등산 동호인 TOP 3 쇼핑몰</div>
+            <div class="specialty-card">
+              <div class="sp-name">🏔️ 블랙야크 공식몰</div>
+              <div class="sp-desc">국내 1위 아웃도어 · 고어텍스 등산화·자켓</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">🌲 노스페이스 공식몰</div>
+              <div class="sp-desc">글로벌 No.1 등산 브랜드 · 방수 성능 검증</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">⛰️ 코오롱스포츠</div>
+              <div class="sp-desc">국내 프리미엄 등산 · 헬리녹스 콜라보</div>
+            </div>
+          </div>
+                    <div class="shop-section">
+            <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-single-btn">
+              <span class="cs-icon">🛒</span>
+              <span class="cs-main">쿠팡에서 구매하기</span>
+            </a>
+          </div>
+        </div>
+      </article>
+      
+      <!-- ========== 8. 자전거 ========== -->
+      <article class="sport s8">
+        <div class="sport-head">
+          <div class="sport-head-top">
+            <span class="sport-num">NO. 08</span>
+            <span class="sport-icon">🚴‍♀️</span>
+          </div>
+          <div class="sport-title">자전거</div>
+          <div class="sport-en">Cycling [사이클링] = 자전거 유산소</div>
+        </div>
+        <div class="sport-body">
+          <div class="recommendation">
+            <span class="rec-label">✨ 이런 분께 추천해요</span>
+            <div class="rec-who">👥 <strong>무릎 관절염 환자 · 비만인 · 통근 운동 원하는 직장인 · 허리 디스크 환자</strong></div>
+            <div class="rec-why">💡 체중 부담 없이 <strong>대퇴 근육 집중 강화</strong>. 자전거 안장이 체중 지지 → 무릎·발목 보호</div>
+            <div class="rec-expert">👨‍⚕️ <em>정형외과 추천: 무릎 연골 손상·퇴행성 관절염 초기 재활 운동으로 1순위</em></div>
+          </div>
+          <div class="block-title">🎽 운동도 장비빨! 이것을 준비하면 좋아요</div>
+          <ul class="item-list">
+            <li>
+              <div class="item-text">
+                <span class="name">MIPS 헬멧</span>
+                <span class="ko">MIPS [밉스] = 회전 충격 분산 기술</span>
+              </div>
+              <button class="item-copy" data-copy="MIPS 자전거 헬멧">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">패드 반바지</span>
+                <span class="ko">Chamois [샤모아] = 안장 쿠션 패드</span>
+              </div>
+              <button class="item-copy" data-copy="자전거 패드 반바지 여성">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">사이클링 장갑</span>
+                <span class="ko">손목 충격 흡수 + 미끄럼 방지</span>
+              </div>
+              <button class="item-copy" data-copy="사이클링 장갑">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">고글·선글라스</span>
+                <span class="ko">벌레·먼지 차단용</span>
+              </div>
+              <button class="item-copy" data-copy="자전거 고글">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">클릿 슈즈·MTB 슈즈 (선택)</span>
+                <span class="ko">Cleat [클릿] = 페달 고정, 중급자 이상 추천</span>
+              </div>
+              <button class="item-copy" data-copy="클릿슈즈 로드자전거">📋</button>
+            </li>
+                      <li>
+              <div class="item-text">
+                <span class="name">자외선 차단 선크림 <em class="level-tag helpful">✨ 도움돼요</em></span>
+                <span class="ko">Sunscreen [선크린] · 얼굴·목·팔 노출 부위 필수 도포</span>
+              </div>
+              <button class="item-copy" data-copy="자전거 선크림 땀저항">📋</button>
+            </li>
+          </ul>
+          <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-buy-btn">
+            <span class="cb-icon">🛒</span>
+            <span class="cb-text">복사한 상품명 검색 (쿠팡)</span>
+          </a>
+          <div class="injury-alert">
+            <span class="injury-label">🔴 부상 위험 부위</span>
+            <div class="injury-tags">
+              <span class="injury-tag">무릎 (장경인대)</span>
+              <span class="injury-tag">손목 터널증후군</span>
+              <span class="injury-tag">회음부</span>
+            </div>
+          </div>
+          <div class="first-aid">
+            <span class="first-aid-label">🏥 병원 가기 전 우선조치</span>
+            <ul class="first-aid-list">
+              <li>넘어졌을 때 — 헬멧 절대 벗지 말고 119</li>
+              <li>머리 충격 시 어지럼증·구토 확인</li>
+              <li>찰과상 — 흐르는 물로 씻고 소독</li>
+              <li>의식 변화·기억 상실 시 즉시 응급실</li>
+            </ul>
+          </div>
+                    
+          <!-- 자전거 전문 쇼핑몰 (동호인 선호 TOP 3) -->
+          <div class="specialty-shop">
+            <div class="specialty-label">🚴‍♀️ 자전거 동호인 TOP 3 쇼핑몰</div>
+            <div class="specialty-card">
+              <div class="sp-name">🚲 자이언트 코리아</div>
+              <div class="sp-desc">세계 1위 자전거 브랜드 · MTB·로드 전문</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">🔧 삼천리자전거</div>
+              <div class="sp-desc">국내 1위 · 생활용·MTB·전기자전거 다양</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">🏁 첼로자전거</div>
+              <div class="sp-desc">로드사이클·픽시 동호인 선호 · 부품·용품 풍부</div>
+            </div>
+          </div>
+                    <div class="shop-section">
+            <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-single-btn">
+              <span class="cs-icon">🛒</span>
+              <span class="cs-main">쿠팡에서 구매하기</span>
+            </a>
+          </div>
+        </div>
+      </article>
+      
+      <!-- ========== 9. 테니스 ========== -->
+      <article class="sport s9">
+        <div class="sport-head">
+          <div class="sport-head-top">
+            <span class="sport-num">NO. 09</span>
+            <span class="sport-icon">🎾</span>
+          </div>
+          <div class="sport-title">테니스</div>
+          <div class="sport-en">Tennis [테니스] = 라켓 코트 스포츠</div>
+        </div>
+        <div class="sport-body">
+          <div class="recommendation">
+            <span class="rec-label">✨ 이런 분께 추천해요</span>
+            <div class="rec-who">👥 <strong>가족 집중력·순발력 향상 · 사회성 증진 · 다이어트</strong></div>
+            <div class="rec-why">💡 전신 근육과 <strong>순발력·판단력</strong>을 동시에 사용. 1시간 플레이로 600kcal 이상 소모</div>
+            <div class="rec-expert">👨‍⚕️ <em>헬스경향 추천: 온 가족이 함께 즐기며 집중력·순발력 향상, 단 테니스 엘보 예방 필수</em></div>
+          </div>
+          <div class="block-title">🎽 운동도 장비빨! 이것을 준비하면 좋아요</div>
+          <ul class="item-list">
+            <li>
+              <div class="item-text">
+                <span class="name">테니스화 (아식스·바볼랏·나이키)</span>
+                <span class="ko">아식스 젤레졸루션 · 바볼랏 SFX · 나이키 베이퍼</span>
+              </div>
+              <button class="item-copy" data-copy="아식스 테니스화 여성">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">엘보 밴드</span>
+                <span class="ko">Elbow Band [엘보 밴드] = 팔꿈치 압박대</span>
+              </div>
+              <button class="item-copy" data-copy="테니스 엘보 보호대">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">리스트밴드</span>
+                <span class="ko">Wristband [리스트밴드] = 손목 밴드</span>
+              </div>
+              <button class="item-copy" data-copy="테니스 리스트밴드">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">기능성 스커트·반바지</span>
+                <span class="ko">속바지 내장형 여성용</span>
+              </div>
+              <button class="item-copy" data-copy="테니스 스커트 속바지">📋</button>
+            </li>
+                      <li>
+              <div class="item-text">
+                <span class="name">자외선 차단 선크림 <em class="level-tag helpful">✨ 도움돼요</em></span>
+                <span class="ko">Sunscreen [선크린] SPF50+ · 야외 코트 자외선 차단</span>
+              </div>
+              <button class="item-copy" data-copy="테니스 선크림 spf50">📋</button>
+            </li>
+          </ul>
+          <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-buy-btn">
+            <span class="cb-icon">🛒</span>
+            <span class="cb-text">복사한 상품명 검색 (쿠팡)</span>
+          </a>
+          <div class="injury-alert">
+            <span class="injury-label">🔴 부상 위험 부위</span>
+            <div class="injury-tags">
+              <span class="injury-tag">테니스 엘보</span>
+              <span class="injury-tag">어깨 충돌증후군</span>
+              <span class="injury-tag">발목</span>
+            </div>
+          </div>
+          <div class="first-aid">
+            <span class="first-aid-label">🏥 병원 가기 전 우선조치</span>
+            <ul class="first-aid-list">
+              <li>팔꿈치 통증 — 즉시 라켓 내려놓기</li>
+              <li>냉찜질 20분 + 팔 거치대 사용</li>
+              <li>48시간 무리한 스트레칭 금지</li>
+              <li>물건 들기 어려우면 정형외과</li>
+            </ul>
+          </div>
+                    
+          <!-- 테니스 전문 쇼핑몰 (동호인 선호 TOP 3) -->
+          <div class="specialty-shop">
+            <div class="specialty-label">🎾 테니스 동호인 TOP 3 쇼핑몰</div>
+            <div class="specialty-card">
+              <div class="sp-name">🏆 스포츠코리아</div>
+              <div class="sp-desc">테니스·배드민턴·피클볼 전문 · 거성테니스 직영</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">🎾 주주스포츠</div>
+              <div class="sp-desc">30년 운영 노하우 · 부산 1위 테니스 전문</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">💎 요넥스코리아 공식몰</div>
+              <div class="sp-desc">요넥스 테니스라켓·의류 정품 + A/S 서비스</div>
+            </div>
+          </div>
+                    <div class="shop-section">
+            <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-single-btn">
+              <span class="cs-icon">🛒</span>
+              <span class="cs-main">쿠팡에서 구매하기</span>
+            </a>
+          </div>
+        </div>
+      </article>
+      
+      <!-- ========== 10. 헬스 ========== -->
+      <article class="sport s10">
+        <div class="sport-head">
+          <div class="sport-head-top">
+            <span class="sport-num">NO. 10</span>
+            <span class="sport-icon">🏋️‍♀️</span>
+          </div>
+          <div class="sport-title">헬스·웨이트</div>
+          <div class="sport-en">Weight Training [웨이트 트레이닝] = 근력 운동</div>
+        </div>
+        <div class="sport-body">
+          <div class="recommendation">
+            <span class="rec-label">✨ 이런 분께 추천해요</span>
+            <div class="rec-who">👥 <strong>근감소증 예방 · 갱년기 여성 · 기초대사량 증가 필요 · 자세 교정</strong></div>
+            <div class="rec-why">💡 <strong>근육량 증가 = 기초대사량 상승</strong>. 40대 이후 근감소증 예방에 유일한 해답</div>
+            <div class="rec-expert">👨‍⚕️ <em>내분비내과·재활의학과 권장: 폐경기 여성 골다공증 예방에 주 2~3회 웨이트 필수</em></div>
+          </div>
+          <div class="block-title">🎽 운동도 장비빨! 이것을 준비하면 좋아요</div>
+          <ul class="item-list">
+            <li>
+              <div class="item-text">
+                <span class="name">흡습속건 상·하의</span>
+                <span class="ko">Dry-fit [드라이핏] = 땀 빨리 마름, 쾌적함 유지</span>
+              </div>
+              <button class="item-copy" data-copy="헬스복 여성 드라이핏">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">플랫솔 운동화</span>
+                <span class="ko">Flat Sole [플랫 솔] = 평평한 밑창, 스쿼트·데드 안정</span>
+              </div>
+              <button class="item-copy" data-copy="플랫솔 운동화 여성">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">스포츠 타올</span>
+                <span class="ko">기구 닦고 땀 닦는 위생 필수품 (헬스장 매너)</span>
+              </div>
+              <button class="item-copy" data-copy="스포츠 타올 헬스장">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">보온 텀블러·물통</span>
+                <span class="ko">500ml+ · 운동 중 수분 섭취 필수</span>
+              </div>
+              <button class="item-copy" data-copy="운동용 텀블러 500ml">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">리프팅 벨트 <em class="level-tag">중급자용</em></span>
+                <span class="ko">Lifting Belt [리프팅 벨트] = 허리 복압 유지, 고중량 시</span>
+              </div>
+              <button class="item-copy" data-copy="리프팅 벨트 여성">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">헬스 스트랩 <em class="level-tag">중급자용</em></span>
+                <span class="ko">Strap [스트랩] = 악력 보조끈, 고중량 풀업·데드 시</span>
+              </div>
+              <button class="item-copy" data-copy="헬스 스트랩">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">무릎 슬리브 <em class="level-tag">중급자용</em></span>
+                <span class="ko">Knee Sleeve [니 슬리브] = 무릎 압박대, 스쿼트 고중량</span>
+              </div>
+              <button class="item-copy" data-copy="니슬리브 스쿼트">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">그립 장갑·초크 <em class="level-tag">중급자용</em></span>
+                <span class="ko">Chalk [초크] = 손 미끄럼 방지, 고중량 풀업·데드 시</span>
+              </div>
+              <button class="item-copy" data-copy="헬스 장갑 논슬립">📋</button>
+            </li>
+            <li>
+              <div class="item-text">
+                <span class="name">웨이트리프팅 슈즈 <em class="level-tag">중급자용</em></span>
+                <span class="ko">Weightlifting Shoes = 파워리프터·고중량 스쿼트용</span>
+              </div>
+              <button class="item-copy" data-copy="웨이트리프팅 슈즈">📋</button>
+            </li>
+                      <li>
+              <div class="item-text">
+                <span class="name">허리 보호대 <em class="level-tag helpful">✨ 도움돼요</em></span>
+                <span class="ko">Waist Support [웨이스트 서포트] = 일반 복압 보조, 초보자도 착용 가능</span>
+              </div>
+              <button class="item-copy" data-copy="허리 보호대 운동">📋</button>
+            </li>
+          </ul>
+          <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-buy-btn">
+            <span class="cb-icon">🛒</span>
+            <span class="cb-text">복사한 상품명 검색 (쿠팡)</span>
+          </a>
+          <div class="injury-alert">
+            <span class="injury-label">🔴 부상 위험 부위</span>
+            <div class="injury-tags">
+              <span class="injury-tag">허리 디스크</span>
+              <span class="injury-tag">무릎</span>
+              <span class="injury-tag">회전근개 (어깨)</span>
+            </div>
+          </div>
+          <div class="first-aid">
+            <span class="first-aid-label">🏥 병원 가기 전 우선조치</span>
+            <ul class="first-aid-list">
+              <li>허리 삐끗 — 무게 즉시 내려놓기 (안전장치 확인)</li>
+              <li>평지에 누워 무릎 굽혀 휴식</li>
+              <li>냉찜질 20분 / 1시간 간격</li>
+              <li>다리 저림·마비 시 즉시 응급실</li>
+            </ul>
+          </div>
+                    
+          <!-- 헬스·웨이트 전문 쇼핑몰 (동호인 선호 TOP 3) -->
+          <div class="specialty-shop">
+            <div class="specialty-label">🏋️‍♀️ 헬스 동호인 TOP 3 쇼핑몰</div>
+            <div class="specialty-card">
+              <div class="sp-name">💪 몬스터짐 스토어</div>
+              <div class="sp-desc">국내 최대 피트니스 전문 쇼핑몰 · 보충제·운동용품 총집합</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">🏆 개근질마트</div>
+              <div class="sp-desc">국내 NO.1 보디빌딩·피트니스 전문 · 홈트레이닝·보충제</div>
+            </div>
+            <div class="specialty-card">
+              <div class="sp-name">⚡ 멜킨 스포츠</div>
+              <div class="sp-desc">헬스 보호대·장갑·운동매트 등 국산 용품 전문</div>
+            </div>
+          </div>
+                    <div class="shop-section">
+            <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-single-btn">
+              <span class="cs-icon">🛒</span>
+              <span class="cs-main">쿠팡에서 구매하기</span>
+            </a>
+          </div>
+        </div>
+      </article>
+      
+    </div>
+  </div>
+  
+  <div class="indicator-wrap" id="indicators"></div>
+</section>
+
+<!-- ============ 정보 출처 + 사용 방법 (2칼럼 나란히) ============ -->
+<div class="info-grid">
+  <!-- 왼쪽: 정보 출처 -->
+  <div class="sources-section">
+    <h3>📚 정보 출처</h3>
+    <p class="sources-sub">공신력 있는 기관 자료 기반</p>
+    <ul class="sources-list">
+      <li>
+        <strong>🏥 대한정형외과학회 (KOA)</strong>
+        스포츠 손상 예방 가이드라인
+      </li>
+      <li>
+        <strong>🏥 대한스포츠의학회 (KSSM)</strong>
+        종목별 스포츠 의학 지침
+      </li>
+      <li>
+        <strong>🏥 질병관리청 건강정보포털</strong>
+        운동 안전수칙·응급처치(RICE)
+      </li>
+      <li>
+        <strong>🏥 대한재활의학회</strong>
+        스포츠 재활·부상 관리
+      </li>
+      <li>
+        <strong>🌐 WHO 세계보건기구</strong>
+        Physical Activity 가이드라인
+      </li>
+      <li>
+        <strong>🌐 ACSM 미국스포츠의학회</strong>
+        운동 권장 지침
+      </li>
+    </ul>
+    <p class="sources-footnote">
+      ⚠️ 일반적 건강 정보이며, 개별 증상은 반드시 전문의 상담이 필요합니다
+    </p>
+  </div>
+  
+  <!-- 오른쪽: 사용 방법 + 공통 주의사항 -->
+  <div class="guide-box">
+    <div class="guide-title">💡 이 페이지 사용방법</div>
+    <div class="guide-steps">
+      <div class="guide-step">
+        <div class="step-num">1</div>
+        <div>관심있는 운동 카드를 <strong>좌우로 넘겨보기</strong></div>
+      </div>
+      <div class="guide-step">
+        <div class="step-num">2</div>
+        <div>필수 아이템 옆 <strong>📋복사</strong> 버튼 탭</div>
+      </div>
+      <div class="guide-step">
+        <div class="step-num">3</div>
+        <div>카드 하단 <strong>🛒 쿠팡에서 구매하기</strong> 버튼 탭</div>
+      </div>
+      <div class="guide-step">
+        <div class="step-num">4</div>
+        <div>쿠팡 검색창에 <strong>붙여넣고</strong> 가격·리뷰 비교 후 구매</div>
+      </div>
+    </div>
+    
+    <!-- 구분선 -->
+    <div class="guide-divider"></div>
+    
+    <!-- 공통 주의사항 -->
+    <div class="guide-caution">
+      <div class="guide-caution-title">⚠️ 모든 운동 공통 주의사항</div>
+      <ul class="guide-caution-list">
+        <li>사전 스트레칭 <strong>10분 필수</strong> (부상 50% 감소)</li>
+        <li>40대 이후는 <strong>주 2~3회 이내</strong> 권장</li>
+        <li>통증 발생 시 즉시 중단 + 정형외과·재활의학과 상담</li>
+        <li>본 내용은 일반 정보이며, 개인 체형·지병에 따라 <strong>전문가 상담 필수</strong></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 공통 주의사항은 사용법 박스 안으로 통합됨 -->
+
+<!-- ============ 스포츠용품 할인 매장 정보 ============ -->
+<div class="affiliate">
+  <h3>🏪 지금 할인 중인 스포츠용품 매장</h3>
+  <p class="sub">2026년 4월 기준 — 온·오프라인 할인 큰 매장 TOP 10</p>
+  
+  <!-- 온라인 + 오프라인 2칼럼 배치 -->
+  <div class="stores-grid">
+    <!-- 온라인 할인 매장 -->
+    <div class="store-section">
+      <div class="store-section-title">
+        <span class="store-label-icon">🌐</span>
+        <span class="store-label-text">온라인 쇼핑몰</span>
+      </div>
+      <div class="store-list">
+        <a href="https://www.adidas.co.kr/outlet" target="_blank" rel="noopener" class="store-card online">
+          <div class="store-name">아디다스 아울렛</div>
+          <div class="store-info">추가 30% 할인 · 2개+ 추가</div>
+          <div class="store-link">adidas.co.kr/outlet ↗</div>
+        </a>
+        <a href="https://www.decathlon.co.kr/" target="_blank" rel="noopener" class="store-card online">
+          <div class="store-name">데카트론 공식몰</div>
+          <div class="store-info">첫구매 20% · 쿠폰: <strong>welcome</strong></div>
+          <div class="store-link">decathlon.co.kr ↗</div>
+        </a>
+        <a href="https://www.kolonmall.com/" target="_blank" rel="noopener" class="store-card online">
+          <div class="store-name">코오롱몰</div>
+          <div class="store-info">코오롱스포츠·헬리녹스 타임딜</div>
+          <div class="store-link">kolonmall.com ↗</div>
+        </a>
+        <a href="https://www.tradeinn.com/outletinn/ko" target="_blank" rel="noopener" class="store-card online">
+          <div class="store-name">Outletinn 아울렛인</div>
+          <div class="store-info">나이키·노스페이스 <strong>최대 70%</strong></div>
+          <div class="store-link">tradeinn.com ↗</div>
+        </a>
+        <a href="https://mariomall.co.kr/" target="_blank" rel="noopener" class="store-card online">
+          <div class="store-name">마리오몰</div>
+          <div class="store-info">스포츠/아웃도어 상시 할인</div>
+          <div class="store-link">mariomall.co.kr ↗</div>
+        </a>
+        <a href="https://www.musinsa.com/campaign/sportouter2025/0" target="_blank" rel="noopener" class="store-card online">
+          <div class="store-name">무신사 스포츠관</div>
+          <div class="store-info">스포츠 아우터 페스티벌 <strong>최대 30%</strong></div>
+          <div class="store-link">musinsa.com ↗</div>
+        </a>
+        <a href="https://www.spao.com/" target="_blank" rel="noopener" class="store-card online">
+          <div class="store-name">스파오 공식몰</div>
+          <div class="store-info">가성비 스포츠웨어 · 상시 특가</div>
+          <div class="store-link">spao.com ↗</div>
+        </a>
+      </div>
+    </div>
+    
+    <!-- 오프라인 할인 매장 -->
+    <div class="store-section">
+      <div class="store-section-title">
+        <span class="store-label-icon">🏢</span>
+        <span class="store-label-text">오프라인 매장</span>
+      </div>
+      <div class="store-list">
+        <div class="store-card offline">
+          <div class="store-name">문정 로데오거리</div>
+          <div class="store-info">국내·해외 브랜드 아울렛</div>
+          <div class="store-address">📍 서울 송파구 문정동<br>(8호선 문정역 1번 출구)</div>
+        </div>
+        <div class="store-card offline">
+          <div class="store-name">마리오아울렛</div>
+          <div class="store-info">상시 50~70% 할인</div>
+          <div class="store-address">📍 서울 구로구 경인로51길 77<br>(1호선 가산디지털단지역)</div>
+        </div>
+        <div class="store-card offline">
+          <div class="store-name">여주·파주 프리미엄 아울렛</div>
+          <div class="store-info">나이키·아디다스 공식 아울렛</div>
+          <div class="store-address">📍 경기 여주 명품로 360<br>경기 파주 필승로 200</div>
+        </div>
+        <div class="store-card offline">
+          <div class="store-name">동대문 평화시장</div>
+          <div class="store-info">배드민턴·테니스 도매가</div>
+          <div class="store-address">📍 서울 중구 을지로6가 17<br>(동대문역사문화공원역)</div>
+        </div>
+        <div class="store-card offline">
+          <div class="store-name">데카트론 송도·하남점</div>
+          <div class="store-info">자체 브랜드 가성비 최강</div>
+          <div class="store-address">📍 인천 연수구 컨벤시아대로 165<br>경기 하남시 미사대로 750</div>
+        </div>
+        <div class="store-card offline">
+          <div class="store-name">롯데프리미엄아울렛 기흥점</div>
+          <div class="store-info">아시아 최대 나이키 팩토리 아울렛 입점</div>
+          <div class="store-address">📍 경기 용인시 기흥구 신고매로 124<br>(나이키 유나이티드 스토어)</div>
+        </div>
+        <div class="store-card offline">
+          <div class="store-name">이케아 기흥점 근처</div>
+          <div class="store-info">리빙파워센터 · 스포츠 복합 쇼핑</div>
+          <div class="store-address">📍 경기 용인시 기흥구 신고매로 일대<br>(롯데아울렛 바로 옆)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- ⚠️ 할인 정보 안내 -->
+  <p class="store-disclaimer">
+    ⚠️ 할인율·행사 내용은 매장별 변동 가능 — 방문·구매 전 반드시 해당 매장에 확인하세요
+  </p>
+  
+  <!-- ============ 쿠팡 실시간 스포츠 할인 행사 ============ -->
+  <div class="coupang-sale-section">
+    <h3 class="sale-title">
+      <span class="sale-fire">🔥</span>
+      쿠팡 스포츠 할인 행사
+      <span class="sale-live">LIVE</span>
+    </h3>
+    <p class="sale-sub">카테고리를 선택하면 쿠팡 메인으로 이동합니다 · 위에서 복사한 검색어를 활용해주세요</p>
+    
+    <div class="sale-grid">
+      <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="sale-card sale1">
+        <div class="sale-emoji">🏃‍♀️</div>
+        <div class="sale-info">
+          <div class="sale-name">운동화·스포츠화</div>
+          <div class="sale-period">상시 할인 진행 중</div>
+        </div>
+        <div class="sale-arrow">🔍</div>
+      </a>
+      <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="sale-card sale2">
+        <div class="sale-emoji">👕</div>
+        <div class="sale-info">
+          <div class="sale-name">스포츠웨어·레깅스</div>
+          <div class="sale-period">주간 특가 · 매주 변동</div>
+        </div>
+        <div class="sale-arrow">🔍</div>
+      </a>
+      <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="sale-card sale3">
+        <div class="sale-emoji">🏋️</div>
+        <div class="sale-info">
+          <div class="sale-name">헬스·요가 용품</div>
+          <div class="sale-period">로켓배송 특가 상시</div>
+        </div>
+        <div class="sale-arrow">🔍</div>
+      </a>
+      <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="sale-card sale4">
+        <div class="sale-emoji">⚽</div>
+        <div class="sale-info">
+          <div class="sale-name">구기·라켓 용품</div>
+          <div class="sale-period">시즌별 기획전</div>
+        </div>
+        <div class="sale-arrow">🔍</div>
+      </a>
+      <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="sale-card sale5">
+        <div class="sale-emoji">🏕️</div>
+        <div class="sale-info">
+          <div class="sale-name">등산·캠핑 아웃도어</div>
+          <div class="sale-period">4월 봄맞이 세일 중</div>
+        </div>
+        <div class="sale-arrow">🔍</div>
+      </a>
+      <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="sale-card sale6">
+        <div class="sale-emoji">🎯</div>
+        <div class="sale-info">
+          <div class="sale-name">쿠팡 와우 전용 특가</div>
+          <div class="sale-period">와우 회원 한정</div>
+        </div>
+        <div class="sale-arrow">🔍</div>
+      </a>
+    </div>
+    
+    <p class="sale-notice">
+      💡 행사 기간·할인율은 쿠팡 공식 사이트에서 실시간 업데이트됩니다<br>
+      쿠폰 발급일: <strong>매월 1일</strong> / 와우 특가: <strong>24시간 변동</strong>
+    </p>
+  </div>
+</div>
+
+<!-- ============ 파트너스 링크 4종 (균등 배치) ============ -->
+<div class="affiliate">
+  <h3>🛒 파트너스 쇼핑몰</h3>
+  <p class="sub">가격 비교 후 최저가에서 구매하세요</p>
+  
+  <div class="aff-grid-4">
+    <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="aff-btn aff-coupang">
+      <span class="ic">🛒</span>
+      <span class="nm">쿠팡</span>
+      <span class="dc">로켓배송</span>
+    </a>
+    <a href="https://bitl.bz/qQEIlA" target="_blank" rel="noopener" class="aff-btn aff-temu">
+      <span class="ic">🛍️</span>
+      <span class="nm">테무</span>
+      <span class="dc">가성비</span>
+    </a>
+    <a href="https://bitl.bz/fjcH9p" target="_blank" rel="noopener" class="aff-btn aff-ali">
+      <span class="ic">📦</span>
+      <span class="nm">알리</span>
+      <span class="dc">해외직구</span>
+    </a>
+    <a href="https://kr.trip.com/?Allianceid=8001792&SID=302477743&trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&trip_sub3=D14461428" target="_blank" rel="noopener" class="aff-btn aff-trip">
+      <span class="ic">✈️</span>
+      <span class="nm">트립닷컴</span>
+      <span class="dc">여행·호텔</span>
+    </a>
+  </div>
+  
+  <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="coupang-search-btn">
+    🔍 쿠팡에서 복사한 상품명 바로 검색하기
+  </a>
+</div>
+
+<!-- ============ 푸터 (심플) ============ -->
+<footer>
+  <p class="footer-simple">© 2026 RICH·ON</p>
+</footer>
+
+<div id="toast" class="toast">✅ 복사 완료!</div>
+
+<script>
+  const toast = document.getElementById('toast');
+  let toastTimer;
+  
+  function showToast(msg, isError = false) {
+    toast.textContent = msg;
+    toast.style.background = isError ? '#d64545' : '#4a9d7f';
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+  
+  // 🎯 복사 실패 시 수동 복사 모달 띄우기
+  function showManualCopyModal(text) {
+    const modal = document.createElement('div');
+    modal.className = 'manual-copy-modal';
+    modal.innerHTML = `
+      <div class="manual-copy-box">
+        <div class="manual-copy-title">📋 아래 텍스트를 길게 눌러 복사해주세요</div>
+        <input type="text" class="manual-copy-input" value="${text}" readonly>
+        <div class="manual-copy-hint">👆 텍스트 박스를 탭하면 전체 선택됩니다</div>
+        <button class="manual-copy-close">닫기</button>
+      </div>
+    `;
+    document.body.appendChild(modal);
+    
+    // 입력창 자동 선택
+    const input = modal.querySelector('.manual-copy-input');
+    setTimeout(() => {
+      input.focus();
+      input.select();
+      input.setSelectionRange(0, 99999); // 모바일 대응
+    }, 100);
+    
+    // 탭 시 다시 선택
+    input.addEventListener('click', () => {
+      input.select();
+      input.setSelectionRange(0, 99999);
+    });
+    
+    // 닫기
+    modal.querySelector('.manual-copy-close').addEventListener('click', () => modal.remove());
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.remove();
+    });
+  }
+  
+  // 🎯 복사 시도 (3중 안전장치)
+  async function tryCopy(text) {
+    // 1차: 최신 Clipboard API
+    if (navigator.clipboard && window.isSecureContext) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (err) {
+        // 조용히 fallback으로 넘어감
+      }
+    }
+    
+    // 2차: execCommand fallback
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.top = '0';
+      ta.style.left = '0';
+      ta.style.opacity = '0';
+      ta.setAttribute('readonly', '');
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      ta.setSelectionRange(0, 99999);
+      const successful = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if (successful) return true;
+    } catch (err) {
+      // 조용히 3차로 넘어감
+    }
+    
+    // 3차: 수동 복사 모달
+    return false;
+  }
+  
+  document.querySelectorAll('.item-copy').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const text = btn.dataset.copy;
+      
+      const success = await tryCopy(text);
+      
+      if (success) {
+        const original = btn.textContent;
+        btn.textContent = '✓';
+        btn.classList.add('copied');
+        showToast(`✅ "${text}" 복사됨!`);
+        setTimeout(() => {
+          btn.textContent = original;
+          btn.classList.remove('copied');
+        }, 1500);
+      } else {
+        // 자동 복사 실패 → 수동 복사 모달
+        showManualCopyModal(text);
+      }
+    });
+  });
+  
+  const carousel = document.getElementById('carousel');
+  const sports = carousel.querySelectorAll('.sport');
+  const indicatorWrap = document.getElementById('indicators');
+  
+  sports.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'indicator' + (i === 0 ? ' active' : '');
+    dot.addEventListener('click', () => {
+      const cardWidth = sports[0].offsetWidth + 16;
+      carousel.scrollTo({ left: cardWidth * i, behavior: 'smooth' });
+    });
+    indicatorWrap.appendChild(dot);
+  });
+  
+  const indicators = indicatorWrap.querySelectorAll('.indicator');
+  
+  carousel.addEventListener('scroll', () => {
+    const cardWidth = sports[0].offsetWidth + 16;
+    const index = Math.round(carousel.scrollLeft / cardWidth);
+    indicators.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+  });
+  
+  function scrollCarousel(direction) {
+    const cardWidth = sports[0].offsetWidth + 16;
+    carousel.scrollBy({ left: cardWidth * direction, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
