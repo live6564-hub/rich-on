@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>리치온 × 코스트코 — 인기 15선</title>
+<meta name="description" content="쿠팡에서 만나는 코스트코 인기 상품 15선. 큐레이션 by 로아 (Rich-On).">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400..700;1,400..700&family=Gowun+Batang:wght@400;700&family=Nanum+Pen+Script&family=Pretendard:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FFFCF7;
+    --bg-warm: #FFF3E8;
+    --ink: #1E2D4A;
+    --ink-soft: #4A5876;
+    --ink-muted: #8A95AC;
+    --line: #EFE6D8;
+    --peach: #E8B4A0;
+    --peach-soft: #FCEAE0;
+    --gold: #D4A56B;
+    --gold-soft: #F5E5CC;
+    --mint: #A8C5B5;
+    --sky: #7B9DC4;
+    --coupang-red: #C8102E;
+    --cream: #FFFCF7;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Pretendard', sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  .container {
+    max-width: 420px;
+    margin: 0 auto;
+    background: var(--bg);
+    min-height: 100vh;
+    position: relative;
+  }
+  
+  /* ======== 헤더 (컴팩트) ======== */
+  .header {
+    text-align: center;
+    padding: 18px 22px 14px;
+    background: linear-gradient(180deg, var(--bg) 0%, var(--bg-warm) 100%);
+    border-bottom: 1px solid var(--line);
+  }
+  .header-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 11px;
+    color: var(--peach);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .header-title {
+    font-size: 21px;
+    font-weight: 900;
+    line-height: 1.25;
+    letter-spacing: -0.03em;
+    margin-bottom: 4px;
+  }
+  .header-title .accent {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 600;
+    color: var(--peach);
+  }
+  .header-sub {
+    font-family: 'Gowun Batang', serif;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+  
+  /* ======== 상단 쿠팡 안내 배너 (2칸 넓이) ======== */
+  .top-coupang-banner {
+    margin: 12px 18px 6px;
+    background: linear-gradient(135deg, #FFF8EC 0%, #FFE5E8 100%);
+    border: 1.5px solid var(--coupang-red);
+    border-radius: 10px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+  }
+  .top-coupang-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid var(--gold);
+    border-left: 2px solid var(--gold);
+  }
+  .top-coupang-banner::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-bottom: 2px solid var(--gold);
+    border-right: 2px solid var(--gold);
+  }
+  .top-coupang-banner:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(200, 16, 46, 0.2);
+  }
+  .banner-icon {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    background: white;
+    border: 1.5px solid var(--coupang-red);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+  }
+  .banner-content {
+    flex: 1;
+    min-width: 0;
+  }
+  .banner-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 10px;
+    color: var(--coupang-red);
+    letter-spacing: 0.08em;
+    margin-bottom: 2px;
+    font-weight: 600;
+  }
+  .banner-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 2px;
+    line-height: 1.3;
+  }
+  .banner-title .red {
+    color: var(--coupang-red);
+  }
+  .banner-sub {
+    font-size: 10px;
+    color: var(--ink-muted);
+    line-height: 1.3;
+  }
+  .banner-arrow {
+    flex-shrink: 0;
+    color: var(--coupang-red);
+    font-size: 18px;
+    font-weight: 800;
+  }
+  
+  /* ======== 카테고리 그리드 (컴팩트) ======== */
+  .category-section {
+    padding: 10px 18px 14px;
+    background: var(--bg);
+  }
+  .category-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-align: center;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+  }
+  .category-subtitle {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ink);
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .category-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .category-card {
+    background: var(--bg-warm);
+    border: 2px solid var(--ink);
+    border-radius: 4px;
+    padding: 12px 6px 10px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .category-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    border-top: 2px solid var(--gold);
+    border-left: 2px solid var(--gold);
+    border-top-left-radius: 4px;
+  }
+  .category-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 8px;
+    height: 8px;
+    border-bottom: 2px solid var(--gold);
+    border-right: 2px solid var(--gold);
+    border-bottom-right-radius: 4px;
+  }
+  .category-card:hover {
+    background: var(--peach-soft);
+    transform: translateY(-1px);
+  }
+  .category-card.active {
+    background: white;
+    border-width: 2.5px;
+    box-shadow: 0 2px 8px rgba(30, 45, 74, 0.15);
+  }
+  .category-icon {
+    font-size: 18px;
+    margin-bottom: 3px;
+    line-height: 1;
+  }
+  .category-en {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 9px;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    margin-bottom: 1px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .category-kr {
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  
+  /* ======== 상품 그리드 (컴팩트) ======== */
+  .products-section {
+    padding: 14px 18px 20px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-align: center;
+    margin-bottom: 2px;
+    text-transform: uppercase;
+  }
+  .section-subtitle {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ink);
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .product-card {
+    background: white;
+    border: 1.5px solid var(--ink);
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+  /* 상품 카드 모서리 골드 액센트 */
+  .product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 10px;
+    border-top: 2px solid var(--gold);
+    border-left: 2px solid var(--gold);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .product-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-bottom: 2px solid var(--gold);
+    border-right: 2px solid var(--gold);
+    z-index: 2;
+    pointer-events: none;
+  }
+  .product-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(30, 45, 74, 0.18);
+    border-color: var(--ink);
+    border-width: 2px;
+  }
+  .product-thumb {
+    aspect-ratio: 1.4 / 1;
+    background: linear-gradient(135deg, var(--peach-soft) 0%, var(--gold-soft) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    position: relative;
+  }
+  .product-pick {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background: linear-gradient(135deg, var(--gold) 0%, #B8895A 100%);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 8px;
+    font-weight: 800;
+    padding: 2px 5px;
+    border-radius: 3px;
+    letter-spacing: 0.04em;
+  }
+  .product-roa {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: var(--coupang-red);
+    color: white;
+    font-size: 9px;
+    font-weight: 800;
+    padding: 2px 5px;
+    border-radius: 3px;
+    letter-spacing: -0.02em;
+  }
+  .product-info {
+    padding: 7px 8px 8px;
+  }
+  .product-cat {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 8px;
+    color: var(--peach);
+    margin-bottom: 1px;
+    letter-spacing: 0.04em;
+  }
+  .product-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.3;
+    margin-bottom: 2px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    min-height: 28px;
+  }
+  .product-tag {
+    font-size: 9px;
+    color: var(--ink-muted);
+    line-height: 1.3;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  /* ======== 푸터 (컴팩트) ======== */
+  .footer {
+    background: var(--ink);
+    color: rgba(255, 252, 247, 0.85);
+    padding: 18px 22px 16px;
+    text-align: center;
+  }
+  .footer-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .footer-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .partner-notice {
+    background: rgba(212, 165, 107, 0.1);
+    border: 1px solid rgba(212, 165, 107, 0.3);
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  .partner-notice-desc {
+    font-size: 9px;
+    line-height: 1.5;
+    color: rgba(255, 252, 247, 0.7);
+    font-family: 'Gowun Batang', serif;
+  }
+  .partner-notice-desc strong {
+    color: var(--gold-soft);
+    font-weight: 700;
+  }
+  .copyright {
+    font-size: 9px;
+    color: rgba(255, 252, 247, 0.5);
+    line-height: 1.5;
+  }
+  .copyright strong {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    color: var(--gold);
+    font-size: 11px;
+  }
+
+  /* 헤더 타이틀 강조 */
+  .brand-coupang-red {
+    font-family: 'Pretendard', sans-serif;
+    font-weight: 900;
+    background: linear-gradient(135deg, #C8102E 0%, #9A0C24 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.02em;
+    padding: 0 2px;
+  }
+  .costco-big {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-weight: 700;
+    color: var(--peach);
+    font-size: 1.1em;
+    letter-spacing: -0.02em;
+  }
+
+
+  /* 쿠팡 파트너스 가이드 카드 */
+  .guide-card {
+    background: linear-gradient(135deg, #FFF8EC 0%, #FFE5E8 100%) !important;
+    border-color: var(--coupang-red) !important;
+    cursor: default !important;
+  }
+  .guide-card:hover {
+    transform: none !important;
+    border-width: 1.5px !important;
+    box-shadow: 0 2px 8px rgba(200, 16, 46, 0.15) !important;
+  }
+  .guide-thumb {
+    background: linear-gradient(135deg, #FFE5E8 0%, #FFFCF7 100%) !important;
+  }
+  .guide-icon {
+    font-size: 36px;
+    line-height: 1;
+  }
+  .guide-pick {
+    background: var(--coupang-red) !important;
+    color: white !important;
+  }
+  .guide-cat {
+    color: var(--coupang-red) !important;
+    font-weight: 700 !important;
+  }
+  .guide-name {
+    color: var(--coupang-red) !important;
+    font-weight: 800 !important;
+    line-height: 1.25 !important;
+    font-size: 12px !important;
+  }
+  .guide-tag {
+    color: var(--coupang-red) !important;
+    font-weight: 700 !important;
+  }
+
+
+  /* ======== 가이드 모달 ======== */
+  .guide-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(30, 45, 74, 0.6);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+  .guide-modal.show {
+    display: flex;
+    animation: fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .guide-modal-content {
+    background: var(--bg);
+    max-width: 380px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    border: 2px solid var(--ink);
+    border-radius: 12px;
+    padding: 22px 20px 18px;
+    position: relative;
+    box-shadow: 0 12px 40px rgba(30, 45, 74, 0.3);
+    animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  @keyframes slideUp {
+    from { transform: translateY(30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .guide-modal-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    border-top: 2.5px solid var(--gold);
+    border-left: 2.5px solid var(--gold);
+    border-top-left-radius: 12px;
+  }
+  .guide-modal-content::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 16px;
+    height: 16px;
+    border-bottom: 2.5px solid var(--gold);
+    border-right: 2.5px solid var(--gold);
+    border-bottom-right-radius: 12px;
+  }
+  .guide-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: var(--ink-muted);
+    cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    font-family: 'Pretendard', sans-serif;
+  }
+  .guide-modal-close:hover {
+    background: var(--bg-warm);
+    color: var(--ink);
+  }
+  .modal-tag {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 11px;
+    color: var(--coupang-red);
+    letter-spacing: 0.1em;
+    text-align: center;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .modal-title {
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--ink);
+    text-align: center;
+    line-height: 1.3;
+    margin-bottom: 18px;
+    letter-spacing: -0.02em;
+  }
+  .modal-pin {
+    font-size: 18px;
+    margin-right: 4px;
+  }
+  .modal-section {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+  }
+  .modal-section-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .modal-section-desc {
+    font-family: 'Gowun Batang', serif;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .modal-section-desc strong {
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .modal-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .modal-list li {
+    font-family: 'Gowun Batang', serif;
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: var(--ink-soft);
+    padding: 2px 0;
+  }
+  .modal-list li strong {
+    color: var(--coupang-red);
+    font-weight: 800;
+    font-family: 'Pretendard', sans-serif;
+  }
+  .modal-footer-text {
+    text-align: center;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--line);
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 11px;
+    color: var(--gold);
+    line-height: 1.6;
+  }
+  .modal-footer-text small {
+    font-family: 'Pretendard', sans-serif;
+    font-style: normal;
+    font-size: 9px;
+    color: var(--ink-muted);
+    letter-spacing: 0.04em;
+  }
+
+
+  /* 이모지 조합 (올리브유 등) */
+  .emoji-combo {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 26px;
+    line-height: 1;
+    letter-spacing: -2px;
+  }
+
+</style>
+</head>
+<body>
+  <div class="container">
+    
+    <!-- ============ 헤더 ============ -->
+    <div class="header">
+      <div class="header-tag">— Costco × Coupang —</div>
+      <h1 class="header-title">
+        <span class="brand-coupang-red">쿠팡</span>에서 만나는<br>
+        <span class="costco-big">코스트코</span> 인기 15선
+      </h1>
+      <p class="header-sub">
+        Curated by <strong>Rich-On</strong>
+      </p>
+    </div>
+    
+    <!-- ============ 상단 쿠팡 안내 (2칸 넓이) ============ -->
+    <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener" class="top-coupang-banner">
+      <div class="banner-icon">📌</div>
+      <div class="banner-content">
+        <div class="banner-tag">— Coupang Partners —</div>
+        <div class="banner-title"><span class="red">쿠팡</span>에서 현재 가격 확인</div>
+        <div class="banner-sub">검색어 복사 → 쿠팡 검색 → 비교 후 구매</div>
+      </div>
+      <div class="banner-arrow">›</div>
+    </a>
+    
+    <!-- ============ 카테고리 그리드 ============ -->
+    <div class="category-section">
+      <div class="category-title">— Categories —</div>
+      <div class="category-subtitle">카테고리별 보기</div>
+      
+      <div class="category-grid">
+        <div class="category-card active" onclick="filterCategory('all', this)">
+          <div class="category-icon">🏠</div>
+          <div class="category-en">All</div>
+          <div class="category-kr">전체</div>
+        </div>
+        <div class="category-card" onclick="filterCategory('roa', this)">
+          <div class="category-icon">⭐</div>
+          <div class="category-en">Top Pick</div>
+          <div class="category-kr">추천 픽</div>
+        </div>
+        <div class="category-card" onclick="filterCategory('food', this)">
+          <div class="category-icon">🍱</div>
+          <div class="category-en">Food</div>
+          <div class="category-kr">식품</div>
+        </div>
+        <div class="category-card" onclick="filterCategory('living', this)">
+          <div class="category-icon">🧺</div>
+          <div class="category-en">Living</div>
+          <div class="category-kr">생활용품</div>
+        </div>
+        <div class="category-card" onclick="filterCategory('kitchen', this)">
+          <div class="category-icon">🍳</div>
+          <div class="category-en">Kitchen</div>
+          <div class="category-kr">주방용품</div>
+        </div>
+        <div class="category-card" onclick="filterCategory('beauty', this)">
+          <div class="category-icon">💄</div>
+          <div class="category-en">Beauty</div>
+          <div class="category-kr">뷰티</div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ============ 상품 그리드 ============ -->
+    <div class="products-section">
+      <div class="section-title">— Costco Top 15 —</div>
+      <div class="section-subtitle">코스트코 인기 15선</div>
+      
+      <div class="products-grid" id="productsGrid">
+        
+        <a href="01-세탁세제팟.html" class="product-card" data-cat="living">
+          <div class="product-thumb">
+            🧺
+            <span class="product-pick">Pick</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">— Laundry —</div>
+            <div class="product-name">커클랜드 울트라클린 152개입</div>
+            <div class="product-tag">한 통 약 5~6개월</div>
+          </div>
+        </a>
+        
+        <a href="02-올리브유.html" class="product-card" data-cat="food">
+          <div class="product-thumb">
+            <span class="emoji-combo">🫒🍶</span>
+            <span class="product-pick">Pick</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">— EVOO —</div>
+            <div class="product-name">커클랜드 유기농 올리브유 2L</div>
+            <div class="product-tag">USDA Organic</div>
+          </div>
+        </a>
+        
+        <a href="04-화장지.html" class="product-card" data-cat="living">
+          <div class="product-thumb">
+            🧻
+            <span class="product-pick">Pick</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">— Tissue —</div>
+            <div class="product-name">커클랜드 프리미엄 화장지 30롤</div>
+            <div class="product-tag">2-ply 부드러움</div>
+          </div>
+        </a>
+        
+        <a href="05-비비고왕교자.html" class="product-card" data-cat="food">
+          <div class="product-thumb">
+            🥟
+            <span class="product-pick">Pick</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">— Dumpling —</div>
+            <div class="product-name">비비고 왕교자 1.05kg</div>
+            <div class="product-tag">국민 만두</div>
+          </div>
+        </a>
+        
+        <a href="06-단백질바.html" class="product-card" data-cat="food">
+          <div class="product-thumb">
+            🍫
+            <span class="product-pick">Pick</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">— Protein —</div>
+            <div class="product-name">커클랜드 프로틴바 60g 20개입</div>
+            <div class="product-tag">21g 단백질</div>
+          </div>
+        </a>
+        
+        <a href="07-퍼시픽볼드커피.html" class="product-card" data-cat="food">
+          <div class="product-thumb">
+            ☕
+            <span class="product-pick">Pick</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">— Coffee —</div>
+            <div class="product-name">커클랜드 퍼시픽 볼드 1.13kg</div>
+            <div class="product-tag">100% Arabica</div>
+          </div>
+        </a>
+        
+        <a href="08-새우.html" class="product-card" data-cat="food">
+          <div class="product-thumb">
+            🦐
+            <span class="product-pick">Pick</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">— Shrimp —</div>
+            <div class="product-name">커클랜드 생새우 31-40 908g</div>
+            <div class="product-tag">손질 완료</div>
+          </div>
+        </a>
+        
+        <a href="09-스테이크.html" class="product-card" data-cat="food">
+          <div class="product-thumb">
+            🥩
+            <span class="product-pick">Pick</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">— Beef —</div>
+            <div class="product-name">USDA Prime 부채살</div>
+            <div class="product-tag">가성비 마블링</div>
+          </div>
+        </a>
+        
+        <a href="10-종이호일.html" class="product-card" data-cat="kitchen">
+          <div class="product-thumb">
+            📜
+            <span class="product-pick">Pick</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">— Parchment —</div>
+            <div class="product-name">커클랜드 종이호일 205sq</div>
+            <div class="product-tag">425℉ 내열</div>
+          </div>
+        </a>
+        
+        <a href="11-지퍼락.html" class="product-card" data-cat="kitchen roa">
+          <div class="product-thumb">
+            🛍️
+            <span class="product-pick">Pick</span>
+            <span class="product-roa">⭐ 픽</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">— Ziploc —</div>
+            <div class="product-name">코스트코 지퍼락 버라이어티팩</div>
+            <div class="product-tag">S·M·L 한 박스</div>
+          </div>
+        </a>
+        
+        <a href="12-샴푸컨디셔너.html" class="product-card" data-cat="beauty">
+          <div class="product-thumb">
+            🧴
+            <span class="product-pick">Pick</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">— Hair Care —</div>
+            <div class="product-name">커클랜드 모이스처 샴푸+컨디셔너 1L</div>
+            <div class="product-tag">Sulfate-Free</div>
+          </div>
+        </a>
+        
+        <a href="15-다우니.html" class="product-card" data-cat="living">
+          <div class="product-thumb">
+            🌸
+            <span class="product-pick">Pick</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">— Softener —</div>
+            <div class="product-name">다우니 라벤더 3.83L</div>
+            <div class="product-tag">P&G 정품</div>
+          </div>
+        </a>
+        
+        <a href="18-세타필.html" class="product-card" data-cat="beauty">
+          <div class="product-thumb">
+            💧
+            <span class="product-pick">Pick</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">— Lotion —</div>
+            <div class="product-name">세타필 모이스처라이징 591ml × 2</div>
+            <div class="product-tag">Galderma</div>
+          </div>
+        </a>
+        
+        <a href="19-필립스에어프라이어.html" class="product-card" data-cat="kitchen">
+          <div class="product-thumb">
+            🍟
+            <span class="product-pick">Pick</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">— Airfryer —</div>
+            <div class="product-name">필립스 에어프라이어 XXL HD9270</div>
+            <div class="product-tag">Rapid Air</div>
+          </div>
+        </a>
+        
+        <a href="23-피노헤어마스크.html" class="product-card" data-cat="beauty roa">
+          <div class="product-thumb">
+            💆
+            <span class="product-pick">Pick</span>
+            <span class="product-roa">⭐ 픽</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat">— Hair Mask —</div>
+            <div class="product-name">시세이도 피노 프리미엄 터치 230g</div>
+            <div class="product-tag">살롱급 케어</div>
+          </div>
+        </a>
+        
+        <!-- 쿠팡 파트너스 가이드 카드 (소비자 알림) -->
+        <div class="product-card guide-card" data-cat="all roa food living kitchen beauty" onclick="openGuideModal()">
+          <div class="product-thumb guide-thumb">
+            <div class="guide-icon">📌</div>
+            <span class="product-pick guide-pick">Notice</span>
+          </div>
+          <div class="product-info">
+            <div class="product-cat guide-cat">— Partner Notice —</div>
+            <div class="product-name guide-name">쿠팡 파트너스<br>활동 안내</div>
+            <div class="product-tag guide-tag">▶ 자세히 보기</div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- ============ 푸터 (컴팩트) ============ -->
+    <div class="footer">
+      <div class="footer-tag">— Curated by —</div>
+      <div class="footer-title">Rich-On</div>
+      
+      <div class="partner-notice">
+        <p class="partner-notice-desc">
+          📌 이 게시물은 <strong>쿠팡 파트너스 활동의 일환</strong>으로,<br>
+          이에 따른 <strong>일정액의 수수료</strong>를 제공받습니다.
+        </p>
+      </div>
+      
+      <div class="copyright">
+        © 2026 <strong>Rich-On</strong> by Roa<br>
+        무단 복제·재배포·상업적 이용 금지
+      </div>
+    </div>
+    
+
+    <!-- ============ 쿠팡 파트너스 가이드 모달 ============ -->
+    <div class="guide-modal" id="guideModal" onclick="closeGuideModal(event)">
+      <div class="guide-modal-content" onclick="event.stopPropagation()">
+        <button class="guide-modal-close" onclick="closeGuideModal()">✕</button>
+        
+        <div class="modal-tag">— Partner Notice —</div>
+        <h2 class="modal-title">
+          <span class="modal-pin">📌</span>
+          쿠팡 파트너스<br>활동 안내
+        </h2>
+        
+        <div class="modal-section">
+          <div class="modal-section-title">💡 큐레이션 콘텐츠란?</div>
+          <p class="modal-section-desc">
+            <strong>큐레이션 [퀴레이션]</strong> = 직접 판매가 아닌, <strong>좋은 상품을 선별·추천</strong>하는 콘텐츠.
+            박물관 큐레이터처럼 코스트코 인기 상품을 골라 소개합니다.
+          </p>
+        </div>
+        
+        <div class="modal-section">
+          <div class="modal-section-title">🛡️ 소비자 알림</div>
+          <ul class="modal-list">
+            <li>이 페이지는 <strong>쿠팡 파트너스 활동의 일환</strong>입니다.</li>
+            <li>이에 따른 <strong>일정액의 수수료</strong>를 제공받습니다.</li>
+            <li>리치온은 <strong>판매자가 아닌 소개자</strong>입니다.</li>
+            <li>실제 구매는 <strong>쿠팡</strong>에서 이루어집니다.</li>
+          </ul>
+        </div>
+        
+        <div class="modal-section">
+          <div class="modal-section-title">📋 안전한 구매 가이드</div>
+          <ul class="modal-list">
+            <li>✓ 좋은 품질의 상품을 고른 후 <strong>가격 비교는 필수</strong></li>
+            <li>✓ 사용 기간은 가구별 <strong>개인차</strong> 있음</li>
+            <li>✓ 식품은 <strong>유통기한</strong> 반드시 확인</li>
+          </ul>
+        </div>
+        
+        <div class="modal-footer-text">
+          © 2026 Rich-On by Roa<br>
+          <small>큐레이션 콘텐츠 · 직접 판매하지 않습니다</small>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  
+  <script>
+    function openGuideModal() {
+      document.getElementById('guideModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeGuideModal(event) {
+      if (event && event.target.classList && event.target.classList.contains('guide-modal-content')) return;
+      document.getElementById('guideModal').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+    
+    function filterCategory(cat, el) {
+      document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      
+      const cards = document.querySelectorAll('.product-card');
+      cards.forEach(card => {
+        const cardCats = (card.dataset.cat || '').split(' ');
+        if (cat === 'all' || cardCats.includes(cat)) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
