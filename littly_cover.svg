@@ -1,0 +1,240 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <defs>
+    <!-- 배경 그라데이션 (index.html과 동일 톤) -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8DCC8"/>
+      <stop offset="100%" stop-color="#D4C4A8"/>
+    </linearGradient>
+    
+    <!-- 카드 베이지 그라데이션 -->
+    <linearGradient id="cardBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFCF7"/>
+      <stop offset="100%" stop-color="#FBF3E4"/>
+    </linearGradient>
+    
+    <!-- 골드 그라데이션 (코스트코 강조) -->
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D4A56B"/>
+      <stop offset="100%" stop-color="#B8843C"/>
+    </linearGradient>
+    
+    <!-- 카드 그림자 -->
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="12"/>
+      <feOffset dx="0" dy="6" result="offsetblur"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <!-- 골드 라벨 그림자 -->
+    <filter id="labelShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="4"/>
+      <feOffset dx="0" dy="2" result="offsetblur"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.25"/></feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- 배경 -->
+  <rect width="1080" height="1080" fill="url(#bg)"/>
+  
+  <!-- 미세 텍스처 (도트 패턴으로 종이 질감) -->
+  <g opacity="0.04">
+    <circle cx="100" cy="150" r="2" fill="#1E2D4A"/>
+    <circle cx="300" cy="80" r="1.5" fill="#1E2D4A"/>
+    <circle cx="500" cy="200" r="2" fill="#1E2D4A"/>
+    <circle cx="800" cy="120" r="1.5" fill="#1E2D4A"/>
+    <circle cx="950" cy="280" r="2" fill="#1E2D4A"/>
+    <circle cx="80" cy="850" r="1.5" fill="#1E2D4A"/>
+    <circle cx="280" cy="950" r="2" fill="#1E2D4A"/>
+    <circle cx="600" cy="900" r="1.5" fill="#1E2D4A"/>
+    <circle cx="900" cy="850" r="2" fill="#1E2D4A"/>
+    <circle cx="980" cy="980" r="1.5" fill="#1E2D4A"/>
+  </g>
+  
+  <!-- 메인 카드 (크림 화이트 배경) -->
+  <rect x="80" y="80" width="920" height="920" rx="32" ry="32" 
+        fill="url(#cardBg)" 
+        stroke="#E8D9BC" 
+        stroke-width="2"
+        filter="url(#cardShadow)"/>
+  
+  <!-- 상단 골드 라벨 ("CURATED EDITION") -->
+  <g transform="translate(540, 175)">
+    <rect x="-145" y="-22" width="290" height="44" rx="22" ry="22" 
+          fill="url(#gold)" 
+          filter="url(#labelShadow)"/>
+    <text x="0" y="6" 
+          font-family="'Cormorant Garamond', serif" 
+          font-size="18" 
+          font-style="italic" 
+          font-weight="600"
+          fill="#FFFCF7" 
+          text-anchor="middle"
+          letter-spacing="3">
+      CURATED EDITION
+    </text>
+  </g>
+  
+  <!-- Eyebrow: Costco × Coupang -->
+  <g transform="translate(540, 265)">
+    <line x1="-180" y1="0" x2="-100" y2="0" stroke="#8A95AC" stroke-width="1"/>
+    <text x="0" y="6" 
+          font-family="'Cormorant Garamond', serif" 
+          font-size="22" 
+          font-style="italic"
+          fill="#4A5876" 
+          text-anchor="middle"
+          letter-spacing="4">
+      Costco  ×  Coupang
+    </text>
+    <line x1="100" y1="0" x2="180" y2="0" stroke="#8A95AC" stroke-width="1"/>
+  </g>
+  
+  <!-- 메인 타이틀 1: "쿠팡에서 만나는" -->
+  <text x="540" y="380" 
+        font-family="'Gowun Batang', serif" 
+        font-size="58" 
+        font-weight="700"
+        fill="#1E2D4A" 
+        text-anchor="middle"
+        letter-spacing="-2">
+    쿠팡에서 만나는
+  </text>
+  
+  <!-- 메인 타이틀 2: "코스트코 인기 13선" (코스트코 = 골드 강조) -->
+  <g transform="translate(540, 480)">
+    <text x="-25" y="0" 
+          font-family="'Cormorant Garamond', serif" 
+          font-size="76" 
+          font-style="italic"
+          font-weight="700"
+          fill="#B8843C" 
+          text-anchor="end"
+          letter-spacing="-1">
+      Costco
+    </text>
+    <text x="20" y="0" 
+          font-family="'Gowun Batang', serif" 
+          font-size="72" 
+          font-weight="700"
+          fill="#1E2D4A" 
+          text-anchor="start"
+          letter-spacing="-2">
+      인기 13선
+    </text>
+  </g>
+  
+  <!-- 장식선 (구분선) -->
+  <g transform="translate(540, 555)">
+    <line x1="-60" y1="0" x2="-20" y2="0" stroke="#D4A56B" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="4" fill="none" stroke="#D4A56B" stroke-width="1.5"/>
+    <line x1="20" y1="0" x2="60" y2="0" stroke="#D4A56B" stroke-width="1.5"/>
+  </g>
+  
+  <!-- 13개 도트 (13선 시각화) -->
+  <g transform="translate(540, 625)">
+    <!-- 13개 작은 원이 가로로 배열 -->
+    <g fill="#D4A56B">
+      <circle cx="-180" cy="0" r="6"/>
+      <circle cx="-150" cy="0" r="6"/>
+      <circle cx="-120" cy="0" r="6"/>
+      <circle cx="-90" cy="0" r="6"/>
+      <circle cx="-60" cy="0" r="6"/>
+      <circle cx="-30" cy="0" r="6"/>
+      <circle cx="0" cy="0" r="8" stroke="#B8843C" stroke-width="2" fill="#FFFCF7"/>
+      <circle cx="30" cy="0" r="6"/>
+      <circle cx="60" cy="0" r="6"/>
+      <circle cx="90" cy="0" r="6"/>
+      <circle cx="120" cy="0" r="6"/>
+      <circle cx="150" cy="0" r="6"/>
+      <circle cx="180" cy="0" r="6"/>
+    </g>
+  </g>
+  
+  <!-- 큐레이션 한 줄 카피 -->
+  <text x="540" y="720" 
+        font-family="'Gowun Batang', serif" 
+        font-size="26" 
+        font-weight="400"
+        fill="#4A5876" 
+        text-anchor="middle"
+        letter-spacing="-0.5">
+    창고형 마트의 인기 상품, 한 화면에서.
+  </text>
+  
+  <!-- 카테고리 칩 (3개) -->
+  <g transform="translate(540, 790)">
+    <!-- 식품 -->
+    <g transform="translate(-220, 0)">
+      <rect x="-55" y="-20" width="110" height="40" rx="20" ry="20" 
+            fill="#FBF3E4" stroke="#E8D9BC" stroke-width="1.5"/>
+      <text x="0" y="6" 
+            font-family="'Pretendard', sans-serif" 
+            font-size="17" 
+            font-weight="600"
+            fill="#4A5876" 
+            text-anchor="middle">
+        식품
+      </text>
+    </g>
+    <!-- 생활 -->
+    <g transform="translate(0, 0)">
+      <rect x="-55" y="-20" width="110" height="40" rx="20" ry="20" 
+            fill="#FBF3E4" stroke="#E8D9BC" stroke-width="1.5"/>
+      <text x="0" y="6" 
+            font-family="'Pretendard', sans-serif" 
+            font-size="17" 
+            font-weight="600"
+            fill="#4A5876" 
+            text-anchor="middle">
+        생활용품
+      </text>
+    </g>
+    <!-- 디저트 -->
+    <g transform="translate(220, 0)">
+      <rect x="-55" y="-20" width="110" height="40" rx="20" ry="20" 
+            fill="#FBF3E4" stroke="#E8D9BC" stroke-width="1.5"/>
+      <text x="0" y="6" 
+            font-family="'Pretendard', sans-serif" 
+            font-size="17" 
+            font-weight="600"
+            fill="#4A5876" 
+            text-anchor="middle">
+        디저트
+      </text>
+    </g>
+  </g>
+  
+  <!-- 하단 분리선 -->
+  <line x1="340" y1="870" x2="740" y2="870" stroke="#E8D9BC" stroke-width="1"/>
+  
+  <!-- Curated by Rich-On -->
+  <g transform="translate(540, 920)">
+    <text x="0" y="0" 
+          font-family="'Cormorant Garamond', serif" 
+          font-size="20" 
+          font-style="italic"
+          fill="#8A95AC" 
+          text-anchor="middle"
+          letter-spacing="2">
+      Curated by
+    </text>
+    <text x="0" y="40" 
+          font-family="'Cormorant Garamond', serif" 
+          font-size="42" 
+          font-weight="700"
+          fill="#1E2D4A" 
+          text-anchor="middle"
+          letter-spacing="3">
+      Rich-On
+    </text>
+  </g>
+  
+</svg>
