@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>한 곳에서 만나는 쿠팡 인기 카테고리</title>
+<meta name="description" content="쿠팡 인기 카테고리 한곳에서 — 홈 · 골든박스 · 로켓 시리즈 · 패션 · 트래블. Curated by Rich-On.">
+<meta property="og:title" content="한 곳에서 만나는 쿠팡 인기 카테고리">
+<meta property="og:description" content="쿠팡 인기 카테고리 10선 큐레이션">
+<meta property="og:image" content="images/mark.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Gowun+Batang:wght@400;700&family=Pretendard:wght@400;500;600;700;800&family=Nanum+Pen+Script&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FFFCF7;
+    --bg-warm:#FFF8EE;
+    --bg-card:#FBF3E4;
+    --bg-card-deep:#F7E9CF;
+    --bg-soft:#FAF5EE;
+    --bg-notice:#FCEAEA;
+    --ink:#1E2D4A;
+    --ink-soft:#4A5876;
+    --ink-muted:#8A95AC;
+    --line:#EFE6D8;
+    --line-soft:#F5EEDE;
+    --line-card:#E8D9BC;
+    --gold:#D4A56B;
+    --gold-deep:#B8843C;
+    --gold-label:#C99659;
+    --green-deep:#2D5A3D;
+    --green-mid:#3F7A55;
+    --rose:#C26060;
+    --rose-soft:#FCE8E8;
+    --rose-label:#D14545;
+    --serif:'Cormorant Garamond', serif;
+    --korean-serif:'Gowun Batang', serif;
+    --korean-sans:'Pretendard', -apple-system, sans-serif;
+    --hand:'Nanum Pen Script', cursive;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{
+    background:#E8DCC8;
+    font-family:var(--korean-sans);
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  body{
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    background:linear-gradient(135deg,#E8DCC8 0%,#D4C4A8 100%);
+  }
+  .container{
+    width:100%;
+    max-width:420px;
+    background:var(--bg);
+    box-shadow:0 0 40px rgba(0,0,0,0.08);
+    position:relative;
+    overflow:hidden;
+  }
+
+  /* === HERO === */
+  .hero{
+    text-align:center;
+    padding:20px 24px 18px;
+    background:var(--bg);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .hero-mark{
+    margin-bottom:10px;
+    display:flex;
+    justify-content:center;
+  }
+  .hero-mark img{
+    width:180px;
+    max-width:65%;
+    height:auto;
+    display:block;
+    border-radius:6px;
+    box-shadow:0 2px 8px rgba(45,90,61,0.18);
+  }
+  .hero-curator{
+    font-family:var(--korean-serif);
+    font-weight:400;
+    font-size:13.5px;
+    color:var(--ink-soft);
+    letter-spacing:-0.3px;
+    line-height:1.4;
+  }
+  .hero-curator b{
+    font-weight:700;
+    color:var(--ink);
+    font-size:14.5px;
+  }
+
+  /* === 사용방법 박스 === */
+  .howto-box{
+    margin:32px 18px 0;
+    border:1.5px dashed var(--gold);
+    border-radius:14px;
+    padding:16px 18px;
+    background:var(--bg-warm);
+  }
+  .howto-eyebrow{
+    font-family:var(--hand);
+    font-size:18px;
+    color:var(--gold-deep);
+    margin-bottom:8px;
+    text-align:center;
+  }
+  .howto-title{
+    font-family:var(--korean-serif);
+    font-weight:700;
+    font-size:15px;
+    color:var(--ink);
+    text-align:center;
+    margin-bottom:10px;
+  }
+  .howto-title .em{color:var(--gold-deep)}
+  .howto-list{
+    list-style:none;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    line-height:1.8;
+  }
+  .howto-list li{
+    padding-left:4px;
+  }
+  .howto-list b{color:var(--ink);font-weight:700}
+
+  /* === 섹션 타이틀 === */
+  .section-title{
+    text-align:center;
+    margin:14px 0 10px;
+  }
+  .section-en{
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:11px;
+    color:var(--ink-muted);
+    letter-spacing:1.2px;
+    margin-bottom:3px;
+  }
+  .section-en::before,.section-en::after{content:'— '}
+  .section-en::after{content:' —'}
+  .section-ko{
+    font-family:var(--korean-serif);
+    font-weight:700;
+    font-size:15px;
+    color:var(--ink);
+    letter-spacing:-0.5px;
+  }
+
+  /* === 카테고리 그리드 (2 × 5) === */
+  .cat-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+    padding:0 14px 8px;
+  }
+  .cat-card{
+    position:relative;
+    aspect-ratio:5/4;
+    background:var(--bg-card);
+    border:2.5px solid var(--green-deep);
+    border-radius:6px;
+    padding:10px 8px 8px;
+    text-decoration:none;
+    color:inherit;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    transition:all 0.25s ease;
+    overflow:hidden;
+  }
+  /* 더블 보더 효과 */
+  .cat-card::before{
+    content:'';
+    position:absolute;
+    top:4px;left:4px;right:4px;bottom:4px;
+    border:1px solid var(--green-deep);
+    border-radius:3px;
+    pointer-events:none;
+  }
+  /* 우측 모서리 빈티지 디테일 */
+  .cat-card::after{
+    content:'';
+    position:absolute;
+    top:8px;right:8px;
+    width:14px;height:14px;
+    border-top:2px solid var(--green-deep);
+    border-right:2px solid var(--green-deep);
+    border-radius:0 3px 0 0;
+  }
+  .cat-card:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 18px rgba(45,90,61,0.18);
+    background:var(--bg-card-deep);
+  }
+  .cat-card:hover::after{
+    border-color:var(--gold-deep);
+  }
+
+  /* 첫 카드(쿠팡 홈) — 골드 강조 */
+  .cat-card.featured{
+    background:#FFFCF7;
+    border-color:var(--gold-deep);
+  }
+  .cat-card.featured::before{
+    border-color:var(--gold);
+  }
+  .cat-card.featured::after{
+    border-top-color:var(--gold-deep);
+    border-right-color:var(--gold-deep);
+  }
+  .cat-card.featured:hover{
+    background:var(--bg-warm);
+  }
+
+  .cat-icon{
+    font-size:26px;
+    margin-bottom:4px;
+    line-height:1;
+    filter:drop-shadow(0 1px 2px rgba(0,0,0,0.05));
+  }
+  .cat-en{
+    font-family:var(--serif);
+    font-style:italic;
+    font-weight:500;
+    font-size:10.5px;
+    color:var(--gold-label);
+    letter-spacing:0.3px;
+    margin-bottom:2px;
+  }
+  .cat-card.featured .cat-en{
+    color:var(--gold-deep);
+  }
+  .cat-ko{
+    font-family:var(--korean-serif);
+    font-weight:700;
+    font-size:13.5px;
+    color:var(--ink);
+    letter-spacing:-0.5px;
+  }
+
+  /* === 표시광고법 안내 박스 === */
+  .legal-notice{
+    margin:14px 18px 0;
+    background:var(--bg-notice);
+    border:1px solid var(--rose);
+    border-radius:12px;
+    padding:14px 16px;
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+  }
+  .legal-icon{
+    flex-shrink:0;
+    font-size:16px;
+    margin-top:1px;
+  }
+  .legal-text{
+    font-size:11.5px;
+    color:var(--ink-soft);
+    line-height:1.65;
+    letter-spacing:-0.2px;
+  }
+  .legal-text b{
+    color:var(--rose);
+    font-weight:700;
+  }
+
+  /* === 푸터 === */
+  .footer{
+    margin-top:36px;
+    padding:28px 24px 32px;
+    border-top:1px solid var(--line-soft);
+    text-align:center;
+    background:var(--bg-soft);
+  }
+  .footer-brand{
+    font-family:var(--serif);
+    font-size:13px;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+    letter-spacing:0.5px;
+  }
+  .footer-brand b{
+    color:var(--ink);
+    font-weight:700;
+  }
+  .footer-tag{
+    font-size:11px;
+    color:var(--ink-muted);
+    letter-spacing:0.3px;
+  }
+  .footer-back{
+    display:inline-block;
+    margin-top:14px;
+    font-family:var(--serif);
+    font-style:italic;
+    font-size:12.5px;
+    color:var(--gold-deep);
+    text-decoration:none;
+    border-bottom:1px solid var(--gold);
+    padding-bottom:1px;
+  }
+
+  /* 모바일 미세 조정 */
+  @media (max-width:380px){
+    .cat-icon{font-size:32px}
+    .cat-ko{font-size:14.5px}
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-mark">
+      <img src="images/mark.jpg" alt="Rich-On" loading="eager" onerror="this.parentElement.style.display='none'">
+    </div>
+    <div class="hero-curator">
+      한 곳에서 만나는 <b>쿠팡 인기 카테고리</b>
+    </div>
+  </div>
+
+  <!-- 섹션 타이틀 -->
+  <div class="section-title">
+    <div class="section-en">COUPANG TOP 10</div>
+    <div class="section-ko">카테고리별 바로가기</div>
+  </div>
+
+  <!-- 카테고리 그리드 -->
+  <div class="cat-grid">
+
+    <!-- 1. 쿠팡 홈 (Featured) -->
+    <a class="cat-card featured" href="https://link.coupang.com/a/ex3MyN" target="_blank" rel="noopener">
+      <div class="cat-icon">🏠</div>
+      <div class="cat-en">Coupang Home</div>
+      <div class="cat-ko">쿠팡 홈</div>
+    </a>
+
+    <!-- 2. 골든 박스 -->
+    <a class="cat-card" href="https://link.coupang.com/a/ex3Nfo" target="_blank" rel="noopener">
+      <div class="cat-icon">🎁</div>
+      <div class="cat-en">Golden Box</div>
+      <div class="cat-ko">골든 박스</div>
+    </a>
+
+    <!-- 3. 로켓 프레시 -->
+    <a class="cat-card" href="https://link.coupang.com/a/ex3NYz" target="_blank" rel="noopener">
+      <div class="cat-icon">🌳</div>
+      <div class="cat-en">Rocket Fresh</div>
+      <div class="cat-ko">로켓 프레시</div>
+    </a>
+
+    <!-- 4. 로켓 와우 -->
+    <a class="cat-card" href="https://link.coupang.com/a/ex3OVQ" target="_blank" rel="noopener">
+      <div class="cat-icon">💎</div>
+      <div class="cat-en">Rocket WOW</div>
+      <div class="cat-ko">로켓 와우</div>
+    </a>
+
+    <!-- 5. 로켓 배송 -->
+    <a class="cat-card" href="https://link.coupang.com/a/ex3QGW" target="_blank" rel="noopener">
+      <div class="cat-icon">🚀</div>
+      <div class="cat-en">Rocket Delivery</div>
+      <div class="cat-ko">로켓 배송</div>
+    </a>
+
+    <!-- 6. 로켓 직구 -->
+    <a class="cat-card" href="https://link.coupang.com/a/ex3RAQ" target="_blank" rel="noopener">
+      <div class="cat-icon">🌐</div>
+      <div class="cat-en">Rocket Jikgu</div>
+      <div class="cat-ko">로켓 직구</div>
+    </a>
+
+    <!-- 7. 여성 패션 -->
+    <a class="cat-card" href="https://link.coupang.com/a/ex3Sw2" target="_blank" rel="noopener">
+      <div class="cat-icon">👗</div>
+      <div class="cat-en">Women's Fashion</div>
+      <div class="cat-ko">여성 패션</div>
+    </a>
+
+    <!-- 8. 남성 패션 -->
+    <a class="cat-card" href="https://link.coupang.com/a/ex3TA1" target="_blank" rel="noopener">
+      <div class="cat-icon">👔</div>
+      <div class="cat-en">Men's Fashion</div>
+      <div class="cat-ko">남성 패션</div>
+    </a>
+
+    <!-- 9. 베이비 패션 -->
+    <a class="cat-card" href="https://link.coupang.com/a/ex3UXb" target="_blank" rel="noopener">
+      <div class="cat-icon">👶</div>
+      <div class="cat-en">Baby Fashion</div>
+      <div class="cat-ko">베이비 패션</div>
+    </a>
+
+    <!-- 10. 쿠팡 트래블 -->
+    <a class="cat-card" href="https://link.coupang.com/a/ex3VUP" target="_blank" rel="noopener">
+      <div class="cat-icon">✈️</div>
+      <div class="cat-en">Coupang Travel</div>
+      <div class="cat-ko">쿠팡 트래블</div>
+    </a>
+
+  </div>
+
+  <!-- 사용방법 박스 -->
+  <div class="howto-box">
+    <div class="howto-eyebrow">— how to use —</div>
+    <div class="howto-title"><span class="em">💡</span> 사용 방법 4단계</div>
+    <ul class="howto-list">
+      <li>① 마음에 드는 <b>카테고리 카드</b> 확인</li>
+      <li>② 카드 클릭 → 해당 카테고리 페이지 이동</li>
+      <li>③ 원하는 상품 선택 후 가격·후기 확인</li>
+      <li>④ 비교 후 안전하게 <b>합리적 구매</b></li>
+    </ul>
+  </div>
+
+  <!-- 표시광고법 안내 -->
+  <div class="legal-notice">
+    <div class="legal-icon">📌</div>
+    <div class="legal-text">
+      <b>쿠팡 파트너스 활동 안내</b><br>
+      이 페이지는 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.
+    </div>
+  </div>
+
+  <!-- 푸터 -->
+  <div class="footer">
+    <div class="footer-brand">© 2026 <b>Rich-On</b> by Roa</div>
+    <div class="footer-tag">큐레이션 콘텐츠 · 직접 판매하지 않습니다</div>
+    <a href="https://litt.ly/live.6564" class="footer-back">← Back to Litt.ly</a>
+  </div>
+
+</div>
+
+<script>
+  // 복사방지
+  document.addEventListener('contextmenu',e=>e.preventDefault());
+  document.addEventListener('selectstart',e=>{if(e.target.tagName!=='INPUT')e.preventDefault()});
+  document.addEventListener('dragstart',e=>e.preventDefault());
+</script>
+
+</body>
+</html>
