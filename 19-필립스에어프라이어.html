@@ -1404,33 +1404,34 @@
 
   /* ========== CTA 통합 안내 박스 ========== */
   .cta-info-box {
-    margin: 16px 16px 18px;
-    padding: 16px;
+    margin: 14px 16px 12px;
+    padding: 12px 16px;
     background: linear-gradient(135deg, #FFFCF7 0%, #FFF8EC 100%);
     border: 1.5px solid rgba(212, 165, 107, 0.3);
-    border-radius: 14px;
-    box-shadow: 0 2px 12px rgba(212, 165, 107, 0.08);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(212, 165, 107, 0.08);
+    text-align: left;
   }
   .info-row {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 8px 4px;
+    padding: 5px 2px;
     border-bottom: 1px dashed rgba(212, 165, 107, 0.25);
   }
   .info-row:last-child {
     border-bottom: none;
-    padding-bottom: 4px;
+    padding-bottom: 2px;
   }
   .info-row:first-child {
-    padding-top: 4px;
+    padding-top: 2px;
   }
   .info-num {
     flex-shrink: 0;
     width: 22px;
     height: 22px;
-    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
-    color: var(--cream);
+    background: linear-gradient(135deg, var(--gold) 0%, #B8895A 100%);
+    color: #FFFCF7;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -1439,35 +1440,34 @@
     font-style: italic;
     font-size: 13px;
     font-weight: 800;
-    box-shadow: 0 1px 4px rgba(212, 165, 107, 0.3);
+    box-shadow: 0 1px 3px rgba(212, 165, 107, 0.3);
   }
   .info-text {
     font-family: 'Gowun Batang', serif;
-    font-size: 13px;
+    font-size: 12.5px;
     color: var(--ink);
     line-height: 1.5;
-    letter-spacing: 0.01em;
   }
   .info-text strong {
-    color: var(--gold-dark);
+    color: #B8895A;
     font-weight: 800;
   }
-
-
+  .info-icon {
+    font-size: 13px;
+    margin-left: 2px;
+  }
   /* 3번 박스 - 숫자 없는 깔끔한 버전 */
   /* 쿠팡 브랜드 컬러 - 고급진 진홍색 */
   .brand-coupang {
     font-family: 'Pretendard', sans-serif;
     font-weight: 900;
     font-size: 15px;
-    color: #C8102E;
-    letter-spacing: -0.02em;
-    text-shadow: 0 1px 2px rgba(200, 16, 46, 0.15);
     background: linear-gradient(135deg, #C8102E 0%, #9A0C24 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    padding: 0 2px;
+    letter-spacing: -0.02em;
+    padding: 0 1px;
   }
   /* 검색 버튼 - 카드 내부 자연스러운 텍스트 라인 */
   /* 추천 검색어 복사 - 카드 안 자연스럽게 (크게) */
@@ -1892,11 +1892,6 @@
         </div>
       </div>
     </div>
-    </div>
-    </div>
-    </div>
-    </div>
-    </div>
   </div>
 
   <!-- ============ 5. CTA ============ -->
@@ -1906,9 +1901,17 @@
       외식보다 좋은,<br>
       <span class="accent">집밥의 시간.</span>
     </h2>
-    
+    <div class="cta-info-box">
+      <div class="info-row">
+        <span class="info-num">1</span>
+        <span class="info-text">좋은 <strong>품질</strong>로 골라, <strong>가격 비교</strong>는 필수 <span class="info-icon">🧮</span></span>
+      </div>
+      <div class="info-row">
+        <span class="info-num">2</span>
+        <span class="info-text"><strong>사용 기간</strong>은 가구별 <strong>개인차</strong> 있음</span>
       </div>
     </div>
+    <p class="cta-sub"><span class="brand-coupang">쿠팡</span>에서 <strong>현재 가격</strong>을 확인하세요.</p>
     
     <div class="search-card">
       <div class="search-label">쿠팡 검색어</div>
@@ -2066,18 +2069,24 @@
     } else {
       fallbackCopy(text, toast);
     }
-  } catch (err) {
+  }
+  
+  function fallbackCopy(text, toast) {
+    const textarea = document.createElement('textarea');
+    textarea.value = text;
+    textarea.style.position = 'fixed';
+    textarea.style.opacity = '0';
+    document.body.appendChild(textarea);
+    textarea.select();
+    try {
+      document.execCommand('copy');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    } catch (err) {
       alert('복사 실패. 검색어를 직접 선택해서 복사해 주세요.');
     }
     document.body.removeChild(textarea);
-  }catch(e) {}
-    document.body.removeChild(ta);
   }
-    toast.textContent = '✓ "' + term + '" 복사됨';
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2000);
-  }
-
-  </script>
+</script>
 </body>
 </html>
