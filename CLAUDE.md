@@ -20,3 +20,13 @@
 - Canva: 유료(왕관) 요소, AI 이미지 생성.
 - Google Flow 영상 생성.
 - 그 밖에 크레딧·결제가 생길 수 있는 모든 도구.
+
+## 📸 인스타그램 스킬 13개 (/ig-*)
+
+- 출처: https://github.com/Jakeschincariol/instagram-agent-skill (MIT, 무료·API 키 없음). 위치: `.claude/skills/ig-*`
+- 스킬은 글만 쓴다. 인스타 게시는 로아가 직접 한다. 자동 팔로우·자동 댓글·자동 게시 금지.
+- 스킬 안내에 `~/.claude/instagram/voice.md` 가 나오면, 이 프로젝트의 `.claude/instagram/voice.md` 를 읽는다
+  (클라우드 세션은 홈 폴더가 매번 지워지기 때문). swipe.md · log.md 도 같은 폴더에 저장한다.
+- 해시태그는 게시물당 최대 5개.
+- 한국어 패치: beats.py · hookscore.py · swipe.py 가 한글 어절을, caption.py 가 한글 해시태그를 센다.
+  점수 기준(훅 공식·슬롭 단어)은 영어 기준이라 한국어 점수는 참고용으로만 본다.
