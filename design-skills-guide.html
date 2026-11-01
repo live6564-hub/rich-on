@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>디자인 스킬 가이드 | 리치온</title>
+<meta name="description" content="클로드로 페이지 만들 때 디자인 스킬 2종 설치법과, 다 만든 뒤 지어낸 내용 확인하는 법">
+<style>
+:root{--bg:#fbfbfd;--card:#fff;--ink:#1d1d1f;--muted:#6e6e73;--line:#e5e5ea;--accent:#0071e3;--warn:#b25000;--warn-bg:#fff4e5;--code:#f5f5f7}
+@media (prefers-color-scheme:dark){:root{--bg:#000;--card:#1c1c1e;--ink:#f5f5f7;--muted:#a1a1a6;--line:#38383a;--accent:#2997ff;--warn:#ffb340;--warn-bg:#2a1f0e;--code:#2c2c2e}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",sans-serif;line-height:1.6;word-break:keep-all}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px}
+header{padding:64px 16px 32px;text-align:center}
+.eyebrow{font-size:13px;font-weight:600;color:var(--accent);letter-spacing:.02em}
+h1{font-size:clamp(30px,7vw,44px);line-height:1.15;letter-spacing:-.02em;margin:8px 0 12px;font-weight:700}
+.lead{font-size:17px;color:var(--muted);margin:0 auto;max-width:520px}
+section{padding:28px 0;border-top:1px solid var(--line)}
+h2{font-size:24px;letter-spacing:-.01em;margin:0 0 12px}
+p{margin:0 0 12px}
+.term{color:var(--muted);font-size:.92em}
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media (min-width:640px){.grid{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:20px}
+.card h3{margin:0 0 6px;font-size:18px}
+.card .tag{display:inline-block;font-size:12px;font-weight:600;color:var(--muted);background:var(--code);border-radius:999px;padding:2px 10px;margin-bottom:10px}
+.copy{position:relative;background:var(--code);border-radius:14px;padding:16px 16px 52px;margin:12px 0;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:14px;line-height:1.6;white-space:pre-wrap;word-break:break-all}
+.copy button{position:absolute;right:10px;bottom:10px;border:0;border-radius:999px;background:var(--accent);color:#fff;font:600 14px/1 -apple-system,sans-serif;padding:10px 16px;cursor:pointer;transition:transform .1s ease-out}
+.copy button:active{transform:scale(.97)}
+.copy button.done{background:#34c759}
+.warn{background:var(--warn-bg);color:var(--ink);border-radius:14px;padding:16px;border-left:4px solid var(--warn)}
+ul{padding-left:20px;margin:0 0 12px}li{margin-bottom:6px}
+footer{padding:32px 0 56px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+footer a{color:var(--accent);text-decoration:none}
+.links{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.links a{border:1px solid var(--line);border-radius:999px;padding:8px 14px;color:var(--ink);background:var(--card);font-size:14px}
+.reveal{opacity:0;transform:translateY(12px);transition:opacity .5s ease-out,transform .5s ease-out}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+<header class="wrap">
+  <div class="eyebrow">RICH-ON 작업 가이드</div>
+  <h1>디자인 스킬 하나로<br>달라지는 페이지</h1>
+  <p class="lead">클로드로 상세페이지·홈페이지를 만들 때 쓰는 디자인 스킬 2종 설치법과, 올리기 전 꼭 돌릴 '지어낸 내용' 확인 문장을 정리했습니다.</p>
+</header>
+
+<main class="wrap">
+  <section class="reveal">
+    <h2>왜 필요한가</h2>
+    <p>스킬 없이 만들면 비슷한 모양이 반복되고, <b>알려 준 적 없는 고객 후기·성과 숫자·요금</b>이 들어갈 때가 있습니다. 플로우랩이 같은 요청을 세 번 넣어 비교한 결과(2026.10.29), 스킬 없는 결과에는 지어낸 후기 3개와 성과 숫자가 들어갔고, 두 스킬도 요금표·무료 조건은 지어 넣었습니다.</p>
+    <p>→ 어떤 방법으로 만들든 <b>마지막 확인 문장</b>은 필수입니다.</p>
+  </section>
+
+  <section class="reveal">
+    <h2>두 스킬 비교</h2>
+    <div class="grid">
+      <div class="card">
+        <span class="tag">앤트로픽 공식</span>
+        <h3>frontend-design</h3>
+        <p>업종·손님부터 따져서 콘셉트를 잡아 줌. 예: 글쓰기 서비스 → 원고지 콘셉트.</p>
+        <p class="term">추천 상황: 상품마다 개성 있는 콘셉트가 필요할 때 · 약 15분</p>
+      </div>
+      <div class="card">
+        <span class="tag">에밀 코왈스키 · MIT 공개</span>
+        <h3>apple-design</h3>
+        <p>흰 여백, 큰 제목, 부드러운 움직임. 다크모드·움직임 줄이기 설정까지 대응.</p>
+        <p class="term">추천 상황: 군더더기 없는 고급 무드가 필요할 때 · 약 25분</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <h2>설치</h2>
+    <p><b>① frontend-design</b> — 클로드 코드 입력창에 보내기 <span class="term">(Plugin [플러그인] = 추가 기능)</span></p>
+    <div class="copy" data-shield-allow="true"><span>/plugin install frontend-design@claude-plugins-official</span><button type="button" data-shield-allow="true">복사</button></div>
+    <p class="term">이미 깔려 있는데 꺼져 있을 수 있어요. /plugin 에서 켜져 있는지 확인.</p>
+
+    <p><b>② apple-design</b> — 터미널 <span class="term">(Terminal [터미널] = 명령을 글자로 넣는 창)</span>에서 실행. 끝에 -g 붙이면 모든 폴더에서 사용.</p>
+    <div class="copy" data-shield-allow="true"><span>npx skills@latest add emilkowalski/skills --skill apple-design</span><button type="button" data-shield-allow="true">복사</button></div>
+    <p class="term">✅ 이 저장소(rich-on)에는 이미 설치해 두었습니다 → <code>.claude/skills/apple-design</code></p>
+  </section>
+
+  <section class="reveal">
+    <h2>처음부터 이렇게 요청</h2>
+    <p>괄호 안만 바꿔 쓰세요. 지어내지 말라고 미리 못 박는 문장입니다.</p>
+    <div class="copy" data-shield-allow="true"><span>/apple-design 리치온 상품 소개 페이지를 만들어 줘. 상품 이름은 (상품명), 특징은 (내가 확인한 사실 3가지), 주로 찾아오는 손님은 30대 주부야. 내가 알려 준 내용만 쓰고, 고객 후기·별점·판매 순위·수상·성과 숫자·가격은 지어내지 말고 비워 둬. 파트너스 링크 4개와 파트너스 수수료 고지 문구를 넣고, index.html 한 파일로 만들어 줘.</span><button type="button" data-shield-allow="true">복사</button></div>
+    <p class="term">frontend-design으로 만들 때는 맨 앞 /apple-design 을 지우고 'frontend-design 스킬을 써서' 를 넣으면 됩니다.</p>
+  </section>
+
+  <section class="reveal">
+    <h2>다 만든 뒤 꼭 확인할 것</h2>
+    <p>같은 채팅창에서 이어서 보내세요.</p>
+    <div class="copy" data-shield-allow="true"><span>이 페이지에서 내가 알려 주지 않은 숫자, 고객 후기, 별점, 판매 순위(1위·베스트셀러), 사람·회사 이름, 요금·할인율, 무료 조건, 수상·인증(FDA·KC 등), "직접 사용" 체험담을 전부 찾아서 표로 보여 줘. 내가 알려 주지 않은 것은 지우거나 [확인 필요]로 바꿔 줘.</span><button type="button" data-shield-allow="true">복사</button></div>
+    <div class="warn">
+      <b>리치온 특히 주의</b>
+      <ul>
+        <li>별점·평점 숫자 → 출처 사이트 + 날짜 없으면 삭제</li>
+        <li>"1위", "Best-Seller" → 조사 기관·기간 없으면 "인기", "리치온 Pick"</li>
+        <li>"직접 사용한 후기" → 실제로 써 본 상품만</li>
+        <li>"FDA 승인" → 텀블러·용기는 "FDA 식품접촉 기준 적합"</li>
+      </ul>
+      저장소 전체 점검 결과는 <a href="docs/fabrication-audit-2026-11.md">점검 보고서</a>에 있습니다.
+    </div>
+  </section>
+
+  <section class="reveal">
+    <h2>요금 안내</h2>
+    <p>두 스킬은 무료입니다. 다만 클로드 코드는 Pro 이상 유료 요금제에서 쓸 수 있고, 만드는 동안 쓴 만큼 사용량이 줄어듭니다.</p>
+  </section>
+</main>
+
+<footer class="wrap">
+  <div class="links">
+    <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener sponsored">🛒 쿠팡</a>
+    <a href="https://bitl.bz/qQEIlA" target="_blank" rel="noopener sponsored">🛍️ 테무</a>
+    <a href="https://kr.trip.com/?Allianceid=8001792&amp;SID=302477743&amp;trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&amp;trip_sub3=D14461428" target="_blank" rel="noopener sponsored">✈️ 트립닷컴</a>
+    <a href="https://bitl.bz/fjcH9p" target="_blank" rel="noopener sponsored">🛒 알리익스프레스</a>
+  </div>
+  <p>이 페이지의 링크는 쿠팡 파트너스 등 제휴 활동의 일환으로, 구매 시 일정액의 수수료를 제공받을 수 있습니다.</p>
+  <p>참고: 플로우랩 자료 03 「클로드로 홈페이지 만들 때, 디자인 스킬 하나로 달라지는 것」(2026.10.29) · <a href="./">리치온 홈으로</a></p>
+</footer>
+
+<script>
+document.querySelectorAll('.copy button').forEach(function(b){
+  b.addEventListener('click',function(){
+    var t=b.parentElement.querySelector('span').innerText;
+    var ok=function(){b.textContent='복사됨 ✓';b.classList.add('done');setTimeout(function(){b.textContent='복사';b.classList.remove('done')},1500)};
+    if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(t).then(ok,fallback)}else{fallback()}
+    function fallback(){var a=document.createElement('textarea');a.value=t;document.body.appendChild(a);a.select();try{document.execCommand('copy');ok()}catch(e){}document.body.removeChild(a)}
+  });
+});
+if('IntersectionObserver' in window){
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.1});
+  document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+}else{document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in')})}
+</script>
+</body>
+</html>
