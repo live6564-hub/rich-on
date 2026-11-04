@@ -1,2 +1,6 @@
 .arena/
 __pycache__/
+
+# 릴스 읽어줘 로그인 파일 (절대 업로드 금지)
+cookies.txt
+**/cookies.txt
