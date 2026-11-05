@@ -1530,10 +1530,17 @@ const Net = (() => {
   // 입력 중에는 방향키·WASD가 캐릭터를 움직이지 않게
   nickInput.addEventListener('keydown', (e) => e.stopPropagation());
 
+  // 함께 걷기 서버가 있을 때만 이름 입력창을 띄운다.
+  // (서버의 /ws 는 일반 요청에 426 으로 답함) — 없으면 혼자 걷기로 그냥 시작
   if (online) {
-    try { nickInput.value = localStorage.getItem('botari-nick') || ''; } catch {}
-    joinModal.classList.add('show');
-    setTimeout(() => nickInput.focus(), 50);
+    fetch('/ws', { method: 'GET', cache: 'no-store' })
+      .then((r) => {
+        if (r.status !== 426) return;
+        try { nickInput.value = localStorage.getItem('botari-nick') || ''; } catch {}
+        joinModal.classList.add('show');
+        setTimeout(() => nickInput.focus(), 50);
+      })
+      .catch(() => {});   // 서버 없음 → 혼자 걷기
   }
 
   // 매 화면마다: 내 위치 보내기 + 다른 사람 움직이기
