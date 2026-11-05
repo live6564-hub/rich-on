@@ -47,7 +47,7 @@ window.CONFIG = {
   },
 
   // 3) 내 캐릭터 (STEP 2에서 사용)
-  character: { name: "동자승", robe: "#8a8d91", skin: "#f1d3b3", speed: 3.0, run: 2.0, turn: 2.2 }, // 회색 승복 / 걷기: 초당 3m / 🏃 뛰기: 2배 / 방향 돌기 빠르기
+  character: { name: "동자승", robe: "#8a8d91", skin: "#f1d3b3", speed: 3.0, run: 2.0, slow: 0.5, turn: 2.2 }, // 회색 승복 / 걷기: 초당 3m / 🏃 빨리: 2배 / 🐢 천천히: 0.5배 / 방향 돌기 빠르기
 
   // 4) 단추 (STEP 3에서 사용)
   action: {
@@ -114,7 +114,7 @@ window.CONFIG = {
   /* 각도·거리 입력판 (방향 단추 위) */
   #goPanel {
     display: none; position: fixed; z-index: 12;
-    left: calc(14px + env(safe-area-inset-left)); bottom: calc(250px + env(safe-area-inset-bottom));
+    left: calc(14px + env(safe-area-inset-left)); bottom: calc(300px + env(safe-area-inset-bottom));
     width: 250px; padding: 10px 10px 8px; border-radius: 16px;
     background: rgba(255,250,240,0.96); box-shadow: 0 4px 16px rgba(0,0,0,0.22); color: #3b2a1a;
   }
@@ -145,7 +145,10 @@ window.CONFIG = {
     padding: 8px 14px; white-space: nowrap; border-radius: 12px; background: rgba(0,0,0,0.45); color: #fff;
     font-size: 13px; pointer-events: none; z-index: 10; transition: opacity .6s;
   }
-  @media (max-width: 560px) { #hint { top: calc(242px + env(safe-area-inset-top)); } }   /* 미니맵 아래로 */
+  @media (max-width: 560px) {   /* 좁은 화면: 소리 단추 아래 왼쪽 (도면과 안 겹치게) */
+    #hint { top: calc(64px + env(safe-area-inset-top)); left: calc(12px + env(safe-area-inset-left)); transform: none;
+            max-width: calc(100vw - 150px); white-space: normal; line-height: 1.4; }
+  }
 
   /* 왼쪽 아래 = 조이스틱 (휴대폰에서만) */
   #joy {
@@ -164,7 +167,7 @@ window.CONFIG = {
 
   /* 오른쪽 아래 = 행동 단추 (물건 근처에서만 보임) */
   #actBtn {
-    position: fixed; right: calc(22px + env(safe-area-inset-right)); bottom: calc(96px + env(safe-area-inset-bottom));
+    position: fixed; right: calc(22px + env(safe-area-inset-right)); bottom: calc(146px + env(safe-area-inset-bottom));
     min-width: 96px; height: 96px; padding: 0 14px; border-radius: 48px; border: none;
     background: rgba(255,248,232,0.94); color: #5a3a1a; font-size: 18px; font-weight: 800;
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
@@ -179,7 +182,7 @@ window.CONFIG = {
   #dpad {
     position: fixed; z-index: 10; display: grid; gap: 4px;
     grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(3, 50px);
-    left: calc(14px + env(safe-area-inset-left)); bottom: calc(84px + env(safe-area-inset-bottom));
+    left: calc(14px + env(safe-area-inset-left)); bottom: calc(134px + env(safe-area-inset-bottom));
     touch-action: none; user-select: none; -webkit-user-select: none;
   }
   #dpad button {
@@ -196,19 +199,21 @@ window.CONFIG = {
   /* 장면이 바뀔 때 잠깐 어두워지기 (되돌아가기) */
   #fade { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 25; }
 
-  /* 맨 아래 가운데 = 조작 단추 5개 (PC·휴대폰 모두) */
+  /* 맨 아래 가운데 = 조작 단추 2줄 (PC·휴대폰 모두) */
   #moveBtns {
-    position: fixed; z-index: 10; display: flex; flex-direction: row; gap: 5px;
+    position: fixed; z-index: 10; display: grid; grid-template-columns: repeat(5, 56px); gap: 5px;
     left: 50%; transform: translateX(-50%); bottom: calc(10px + env(safe-area-inset-bottom));
     padding: 6px; border-radius: 20px; background: rgba(255,255,255,0.35); backdrop-filter: blur(6px);
   }
   #moveBtns button {
-    width: 54px; height: 54px; border-radius: 14px; border: none; cursor: pointer;
+    width: 56px; height: 48px; border-radius: 13px; border: none; cursor: pointer;
     background: rgba(255,255,255,0.9); color: #3b2a1a; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     font-size: 12px; font-weight: 800; line-height: 1.1; touch-action: manipulation; position: relative;
   }
-  #moveBtns button .ico { font-size: 21px; line-height: 1; margin-bottom: 2px; }
+  #moveBtns button .ico { font-size: 19px; line-height: 1; margin-bottom: 2px; }
+  #moveBtns button { font-size: 11px; }
+  #moveBtns button.off { opacity: 0.45; }   /* 지금은 못 쓰는 단추 (예: 목탁 없이 목탁소리) */
   #moveBtns button .key {
     position: absolute; top: 3px; right: 5px; font-size: 9px; font-weight: 700; color: #9a8a76;
   }
@@ -286,10 +291,14 @@ window.CONFIG = {
     <div class="row" style="margin:8px 0 0"><button type="button" class="go" id="goBtn">🚶 가기</button><button type="button" id="goClose">닫기</button></div>
   </div>
   <div id="moveBtns">
-    <button id="btnRun"  type="button" aria-label="뛰어가기"><span class="key">Shift</span><span class="ico">🏃</span>뛰기</button>
-    <button id="btnRest" type="button" aria-label="앉기"><span class="key">C</span><span class="ico">🧘</span><span class="lbl">앉기</span></button>
+    <button id="btnFast" type="button" aria-label="빨리 걷기"><span class="key">Shift</span><span class="ico">🏃</span>빨리</button>
+    <button id="btnSlow" type="button" aria-label="천천히 걷기"><span class="key">Z</span><span class="ico">🐢</span>천천히</button>
+    <button id="btnSit"  type="button" aria-label="앉기"><span class="key">C</span><span class="ico">🧘</span>앉기</button>
+    <button id="btnStand" type="button" aria-label="서기"><span class="key">X</span><span class="ico">🧍</span>서기</button>
     <button id="btnBow"  type="button" aria-label="절하기"><span class="key">F</span><span class="ico">🙇</span>절</button>
-    <button id="btnTap"  type="button" aria-label="목탁"><span class="key">T</span><span class="ico">🥁</span>목탁</button>
+    <button id="btnPray" type="button" aria-label="합장"><span class="key">P</span><span class="ico">🙏</span>합장</button>
+    <button id="btnHold" type="button" aria-label="목탁 집기"><span class="key">E</span><span class="ico">🤲</span><span class="lbl">목탁집기</span></button>
+    <button id="btnTap"  type="button" aria-label="목탁 소리"><span class="key">T</span><span class="ico">🥁</span>목탁소리</button>
     <button id="btnHome" type="button" aria-label="처음 자리로 되돌아가기"><span class="key">H</span><span class="ico">↩️</span>처음으로</button>
   </div>
   <canvas id="miniMap" aria-label="건물 위치 도면"></canvas>
@@ -897,11 +906,16 @@ function blocked(x, z) {
 }
 
 /* ---------------- 화면 크기 바뀔 때 ---------------- */
-window.addEventListener('resize', () => {
-  camera.aspect = window.innerWidth / window.innerHeight;
+// 세로 화면(휴대폰)에서는 캐릭터가 화면 위쪽에 보이게 살짝 올림 (아래 단추들에 가리지 않게)
+function fitView() {
+  const w = window.innerWidth, h = window.innerHeight;
+  camera.aspect = w / h;
+  if (h > w) camera.setViewOffset(w, h, 0, Math.round(h * 0.14), w, h); else camera.clearViewOffset();
   camera.updateProjectionMatrix();
-  renderer.setSize(window.innerWidth, window.innerHeight);
-});
+  renderer.setSize(w, h);
+}
+window.addEventListener('resize', fitView);
+fitView();
 
 /* =====================================================================
    소리 — Web Audio 합성 (파일 없음). 화면을 처음 누른 뒤부터 소리를 낸다.
@@ -1118,7 +1132,7 @@ function makeMonk(cfg) {
   handMoktak.scale.set(1, 0.8, 1.1); handMoktak.position.set(0, -0.42, 0.04); handMoktak.visible = false; handMoktak.castShadow = true;
   arms[0].add(handMoktak);
 
-  return { root, body, upper, legs, arms, head, handMoktak, phase: 0, moveAmt: 0, sitting: false, bowT: 0, tapT: 0, tapShow: 0 };
+  return { root, body, upper, legs, arms, head, handMoktak, phase: 0, moveAmt: 0, sitting: false, bowT: 0, tapT: 0, tapShow: 0, gassho: false, holding: false };
 }
 
 // 걷는 몸짓 (amt = 0 멈춤 ~ 1 걷기). 앉은 자세에서도 부드럽게 풀린다.
@@ -1182,7 +1196,16 @@ function poseOverlay(m, dt) {
   } else {
     m.upper.rotation.x += (0 - m.upper.rotation.x) * damp(8, dt);
   }
-  // 목탁 두드리기: 왼손에 작은 목탁을 들고, 오른손으로 똑
+  // 합장 (서서·앉아서·걸으면서): 두 손을 가슴 앞에 모음
+  if (m.gassho && !(m.bowT > 0)) {
+    m.arms.forEach((a, i) => { const side = i ? 1 : -1; a.rotation.x = -1.3; a.rotation.z = -side * 0.62; });
+  }
+  // 목탁을 들고 있으면 왼손에 목탁
+  if (m.holding && !m.gassho && !(m.bowT > 0) && !(m.tapShow > 0)) {
+    m.handMoktak.visible = true;
+    m.arms[0].rotation.x = -0.85; m.arms[0].rotation.z = 0.3;
+  }
+  // 목탁 두드리기: 왼손에 든 목탁을 오른손으로 똑
   if (m.tapShow > 0) {
     m.tapShow -= dt;
     m.handMoktak.visible = true;
@@ -1192,7 +1215,7 @@ function poseOverlay(m, dt) {
       m.arms[1].rotation.x = -0.6 - 0.55 * Math.sin(Math.PI * m.tapT);
       m.arms[1].rotation.z = -0.45;
     } else { m.arms[1].rotation.x = -0.6; m.arms[1].rotation.z = -0.45; }
-  } else m.handMoktak.visible = false;
+  } else if (!m.holding) m.handMoktak.visible = false;
 }
 function startTap(m) { m.tapT = 1; m.tapShow = 1.6; }
 
@@ -1319,12 +1342,16 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'KeyF') doBow();
   if (e.code === 'KeyT') doTap();
   if (e.code === 'KeyQ') doUTurn();
+  if (e.code === 'KeyZ') setSpeed('slow');
+  if (e.code === 'KeyX') doStand();
+  if (e.code === 'KeyP') doPray();
+  if (e.code === 'KeyE') doHold();
   if (e.code === 'KeyH') goHome();
   if (e.code === 'KeyG') setPanel(!goPanel.classList.contains('show'));
 });
 
 // 🔄 돌아서기: 제자리에서 뒤로 휙 돈다 (0.7초)
-let uTurnT = 0, uTurnFrom = 0, bumpT = 0;
+let uTurnT = 0, uTurnFrom = 0, bumpT = 0, btnTick = 0;
 function doUTurn() {
   if (state === 'sit') stopAction();
   resting = false; monk.bowT = 0;
@@ -1385,25 +1412,84 @@ function toggleRest() {
   if (state !== 'walk') return;
   resting = !resting; monk.bowT = 0;
   if (!resting) camYaw = monk.root.rotation.y;
+  updateBtns();
 }
 // 절하기
 function doBow() {
   if (state === 'walk' && !resting && monk.bowT === 0) monk.bowT = 0.001;
 }
-// 목탁 두드리기
-function doTap() {
-  if (state !== 'walk') return;
-  startTap(monk); tapCount++;
+// 가까이 놓여 있는 목탁 (누가 들고 있지 않은 것)
+function nearMoktak(x, z, r = ACT.radius) {
+  let best = null, bd = r;
+  for (const m of moktaks) { if (m.held) continue; const d = Math.hypot(x - m.x, z - m.z); if (d <= bd) { bd = d; best = m; } }
+  return best;
+}
+let heldMoktak = null;        // 내가 들고 있는 목탁
+// 🤲 목탁 집기 / 내려놓기
+function doHold() {
   const mp = monk.root.position;
-  moktaks.forEach((m) => { if (Math.hypot(mp.x - m.x, mp.z - m.z) < ACT.radius) m.hit = 1; });
+  if (heldMoktak) {                                   // 내려놓기: 내 앞 바닥에
+    const m = heldMoktak, ry = monk.root.rotation.y;
+    const x = mp.x + Math.sin(ry) * 0.6, z = mp.z + Math.cos(ry) * 0.6;
+    scene.attach(m.g); m.g.position.set(x, groundHeight(x, z), z); m.g.rotation.set(0, ry, 0);
+    m.x = x; m.z = z; m.held = false; m.g.visible = true;
+    heldMoktak = null; monk.holding = false;
+    toast('목탁을 내려놓았어요');
+  } else {
+    const m = nearMoktak(mp.x, mp.z);
+    if (!m) { toast('가까이에 목탁이 없어요 (법당 방석 옆에 있어요)'); return; }
+    m.held = true; m.g.visible = false; heldMoktak = m; monk.holding = true;
+    toast('목탁을 집었어요 🤲 — 🥁 목탁소리를 눌러 보세요');
+  }
+  updateBtns();
+}
+// 🥁 목탁 소리 — 목탁을 들고 있거나 바로 옆에 있을 때만 소리가 난다
+function doTap() {
+  if (state === 'sit' && sitT < 1) return;
+  const mp = monk.root.position;
+  if (heldMoktak) { startTap(monk); }
+  else {
+    const m = nearMoktak(mp.x, mp.z);
+    if (!m) { toast('목탁이 없어요 — 먼저 🤲 목탁집기'); return; }   // 목탁 없으면 소리 안 남
+    m.hit = 1;
+  }
+  tapCount++;
   if (!Sound.ctx) Sound.setOn(true);
   Sound.tok();
+}
+// 🙏 합장 — 방석 옆이면 방석에 앉아 합장, 아니면 그 자리에서 두 손 모으기 (한 번 더 누르면 풀기)
+function doPray() {
+  if (state === 'sit') return;
+  if (actTarget && actTarget.type === 'cushion') { monk.gassho = false; startAction(); return; }
+  monk.gassho = !monk.gassho; monk.bowT = 0;
+  updateBtns();
+}
+// 🧘 앉기 / 🧍 서기
+function doSit() { if (state === 'walk' && !resting) { resting = true; monk.bowT = 0; autoGo = null; updateBtns(); } }
+function doStand() {
+  if (state === 'sit') stopAction();
+  else if (resting) { resting = false; camYaw = monk.root.rotation.y; }
+  else { toast('이미 서 있어요'); return; }
+  updateBtns();
+}
+// 🏃 빨리 / 🐢 천천히 (한 번 더 누르면 보통)
+let speedMode = 'normal';
+function setSpeed(m) { speedMode = speedMode === m ? 'normal' : m; updateBtns(); toast(speedMode === 'fast' ? '빨리 걸어요 🏃' : speedMode === 'slow' ? '천천히 걸어요 🐢' : '보통 빠르기'); }
+function updateBtns() {
+  const $ = (id) => document.getElementById(id);
+  $('btnFast').classList.toggle('on', speedMode === 'fast');
+  $('btnSlow').classList.toggle('on', speedMode === 'slow');
+  $('btnSit').classList.toggle('on', resting || state === 'sit');
+  $('btnPray').classList.toggle('on', monk.gassho || state === 'sit');
+  $('btnHold').classList.toggle('on', !!heldMoktak);
+  $('btnHold').querySelector('.lbl').textContent = heldMoktak ? '내려놓기' : '목탁집기';
+  const mp = monk.root.position;
+  $('btnTap').classList.toggle('off', !heldMoktak && !nearMoktak(mp.x, mp.z));
 }
 
 /* ---------------- 휴대폰 동작 단추 (조이스틱과 같은 조건에서 보임) ---------------- */
 const moveBtns = document.getElementById('moveBtns');
-const btnRun = document.getElementById('btnRun'), btnRest = document.getElementById('btnRest');
-let runOn = false;
+let runOn = false;   // (예전 이름 — 이제 speedMode 를 씀)
 const setTouchClass = (v) => document.body.classList.toggle('touch', v);
 setTouchClass(isTouch);
 window.matchMedia('(pointer: coarse)').addEventListener?.('change', (e) => setTouchClass(e.matches));
@@ -1412,9 +1498,13 @@ const onBtn = (el, fn) => el.addEventListener('pointerdown', (e) => {
   if (!Sound.ctx) Sound.setOn(true);
   fn();
 });
-onBtn(btnRun, () => { runOn = !runOn; btnRun.classList.toggle('on', runOn); });
-onBtn(btnRest, toggleRest);
+onBtn(document.getElementById('btnFast'), () => setSpeed('fast'));
+onBtn(document.getElementById('btnSlow'), () => setSpeed('slow'));
+onBtn(document.getElementById('btnSit'), doSit);
+onBtn(document.getElementById('btnStand'), doStand);
 onBtn(document.getElementById('btnBow'), doBow);
+onBtn(document.getElementById('btnPray'), doPray);
+onBtn(document.getElementById('btnHold'), doHold);
 onBtn(document.getElementById('btnTap'), doTap);
 onBtn(document.getElementById('btnHome'), goHome);
 onBtn(document.getElementById('btnTurn'), doUTurn);
@@ -1444,7 +1534,8 @@ function update(dt) {
   if (autoGo && (f !== 0 || turn !== 0)) stopAuto('직접 움직여서 멈췄어요');   // 손으로 움직이면 자동 걷기 멈춤
   const autoTurning = autoGo && autoGo.phase === 'turn';
   if (autoGo && autoGo.phase === 'walk') f = 1;
-  const running = (keys.run || runOn) && f > 0;
+  const running = (keys.run || speedMode === 'fast') && f > 0;
+  const slowWalk = speedMode === 'slow' && !keys.run && f !== 0;
   const mag = f !== 0 ? 1 : (turn !== 0 || uTurnT > 0 || autoTurning) ? 0.35 : 0;
   bumpT = Math.max(0, bumpT - dt);
 
@@ -1473,7 +1564,7 @@ function update(dt) {
       } else if (turn) monk.root.rotation.y -= turn * C.character.turn * dt;
       if (f !== 0) {
         const ry = monk.root.rotation.y, dx = Math.sin(ry) * f, dz = Math.cos(ry) * f;
-        const spd = f > 0 ? (running ? C.character.run : 1) : 0.55;   // 뒤로는 천천히
+        const spd = (f > 0 ? (running ? C.character.run : 1) : 0.55) * (slowWalk ? C.character.slow : 1);   // 뒤로는 천천히
         let step = C.character.speed * spd * dt;
         if (autoGo && autoGo.phase === 'walk') step = Math.min(step, autoGo.left);
         const ox = p.x, oz = p.z;
@@ -1497,7 +1588,7 @@ function update(dt) {
 
     // 3) 걷는 몸짓 + 앉은 자세에서 천천히 풀기
     if (resting) poseRest(monk, dt);
-    else poseWalk(monk, dt, mag * (running ? 1.5 : 1));   // 뛰면 팔다리를 더 크고 빠르게
+    else poseWalk(monk, dt, mag * (running ? 1.5 : slowWalk ? 0.55 : 1));   // 빨리: 팔다리 크고 빠르게 / 천천히: 작고 느리게
 
     // 행동 단추: 가장 가까운 방석·종 반경 안에서만 보임
     let best = null, bestD = 1e9;
@@ -1521,10 +1612,7 @@ function update(dt) {
     poseSit(monk, dt);
   }
   poseOverlay(monk, dt);
-  if (btnRest.classList.contains('on') !== resting) {
-    btnRest.classList.toggle('on', resting);
-    btnRest.querySelector('.lbl').textContent = resting ? '서기' : '앉기';
-  }
+  btnTick += dt; if (btnTick > 0.25) { btnTick = 0; updateBtns(); }
 
   // 목탁: 누군가(나 또는 다른 사람) 합장 중이면 박자에 맞춰 똑똑
   const meSitting = state === 'sit' && sitT >= 1;
@@ -1532,13 +1620,18 @@ function update(dt) {
     beatT += dt;
     const period = 60 / ACT.bpm;
     if (beatT >= period) {
-      beatT -= period; Sound.tok();
-      if (meSitting) sitTarget.moktak.hit = 1;
-      Net.forEachSitting((m) => {          // 다른 사람이 앉은 곳 가장 가까운 목탁
-        let best = null, bd = 1e9;
-        moktaks.forEach((k) => { const d = Math.hypot(k.x - m.root.position.x, k.z - m.root.position.z); if (d < bd) { bd = d; best = k; } });
-        if (best && bd < 3) best.hit = 1;
+      beatT -= period;
+      let sound = false;
+      if (meSitting) {
+        const mk = sitTarget.moktak;
+        if (!mk.held && Math.hypot(mk.x - sitTarget.x, mk.z - sitTarget.z) < 2) { mk.hit = 1; sound = true; }
+        else if (heldMoktak) { startTap(monk); sound = true; }       // 들고 있는 목탁으로
+      }
+      Net.forEachSitting((m) => {          // 다른 사람이 앉은 곳 옆에 목탁이 있을 때만
+        const k = nearMoktak(m.root.position.x, m.root.position.z, 2.5);
+        if (k) { k.hit = 1; sound = true; }
       });
+      if (sound) Sound.tok();             // 목탁이 없으면 소리 안 남
     }
     // 박자마다 고개를 살짝 숙임
     const nod = 0.12 * Math.exp(-beatT * 5);
@@ -1681,6 +1774,7 @@ const Net = (() => {
         const o = others.get(msg.id);
         if (!o) { addOther(msg); countText(); return; }
         o.snaps.push({ t: now(), x: msg.x, y: msg.y, z: msg.z, ry: msg.ry, act: msg.act });
+        o.m.gassho = !!(msg.fx & 1); o.m.holding = !!(msg.fx & 2);
         // 목탁 두드리기 (가까이 있을 때만 소리)
         if (o.tap !== undefined && msg.tap !== o.tap) {
           startTap(o.m);
@@ -1750,12 +1844,12 @@ const Net = (() => {
   }
 
   // 매 화면마다: 내 위치 보내기 + 다른 사람 움직이기
-  function update(dt, myAct, myTap, myBell) {
+  function update(dt, myAct, myTap, myBell, myFx) {
     const t = now();
     if (ws && ws.readyState === 1 && t - lastSend >= 1 / C.room.sendPerSec) {
       const p = monk.root.position;
-      const cur = { x: +p.x.toFixed(2), y: +p.y.toFixed(2), z: +p.z.toFixed(2), ry: +monk.root.rotation.y.toFixed(2), act: myAct, tap: myTap, bell: myBell };
-      const changed = !last || cur.x !== last.x || cur.y !== last.y || cur.z !== last.z || cur.ry !== last.ry || cur.act !== last.act || cur.tap !== last.tap || cur.bell !== last.bell;
+      const cur = { x: +p.x.toFixed(2), y: +p.y.toFixed(2), z: +p.z.toFixed(2), ry: +monk.root.rotation.y.toFixed(2), act: myAct, tap: myTap, bell: myBell, fx: myFx };
+      const changed = !last || cur.x !== last.x || cur.y !== last.y || cur.z !== last.z || cur.ry !== last.ry || cur.act !== last.act || cur.tap !== last.tap || cur.bell !== last.bell || cur.fx !== last.fx;
       if (changed) { ws.send(JSON.stringify({ t: 'pos', ...cur })); last = cur; lastSend = t; }
     }
     const rt = t - DELAY;
@@ -1887,7 +1981,8 @@ function loop() {
   MiniMap.draw(dt);
   // 행동 번호: 0 걷기 · 1 합장 · 2 제자리 앉기 · 3 절하기
   const actCode = state === 'sit' ? 1 : resting ? 2 : monk.bowT > 0 ? 3 : 0;
-  Net.update(dt, actCode, tapCount, bellCount);
+  const fx = (monk.gassho ? 1 : 0) | (heldMoktak ? 2 : 0);   // 서서 합장 · 목탁 들고 있음
+  Net.update(dt, actCode, tapCount, bellCount, fx);
   renderer.render(scene, camera);
   requestAnimationFrame(loop);
 }

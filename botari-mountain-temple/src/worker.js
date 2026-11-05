@@ -81,6 +81,7 @@ export class Room extends DurableObject {
     me.act = Math.max(0, Math.min(3, Math.round(Number(msg.act) || 0)));   // 0 걷기 · 1 합장 · 2 앉기 · 3 절하기
     me.tap = Math.max(0, Math.min(1e6, Math.round(Number(msg.tap) || 0)));  // 목탁 두드린 횟수
     me.bell = Math.max(0, Math.min(1e6, Math.round(Number(msg.bell) || 0))); // 종 친 횟수
+    me.fx = Math.max(0, Math.min(3, Math.round(Number(msg.fx) || 0)));      // 1 서서 합장 · 2 목탁 들고 있음
     ws.serializeAttachment(me);
 
     this.broadcast({ t: "pos", ...publicInfo(me) }, ws);
@@ -111,7 +112,7 @@ export class Room extends DurableObject {
 
 function publicInfo(a) {
   if (!a) return null;
-  return { id: a.id, name: a.name, x: a.x, y: a.y, z: a.z, ry: a.ry, act: a.act, tap: a.tap || 0, bell: a.bell || 0 };
+  return { id: a.id, name: a.name, x: a.x, y: a.y, z: a.z, ry: a.ry, act: a.act, tap: a.tap || 0, bell: a.bell || 0, fx: a.fx || 0 };
 }
 function num(v, lo, hi) {
   const n = Number(v);
