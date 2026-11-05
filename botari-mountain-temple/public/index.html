@@ -33,7 +33,17 @@ window.CONFIG = {
     bellTower: { name: "범종각", x: -13, z: 7, face: "east" },
     pagoda:    { name: "삼층석탑", x: 0, z: 5 },
     lanterns:  [ { x: -3.2, z: 0.6 }, { x: 3.2, z: 0.6 } ],   // 대웅전 앞 석등 2개
-    pines: 60                                                 // 둘레 소나무 수
+    pines: 60,                                                // 둘레 소나무 수
+    // 마당 돌길: 점 [x, z] 를 이어 디딤돌을 깐다. 건물 이름을 쓰면 그 건물 계단 앞이 된다.
+    paths: [
+      ["불이문", [0, 8.3], [-2.3, 7.0], [-2.3, 3.0], [0, 1.8], "대웅전"],   // 석탑 왼쪽으로 돌아 대웅전
+      [[0, 8.3], [2.3, 7.0], [2.3, 3.0], [0, 1.8]],                         // 석탑 오른쪽
+      [[-2.3, 7.0], "범종각"],
+      [[2.3, 7.0], "요사채"],
+      [[2.3, 3.0], [7.8, 0.8], [7.8, -6], "극락전"],
+      [[-2.3, 3.0], [-7.8, 0.8], [-7.8, -6], "관음전"],
+      [[7.8, -6], [7.8, -14.6], "산신각"]
+    ]
   },
 
   // 3) 내 캐릭터 (STEP 2에서 사용)
@@ -310,6 +320,8 @@ const areas = [];                                // 알약에 보일 구역 이�
 const moktaks = [];                              // 법당마다 있는 목탁
 const indoors = [];                              // 법당 안 (카메라를 낮고 가깝게)
 const mapItems = [];                             // 축소 도면에 그릴 것들
+const entrances = {};                            // 건물 이름 → 계단 앞 자리 [x, z]
+const pathLines = [];                            // 돌길 (도면에도 그림)
 const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.85, ...extra });
 function part(geo, material, x, y, z, parent = scene) {
   const m = new THREE.Mesh(geo, material);
@@ -525,6 +537,7 @@ function buildHall(o) {
   }
   F.area(bMinX, bMaxX, bMinZ, bMaxZ + depth * steps, o.name);
   F.map(-W / 2, W / 2, -D / 2, D / 2, 'hall', o.name);
+  entrances[o.name] = F.toW(0, bMaxZ + depth * steps + 0.35);
 }
 
 // 일주문 · 천왕문 · 불이문
@@ -580,6 +593,7 @@ function buildGate(gate) {
     const sign = makeSign('불이문', 1.3, 0.44); sign.position.set(0, H - 0.55, 0.9); F.g.add(sign);
     F.area(-2.5, 2.5, -1.5, 1.5, '불이문');
     F.map(-2.2, 2.2, -0.9, 0.9, 'gate', '불이문');
+    entrances['불이문'] = [0, gate.z - 1.2];
   }
 }
 
@@ -652,6 +666,7 @@ function buildBellTower(o) {
   targets.push({ type: 'bell', x: tx, z: tz, label: C.action.bell.label, icon: '🔔', radius: C.action.bell.radius, name: o.name });
   F.area(-2.7, 2.7, -2.7, 3.6, o.name);
   F.map(-2.2, 2.2, -2.2, 2.2, 'bell', o.name);
+  entrances[o.name] = F.toW(0, 2.7 + 0.9 + 0.35);
 }
 
 // 삼층석탑
@@ -700,6 +715,34 @@ if (O.pagoda) buildPagoda(O.pagoda);
   const geo = new THREE.BoxGeometry(1.4, 0.04, 0.9), inst = new THREE.InstancedMesh(geo, stoneDark, zs.length);
   const m4 = new THREE.Matrix4();
   zs.forEach((z, i) => inst.setMatrixAt(i, m4.makeTranslation(0, 0.02, z + 0.45)));
+  inst.receiveShadow = true; scene.add(inst);
+}
+// 마당 디딤돌 (CONFIG.objects.paths)
+if (O.paths) {
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const stones = [];
+  O.paths.forEach((line) => {
+    const pts = line.map((q) => (typeof q === 'string' ? entrances[q] : q)).filter(Boolean);
+    if (pts.length < 2) return;
+    pathLines.push(pts);
+    for (let i = 0; i < pts.length - 1; i++) {
+      const [ax, az] = pts[i], [bx, bz] = pts[i + 1], len = Math.hypot(bx - ax, bz - az);
+      for (let d = 0; d <= len; d += 0.95) {
+        const x = ax + (bx - ax) * (d / len), z = az + (bz - az) * (d / len);
+        if (stones.some((q) => Math.hypot(q.x - x, q.z - z) < 0.65)) continue;   // 갈림길 겹침 방지
+        stones.push({ x, z, r: rnd() * Math.PI, s: 0.85 + rnd() * 0.3, c: 0.82 + rnd() * 0.25 });
+      }
+    }
+  });
+  const geo = new THREE.CylinderGeometry(0.42, 0.45, 0.06, 7);   // 납작한 돌 (원기둥)
+  const inst = new THREE.InstancedMesh(geo, mat(0x8f8b80, { roughness: 1 }), stones.length);
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), v = new THREE.Vector3(), sc = new THREE.Vector3(), col = new THREE.Color();
+  stones.forEach((st, i) => {
+    q.setFromAxisAngle(v.set(0, 1, 0), st.r);
+    m4.compose(v.set(st.x, 0.04, st.z), q, sc.set(st.s, 1, st.s * 0.85));
+    inst.setMatrixAt(i, m4);
+    inst.setColorAt(i, col.setScalar(st.c));
+  });
   inst.receiveShadow = true; scene.add(inst);
 }
 if (O.wall) areas.push({ cx: 0, cz: 0, yaw: 0, minX: O.wall.minX, maxX: O.wall.maxX, minZ: O.wall.minZ, maxZ: O.wall.maxZ, name: '마당' });
@@ -1557,6 +1600,11 @@ const MiniMap = (() => {
     b.strokeStyle = '#6b665c'; b.lineWidth = 1.5; b.strokeRect(mx(w.minX), mz(w.minZ), (w.maxX - w.minX) * sc, (w.maxZ - w.minZ) * sc);   // 담장
     b.fillStyle = 'rgba(205,189,152,1)'; b.fillRect(mx(-1.6), mz(w.maxZ) - 1.5, 3.2 * sc, 3);   // 담장 입구
   }
+  // 돌길
+  b.strokeStyle = 'rgba(120,116,106,0.95)'; b.lineWidth = 1.6; b.lineCap = 'round'; b.lineJoin = 'round';
+  pathLines.forEach((pts) => {
+    b.beginPath(); pts.forEach(([x, z], i) => (i ? b.lineTo(mx(x), mz(z)) : b.moveTo(mx(x), mz(z)))); b.stroke();
+  });
   b.textAlign = 'center'; b.textBaseline = 'middle';
   b.font = 'bold 9px -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif';
   for (const it of mapItems) {
