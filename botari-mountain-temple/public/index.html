@@ -13,14 +13,27 @@ window.CONFIG = {
   // 1) 장소 이름 (위 가운데 알약에 표시)
   placeName: "산속 절",
 
-  // 2) 놓을 것 (STEP 3에서 사용)
+  // 2) 놓을 것 — 우리나라 큰절 배치 (일주문 → 천왕문 → 불이문 → 마당·석탑·범종각 → 대웅전)
+  //    face = 건물 앞면이 보는 쪽 (south = 들어오는 길 쪽, east/west = 마당 쪽)
   objects: {
-    hall:     { roof: "#1f2226", pillar: "#a3262a", openFront: true }, // 법당: 검은 기와지붕, 붉은 기둥, 앞면이 열린 입구
-    stairs:   true,          // 법당 앞 돌계단
-    lanterns: 2,             // 양옆 석등 2개
-    pines:    true,          // 둘레 소나무
-    buddha:   true,          // 법당 안 불상
-    cushion:  true           // 불상 앞 방석
+    roof: "#1f2226", pillar: "#a3262a",          // 검은 기와지붕, 붉은 기둥
+    gates: [
+      { type: "일주문", z: 36 },                  // 기둥이 한 줄로 선 첫 문
+      { type: "천왕문", z: 25 },                  // 사천왕이 지키는 문
+      { type: "불이문", z: 14 }                   // 담장 입구 (여기부터 절 마당)
+    ],
+    wall: { minX: -22, maxX: 22, minZ: -26, maxZ: 14 },   // 돌담장
+    halls: [
+      { name: "대웅전", x: 0,   z: -8,  face: "south", w: 10,  d: 7,   wallH: 3.4, baseH: 0.8, statue: "삼존불" },
+      { name: "극락전", x: 14,  z: -6,  face: "west",  w: 7,   d: 5.5, wallH: 3.0, baseH: 0.6, statue: "아미타불" },
+      { name: "관음전", x: -14, z: -6,  face: "east",  w: 7,   d: 5.5, wallH: 3.0, baseH: 0.6, statue: "관음보살" },
+      { name: "산신각", x: 10,  z: -19, face: "south", w: 4.5, d: 3.5, wallH: 2.5, baseH: 0.4, statue: "산신" },
+      { name: "요사채", x: 14,  z: 7,   face: "west",  w: 8,   d: 4.5, wallH: 2.6, baseH: 0.3, closed: true } // 스님 사는 집 (문 닫힘)
+    ],
+    bellTower: { name: "범종각", x: -13, z: 7, face: "east" },
+    pagoda:    { name: "삼층석탑", x: 0, z: 5 },
+    lanterns:  [ { x: -3.2, z: 0.6 }, { x: 3.2, z: 0.6 } ],   // 대웅전 앞 석등 2개
+    pines: 120                                                // 둘레 소나무 수
   },
 
   // 3) 내 캐릭터 (STEP 2에서 사용)
@@ -30,8 +43,9 @@ window.CONFIG = {
   action: {
     label: "합장",
     target: "cushion",       // 방석
-    radius: 1.5,             // 반경 1.5m 안에 들어가면 단추가 뜸
-    bpm: 72                  // 목탁 박자
+    radius: 1.5,             // 반경 1.5m 안에 들어가면 단추가 뜸 (모든 법당 방석)
+    bpm: 72,                 // 목탁 박자
+    bell: { label: "타종", radius: 2.2 }   // 범종각 종 가까이 가면 "타종" 단추
   },
 
   // 함께 걷기 (STEP 5) — 한 방 최대 인원 (서버 src/worker.js 의 MAX_PEOPLE 과 같게)
@@ -41,7 +55,7 @@ window.CONFIG = {
   ambience: { wind: 0.18, chimeEverySec: [6, 14] },
 
   // 바탕 색
-  world: { size: 60, ground: "#6f8f5a", skyTop: "#7fb2e0", skyBottom: "#e7eef2", fog: "#dfe8ea" }
+  world: { size: 100, start: { x: 0, z: 46 }, ground: "#6f8f5a", court: "#cdbd98", skyTop: "#7fb2e0", skyBottom: "#e7eef2", fog: "#dfe8ea" }
 };
 </script>
 
@@ -243,8 +257,8 @@ sun.position.set(12, 20, 8);
 sun.castShadow = true;
 sun.shadow.mapSize.set(2048, 2048);
 const S = C.world.size / 2;
-Object.assign(sun.shadow.camera, { left: -S, right: S, top: S, bottom: -S, near: 1, far: 60 });
-scene.add(sun);
+Object.assign(sun.shadow.camera, { left: -26, right: 26, top: 26, bottom: -26, near: 1, far: 70 });
+scene.add(sun); scene.add(sun.target);   // 그림자 범위는 캐릭터를 따라다닌다 (넓은 절에서도 선명하게)
 
 /* ---------------- 땅 (납작한 상자) ---------------- */
 const ground = new THREE.Mesh(
@@ -273,143 +287,374 @@ const mountainMat = new THREE.MeshStandardMaterial({ color: 0x5f7a6a, roughness:
   });
 
 /* =====================================================================
-   STEP 3 — 장소 꾸미기 (CONFIG.objects 대로) : 상자·원기둥·원뿔·공만 사용
+   STEP 3 — 큰절 꾸미기 (CONFIG.objects 대로) : 상자·원기둥·원뿔·공만 사용
    ===================================================================== */
 const O = C.objects;
 const colliders = { circles: [], boxes: [] };   // 통과 못 하는 것들
 const camBlockers = [];                          // 카메라가 뚫고 지나가면 안 되는 것들
+const walkables = [];                            // 올라설 수 있는 곳 (기단·계단·마루)
+const targets = [];                              // 행동 단추 대상 (방석·종)
+const areas = [];                                // 알약에 보일 구역 이름
+const moktaks = [];                              // 법당마다 있는 목탁
+const indoors = [];                              // 법당 안 (카메라를 낮고 가깝게)
 const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.85, ...extra });
 function part(geo, material, x, y, z, parent = scene) {
   const m = new THREE.Mesh(geo, material);
   m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true;
   parent.add(m); return m;
 }
-const addBox = (minX, maxX, minZ, maxZ) => colliders.boxes.push({ minX, maxX, minZ, maxZ });
-const addCircle = (x, z, r) => colliders.circles.push({ x, z, r });
+const FACE = { south: 0, north: Math.PI, east: Math.PI / 2, west: -Math.PI / 2 };
 
-// 배치 (단위: m) — 법당은 캐릭터 앞쪽(-z)에 있다
-const L = {
-  base:  { minX: -5, maxX: 5, minZ: -10.5, maxZ: -2, h: 0.6 },   // 법당 돌 기단
-  hall:  { minX: -4, maxX: 4, minZ: -9.5, maxZ: -3.5, wallH: 3 }, // 법당 (앞면이 열림)
-  stair: { halfW: 1.5, steps: 3, depth: 0.5 },                    // 돌계단 (기단 앞)
-  buddha:  { x: 0, z: -8.4 },
-  cushion: { x: 0, z: -6.6 },
-  moktak:  { x: 0.75, z: -6.3 }
-};
-const FLOOR_IN = L.base.h + 0.08;   // 법당 마루 높이
+// 건물 하나의 "제자리 좌표" (건물 앞 = +z). 충돌·높이도 이 좌표로 적고 세계 좌표로 바꾼다.
+function makeFrame(cx, cz, yaw) {
+  const g = new THREE.Group(); g.position.set(cx, 0, cz); g.rotation.y = yaw; scene.add(g);
+  const c = Math.cos(yaw), sn = Math.sin(yaw);
+  const toW = (lx, lz) => [cx + lx * c + lz * sn, cz - lx * sn + lz * c];
+  const aabb = (minX, maxX, minZ, maxZ) => {
+    const ps = [toW(minX, minZ), toW(maxX, minZ), toW(minX, maxZ), toW(maxX, maxZ)];
+    return { minX: Math.min(...ps.map((q) => q[0])), maxX: Math.max(...ps.map((q) => q[0])),
+             minZ: Math.min(...ps.map((q) => q[1])), maxZ: Math.max(...ps.map((q) => q[1])) };
+  };
+  return {
+    g, cx, cz, yaw, toW,
+    box(minX, maxX, minZ, maxZ) { colliders.boxes.push(aabb(minX, maxX, minZ, maxZ)); },
+    circle(lx, lz, r) { const [x, z] = toW(lx, lz); colliders.circles.push({ x, z, r }); },
+    walk(minX, maxX, minZ, maxZ, h, stairs) { walkables.push({ cx, cz, yaw, minX, maxX, minZ, maxZ, h, stairs }); },
+    area(minX, maxX, minZ, maxZ, name) { areas.push({ cx, cz, yaw, minX, maxX, minZ, maxZ, name }); }
+  };
+}
+function toLocal(w, x, z) {
+  const dx = x - w.cx, dz = z - w.cz, c = Math.cos(w.yaw), sn = Math.sin(w.yaw);
+  return [dx * c - dz * sn, dx * sn + dz * c];
+}
 
 const stone = mat(0x9a9890), stoneDark = mat(0x7d7b74), wood = mat(0x8a5a32), floorWood = mat(0xb48a5a);
-const red = mat(O.hall.pillar), roof = mat(O.hall.roof, { roughness: 0.7 }), green = mat(0x2f7a6a);
+const red = mat(O.pillar), roof = mat(O.roof, { roughness: 0.7 }), green = mat(0x2f7a6a);
+const wallMat = mat(0xefe6d2), doorMat = mat(0x9a6a3a);
 const gold = mat(0xd4a640, { metalness: 0.6, roughness: 0.35 });
+const haloMat = mat(0xe8c766, { metalness: 0.4, roughness: 0.4 });
+const skinMat = mat(0xe8c39a);
 
-// --- 돌 기단 ---
-{
-  const b = L.base;
-  part(new THREE.BoxGeometry(b.maxX - b.minX, b.h, b.maxZ - b.minZ), stone, 0, b.h / 2, (b.minZ + b.maxZ) / 2);
-  // 기단 가장자리는 계단 말고는 올라갈 수 없음
-  const t = 0.1, hw = L.stair.halfW;
-  addBox(b.minX, -hw, b.maxZ - t, b.maxZ + t);
-  addBox(hw, b.maxX, b.maxZ - t, b.maxZ + t);
-  addBox(b.minX - t, b.minX + t, b.minZ, b.maxZ);
-  addBox(b.maxX - t, b.maxX + t, b.minZ, b.maxZ);
-  addBox(b.minX, b.maxX, b.minZ - t, b.minZ + t);
+// 현판 (글자를 그린 캔버스를 얇은 상자 앞면에 붙임)
+function makeSign(text, w, h) {
+  const cv = document.createElement('canvas'); cv.width = 64 * text.length + 64; cv.height = 128;
+  const g = cv.getContext('2d');
+  g.fillStyle = '#1d3a35'; g.fillRect(0, 0, cv.width, cv.height);
+  g.strokeStyle = '#c9a646'; g.lineWidth = 8; g.strokeRect(6, 6, cv.width - 12, cv.height - 12);
+  g.fillStyle = '#f1d27a'; g.font = 'bold 72px "Apple SD Gothic Neo", "Malgun Gothic", serif';
+  g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(text, cv.width / 2, 68);
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+  const dark = mat(0x1d3a35);
+  const front = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.6 });
+  return new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.08), [dark, dark, dark, dark, front, dark]);
 }
 
-// --- 돌계단 ---
-if (O.stairs) {
-  const st = L.stair, stepH = L.base.h / st.steps;
-  for (let i = 0; i < st.steps; i++) {
-    const h = stepH * (i + 1);
-    const zFront = L.base.maxZ + st.depth * (st.steps - i);
-    part(new THREE.BoxGeometry(st.halfW * 2, h, st.depth), i % 2 ? stone : stoneDark, 0, h / 2, zFront - st.depth / 2);
-  }
-  // 계단 앞 돌길
-  for (let z = L.base.maxZ + st.depth * st.steps + 0.4; z < 9; z += 1.1)
-    part(new THREE.BoxGeometry(1.4, 0.04, 0.9), stoneDark, 0, 0.02, z + 0.45).castShadow = false;
-}
-
-// --- 법당 ---
-{
-  const h = L.hall, y0 = L.base.h, H = h.wallH, t = 0.3;
-  const W = h.maxX - h.minX, D = h.maxZ - h.minZ, cz = (h.minZ + h.maxZ) / 2;
-  // 마루
-  part(new THREE.BoxGeometry(W, 0.08, D), floorWood, 0, y0 + 0.04, cz);
-  // 벽 (뒤·왼쪽·오른쪽) — 앞면은 열려 있음
-  const wallMat = mat(0xefe6d2);
-  const back = part(new THREE.BoxGeometry(W + t, H, t), wallMat, 0, y0 + H / 2, h.minZ);
-  const left = part(new THREE.BoxGeometry(t, H, D), wallMat, h.minX, y0 + H / 2, cz);
-  const right = part(new THREE.BoxGeometry(t, H, D), wallMat, h.maxX, y0 + H / 2, cz);
-  camBlockers.push(back, left, right);
-  addBox(h.minX - t / 2, h.maxX + t / 2, h.minZ - t / 2, h.minZ + t / 2);
-  addBox(h.minX - t / 2, h.minX + t / 2, h.minZ, h.maxZ);
-  addBox(h.maxX - t / 2, h.maxX + t / 2, h.minZ, h.maxZ);
-  // 붉은 기둥 (앞 4개 + 뒤 모서리 2개)
-  const pillarGeo = new THREE.CylinderGeometry(0.18, 0.2, H, 14);
-  [h.minX, -1.6, 1.6, h.maxX].forEach((x) => { part(pillarGeo, red, x, y0 + H / 2, h.maxZ); addCircle(x, h.maxZ, 0.22); });
-  [h.minX, h.maxX].forEach((x) => part(pillarGeo, red, x, y0 + H / 2, h.minZ));
-  // 단청 띠 (초록 들보)
-  part(new THREE.BoxGeometry(W + 0.4, 0.3, 0.25), green, 0, y0 + H - 0.15, h.maxZ);
-  part(new THREE.BoxGeometry(W + 0.4, 0.12, 0.27), red, 0, y0 + H - 0.36, h.maxZ);
-  // 처마 + 검은 기와지붕 (사각뿔)
-  const eaveY = y0 + H + 0.12;
-  const eave = part(new THREE.BoxGeometry(W + 2.4, 0.24, D + 2.2), roof, 0, eaveY, cz);
+// 검은 기와지붕 (처마 + 사각뿔 + 용마루 + 들린 처마 끝)
+function addRoof(F, W, D, y, ox = 1.2, oz = 1.0, rise = 1.8) {
+  const eave = part(new THREE.BoxGeometry(W + ox * 2, 0.24, D + oz * 2), roof, 0, y, 0, F.g);
   camBlockers.push(eave);
   const roofGeo = new THREE.ConeGeometry(1, 1, 4); roofGeo.rotateY(Math.PI / 4);
-  const r = part(roofGeo, roof, 0, eaveY + 0.12 + 0.9, cz);
-  r.scale.set((W / 2 + 1.1) / 0.7071, 1.8, (D / 2 + 1.0) / 0.7071);
-  part(new THREE.BoxGeometry(W * 0.55, 0.22, 0.3), roof, 0, eaveY + 1.85, cz);     // 용마루
-  // 처마 끝이 살짝 들린 모서리 (작은 원뿔)
+  const r = part(roofGeo, roof, 0, y + 0.12 + rise / 2, 0, F.g);
+  r.scale.set((W / 2 + ox - 0.1) / 0.7071, rise, (D / 2 + oz) / 0.7071);
+  part(new THREE.BoxGeometry(W * 0.55, 0.22, 0.3), roof, 0, y + rise * 1.03, 0, F.g);
   [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => {
-    const c = part(new THREE.ConeGeometry(0.12, 0.6, 6), roof, sx * (W / 2 + 1.15), eaveY + 0.25, cz + sz * (D / 2 + 1.05));
-    c.rotation.set(sz * 0.5, 0, -sx * 0.5);
+    const cn = part(new THREE.ConeGeometry(0.12, 0.6, 6), roof, sx * (W / 2 + ox - 0.05), y + 0.25, sz * (D / 2 + oz + 0.05), F.g);
+    cn.rotation.set(sz * 0.5, 0, -sx * 0.5);
   });
-  // 법당 안 따뜻한 불빛
-  const inLight = new THREE.PointLight(0xffc98a, 8, 9, 1.6);
-  inLight.position.set(0, y0 + 2.4, -6.8);
-  scene.add(inLight);
 }
 
-// --- 불상 ---
-if (O.buddha) {
-  const { x, z } = L.buddha, y0 = FLOOR_IN;
-  part(new THREE.BoxGeometry(1.6, 0.5, 1.2), wood, x, y0 + 0.25, z);                        // 불단
-  part(new THREE.CylinderGeometry(0.75, 0.8, 0.25, 20), gold, x, y0 + 0.62, z);             // 연꽃 대좌
-  part(new THREE.CylinderGeometry(0.62, 0.7, 0.35, 20), gold, x, y0 + 0.9, z);              // 앉은 다리
-  part(new THREE.CylinderGeometry(0.32, 0.5, 0.75, 20), gold, x, y0 + 1.42, z);             // 몸
-  part(new THREE.SphereGeometry(0.11, 12, 10), gold, x - 0.08, y0 + 1.25, z + 0.42);        // 모은 손
-  part(new THREE.SphereGeometry(0.11, 12, 10), gold, x + 0.08, y0 + 1.25, z + 0.42);
-  part(new THREE.SphereGeometry(0.3, 20, 16), gold, x, y0 + 2.06, z);                       // 머리
-  part(new THREE.SphereGeometry(0.13, 12, 10), gold, x, y0 + 2.36, z);                      // 육계
-  const halo = part(new THREE.CylinderGeometry(0.9, 0.9, 0.05, 32), mat(0xe8c766, { metalness: 0.4, roughness: 0.4 }), x, y0 + 1.9, z - 0.45);
-  halo.rotation.x = Math.PI / 2;                                                            // 광배
-  // 초 2개
-  [-0.62, 0.62].forEach((dx) => {
-    part(new THREE.CylinderGeometry(0.05, 0.05, 0.3, 10), mat(0xfaf5e8), x + dx, y0 + 0.65, z + 0.45);
-    part(new THREE.SphereGeometry(0.04, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffd27a }), x + dx, y0 + 0.84, z + 0.45);
-  });
-  addCircle(x, z, 1.0);
+// 불상 (공·원기둥) — kind: 'buddha' 부처님 / 'bodhi' 보살 (보관을 씀)
+function addBuddha(parent, x, y0, z, s, kind = 'buddha', robeMat = gold, faceMat = gold) {
+  const b = new THREE.Group(); b.position.set(x, y0, z); b.scale.setScalar(s); parent.add(b);
+  part(new THREE.CylinderGeometry(0.75, 0.8, 0.25, 20), gold, 0, 0.12, 0, b);       // 연꽃 대좌
+  part(new THREE.CylinderGeometry(0.62, 0.7, 0.35, 20), robeMat, 0, 0.4, 0, b);      // 앉은 다리
+  part(new THREE.CylinderGeometry(0.32, 0.5, 0.75, 20), robeMat, 0, 0.92, 0, b);     // 몸
+  part(new THREE.SphereGeometry(0.11, 12, 10), faceMat, -0.08, 0.75, 0.42, b);       // 모은 손
+  part(new THREE.SphereGeometry(0.11, 12, 10), faceMat, 0.08, 0.75, 0.42, b);
+  part(new THREE.SphereGeometry(0.3, 20, 16), faceMat, 0, 1.56, 0, b);               // 머리
+  if (kind === 'buddha') part(new THREE.SphereGeometry(0.13, 12, 10), faceMat, 0, 1.86, 0, b);   // 육계
+  else {
+    part(new THREE.CylinderGeometry(0.27, 0.32, 0.22, 16), gold, 0, 1.86, 0, b);    // 보관
+    part(new THREE.ConeGeometry(0.1, 0.2, 8), gold, 0, 2.06, 0, b);
+  }
+  const halo = part(new THREE.CylinderGeometry(0.9, 0.9, 0.05, 32), haloMat, 0, 1.4, -0.45, b);
+  halo.rotation.x = Math.PI / 2;                                                    // 광배
+  return b;
+}
+// 법당 안 상 (CONFIG의 statue 이름대로)
+function addStatue(F, kind, y0, z) {
+  const g = F.g;
+  if (kind === '삼존불') {                       // 가운데 부처님 + 양옆 보살
+    part(new THREE.BoxGeometry(5.4, 0.5, 1.3), wood, 0, y0 + 0.25, z, g);
+    addBuddha(g, 0, y0 + 0.5, z, 1.15);
+    addBuddha(g, -1.8, y0 + 0.5, z + 0.05, 0.8, 'bodhi');
+    addBuddha(g, 1.8, y0 + 0.5, z + 0.05, 0.8, 'bodhi');
+    [-0.8, 0.8].forEach((dx) => {
+      part(new THREE.CylinderGeometry(0.05, 0.05, 0.3, 10), mat(0xfaf5e8), dx, y0 + 0.65, z + 0.55, g);
+      part(new THREE.SphereGeometry(0.04, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffd27a }), dx, y0 + 0.84, z + 0.55, g);
+    });
+    F.box(-2.8, 2.8, z - 0.75, z + 0.75);
+  } else if (kind === '아미타불' || kind === '관음보살') {
+    part(new THREE.BoxGeometry(1.7, 0.5, 1.2), wood, 0, y0 + 0.25, z, g);
+    if (kind === '아미타불') addBuddha(g, 0, y0 + 0.5, z, 1.0);
+    else {
+      const white = mat(0xf4f1e8), face = mat(0xead09a, { metalness: 0.3, roughness: 0.5 });
+      addBuddha(g, 0, y0 + 0.5, z, 1.0, 'bodhi', white, face);
+      part(new THREE.CylinderGeometry(0.06, 0.08, 0.22, 10), mat(0x9ec9c0), 0.32, y0 + 1.35, z + 0.38, g);   // 정병
+      part(new THREE.SphereGeometry(0.06, 8, 8), mat(0x9ec9c0), 0.32, y0 + 1.5, z + 0.38, g);
+    }
+    [-0.62, 0.62].forEach((dx) => {
+      part(new THREE.CylinderGeometry(0.05, 0.05, 0.3, 10), mat(0xfaf5e8), dx, y0 + 0.65, z + 0.45, g);
+      part(new THREE.SphereGeometry(0.04, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffd27a }), dx, y0 + 0.84, z + 0.45, g);
+    });
+    F.circle(0, z, 1.0);
+  } else if (kind === '산신') {                  // 흰 수염 산신령 + 호랑이
+    part(new THREE.BoxGeometry(1.0, 0.45, 0.7), wood, -0.4, y0 + 0.22, z, g);
+    const robeB = mat(0x9fb8c8), white = mat(0xf5f5f2);
+    part(new THREE.CylinderGeometry(0.28, 0.42, 0.8, 16), robeB, -0.4, y0 + 0.85, z, g);
+    part(new THREE.SphereGeometry(0.24, 16, 12), skinMat, -0.4, y0 + 1.45, z, g);
+    const beard = part(new THREE.ConeGeometry(0.16, 0.45, 12), white, -0.4, y0 + 1.15, z + 0.17, g);
+    beard.rotation.x = Math.PI;
+    part(new THREE.CylinderGeometry(0.2, 0.22, 0.18, 14), mat(0x2a2a2a), -0.4, y0 + 1.7, z, g);   // 관
+    // 호랑이 (엎드림)
+    const tiger = mat(0xe0802a), black = mat(0x222222);
+    part(new THREE.BoxGeometry(0.95, 0.4, 0.42), tiger, 0.75, y0 + 0.22, z + 0.1, g);
+    part(new THREE.BoxGeometry(0.38, 0.34, 0.36), tiger, 0.75, y0 + 0.4, z + 0.45, g).rotation.y = 0.1;
+    [-0.3, -0.05, 0.2].forEach((dx) => part(new THREE.BoxGeometry(0.06, 0.41, 0.44), black, 0.75 + dx, y0 + 0.22, z + 0.1, g));
+    [-0.11, 0.11].forEach((dx) => part(new THREE.ConeGeometry(0.06, 0.12, 6), tiger, 0.75 + dx, y0 + 0.62, z + 0.42, g));
+    const tail = part(new THREE.CylinderGeometry(0.04, 0.04, 0.6, 8), tiger, 1.3, y0 + 0.3, z - 0.1, g);
+    tail.rotation.z = 1.1;
+    F.box(-1.0, 1.45, z - 0.5, z + 0.7);
+  }
 }
 
-// --- 방석 + 목탁 ---
-let moktak = null, moktakStick = null;
-if (O.cushion) {
-  const { x, z } = L.cushion;
-  part(new THREE.CylinderGeometry(0.42, 0.45, 0.12, 24), mat(0x8e2a35), x, FLOOR_IN + 0.06, z);
-  part(new THREE.CylinderGeometry(0.3, 0.3, 0.125, 24), mat(0xc79a3c), x, FLOOR_IN + 0.065, z).castShadow = false;
-  // 목탁 (납작한 공 + 홈) + 채
-  moktak = new THREE.Group(); moktak.position.set(L.moktak.x, FLOOR_IN, L.moktak.z); scene.add(moktak);
-  const body = part(new THREE.SphereGeometry(0.16, 20, 16), mat(0x8b3a1e, { roughness: 0.5 }), 0, 0.13, 0, moktak);
+// 방석 + 목탁
+function addCushion(F, lx, lz, y0, faceYaw, name) {
+  const g = F.g;
+  part(new THREE.CylinderGeometry(0.42, 0.45, 0.12, 24), mat(0x8e2a35), lx, y0 + 0.06, lz, g);
+  part(new THREE.CylinderGeometry(0.3, 0.3, 0.125, 24), mat(0xc79a3c), lx, y0 + 0.065, lz, g).castShadow = false;
+  const mk = new THREE.Group(); mk.position.set(lx + 0.75, y0, lz + 0.3); g.add(mk);
+  const body = part(new THREE.SphereGeometry(0.16, 20, 16), mat(0x8b3a1e, { roughness: 0.5 }), 0, 0.13, 0, mk);
   body.scale.set(1, 0.8, 1.1);
-  part(new THREE.BoxGeometry(0.2, 0.02, 0.03), mat(0x2a1208), 0, 0.15, 0.16, moktak);
-  moktakStick = new THREE.Group(); moktakStick.position.set(0.05, 0.42, 0.05); moktak.add(moktakStick);
-  const stickRod = part(new THREE.CylinderGeometry(0.015, 0.015, 0.3, 8), wood, 0, 0, 0, moktakStick);
-  stickRod.rotation.z = Math.PI / 2.4;
-  part(new THREE.SphereGeometry(0.035, 10, 8), wood, -0.13, -0.05, 0, moktakStick);
+  part(new THREE.BoxGeometry(0.2, 0.02, 0.03), mat(0x2a1208), 0, 0.15, 0.16, mk);
+  const stick = new THREE.Group(); stick.position.set(0.05, 0.42, 0.05); mk.add(stick);
+  part(new THREE.CylinderGeometry(0.015, 0.015, 0.3, 8), wood, 0, 0, 0, stick).rotation.z = Math.PI / 2.4;
+  part(new THREE.SphereGeometry(0.035, 10, 8), wood, -0.13, -0.05, 0, stick);
+  const [mx, mz] = F.toW(lx + 0.75, lz + 0.3);
+  const moktak = { g: mk, stick, x: mx, z: mz, hit: 0 };
+  moktaks.push(moktak);
+  const [x, z] = F.toW(lx, lz);
+  targets.push({ type: 'cushion', x, z, face: faceYaw, moktak, name, label: C.action.label, icon: '🙏', radius: C.action.radius });
 }
 
-// --- 석등 2개 (계단 양옆) ---
-for (let i = 0; i < O.lanterns; i++) {
-  const x = i % 2 ? 3.2 : -3.2, z = 0.2 - Math.floor(i / 2) * 3;
+// 법당 (앞면이 열림) / 요사채 (closed: 앞면에 문이 닫혀 있음)
+function buildHall(o) {
+  const yaw = FACE[o.face] ?? 0, F = makeFrame(o.x, o.z, yaw);
+  const W = o.w, D = o.d, H = o.wallH, bh = o.baseH, t = 0.3;
+  const steps = Math.max(2, Math.round(bh / 0.2)), depth = 0.45, hw = Math.min(1.6, W / 4);
+  const bMinX = -W / 2 - 1, bMaxX = W / 2 + 1, bMinZ = -D / 2 - 1, bMaxZ = D / 2 + 1.5;
+  const floorH = bh + 0.08;
+  // 돌 기단 + 가장자리 (계단 말고는 못 올라감)
+  part(new THREE.BoxGeometry(bMaxX - bMinX, bh, bMaxZ - bMinZ), stone, 0, bh / 2, (bMinZ + bMaxZ) / 2, F.g);
+  const e = 0.1;
+  F.box(bMinX, -hw, bMaxZ - e, bMaxZ + e); F.box(hw, bMaxX, bMaxZ - e, bMaxZ + e);
+  F.box(bMinX - e, bMinX + e, bMinZ, bMaxZ); F.box(bMaxX - e, bMaxX + e, bMinZ, bMaxZ);
+  F.box(bMinX, bMaxX, bMinZ - e, bMinZ + e);
+  F.walk(bMinX, bMaxX, bMinZ, bMaxZ, bh);
+  // 돌계단
+  for (let i = 0; i < steps; i++) {
+    const h = (bh / steps) * (i + 1), zf = bMaxZ + depth * (steps - i);
+    part(new THREE.BoxGeometry(hw * 2, h, depth), i % 2 ? stone : stoneDark, 0, h / 2, zf - depth / 2, F.g);
+  }
+  F.walk(-hw, hw, bMaxZ, bMaxZ + depth * steps, bh, { z0: bMaxZ, n: steps, depth });
+  // 마루
+  part(new THREE.BoxGeometry(W, 0.08, D), floorWood, 0, bh + 0.04, 0, F.g);
+  F.walk(-W / 2, W / 2, -D / 2, D / 2, floorH);
+  indoors.push({ cx: F.cx, cz: F.cz, yaw: F.yaw, minX: -W / 2, maxX: W / 2, minZ: -D / 2 - 0.6, maxZ: D / 2 + 0.6 });
+  // 벽 (뒤·왼쪽·오른쪽)
+  const back = part(new THREE.BoxGeometry(W + t, H, t), wallMat, 0, bh + H / 2, -D / 2, F.g);
+  const left = part(new THREE.BoxGeometry(t, H, D), wallMat, -W / 2, bh + H / 2, 0, F.g);
+  const right = part(new THREE.BoxGeometry(t, H, D), wallMat, W / 2, bh + H / 2, 0, F.g);
+  camBlockers.push(back, left, right);
+  F.box(-W / 2 - t / 2, W / 2 + t / 2, -D / 2 - t / 2, -D / 2 + t / 2);
+  F.box(-W / 2 - t / 2, -W / 2 + t / 2, -D / 2, D / 2);
+  F.box(W / 2 - t / 2, W / 2 + t / 2, -D / 2, D / 2);
+  // 붉은 기둥 (앞 4개 + 뒤 모서리 2개)
+  const pillarGeo = new THREE.CylinderGeometry(0.18, 0.2, H, 14);
+  const inner = W / 6;
+  [-W / 2, -inner, inner, W / 2].forEach((x) => { part(pillarGeo, red, x, bh + H / 2, D / 2, F.g); F.circle(x, D / 2, 0.22); });
+  [-W / 2, W / 2].forEach((x) => part(pillarGeo, red, x, bh + H / 2, -D / 2, F.g));
+  // 요사채: 앞면에 문짝 (못 들어감)
+  if (o.closed) {
+    const front = part(new THREE.BoxGeometry(W, H - 0.5, 0.15), doorMat, 0, bh + (H - 0.5) / 2, D / 2 - 0.05, F.g);
+    camBlockers.push(front);
+    for (let x = -W / 2 + W / 8; x < W / 2; x += W / 4)
+      part(new THREE.BoxGeometry(0.06, H - 0.6, 0.18), mat(0x6b4a2a), x, bh + (H - 0.5) / 2, D / 2 - 0.02, F.g);
+    F.box(-W / 2, W / 2, D / 2 - 0.15, D / 2 + 0.1);
+    // 툇마루 (기단 위 앞쪽)
+  }
+  // 단청 띠 (카메라가 뚫지 않게)
+  camBlockers.push(part(new THREE.BoxGeometry(W + 0.4, 0.3, 0.25), green, 0, bh + H - 0.15, D / 2, F.g));
+  camBlockers.push(part(new THREE.BoxGeometry(W + 0.4, 0.12, 0.27), red, 0, bh + H - 0.36, D / 2, F.g));
+  addRoof(F, W, D, bh + H + 0.12, 1.2, 1.0, Math.min(1.8, W * 0.2 + 0.4));
+  // 현판
+  const sign = makeSign(o.name, Math.min(1.9, W * 0.3), 0.55);
+  sign.position.set(0, bh + H - 0.62, D / 2 + 0.2); F.g.add(sign); camBlockers.push(sign);
+  // 상 + 방석 + 불빛
+  if (o.statue) {
+    const sz = -D / 2 + 1.0;
+    addStatue(F, o.statue, floorH, sz);
+    const cz = Math.min(D / 2 - 0.9, sz + 1.9);
+    addCushion(F, 0, cz, floorH, yaw + Math.PI, o.name);
+    const lt = new THREE.PointLight(0xffc98a, 6, Math.max(W, D) + 2, 1.6);
+    const [lx, lz] = F.toW(0, 0); lt.position.set(lx, bh + H * 0.75, lz); scene.add(lt);
+  }
+  F.area(bMinX, bMaxX, bMinZ, bMaxZ + depth * steps, o.name);
+}
+
+// 일주문 · 천왕문 · 불이문
+function buildGate(gate) {
+  const F = makeFrame(0, gate.z, 0);
+  if (gate.type === '일주문') {
+    [-1.9, 1.9].forEach((x) => {
+      part(new THREE.CylinderGeometry(0.3, 0.34, 4.0, 16), red, x, 2.0, 0, F.g);
+      part(new THREE.CylinderGeometry(0.45, 0.5, 0.35, 16), stone, x, 0.17, 0, F.g);
+      F.circle(x, 0, 0.5);
+    });
+    part(new THREE.BoxGeometry(4.6, 0.35, 0.35), green, 0, 3.75, 0, F.g);
+    part(new THREE.BoxGeometry(4.6, 0.14, 0.37), red, 0, 3.5, 0, F.g);
+    addRoof(F, 4.4, 1.0, 4.08, 0.9, 0.8, 1.0);
+    const sign = makeSign(C.placeName.replace(/\s/g, ''), 1.6, 0.5); sign.position.set(0, 3.15, 0.25); F.g.add(sign);
+    F.area(-3, 3, -1.5, 1.5, '일주문');
+  } else if (gate.type === '천왕문') {
+    const W = 8, D = 4.6, H = 3.2, t = 0.3, pw = 1.4;
+    part(new THREE.BoxGeometry(W, 0.08, D), floorWood, 0, 0.04, 0, F.g);
+    // 바깥 옆벽 + 앞·뒤 벽 (가운데 통로만 열림)
+    const walls = [
+      [t, H, D, -W / 2, 0], [t, H, D, W / 2, 0],
+      [W / 2 - pw, H, t, -(pw + W / 2) / 2, D / 2], [W / 2 - pw, H, t, (pw + W / 2) / 2, D / 2],
+      [W / 2 - pw, H, t, -(pw + W / 2) / 2, -D / 2], [W / 2 - pw, H, t, (pw + W / 2) / 2, -D / 2]
+    ];
+    walls.forEach(([w, h, d, x, z]) => {
+      const m = part(new THREE.BoxGeometry(w, h, d), wallMat, x, h / 2, z, F.g); camBlockers.push(m);
+      F.box(x - w / 2, x + w / 2, z - d / 2, z + d / 2);
+    });
+    // 사천왕 4분 (통로 양옆 난간 너머)
+    const kings = [[0x2f6fb0, 'sword'], [0xc0392b, 'pagoda'], [0x2e8b57, 'pipa'], [0xd4a017, 'rope']];
+    [[-2.7, 1.0], [-2.7, -1.0], [2.7, 1.0], [2.7, -1.0]].forEach(([x, z], i) => addKing(F.g, x, z, x < 0 ? Math.PI / 2 : -Math.PI / 2, ...kings[i]));
+    // 나무 난간 (통로와 사천왕 사이)
+    [-pw, pw].forEach((x) => {
+      part(new THREE.BoxGeometry(0.1, 0.9, D - 0.4), red, x, 0.45, 0, F.g);
+      F.box(x - 0.08, x + 0.08, -D / 2, D / 2);
+    });
+    [[-pw, D / 2], [pw, D / 2], [-pw, -D / 2], [pw, -D / 2]].forEach(([x, z]) => { part(new THREE.CylinderGeometry(0.17, 0.19, H, 12), red, x, H / 2, z, F.g); F.circle(x, z, 0.2); });
+    part(new THREE.BoxGeometry(W + 0.4, 0.28, 0.25), green, 0, H - 0.14, D / 2, F.g);
+    addRoof(F, W, D, H + 0.12, 1.1, 0.9, 1.6);
+    const sign = makeSign('천왕문', 1.5, 0.48); sign.position.set(0, H - 0.55, D / 2 + 0.2); F.g.add(sign);
+    const lt = new THREE.PointLight(0xffe0b0, 3, 7, 1.6); lt.position.set(0, 2.6, gate.z); scene.add(lt);
+    F.area(-W / 2, W / 2, -D / 2 - 0.5, D / 2 + 0.5, '천왕문');
+  } else if (gate.type === '불이문') {
+    const H = 3.0;
+    [[-1.6, 0.7], [1.6, 0.7], [-1.6, -0.7], [1.6, -0.7]].forEach(([x, z]) => {
+      part(new THREE.CylinderGeometry(0.2, 0.22, H, 14), red, x, H / 2, z, F.g); F.circle(x, z, 0.24);
+    });
+    part(new THREE.BoxGeometry(3.6, 0.3, 0.25), green, 0, H - 0.15, 0.7, F.g);
+    addRoof(F, 3.4, 1.4, H + 0.12, 0.9, 0.8, 1.1);
+    const sign = makeSign('불이문', 1.3, 0.44); sign.position.set(0, H - 0.55, 0.9); F.g.add(sign);
+    F.area(-2.5, 2.5, -1.5, 1.5, '불이문');
+  }
+}
+
+// 사천왕 (서 있는 큰 장수)
+function addKing(g, x, z, yaw, color, item) {
+  const k = new THREE.Group(); k.position.set(x, 0.08, z); k.rotation.y = yaw; g.add(k);
+  const robeM = mat(color), armor = mat(0xc9a646, { metalness: 0.5, roughness: 0.4 }), dark = mat(0x222222);
+  part(new THREE.CylinderGeometry(0.42, 0.55, 1.3, 14), robeM, 0, 0.65, 0, k);
+  part(new THREE.BoxGeometry(0.75, 0.6, 0.45), armor, 0, 1.55, 0, k);
+  part(new THREE.SphereGeometry(0.28, 16, 12), mat(0xc98a5e), 0, 2.12, 0, k);
+  [-0.1, 0.1].forEach((dx) => part(new THREE.SphereGeometry(0.06, 8, 8), new THREE.MeshStandardMaterial({ color: 0xffffff }), dx, 2.17, 0.24, k));
+  [-0.1, 0.1].forEach((dx) => part(new THREE.SphereGeometry(0.03, 8, 8), dark, dx, 2.17, 0.29, k));
+  [-1, 1].forEach((sx) => { const b = part(new THREE.BoxGeometry(0.16, 0.04, 0.04), dark, sx * 0.1, 2.27, 0.25, k); b.rotation.z = sx * 0.35; });
+  part(new THREE.CylinderGeometry(0.22, 0.3, 0.25, 12), armor, 0, 2.42, 0, k);                    // 투구
+  [-1, 1].forEach((sx) => part(new THREE.CylinderGeometry(0.1, 0.12, 0.6, 10), robeM, sx * 0.48, 1.55, 0.12, k).rotation.x = -0.6);
+  if (item === 'sword') part(new THREE.BoxGeometry(0.06, 1.1, 0.12), mat(0xdddddd, { metalness: 0.8, roughness: 0.2 }), 0.48, 1.9, 0.35, k);
+  if (item === 'pagoda') { [0.2, 0.15, 0.1].forEach((w, i) => part(new THREE.BoxGeometry(w, 0.1, w), armor, -0.48, 1.95 + i * 0.12, 0.35, k)); }
+  if (item === 'pipa') { part(new THREE.SphereGeometry(0.2, 12, 10), wood, 0, 1.35, 0.4, k).scale.set(1, 1.3, 0.4); part(new THREE.BoxGeometry(0.05, 0.6, 0.05), wood, 0, 1.8, 0.4, k); }
+  if (item === 'rope') { const r = part(new THREE.CylinderGeometry(0.04, 0.04, 1.0, 8), mat(0xc0392b), 0.48, 1.5, 0.35, k); r.rotation.z = 0.5; }
+}
+
+// 돌담장 (불이문 자리만 열림)
+function buildWall(w) {
+  const H = 1.4, T = 0.5, gate = 1.9;
+  const seg = (minX, maxX, minZ, maxZ) => {
+    const cx = (minX + maxX) / 2, cz = (minZ + maxZ) / 2, sx = maxX - minX, sz = maxZ - minZ;
+    const m = part(new THREE.BoxGeometry(sx, H, sz), mat(0xb7ae9c), cx, H / 2, cz);
+    part(new THREE.BoxGeometry(sx + 0.3, 0.25, sz + 0.3), roof, cx, H + 0.12, cz);
+    camBlockers.push(m);
+    colliders.boxes.push({ minX, maxX, minZ, maxZ });
+  };
+  seg(w.minX, -gate, w.maxZ - T / 2, w.maxZ + T / 2);
+  seg(gate, w.maxX, w.maxZ - T / 2, w.maxZ + T / 2);
+  seg(w.minX - T / 2, w.minX + T / 2, w.minZ, w.maxZ);
+  seg(w.maxX - T / 2, w.maxX + T / 2, w.minZ, w.maxZ);
+  seg(w.minX, w.maxX, w.minZ - T / 2, w.minZ + T / 2);
+  // 마당 (모래색 흙)
+  const court = part(new THREE.BoxGeometry(w.maxX - w.minX - T, 0.02, w.maxZ - w.minZ - T), mat(C.world.court, { roughness: 1 }), (w.minX + w.maxX) / 2, 0.01, (w.minZ + w.maxZ) / 2);
+  court.castShadow = false;
+}
+
+// 범종각 (종 + 당목)
+let bellLog = null, bellSwing = 0, bellCount = 0;
+function buildBellTower(o) {
+  const yaw = FACE[o.face] ?? 0, F = makeFrame(o.x, o.z, yaw), bh = 0.4, S = 2.0;
+  part(new THREE.BoxGeometry(5.4, bh, 5.4), stone, 0, bh / 2, 0, F.g);
+  const e = 0.1, hw = 1.2;
+  F.box(-2.7, -hw, 2.7 - e, 2.7 + e); F.box(hw, 2.7, 2.7 - e, 2.7 + e);
+  F.box(-2.7 - e, -2.7 + e, -2.7, 2.7); F.box(2.7 - e, 2.7 + e, -2.7, 2.7); F.box(-2.7, 2.7, -2.7 - e, -2.7 + e);
+  F.walk(-2.7, 2.7, -2.7, 2.7, bh);
+  for (let i = 0; i < 2; i++) { const h = (bh / 2) * (i + 1); part(new THREE.BoxGeometry(hw * 2, h, 0.45), stoneDark, 0, h / 2, 2.7 + 0.45 * (2 - i) - 0.225, F.g); }
+  F.walk(-hw, hw, 2.7, 2.7 + 0.9, bh, { z0: 2.7, n: 2, depth: 0.45 });
+  const H = 3.4;
+  [[-S, -S], [S, -S], [-S, S], [S, S]].forEach(([x, z]) => { part(new THREE.CylinderGeometry(0.18, 0.2, H, 12), red, x, bh + H / 2, z, F.g); F.circle(x, z, 0.22); });
+  part(new THREE.BoxGeometry(S * 2 + 0.4, 0.25, 0.25), green, 0, bh + H - 0.12, 0, F.g);      // 종을 거는 들보
+  addRoof(F, S * 2, S * 2, bh + H + 0.12, 1.0, 1.0, 1.5);
+  // 범종 (청동)
+  const bronze = mat(0x5f6f4f, { metalness: 0.6, roughness: 0.45 });
+  part(new THREE.CylinderGeometry(0.5, 0.68, 1.35, 24), bronze, 0, bh + 1.55, 0, F.g);
+  part(new THREE.SphereGeometry(0.5, 20, 12, 0, Math.PI * 2, 0, Math.PI / 2), bronze, 0, bh + 2.22, 0, F.g);
+  part(new THREE.CylinderGeometry(0.06, 0.06, 0.6, 8), bronze, 0, bh + 2.8, 0, F.g);
+  part(new THREE.CylinderGeometry(0.7, 0.7, 0.06, 24), bronze, 0, bh + 0.9, 0, F.g);
+  F.circle(0, 0, 0.8);
+  // 당목 (종을 치는 통나무) — 줄 2개에 매달림
+  bellLog = new THREE.Group(); bellLog.position.set(1.55, bh + 1.6, 0); F.g.add(bellLog);
+  const log = part(new THREE.CylinderGeometry(0.13, 0.13, 1.2, 12), mat(0x7a5232), 0, 0, 0, bellLog);
+  log.rotation.z = Math.PI / 2;
+  [-0.35, 0.35].forEach((dx) => part(new THREE.CylinderGeometry(0.015, 0.015, H - 1.75, 6), mat(0xd9c9a3), dx, (H - 1.75) / 2, 0, bellLog));
+  const [tx, tz] = F.toW(2.0, 0.6);
+  targets.push({ type: 'bell', x: tx, z: tz, label: C.action.bell.label, icon: '🔔', radius: C.action.bell.radius, name: o.name });
+  F.area(-2.7, 2.7, -2.7, 3.6, o.name);
+}
+
+// 삼층석탑
+function buildPagoda(o) {
+  const F = makeFrame(o.x, o.z, 0), g = F.g;
+  part(new THREE.BoxGeometry(2.6, 0.35, 2.6), stoneDark, 0, 0.17, 0, g);
+  part(new THREE.BoxGeometry(2.1, 0.6, 2.1), stone, 0, 0.65, 0, g);
+  part(new THREE.BoxGeometry(2.3, 0.15, 2.3), stoneDark, 0, 1.02, 0, g);
+  let y = 1.1;
+  [[1.3, 0.75], [1.05, 0.5], [0.85, 0.42]].forEach(([w, h]) => {
+    part(new THREE.BoxGeometry(w, h, w), stone, 0, y + h / 2, 0, g); y += h;
+    part(new THREE.BoxGeometry(w * 1.75, 0.16, w * 1.75), stoneDark, 0, y + 0.08, 0, g); y += 0.16;
+    part(new THREE.BoxGeometry(w * 1.2, 0.1, w * 1.2), stoneDark, 0, y + 0.05, 0, g); y += 0.1;
+  });
+  part(new THREE.CylinderGeometry(0.06, 0.08, 0.9, 8), stoneDark, 0, y + 0.45, 0, g);
+  [0.18, 0.14, 0.1].forEach((r, i) => part(new THREE.SphereGeometry(r, 10, 8), stoneDark, 0, y + 0.3 + i * 0.25, 0, g));
+  F.box(-1.3, 1.3, -1.3, 1.3);
+  F.area(-1.8, 1.8, -1.8, 1.8, o.name);
+}
+
+// 석등
+function buildLantern(x, z) {
   part(new THREE.BoxGeometry(0.7, 0.25, 0.7), stoneDark, x, 0.125, z);
   part(new THREE.CylinderGeometry(0.12, 0.15, 0.9, 10), stone, x, 0.7, z);
   part(new THREE.BoxGeometry(0.6, 0.12, 0.6), stoneDark, x, 1.2, z);
@@ -418,42 +663,84 @@ for (let i = 0; i < O.lanterns; i++) {
   const capGeo = new THREE.ConeGeometry(0.5, 0.35, 4); capGeo.rotateY(Math.PI / 4);
   part(capGeo, stoneDark, x, 1.86, z);
   part(new THREE.SphereGeometry(0.09, 10, 8), stone, x, 2.08, z);
-  const glow = new THREE.PointLight(0xffb060, 1.5, 4, 2); glow.position.set(x, 1.5, z); scene.add(glow);
-  addCircle(x, z, 0.45);
+  colliders.circles.push({ x, z, r: 0.45 });
 }
 
-// --- 둘레 소나무 ---
+// ---- 짓기 ----
+O.halls.forEach(buildHall);
+O.gates.forEach(buildGate);
+if (O.wall) buildWall(O.wall);
+if (O.bellTower) buildBellTower(O.bellTower);
+if (O.pagoda) buildPagoda(O.pagoda);
+(O.lanterns || []).forEach((l) => buildLantern(l.x, l.z));
+
+// 들어오는 숲길 돌 (일주문 앞 → 불이문)
+{
+  const zs = []; for (let z = (O.wall ? O.wall.maxZ : 0) + 0.8; z < C.world.start.z + 2; z += 1.1) zs.push(z);
+  const geo = new THREE.BoxGeometry(1.4, 0.04, 0.9), inst = new THREE.InstancedMesh(geo, stoneDark, zs.length);
+  const m4 = new THREE.Matrix4();
+  zs.forEach((z, i) => inst.setMatrixAt(i, m4.makeTranslation(0, 0.02, z + 0.45)));
+  inst.receiveShadow = true; scene.add(inst);
+}
+if (O.wall) areas.push({ cx: 0, cz: 0, yaw: 0, minX: O.wall.minX, maxX: O.wall.maxX, minZ: O.wall.minZ, maxZ: O.wall.maxZ, name: '마당' });
+
+// 둘레 소나무 (한 번에 그리기: InstancedMesh [인스턴스드 메시] = 같은 모양을 여러 개 빠르게 그리는 방법)
 if (O.pines) {
   let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  const trunk = mat(0x6b4a30), leafA = mat(0x2e5b3a), leafB = mat(0x3c6e44);
-  const lim = C.world.size / 2 - 2;
-  let placed = 0, tries = 0;
-  while (placed < 46 && tries++ < 800) {
-    const a = rnd() * Math.PI * 2, rad = 13 + rnd() * 14;
-    const x = Math.cos(a) * rad, z = -4 + Math.sin(a) * rad;
-    if (Math.abs(x) > lim || Math.abs(z) > lim) continue;
-    if (Math.abs(x) < 5 && z > 0) continue;                          // 시작 자리·카메라 쪽은 비워 둠
-    if (colliders.circles.some((c) => Math.hypot(c.x - x, c.z - z) < 2.2)) continue;
-    const s = 0.8 + rnd() * 0.6, g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = rnd() * 6;
-    part(new THREE.CylinderGeometry(0.14 * s, 0.22 * s, 2.2 * s, 8), trunk, 0, 1.1 * s, 0, g).rotation.z = (rnd() - 0.5) * 0.15;
-    [[1.3, 1.4, 1.9], [1.0, 1.2, 2.6], [0.65, 1.0, 3.25]].forEach(([r, hh, y], k) =>
-      part(new THREE.ConeGeometry(r * s, hh * s, 8), k % 2 ? leafB : leafA, 0, y * s, 0, g));
-    scene.add(g);
-    addCircle(x, z, 0.45 * s);
-    placed++;
+  const lim = C.world.size / 2 - 2, w = O.wall;
+  const spots = [];
+  for (let tries = 0; spots.length < O.pines && tries < 5000; tries++) {
+    const x = (rnd() * 2 - 1) * lim, z = (rnd() * 2 - 1) * lim;
+    if (w && x > w.minX - 2.5 && x < w.maxX + 2.5 && z > w.minZ - 2.5 && z < w.maxZ + 2.5) continue;   // 담장 안·가까이 비움
+    if (Math.abs(x) < 6 && z > (w ? w.maxZ : 0) - 1) continue;                                      // 숲길 비움
+    if (Math.abs(x) < 6.5 && O.gates.some((gt) => Math.abs(z - gt.z) < 4)) continue;                // 문 둘레 비움
+    if (spots.some((q) => Math.hypot(q.x - x, q.z - z) < 2.6)) continue;
+    spots.push({ x, z, s: 0.8 + rnd() * 0.7, r: rnd() * 6, lean: (rnd() - 0.5) * 0.15 });
   }
+  const parts3 = [
+    [new THREE.CylinderGeometry(0.14, 0.22, 2.2, 8), mat(0x6b4a30), 1.1],
+    [new THREE.ConeGeometry(1.3, 1.4, 8), mat(0x2e5b3a), 1.9],
+    [new THREE.ConeGeometry(1.0, 1.2, 8), mat(0x3c6e44), 2.6],
+    [new THREE.ConeGeometry(0.65, 1.0, 8), mat(0x2e5b3a), 3.25]
+  ];
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), e3 = new THREE.Euler(), v = new THREE.Vector3(), sc = new THREE.Vector3();
+  parts3.forEach(([geo, material, y], k) => {
+    const inst = new THREE.InstancedMesh(geo, material, spots.length);
+    spots.forEach((p, i) => {
+      e3.set(0, p.r, k === 0 ? p.lean : 0); q.setFromEuler(e3);
+      m4.compose(v.set(p.x, y * p.s, p.z), q, sc.setScalar(p.s));
+      inst.setMatrixAt(i, m4);
+    });
+    inst.castShadow = true; inst.receiveShadow = true; scene.add(inst);
+  });
+  spots.forEach((p) => colliders.circles.push({ x: p.x, z: p.z, r: 0.45 * p.s }));
 }
 
 // 걸어 다니는 곳의 높이 (기단·계단·마루)
 function groundHeight(x, z) {
-  const b = L.base, h = L.hall, st = L.stair;
-  if (x > h.minX && x < h.maxX && z > h.minZ && z < h.maxZ) return FLOOR_IN;
-  if (x > b.minX && x < b.maxX && z > b.minZ && z < b.maxZ) return b.h;
-  if (O.stairs && Math.abs(x) < st.halfW && z >= b.maxZ && z < b.maxZ + st.depth * st.steps) {
-    const i = Math.floor((z - b.maxZ) / st.depth);                  // 0 = 맨 위 칸
-    return (b.h / st.steps) * (st.steps - i);
+  let h = 0;
+  for (const w of walkables) {
+    const [lx, lz] = toLocal(w, x, z);
+    if (lx < w.minX || lx > w.maxX || lz < w.minZ || lz > w.maxZ) continue;   // 경계도 포함 (계단과 기단 사이 틈 없음)
+    let hh = w.h;
+    if (w.stairs) {
+      const i = Math.min(w.stairs.n - 1, Math.floor((lz - w.stairs.z0) / w.stairs.depth));   // 0 = 맨 위 칸
+      hh = (w.h / w.stairs.n) * (w.stairs.n - i);
+    }
+    if (hh > h) h = hh;
   }
-  return 0;
+  return h;
+}
+// 지금 있는 구역 이름 (알약에 표시)
+function areaAt(x, z) {
+  for (const a of areas) {
+    const [lx, lz] = toLocal(a, x, z);
+    if (lx > a.minX && lx < a.maxX && lz > a.minZ && lz < a.maxZ) return a.name;
+  }
+  return '';
+}
+function isIndoor(x, z) {
+  return indoors.some((a) => { const [lx, lz] = toLocal(a, x, z); return lx > a.minX && lx < a.maxX && lz > a.minZ && lz < a.maxZ; });
 }
 const BODY_R = 0.3;
 function blocked(x, z) {
@@ -548,6 +835,26 @@ const Sound = {
     const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1800; bp.Q.value = 1.5;
     const ng = ctx.createGain(); ng.gain.value = 0.35;
     n.connect(bp).connect(ng).connect(this.master); n.start(t);
+  },
+
+  // 범종: 낮고 길게 "웅~" + 맥놀이(두 소리가 겹쳐 울렁이는 한국 종소리)
+  bell() {
+    if (!this.ctx || !this.on) return;
+    const ctx = this.ctx, t = ctx.currentTime, base = 82;
+    [[1, 0.32, 9], [1.012, 0.26, 9], [2.0, 0.12, 6], [2.76, 0.07, 4], [4.1, 0.035, 2.5]].forEach(([r, peak, dur]) => {
+      const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.value = base * r;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g).connect(this.master); o.start(t); o.stop(t + dur + 0.1);
+    });
+    const n = ctx.createBufferSource(), len = Math.floor(ctx.sampleRate * 0.15);
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
+    n.buffer = buf;
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 500;
+    const ng = ctx.createGain(); ng.gain.value = 0.5;
+    n.connect(lp).connect(ng).connect(this.master); n.start(t);
   },
 
   scheduleChime() {
@@ -725,7 +1032,7 @@ function poseOverlay(m, dt) {
 function startTap(m) { m.tapT = 1; m.tapShow = 1.6; }
 
 const monk = makeMonk(C.character);
-monk.root.position.set(0, 0, 6);
+monk.root.position.set(C.world.start.x, 0, C.world.start.z);
 monk.root.rotation.y = Math.PI;   // 처음엔 안쪽(앞쪽)을 바라봄
 scene.add(monk.root);
 window.monk = monk; // STEP 3(합장)에서 같이 쓴다
@@ -782,7 +1089,7 @@ const CAM = {
   lookLag: 4.0
 };
 let camYaw = monk.root.rotation.y;              // 카메라가 서 있는 방향 (캐릭터 뒤쪽)
-const camLook = new THREE.Vector3(0, CAM.lookH, 6);
+const camLook = new THREE.Vector3(C.world.start.x, CAM.lookH, C.world.start.z);
 window.CAM = CAM;
 
 function angleLerp(a, b, t) {
@@ -804,20 +1111,30 @@ const LIMIT = C.world.size / 2 - 0.6;   // 땅 끝 밖으로 못 나감
 const tmpTarget = new THREE.Vector3();
 const tmpLook = new THREE.Vector3();
 const ACT = C.action;
-const actTarget = L[ACT.target];
+let actTarget = null;         // 지금 단추가 가리키는 대상 (방석 또는 종)
+let sitTarget = null;         // 앉아 있는 방석
 const actBtn = document.getElementById('actBtn');
-document.getElementById('actLabel').textContent = ACT.label;
+const actLabel = document.getElementById('actLabel'), actIco = actBtn.querySelector('.ico');
+actLabel.textContent = ACT.label;
+let areaNow = null;
 let state = 'walk';          // 'walk' | 'sit'(합장)
 let resting = false;         // C 키: 제자리 앉기
 let tapCount = 0;            // T 키: 목탁 두드린 횟수 (함께 걷기 때 다른 사람에게 알림)
 let sitT = 0;                // 앉기 진행 (0 → 1)
-let beatT = 0, stickHit = 0;
+let beatT = 0;
 const sitFrom = new THREE.Vector3();
 const camRay = new THREE.Raycaster();
 const orbit = { yaw: camYaw, dist: CAM.dist, h: CAM.height, lookH: CAM.lookH };
 
+function ringBell() {
+  bellSwing = 1; bellCount++;
+  Sound.bell();
+}
 function startAction() {
-  if (state !== 'walk') return;
+  if (state !== 'walk' || !actTarget) return;
+  if (!Sound.ctx) Sound.setOn(true);
+  if (actTarget.type === 'bell') { ringBell(); return; }
+  sitTarget = actTarget;
   resting = false; monk.bowT = 0;
   state = 'sit'; sitT = 0; beatT = 0;
   sitFrom.copy(monk.root.position);
@@ -853,7 +1170,7 @@ function doTap() {
   if (state !== 'walk') return;
   startTap(monk); tapCount++;
   const mp = monk.root.position;
-  if (moktak && Math.hypot(mp.x - L.moktak.x, mp.z - L.moktak.z) < ACT.radius) stickHit = 1;
+  moktaks.forEach((m) => { if (Math.hypot(mp.x - m.x, mp.z - m.z) < ACT.radius) m.hit = 1; });
   if (!Sound.ctx) Sound.setOn(true);
   Sound.tok();
 }
@@ -912,17 +1229,25 @@ function update(dt) {
     if (resting) poseRest(monk, dt);
     else poseWalk(monk, dt, mag * ((keys.run || runOn) && mag > 0 ? 1.35 : 1));
 
-    // 행동 단추: 방석 반경 안에서만 보임
-    const near = actTarget && Math.hypot(p.x - actTarget.x, p.z - actTarget.z) <= ACT.radius;
-    actBtn.classList.toggle('show', !!near);
+    // 행동 단추: 가장 가까운 방석·종 반경 안에서만 보임
+    let best = null, bestD = 1e9;
+    for (const t of targets) {
+      const d = Math.hypot(p.x - t.x, p.z - t.z);
+      if (d <= t.radius && d < bestD) { best = t; bestD = d; }
+    }
+    if (best !== actTarget) {
+      actTarget = best;
+      if (best) { actLabel.textContent = best.label; actIco.textContent = best.icon; }
+    }
+    actBtn.classList.toggle('show', !!best);
   } else {
     // 4) 합장: 방석으로 가서 불상을 향해 앉고, 두 손을 모은다
     sitT = Math.min(1, sitT + dt / 0.9);
     const e = sitT * sitT * (3 - 2 * sitT);
-    p.x = THREE.MathUtils.lerp(sitFrom.x, actTarget.x, e);
-    p.z = THREE.MathUtils.lerp(sitFrom.z, actTarget.z, e);
+    p.x = THREE.MathUtils.lerp(sitFrom.x, sitTarget.x, e);
+    p.z = THREE.MathUtils.lerp(sitFrom.z, sitTarget.z, e);
     p.y += (groundHeight(p.x, p.z) + 0.1 - p.y) * damp(10, dt);
-    monk.root.rotation.y = angleLerp(monk.root.rotation.y, Math.PI, damp(6, dt));   // 불상 쪽(-z)
+    monk.root.rotation.y = angleLerp(monk.root.rotation.y, sitTarget.face, damp(6, dt));   // 상 쪽을 봄
     poseSit(monk, dt);
   }
   poseOverlay(monk, dt);
@@ -936,7 +1261,15 @@ function update(dt) {
   if (meSitting || Net.anyoneSitting()) {
     beatT += dt;
     const period = 60 / ACT.bpm;
-    if (beatT >= period) { beatT -= period; stickHit = 1; Sound.tok(); }
+    if (beatT >= period) {
+      beatT -= period; Sound.tok();
+      if (meSitting) sitTarget.moktak.hit = 1;
+      Net.forEachSitting((m) => {          // 다른 사람이 앉은 곳 가장 가까운 목탁
+        let best = null, bd = 1e9;
+        moktaks.forEach((k) => { const d = Math.hypot(k.x - m.root.position.x, k.z - m.root.position.z); if (d < bd) { bd = d; best = k; } });
+        if (best && bd < 3) best.hit = 1;
+      });
+    }
     // 박자마다 고개를 살짝 숙임
     const nod = 0.12 * Math.exp(-beatT * 5);
     if (meSitting) monk.head.rotation.x = nod;
@@ -944,12 +1277,23 @@ function update(dt) {
   } else beatT = 0;
 
   // 목탁 채 움직임 (때리고 → 천천히 올라감)
-  if (moktakStick) {
-    stickHit = Math.max(0, stickHit - dt * 6);
-    moktakStick.rotation.z = -0.5 * (1 - stickHit) + 0.25;
-    moktakStick.position.y = 0.42 - 0.18 * stickHit;
-    moktak.scale.setScalar(1 + 0.05 * stickHit);
+  for (const m of moktaks) {
+    m.hit = Math.max(0, m.hit - dt * 6);
+    m.stick.rotation.z = -0.5 * (1 - m.hit) + 0.25;
+    m.stick.position.y = 0.42 - 0.18 * m.hit;
+    m.g.scale.setScalar(1 + 0.05 * m.hit);
   }
+  // 당목: 종을 치고 천천히 흔들리다 멈춤
+  if (bellLog) {
+    bellSwing = Math.max(0, bellSwing - dt * 0.6);
+    const sw = bellSwing > 0.85 ? -(1 - bellSwing) / 0.15 * 0.5 : -0.5 * Math.sin((1 - bellSwing) * 9) * bellSwing;
+    bellLog.position.x = 1.55 + sw;
+  }
+  // 알약: 지금 있는 곳 이름
+  const an = areaAt(p.x, p.z);
+  if (an !== areaNow) { areaNow = an; renderPill(); }
+  // 해 그림자가 캐릭터를 따라옴
+  sun.position.set(p.x + 12, 20, p.z + 8); sun.target.position.set(p.x, 0, p.z);
 
   // 5) 카메라 — 캐릭터 둘레를 원을 그리며 돈다 (몸을 뚫고 지나가지 않음)
   const gy = p.y;
@@ -957,6 +1301,7 @@ function update(dt) {
   if (state === 'walk' && !resting) {
     if (mag > 0 && f > -0.3) camYaw = angleLerp(camYaw, monk.root.rotation.y, damp(CAM.yawLag * mag, dt));
     wantYaw = camYaw; wantDist = CAM.dist; wantH = CAM.height; wantLookH = CAM.lookH; lag = CAM.posLag;
+    if (isIndoor(p.x, p.z)) { wantDist = 3.6; wantH = 1.7; wantLookH = 1.1; }   // 법당 안: 현판·들보에 안 가리게 낮고 가깝게
   } else {
     // 행동 중: 얼굴 쪽(비스듬한 앞)으로 천천히 돈다
     wantYaw = monk.root.rotation.y + Math.PI + 0.85; wantDist = 2.8; wantH = 1.5; wantLookH = 0.55; lag = 0.9;
@@ -977,7 +1322,7 @@ function update(dt) {
   camLook.lerp(tmpLook, damp(CAM.lookLag, dt));
   camera.lookAt(camLook);
 }
-window.__debug = { get state() { return state; }, startAction, groundHeight, blocked };
+window.__debug = { get state() { return state; }, startAction, groundHeight, blocked, camera, scene, renderer };
 
 /* =====================================================================
    STEP 5 — 함께 걷기 (Cloudflare Workers + Durable Objects, WebSocket)
@@ -1001,6 +1346,14 @@ function makeNameTag(text) {
   return sp;
 }
 
+let pillNet = '';
+function renderPill() {
+  const parts = [C.placeName];
+  if (areaNow) parts.push(areaNow);
+  if (pillNet) parts.push(pillNet);
+  document.getElementById('placePill').textContent = parts.join(' · ');
+}
+
 const Net = (() => {
   const pill = document.getElementById('placePill');
   const joinModal = document.getElementById('joinModal');
@@ -1013,17 +1366,17 @@ const Net = (() => {
   let isFull = false, lastSend = 0, last = null, myTag = null;
 
   const now = () => performance.now() / 1000;
-  const setPill = (extra) => { pill.textContent = C.placeName + (extra ? ' · ' + extra : ''); };
+  const setPill = (extra) => { pillNet = extra || ''; renderPill(); };
 
   function addOther(info) {
     if (info.id === myId || others.has(info.id)) return;
     const m = makeMonk(C.character);
     const tag = makeNameTag(info.name || '손님');
     m.root.add(tag);
-    m.root.position.set(info.x ?? 0, info.y ?? 0, info.z ?? 6);
+    m.root.position.set(info.x ?? C.world.start.x, info.y ?? 0, info.z ?? C.world.start.z);
     m.root.rotation.y = info.ry ?? Math.PI;
     scene.add(m.root);
-    others.set(info.id, { m, tag, act: info.act || 0, tap: info.tap, snaps: [{ t: now(), ...info }] });
+    others.set(info.id, { m, tag, act: info.act || 0, tap: info.tap, bell: info.bell, snaps: [{ t: now(), ...info }] });
   }
   function removeOther(id) {
     const o = others.get(id); if (!o) return;
@@ -1064,6 +1417,9 @@ const Net = (() => {
           if (o.m.root.position.distanceTo(monk.root.position) < 10) Sound.tok();
         }
         o.tap = msg.tap;
+        // 다른 사람이 종을 침 (절 어디서나 들림)
+        if (o.bell !== undefined && msg.bell !== o.bell) { bellSwing = 1; Sound.bell(); }
+        o.bell = msg.bell;
         if (o.snaps.length > 30) o.snaps.shift();
       } else if (msg.t === 'full') {
         isFull = true; fullModal.classList.add('show'); setPill('방이 꽉 찼어요');
@@ -1117,12 +1473,12 @@ const Net = (() => {
   }
 
   // 매 화면마다: 내 위치 보내기 + 다른 사람 움직이기
-  function update(dt, myAct, myTap) {
+  function update(dt, myAct, myTap, myBell) {
     const t = now();
     if (ws && ws.readyState === 1 && t - lastSend >= 1 / C.room.sendPerSec) {
       const p = monk.root.position;
-      const cur = { x: +p.x.toFixed(2), y: +p.y.toFixed(2), z: +p.z.toFixed(2), ry: +monk.root.rotation.y.toFixed(2), act: myAct, tap: myTap };
-      const changed = !last || cur.x !== last.x || cur.y !== last.y || cur.z !== last.z || cur.ry !== last.ry || cur.act !== last.act || cur.tap !== last.tap;
+      const cur = { x: +p.x.toFixed(2), y: +p.y.toFixed(2), z: +p.z.toFixed(2), ry: +monk.root.rotation.y.toFixed(2), act: myAct, tap: myTap, bell: myBell };
+      const changed = !last || cur.x !== last.x || cur.y !== last.y || cur.z !== last.z || cur.ry !== last.ry || cur.act !== last.act || cur.tap !== last.tap || cur.bell !== last.bell;
       if (changed) { ws.send(JSON.stringify({ t: 'pos', ...cur })); last = cur; lastSend = t; }
     }
     const rt = t - DELAY;
@@ -1160,7 +1516,7 @@ function loop() {
   update(dt);
   // 행동 번호: 0 걷기 · 1 합장 · 2 제자리 앉기 · 3 절하기
   const actCode = state === 'sit' ? 1 : resting ? 2 : monk.bowT > 0 ? 3 : 0;
-  Net.update(dt, actCode, tapCount);
+  Net.update(dt, actCode, tapCount, bellCount);
   renderer.render(scene, camera);
   requestAnimationFrame(loop);
 }

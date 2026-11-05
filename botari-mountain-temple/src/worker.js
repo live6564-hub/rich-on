@@ -47,7 +47,7 @@ export class Room extends DurableObject {
 
     const name = cleanName(url.searchParams.get("name"));
     const id = crypto.randomUUID().slice(0, 8);
-    const me = { id, name, x: 0, y: 0, z: 6, ry: Math.PI, act: 0, lastT: 0, count: 0 };
+    const me = { id, name, x: 0, y: 0, z: 46, ry: Math.PI, act: 0, lastT: 0, count: 0 };
 
     // 지금 있는 사람 목록 (잠에서 깨도 attachment 에 저장된 위치로 복원됨)
     const peers = this.ctx.getWebSockets().map((ws) => publicInfo(ws.deserializeAttachment())).filter(Boolean);
@@ -80,6 +80,7 @@ export class Room extends DurableObject {
     me.ry = num(msg.ry, -1000, 1000);
     me.act = Math.max(0, Math.min(3, Math.round(Number(msg.act) || 0)));   // 0 걷기 · 1 합장 · 2 앉기 · 3 절하기
     me.tap = Math.max(0, Math.min(1e6, Math.round(Number(msg.tap) || 0)));  // 목탁 두드린 횟수
+    me.bell = Math.max(0, Math.min(1e6, Math.round(Number(msg.bell) || 0))); // 종 친 횟수
     ws.serializeAttachment(me);
 
     this.broadcast({ t: "pos", ...publicInfo(me) }, ws);
@@ -110,7 +111,7 @@ export class Room extends DurableObject {
 
 function publicInfo(a) {
   if (!a) return null;
-  return { id: a.id, name: a.name, x: a.x, y: a.y, z: a.z, ry: a.ry, act: a.act, tap: a.tap || 0 };
+  return { id: a.id, name: a.name, x: a.x, y: a.y, z: a.z, ry: a.ry, act: a.act, tap: a.tap || 0, bell: a.bell || 0 };
 }
 function num(v, lo, hi) {
   const n = Number(v);
