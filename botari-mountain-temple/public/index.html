@@ -102,6 +102,42 @@ window.CONFIG = {
   }
   /* 휴대폰처럼 좁은 화면: 장소 알약과 겹치지 않게 알약 아래로 */
   @media (max-width: 560px) { #miniMap { top: calc(60px + env(safe-area-inset-top)); } }
+  #miniMap { pointer-events: auto; cursor: zoom-in; }
+  /* 도면 크게 보기 (누르면 화면 가운데에 크게, 다시 누르면 작게) */
+  #miniMap.big {
+    top: 50%; left: 50%; right: auto; transform: translate(-50%, -50%); z-index: 21; cursor: zoom-out;
+    width: min(92vw, 380px); height: min(141vw, 584px, 84vh); background: rgba(255,255,255,0.92);
+  }
+  #mapShade { display: none; position: fixed; inset: 0; z-index: 20; background: rgba(0,0,0,0.35); }
+  #mapShade.show { display: block; }
+
+  /* 각도·거리 입력판 (방향 단추 위) */
+  #goPanel {
+    display: none; position: fixed; z-index: 12;
+    left: calc(14px + env(safe-area-inset-left)); bottom: calc(250px + env(safe-area-inset-bottom));
+    width: 250px; padding: 10px 10px 8px; border-radius: 16px;
+    background: rgba(255,250,240,0.96); box-shadow: 0 4px 16px rgba(0,0,0,0.22); color: #3b2a1a;
+  }
+  #goPanel.show { display: block; }
+  #goPanel .chips button { white-space: nowrap; }
+  body.panel-open #miniMap:not(.big) { visibility: hidden; }   /* 입력판을 열면 작은 도면은 잠깐 숨김 (겹침 방지) */
+  #goPanel .row { display: flex; align-items: center; gap: 4px; margin-bottom: 6px; font-size: 13px; font-weight: 800; }
+  #goPanel .row > span:first-child { width: 30px; }
+  #goPanel input {
+    width: 64px; height: 36px; border-radius: 10px; border: 2px solid #e2d3b8; text-align: center;
+    font-size: 17px; font-weight: 800; color: #333; background: #fff; outline: none;
+  }
+  #goPanel input:focus { border-color: #c79a3c; }
+  #goPanel button {
+    height: 36px; min-width: 36px; padding: 0 8px; border: none; border-radius: 10px; cursor: pointer;
+    background: #efe4cf; color: #3b2a1a; font-size: 13px; font-weight: 800;
+  }
+  #goPanel .chips { display: flex; gap: 4px; margin: 0 0 8px 34px; }
+  #goPanel .chips button { height: 28px; font-size: 11px; padding: 0 6px; background: #f6eedd; }
+  #goPanel .help { font-size: 10.5px; color: #8a7a66; margin: -2px 0 8px 34px; }
+  #goPanel .go { background: #8e2a35; color: #fff; flex: 1; font-size: 15px; }
+
+  #dpad .corner { grid-column: 3; grid-row: 1; font-size: 16px; background: rgba(255,248,232,0.95); }
 
   /* 처음 안내 (화면을 한 번 누르면 사라짐) */
   #hint {
@@ -231,8 +267,24 @@ window.CONFIG = {
     <button class="mid" id="btnTurn" aria-label="돌아서기">🔄<small>돌아서기</small></button>
     <button class="right" data-k="r" aria-label="오른쪽으로 돌기">▶<small>오른쪽</small></button>
     <button class="down" data-k="b" aria-label="뒤로">▼<small>뒤로</small></button>
+    <button class="corner" id="btnGoPanel" aria-label="각도와 거리로 가기">📐<small>각도·거리</small></button>
   </div>
   <div id="fade"></div>
+  <div id="mapShade"></div>
+  <div id="goPanel">
+    <div class="row"><span>각도</span>
+      <button type="button" data-da="-15">−</button><input id="goAngle" type="number" value="0" min="-180" max="180" step="5"><button type="button" data-da="15">+</button><span>도</span>
+    </div>
+    <div class="help">＋오른쪽 · −왼쪽 · 지금 보는 쪽 = 0도</div>
+    <div class="chips">
+      <button type="button" data-a="-90">◀ 왼쪽90</button><button type="button" data-a="0">▲ 앞</button>
+      <button type="button" data-a="90">오른쪽90 ▶</button><button type="button" data-a="180">🔄 뒤</button>
+    </div>
+    <div class="row"><span>거리</span>
+      <button type="button" data-dd="-1">−</button><input id="goDist" type="number" inputmode="decimal" value="5" min="0.5" max="60" step="0.5"><button type="button" data-dd="1">+</button><span>m</span>
+    </div>
+    <div class="row" style="margin:8px 0 0"><button type="button" class="go" id="goBtn">🚶 가기</button><button type="button" id="goClose">닫기</button></div>
+  </div>
   <div id="moveBtns">
     <button id="btnRun"  type="button" aria-label="뛰어가기"><span class="key">Shift</span><span class="ico">🏃</span>뛰기</button>
     <button id="btnRest" type="button" aria-label="앉기"><span class="key">C</span><span class="ico">🧘</span><span class="lbl">앉기</span></button>
@@ -951,6 +1003,25 @@ const Sound = {
     n.connect(lp).connect(ng).connect(this.master); n.start(t);
   },
 
+  // 부딪힘: "쿵" (낮게 떨어지는 소리 + 짧은 둔탁한 소음)
+  bump() {
+    if (!this.ctx || !this.on) return;
+    const ctx = this.ctx, t = ctx.currentTime;
+    const o = ctx.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(55, t + 0.16);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.7, t + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+    o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.25);
+    const n = ctx.createBufferSource(), len = Math.floor(ctx.sampleRate * 0.06);
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+    n.buffer = buf;
+    const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 700;
+    const ng = ctx.createGain(); ng.gain.value = 0.45;
+    n.connect(lp).connect(ng).connect(this.master); n.start(t);
+  },
+
   scheduleChime() {
     clearTimeout(this.chimeTimer);
     const [a, b] = C.ambience.chimeEverySec;
@@ -1249,23 +1320,58 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'KeyT') doTap();
   if (e.code === 'KeyQ') doUTurn();
   if (e.code === 'KeyH') goHome();
+  if (e.code === 'KeyG') setPanel(!goPanel.classList.contains('show'));
 });
 
 // 🔄 돌아서기: 제자리에서 뒤로 휙 돈다 (0.7초)
-let uTurnT = 0, uTurnFrom = 0;
+let uTurnT = 0, uTurnFrom = 0, bumpT = 0;
 function doUTurn() {
   if (state === 'sit') stopAction();
   resting = false; monk.bowT = 0;
   if (uTurnT > 0) return;
   uTurnFrom = monk.root.rotation.y; uTurnT = 0.001;
 }
+// 📐 각도·거리로 가기: 몸을 그 각도로 돌린 뒤, 그 거리만큼 저절로 걸어간다
+let autoGo = null;            // { phase: 'turn'|'walk', ry, left }
+const goPanel = document.getElementById('goPanel');
+const goAngle = document.getElementById('goAngle'), goDist = document.getElementById('goDist');
+function toast(msg, ms = 1800) {
+  const h = document.getElementById('hint');
+  h.textContent = msg; h.style.opacity = 1;
+  clearTimeout(toast.t); toast.t = setTimeout(() => { h.style.opacity = 0; }, ms);
+}
+function startAuto(deg, dist) {
+  if (!Number.isFinite(deg) || !Number.isFinite(dist)) { toast('숫자를 넣어 주세요'); return; }
+  deg = Math.max(-180, Math.min(180, deg)); dist = Math.max(0, Math.min(60, dist));
+  if (state === 'sit') stopAction();
+  resting = false; monk.bowT = 0; uTurnT = 0;
+  autoGo = { phase: 'turn', ry: monk.root.rotation.y - deg * Math.PI / 180, left: dist };   // ＋ = 오른쪽
+  setPanel(false);
+  toast(`${deg > 0 ? '오른쪽 ' + deg : deg < 0 ? '왼쪽 ' + (-deg) : '앞'}도 → ${dist}m 가는 중…`, 1500);
+}
+function stopAuto(msg) { autoGo = null; if (msg) toast(msg); }
+function setPanel(v) { goPanel.classList.toggle('show', v); document.body.classList.toggle('panel-open', v); }
+document.getElementById('btnGoPanel').addEventListener('pointerdown', (e) => {
+  e.preventDefault(); e.stopPropagation(); setPanel(!goPanel.classList.contains('show'));
+});
+goPanel.addEventListener('pointerdown', (e) => e.stopPropagation());
+goPanel.querySelectorAll('[data-da]').forEach((b) => b.addEventListener('click', () => { goAngle.value = Math.max(-180, Math.min(180, (+goAngle.value || 0) + +b.dataset.da)); }));
+goPanel.querySelectorAll('[data-dd]').forEach((b) => b.addEventListener('click', () => { goDist.value = Math.max(0.5, Math.min(60, (+goDist.value || 0) + +b.dataset.dd)); }));
+goPanel.querySelectorAll('[data-a]').forEach((b) => b.addEventListener('click', () => { goAngle.value = b.dataset.a; }));
+document.getElementById('goBtn').addEventListener('click', () => { if (!Sound.ctx) Sound.setOn(true); startAuto(parseFloat(goAngle.value), parseFloat(goDist.value)); });
+document.getElementById('goClose').addEventListener('click', () => setPanel(false));
+[goAngle, goDist].forEach((el) => el.addEventListener('keydown', (e) => {
+  e.stopPropagation();                                  // 입력 중에는 캐릭터가 안 움직이게
+  if (e.key === 'Enter') { e.preventDefault(); document.getElementById('goBtn').click(); }
+}));
+
 // ↩️ 처음으로: 일주문 앞 처음 자리로 되돌아가기
 function goHome() {
   const fade = document.getElementById('fade');
   fade.style.opacity = 1;
   setTimeout(() => {
     if (state === 'sit') state = 'walk';
-    resting = false; monk.bowT = 0; uTurnT = 0;
+    resting = false; monk.bowT = 0; uTurnT = 0; autoGo = null;
     monk.root.position.set(C.world.start.x, 0, C.world.start.z);
     monk.root.rotation.y = Math.PI;
     camYaw = Math.PI; orbit.yaw = Math.PI; orbit.dist = CAM.dist; orbit.h = CAM.height; orbit.lookH = CAM.lookH;
@@ -1333,10 +1439,14 @@ window.addEventListener('keyup', (e) => { if (e.code === 'ShiftLeft' || e.code =
 
 function update(dt) {
   // 1) 입력 모으기 — 캐릭터 몸 기준: ▲ 앞으로 · ▼ 뒤로 · ◀▶ 제자리에서 몸 돌리기
-  const f = ((keys.f || dp.f) ? 1 : 0) - ((keys.b || dp.b) ? 1 : 0);
+  let f = ((keys.f || dp.f) ? 1 : 0) - ((keys.b || dp.b) ? 1 : 0);
   const turn = ((keys.r || dp.r) ? 1 : 0) - ((keys.l || dp.l) ? 1 : 0);
+  if (autoGo && (f !== 0 || turn !== 0)) stopAuto('직접 움직여서 멈췄어요');   // 손으로 움직이면 자동 걷기 멈춤
+  const autoTurning = autoGo && autoGo.phase === 'turn';
+  if (autoGo && autoGo.phase === 'walk') f = 1;
   const running = (keys.run || runOn) && f > 0;
-  const mag = f !== 0 ? 1 : (turn !== 0 || uTurnT > 0) ? 0.35 : 0;
+  const mag = f !== 0 ? 1 : (turn !== 0 || uTurnT > 0 || autoTurning) ? 0.35 : 0;
+  bumpT = Math.max(0, bumpT - dt);
 
   // 다시 움직이면 일어나서 걷기로
   if (state === 'sit' && mag > 0 && sitT > 0.6) stopAction();
@@ -1353,15 +1463,34 @@ function update(dt) {
         const e = uTurnT * uTurnT * (3 - 2 * uTurnT);
         monk.root.rotation.y = uTurnFrom + Math.PI * e;
         if (uTurnT >= 1) uTurnT = 0;
+      } else if (autoTurning) {
+        // 자동: 목표 각도까지 천천히 몸 돌리기
+        const ry = monk.root.rotation.y;
+        const diff = ((autoGo.ry - ry + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
+        const stepA = C.character.turn * 1.3 * dt;
+        if (Math.abs(diff) <= stepA) { monk.root.rotation.y = ry + diff; autoGo.phase = 'walk'; if (autoGo.left <= 0) stopAuto('방향만 바꿨어요'); }
+        else monk.root.rotation.y = ry + Math.sign(diff) * stepA;
       } else if (turn) monk.root.rotation.y -= turn * C.character.turn * dt;
       if (f !== 0) {
         const ry = monk.root.rotation.y, dx = Math.sin(ry) * f, dz = Math.cos(ry) * f;
         const spd = f > 0 ? (running ? C.character.run : 1) : 0.55;   // 뒤로는 천천히
-        const step = C.character.speed * spd * dt;
+        let step = C.character.speed * spd * dt;
+        if (autoGo && autoGo.phase === 'walk') step = Math.min(step, autoGo.left);
+        const ox = p.x, oz = p.z;
         const nx = THREE.MathUtils.clamp(p.x + dx * step, -LIMIT, LIMIT);
         if (!blocked(nx, p.z)) p.x = nx;
         const nz = THREE.MathUtils.clamp(p.z + dz * step, -LIMIT, LIMIT);
         if (!blocked(p.x, nz)) p.z = nz;
+        const moved = Math.hypot(p.x - ox, p.z - oz);
+        // 부딪힘: 가려는 만큼 거의 못 갔으면 "쿵" (0.5초에 한 번만)
+        if (step > 0.001 && moved < step * 0.3) {
+          if (bumpT === 0) { Sound.bump(); bumpT = 0.5; monk.body.position.y = 0.06; }
+          if (autoGo) stopAuto('부딪혀서 멈췄어요 🧱');
+        }
+        if (autoGo && autoGo.phase === 'walk') {
+          autoGo.left -= moved;
+          if (autoGo.left <= 0.01) stopAuto('도착했어요 ✅');
+        }
       }
     }
     p.y += (groundHeight(p.x, p.z) - p.y) * damp(14, dt);   // 계단을 부드럽게 오르내림
@@ -1662,54 +1791,60 @@ const Net = (() => {
    건물 위치 축소 도면 (오른쪽 위) — 위쪽 = 절 안쪽(대웅전), 아래쪽 = 들어오는 길
    ===================================================================== */
 const MiniMap = (() => {
-  const cv = document.getElementById('miniMap');
-  const W = 112, H = 172, dpr = Math.min(window.devicePixelRatio || 1, 2);
-  cv.width = W * dpr; cv.height = H * dpr;
-  const g = cv.getContext('2d');
-  // 보여 줄 범위: 담장 둘레 + 일주문 앞 시작 자리까지
+  const cv = document.getElementById('miniMap'), shade = document.getElementById('mapShade');
+  const g = cv.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2);
   const w = O.wall || { minX: -20, maxX: 20, minZ: -20, maxZ: 10 };
   const pad = 3, x0 = w.minX - pad, x1 = w.maxX + pad, z0 = w.minZ - pad, z1 = C.world.start.z + 3;
-  const sc = Math.min((W - 8) / (x1 - x0), (H - 8) / (z1 - z0));
-  const ox = (W - (x1 - x0) * sc) / 2, oz = (H - (z1 - z0) * sc) / 2;
+  let W = 112, H = 172, sc = 1, ox = 0, oz = 0, big = false, bg = null;
   const mx = (x) => ox + (x - x0) * sc, mz = (z) => oz + (z - z0) * sc;
   const clampX = (x) => Math.max(x0, Math.min(x1, x)), clampZ = (z) => Math.max(z0, Math.min(z1, z));
+  const FONT = '-apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif';
 
-  // 바탕 (한 번만 그림)
-  const bg = document.createElement('canvas'); bg.width = cv.width; bg.height = cv.height;
-  const b = bg.getContext('2d'); b.scale(dpr, dpr);
-  b.fillStyle = 'rgba(111,143,90,0.55)'; b.fillRect(mx(x0), mz(z0), (x1 - x0) * sc, (z1 - z0) * sc);   // 숲
-  b.fillStyle = 'rgba(120,120,112,0.9)'; b.fillRect(mx(-0.7), mz(w.maxZ), 1.4 * sc, (C.world.start.z - w.maxZ) * sc);  // 숲길
-  if (O.wall) {
-    b.fillStyle = 'rgba(205,189,152,0.95)'; b.fillRect(mx(w.minX), mz(w.minZ), (w.maxX - w.minX) * sc, (w.maxZ - w.minZ) * sc);   // 마당
-    b.strokeStyle = '#6b665c'; b.lineWidth = 1.5; b.strokeRect(mx(w.minX), mz(w.minZ), (w.maxX - w.minX) * sc, (w.maxZ - w.minZ) * sc);   // 담장
-    b.fillStyle = 'rgba(205,189,152,1)'; b.fillRect(mx(-1.6), mz(w.maxZ) - 1.5, 3.2 * sc, 3);   // 담장 입구
-  }
-  // 돌길
-  b.strokeStyle = 'rgba(120,116,106,0.95)'; b.lineWidth = 1.6; b.lineCap = 'round'; b.lineJoin = 'round';
-  pathLines.forEach((pts) => {
-    b.beginPath(); pts.forEach(([x, z], i) => (i ? b.lineTo(mx(x), mz(z)) : b.moveTo(mx(x), mz(z)))); b.stroke();
-  });
-  b.textAlign = 'center'; b.textBaseline = 'middle';
-  b.font = 'bold 9px -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif';
-  for (const it of mapItems) {
-    const x = mx(it.minX), z = mz(it.minZ), ww = (it.maxX - it.minX) * sc, hh = (it.maxZ - it.minZ) * sc;
-    b.fillStyle = it.type === 'hall' ? '#2b2f33' : it.type === 'gate' ? '#a3262a' : it.type === 'bell' ? '#2f7a6a' : '#7d7b74';
-    b.fillRect(x, z, ww, hh);
-    if (it.name) {
-      const short = it.name.length > 2 ? it.name.slice(0, 2) : it.name;     // 대웅전 → 대웅
-      const tx = x + ww / 2, tz = z + hh / 2;
-      const label = it.type === 'gate' ? null : short;
-      if (label) {   // 진한 테두리 글씨 (작은 건물 밖으로 나와도 잘 보이게)
-        b.lineWidth = 2.5; b.strokeStyle = 'rgba(30,30,30,0.9)'; b.lineJoin = 'round';
-        b.strokeText(label, tx, tz + 0.5); b.fillStyle = '#fff'; b.fillText(label, tx, tz + 0.5);
+  // 바탕 그리기 (크기가 바뀔 때마다 다시)
+  function build() {
+    const r = cv.getBoundingClientRect(); W = Math.round(r.width); H = Math.round(r.height);
+    cv.width = W * dpr; cv.height = H * dpr;
+    sc = Math.min((W - 8) / (x1 - x0), (H - 8) / (z1 - z0));
+    ox = (W - (x1 - x0) * sc) / 2; oz = (H - (z1 - z0) * sc) / 2;
+    const k = Math.min(2.2, W / 112);                     // 글씨 크기 배율
+    bg = document.createElement('canvas'); bg.width = cv.width; bg.height = cv.height;
+    const b = bg.getContext('2d'); b.scale(dpr, dpr);
+    b.fillStyle = 'rgba(111,143,90,0.55)'; b.fillRect(mx(x0), mz(z0), (x1 - x0) * sc, (z1 - z0) * sc);   // 숲
+    b.fillStyle = 'rgba(120,120,112,0.9)'; b.fillRect(mx(-0.7), mz(w.maxZ), 1.4 * sc, (C.world.start.z - w.maxZ) * sc);  // 숲길
+    if (O.wall) {
+      b.fillStyle = 'rgba(205,189,152,0.95)'; b.fillRect(mx(w.minX), mz(w.minZ), (w.maxX - w.minX) * sc, (w.maxZ - w.minZ) * sc);   // 마당
+      b.strokeStyle = '#6b665c'; b.lineWidth = 1.5 * k; b.strokeRect(mx(w.minX), mz(w.minZ), (w.maxX - w.minX) * sc, (w.maxZ - w.minZ) * sc);   // 담장
+      b.fillStyle = 'rgba(205,189,152,1)'; b.fillRect(mx(-1.6), mz(w.maxZ) - 1.5 * k, 3.2 * sc, 3 * k);   // 담장 입구
+    }
+    b.strokeStyle = 'rgba(120,116,106,0.95)'; b.lineWidth = 1.6 * k; b.lineCap = 'round'; b.lineJoin = 'round';   // 돌길
+    pathLines.forEach((pts) => { b.beginPath(); pts.forEach(([x, z], i) => (i ? b.lineTo(mx(x), mz(z)) : b.moveTo(mx(x), mz(z)))); b.stroke(); });
+    b.textAlign = 'center'; b.textBaseline = 'middle'; b.font = `bold ${9 * k}px ${FONT}`;
+    for (const it of mapItems) {
+      const x = mx(it.minX), z = mz(it.minZ), ww = (it.maxX - it.minX) * sc, hh = (it.maxZ - it.minZ) * sc;
+      b.fillStyle = it.type === 'hall' ? '#2b2f33' : it.type === 'gate' ? '#a3262a' : it.type === 'bell' ? '#2f7a6a' : '#7d7b74';
+      b.fillRect(x, z, ww, hh);
+      if (it.name && it.type !== 'gate') {
+        const label = big ? it.name : (it.name.length > 2 ? it.name.slice(0, 2) : it.name);   // 크게 볼 땐 이름 전부
+        b.lineWidth = 2.5 * k; b.strokeStyle = 'rgba(30,30,30,0.9)'; b.lineJoin = 'round';
+        b.strokeText(label, x + ww / 2, z + hh / 2 + 0.5); b.fillStyle = '#fff'; b.fillText(label, x + ww / 2, z + hh / 2 + 0.5);
       }
     }
+    b.font = `bold ${7.5 * k}px ${FONT}`; b.textAlign = 'left';
+    for (const it of mapItems) if (it.type === 'gate') { b.fillStyle = '#5a2a1a'; b.fillText(it.name, mx(it.maxX) + 2 * k, mz((it.minZ + it.maxZ) / 2) + 0.5); }
+    // 크게 보기 / 작게 보기 안내
+    b.font = `bold ${(big ? 12 : 8) * (big ? 1 : 1)}px ${FONT}`; b.textAlign = 'right'; b.textBaseline = 'bottom';
+    b.fillStyle = 'rgba(59,42,26,0.85)';
+    b.fillText(big ? '누르면 작게 ✕' : '🔍', W - 5, H - 3);
+    acc = 1;   // 바로 다시 그림
   }
-  // 문 이름은 옆에 작게
-  b.font = 'bold 7.5px -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif'; b.textAlign = 'left';
-  for (const it of mapItems) if (it.type === 'gate') {
-    b.fillStyle = '#5a2a1a'; b.fillText(it.name, mx(it.maxX) + 2, mz((it.minZ + it.maxZ) / 2) + 0.5);
+  function toggle(v = !big) {
+    big = v; cv.classList.toggle('big', big); shade.classList.toggle('show', big);
+    requestAnimationFrame(build);
   }
+  cv.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); toggle(); });
+  shade.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); toggle(false); });
+  window.addEventListener('resize', () => requestAnimationFrame(build));
+  window.addEventListener('keydown', (e) => { if (e.code === 'KeyM' && !e.repeat) toggle(); if (e.code === 'Escape' && big) toggle(false); });
 
   let acc = 0;
   function dot(x, z, r, fill, stroke) {
@@ -1717,22 +1852,31 @@ const MiniMap = (() => {
     g.fillStyle = fill; g.fill(); if (stroke) { g.strokeStyle = stroke; g.lineWidth = 1; g.stroke(); }
   }
   function draw(dt) {
-    acc += dt; if (acc < 0.1) return; acc = 0;          // 1초에 10번만 다시 그림 (가볍게)
+    acc += dt; if (acc < 0.1 || !bg) return; acc = 0;          // 1초에 10번만 다시 그림 (가볍게)
+    const k = Math.min(2.2, W / 112);
     g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, cv.width, cv.height);
     g.drawImage(bg, 0, 0);
     g.setTransform(dpr, 0, 0, dpr, 0, 0);
-    Net.forEachOther((m) => dot(m.root.position.x, m.root.position.z, 2.6, '#ffffff', '#3b2a1a'));   // 다른 사람
-    // 나 (보는 방향 화살표)
+    Net.forEachOther((m) => dot(m.root.position.x, m.root.position.z, 2.6 * k, '#ffffff', '#3b2a1a'));   // 다른 사람
     const p = monk.root.position, ry = monk.root.rotation.y;
+    // 자동 걷기 중이면 갈 길을 점선으로
+    if (autoGo) {
+      const a = autoGo.ry, L = autoGo.left;
+      g.setLineDash([3 * k, 3 * k]); g.strokeStyle = '#c0392b'; g.lineWidth = 1.5 * k;
+      g.beginPath(); g.moveTo(mx(p.x), mz(p.z)); g.lineTo(mx(clampX(p.x + Math.sin(a) * L)), mz(clampZ(p.z + Math.cos(a) * L))); g.stroke();
+      g.setLineDash([]);
+    }
+    // 나 (보는 방향 화살표)
     const px = mx(clampX(p.x)), pz = mz(clampZ(p.z));
-    const fx = Math.sin(ry), fz = Math.cos(ry);
+    const fx = Math.sin(ry), fz = Math.cos(ry), s1 = 6 * k, s2 = 3.6 * k, s3 = 2.5 * k;
     g.beginPath();
-    g.moveTo(px + fx * 6, pz + fz * 6);
-    g.lineTo(px - fz * 3.6 - fx * 2.5, pz + fx * 3.6 - fz * 2.5);
-    g.lineTo(px + fz * 3.6 - fx * 2.5, pz - fx * 3.6 - fz * 2.5);
+    g.moveTo(px + fx * s1, pz + fz * s1);
+    g.lineTo(px - fz * s2 - fx * s3, pz + fx * s2 - fz * s3);
+    g.lineTo(px + fz * s2 - fx * s3, pz - fx * s2 - fz * s3);
     g.closePath(); g.fillStyle = '#f2b51c'; g.fill(); g.strokeStyle = '#5a3a1a'; g.lineWidth = 1; g.stroke();
   }
-  return { draw };
+  build();
+  return { draw, toggle };
 })();
 
 /* ---------------- 그리기 반복 ---------------- */
