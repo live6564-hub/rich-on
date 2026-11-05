@@ -34,6 +34,9 @@ window.CONFIG = {
     bpm: 72                  // 목탁 박자
   },
 
+  // 함께 걷기 (STEP 5) — 한 방 최대 인원 (서버 src/worker.js 의 MAX_PEOPLE 과 같게)
+  room: { name: "main", maxPeople: 20, sendPerSec: 5 },
+
   // 배경음: 잔잔한 바람 + 이따금 풍경 소리
   ambience: { wind: 0.18, chimeEverySec: [6, 14] },
 
@@ -101,6 +104,28 @@ window.CONFIG = {
   #actBtn.show { opacity: 1; transform: scale(1); pointer-events: auto; }
   #actBtn:active { transform: scale(0.94); }
 
+  /* 입장 (닉네임 입력) · 방이 꽉 찼어요 안내 */
+  .modal {
+    display: none; position: fixed; inset: 0; z-index: 30; align-items: center; justify-content: center;
+    background: rgba(20,30,35,0.45); backdrop-filter: blur(3px); padding: 16px;
+  }
+  .modal.show { display: flex; }
+  .card {
+    width: 100%; max-width: 320px; background: #fffaf0; border-radius: 20px; padding: 22px 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25); text-align: center; color: #3b2a1a;
+  }
+  .card h2 { font-size: 19px; margin-bottom: 6px; }
+  .card p { font-size: 14px; color: #6b5a48; margin-bottom: 14px; line-height: 1.5; }
+  .card input {
+    width: 100%; height: 46px; border-radius: 12px; border: 2px solid #e2d3b8; padding: 0 12px;
+    font-size: 17px; text-align: center; outline: none; background: #fff; color: #333;
+  }
+  .card input:focus { border-color: #c79a3c; }
+  .card button {
+    margin-top: 12px; width: 100%; height: 48px; border: none; border-radius: 12px;
+    background: #8e2a35; color: #fff; font-size: 17px; font-weight: 800; cursor: pointer;
+  }
+
   /* 로딩 실패 안내 (하얀 화면 방지) */
   #loadErr {
     display: none; position: fixed; inset: 0; align-items: center; justify-content: center; text-align: center;
@@ -124,6 +149,21 @@ window.CONFIG = {
   <button id="actBtn" aria-label="행동"><span class="ico">🙏</span><span id="actLabel"></span></button>
   <div id="joy"><div id="joyKnob"></div></div>
   <div id="hint">화면을 한 번 누르면 소리가 나요</div>
+  <div class="modal" id="joinModal">
+    <form class="card" id="joinForm">
+      <h2>🙏 산속 절에 들어가기</h2>
+      <p>머리 위에 보일 이름을 적어 주세요</p>
+      <input id="nickInput" maxlength="10" placeholder="예) 로아" autocomplete="off">
+      <button type="submit">입장하기</button>
+    </form>
+  </div>
+  <div class="modal" id="fullModal">
+    <div class="card">
+      <h2>방이 꽉 찼어요</h2>
+      <p>지금 20명이 함께 걷고 있어요.<br>조금 뒤에 다시 들어와 주세요.</p>
+      <button id="retryBtn" type="button">다시 들어가 보기</button>
+    </div>
+  </div>
   <div id="loadErr">3D 화면을 불러오지 못했어요.<br>인터넷 연결을 확인한 뒤 새로고침 해 주세요.</div>
 
 <script>
@@ -572,7 +612,37 @@ function makeMonk(cfg) {
   add(head, new THREE.SphereGeometry(0.035, 8, 8), cheek, -0.14, -0.06, 0.19);
   add(head, new THREE.SphereGeometry(0.035, 8, 8), cheek, 0.14, -0.06, 0.19);
 
-  return { root, body, legs, arms, head };
+  return { root, body, legs, arms, head, phase: 0, moveAmt: 0, sitting: false };
+}
+
+// 걷는 몸짓 (amt = 0 멈춤 ~ 1 걷기). 앉은 자세에서도 부드럽게 풀린다.
+function poseWalk(m, dt, amt) {
+  m.moveAmt += (amt - m.moveAmt) * damp(8, dt);
+  m.phase += dt * 9 * m.moveAmt;
+  const sw = Math.sin(m.phase) * 0.6 * m.moveAmt, k = damp(8, dt);
+  m.legs[0].rotation.x += (sw - m.legs[0].rotation.x) * k;
+  m.legs[1].rotation.x += (-sw - m.legs[1].rotation.x) * k;
+  m.arms.forEach((a, i) => {
+    const side = i ? 1 : -1;
+    a.rotation.x += ((i ? sw : -sw) * 0.8 - a.rotation.x) * k;
+    a.rotation.z += (side * 0.12 - a.rotation.z) * k;
+  });
+  m.body.position.y += (Math.abs(Math.sin(m.phase)) * 0.05 * m.moveAmt - m.body.position.y) * k;
+  m.head.rotation.x += (0 - m.head.rotation.x) * k;
+  m.sitting = false;
+}
+// 앉아서 두 손 모으기
+function poseSit(m, dt) {
+  const k = damp(6, dt);
+  m.body.position.y += (-0.32 - m.body.position.y) * k;
+  m.legs.forEach((l) => { l.rotation.x += (-1.45 - l.rotation.x) * k; });
+  m.arms.forEach((a, i) => {
+    const side = i ? 1 : -1;
+    a.rotation.x += (-1.3 - a.rotation.x) * k;
+    a.rotation.z += (-side * 0.62 - a.rotation.z) * k;
+  });
+  m.moveAmt = 0;
+  m.sitting = true;
 }
 
 const monk = makeMonk(C.character);
@@ -652,7 +722,6 @@ placeCameraNow();
 
 /* ---------------- 걷기 + 행동(합장) ---------------- */
 const LIMIT = C.world.size / 2 - 0.6;   // 땅 끝 밖으로 못 나감
-let walkPhase = 0, moveAmt = 0;
 const tmpTarget = new THREE.Vector3();
 const tmpLook = new THREE.Vector3();
 const ACT = C.action;
@@ -712,19 +781,7 @@ function update(dt) {
     p.y += (groundHeight(p.x, p.z) - p.y) * damp(14, dt);   // 계단을 부드럽게 오르내림
 
     // 3) 걷는 몸짓 + 앉은 자세에서 천천히 풀기
-    moveAmt += (mag - moveAmt) * damp(8, dt);
-    walkPhase += dt * 9 * moveAmt;
-    const sw = Math.sin(walkPhase) * 0.6 * moveAmt;
-    const k = damp(8, dt);
-    monk.legs[0].rotation.x += (sw - monk.legs[0].rotation.x) * k;
-    monk.legs[1].rotation.x += (-sw - monk.legs[1].rotation.x) * k;
-    monk.arms.forEach((a, i) => {
-      const side = i ? 1 : -1;
-      a.rotation.x += ((i ? sw : -sw) * 0.8 - a.rotation.x) * k;
-      a.rotation.z += (side * 0.12 - a.rotation.z) * k;
-    });
-    monk.body.position.y += (Math.abs(Math.sin(walkPhase)) * 0.05 * moveAmt - monk.body.position.y) * k;
-    monk.head.rotation.x += (0 - monk.head.rotation.x) * k;
+    poseWalk(monk, dt, mag);
 
     // 행동 단추: 방석 반경 안에서만 보임
     const near = actTarget && Math.hypot(p.x - actTarget.x, p.z - actTarget.z) <= ACT.radius;
@@ -737,25 +794,20 @@ function update(dt) {
     p.z = THREE.MathUtils.lerp(sitFrom.z, actTarget.z, e);
     p.y += (groundHeight(p.x, p.z) + 0.1 - p.y) * damp(10, dt);
     monk.root.rotation.y = angleLerp(monk.root.rotation.y, Math.PI, damp(6, dt));   // 불상 쪽(-z)
-    const k = damp(6, dt);
-    monk.body.position.y += (-0.32 - monk.body.position.y) * k;
-    monk.legs.forEach((l, i) => { l.rotation.x += (-1.45 - l.rotation.x) * k; });
-    monk.arms.forEach((a, i) => {
-      const side = i ? 1 : -1;
-      a.rotation.x += (-1.3 - a.rotation.x) * k;
-      a.rotation.z += (-side * 0.62 - a.rotation.z) * k;
-    });
-    moveAmt = 0;
-
-    // 목탁: 박자에 맞춰 똑똑 (앉은 뒤부터)
-    if (sitT >= 1) {
-      beatT += dt;
-      const period = 60 / ACT.bpm;
-      if (beatT >= period) { beatT -= period; stickHit = 1; Sound.tok(); }
-      // 박자마다 고개를 살짝 숙임
-      monk.head.rotation.x = 0.12 * Math.exp(-beatT * 5);
-    }
+    poseSit(monk, dt);
   }
+
+  // 목탁: 누군가(나 또는 다른 사람) 합장 중이면 박자에 맞춰 똑똑
+  const meSitting = state === 'sit' && sitT >= 1;
+  if (meSitting || Net.anyoneSitting()) {
+    beatT += dt;
+    const period = 60 / ACT.bpm;
+    if (beatT >= period) { beatT -= period; stickHit = 1; Sound.tok(); }
+    // 박자마다 고개를 살짝 숙임
+    const nod = 0.12 * Math.exp(-beatT * 5);
+    if (meSitting) monk.head.rotation.x = nod;
+    Net.forEachSitting((m) => { m.head.rotation.x = nod; });
+  } else beatT = 0;
 
   // 목탁 채 움직임 (때리고 → 천천히 올라감)
   if (moktakStick) {
@@ -793,11 +845,176 @@ function update(dt) {
 }
 window.__debug = { get state() { return state; }, startAction, groundHeight, blocked };
 
+/* =====================================================================
+   STEP 5 — 함께 걷기 (Cloudflare Workers + Durable Objects, WebSocket)
+   - 내 위치는 움직일 때만, 1초에 최대 5번까지만 보낸다
+   - 다른 사람 캐릭터는 받은 위치 사이를 부드럽게 이어서 움직인다
+   - 연결이 끊기면 스스로 다시 연결한다
+   ===================================================================== */
+// 머리 위 이름표 (글자를 그린 캔버스 → 3D 판)
+function makeNameTag(text) {
+  const cv = document.createElement('canvas'); cv.width = 256; cv.height = 64;
+  const g = cv.getContext('2d');
+  g.font = 'bold 30px -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif';
+  const w = Math.min(244, g.measureText(text).width + 32);
+  g.fillStyle = 'rgba(255,250,240,0.92)';
+  g.beginPath(); g.roundRect((256 - w) / 2, 8, w, 48, 24); g.fill();
+  g.fillStyle = '#3b2a1a'; g.textAlign = 'center'; g.textBaseline = 'middle';
+  g.fillText(text, 128, 33, 230);
+  const tex = new THREE.CanvasTexture(cv); tex.colorSpace = THREE.SRGBColorSpace;
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, depthTest: false, transparent: true }));
+  sp.scale.set(1.2, 0.3, 1); sp.position.y = 1.72; sp.renderOrder = 10;
+  return sp;
+}
+
+const Net = (() => {
+  const pill = document.getElementById('placePill');
+  const joinModal = document.getElementById('joinModal');
+  const fullModal = document.getElementById('fullModal');
+  const nickInput = document.getElementById('nickInput');
+  const online = location.protocol === 'http:' || location.protocol === 'https:';
+  const others = new Map();        // id → { m, tag, snaps: [{t,x,y,z,ry,act}] }
+  const DELAY = 0.25;              // 0.25초 늦게 그려서 받은 위치 사이를 부드럽게 잇는다
+  let ws = null, myId = null, nick = '', retry = 0, retryTimer = null, pingTimer = null;
+  let isFull = false, lastSend = 0, last = null, myTag = null;
+
+  const now = () => performance.now() / 1000;
+  const setPill = (extra) => { pill.textContent = C.placeName + (extra ? ' · ' + extra : ''); };
+
+  function addOther(info) {
+    if (info.id === myId || others.has(info.id)) return;
+    const m = makeMonk(C.character);
+    const tag = makeNameTag(info.name || '손님');
+    m.root.add(tag);
+    m.root.position.set(info.x ?? 0, info.y ?? 0, info.z ?? 6);
+    m.root.rotation.y = info.ry ?? Math.PI;
+    scene.add(m.root);
+    others.set(info.id, { m, tag, act: !!info.act, snaps: [{ t: now(), ...info }] });
+  }
+  function removeOther(id) {
+    const o = others.get(id); if (!o) return;
+    scene.remove(o.m.root);
+    o.m.root.traverse((n) => { n.geometry?.dispose?.(); n.material?.map?.dispose?.(); });
+    others.delete(id);
+  }
+  function clearOthers() { [...others.keys()].forEach(removeOther); }
+  function countText() { setPill('👥 ' + (others.size + 1) + '명'); }
+
+  function connect() {
+    clearTimeout(retryTimer);
+    const url = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host +
+      '/ws?room=' + encodeURIComponent(C.room.name) + '&name=' + encodeURIComponent(nick);
+    try { ws = new WebSocket(url); } catch (e) { scheduleRetry(); return; }
+    setPill('연결 중…');
+    ws.onopen = () => {
+      retry = 0;
+      clearInterval(pingTimer);
+      pingTimer = setInterval(() => { if (ws && ws.readyState === 1) ws.send('ping'); }, 25000);
+      last = null;   // 연결되면 내 위치를 한 번 보낸다
+    };
+    ws.onmessage = (ev) => {
+      if (ev.data === 'pong') return;
+      let msg; try { msg = JSON.parse(ev.data); } catch { return; }
+      if (msg.t === 'welcome') {
+        myId = msg.id; clearOthers();
+        msg.peers.forEach(addOther); countText();
+      } else if (msg.t === 'join') { addOther(msg); countText(); }
+      else if (msg.t === 'leave') { removeOther(msg.id); countText(); }
+      else if (msg.t === 'pos') {
+        const o = others.get(msg.id);
+        if (!o) { addOther(msg); countText(); return; }
+        o.snaps.push({ t: now(), x: msg.x, y: msg.y, z: msg.z, ry: msg.ry, act: msg.act });
+        if (o.snaps.length > 30) o.snaps.shift();
+      } else if (msg.t === 'full') {
+        isFull = true; fullModal.classList.add('show'); setPill('방이 꽉 찼어요');
+      }
+    };
+    ws.onclose = () => {
+      clearInterval(pingTimer);
+      ws = null; clearOthers();
+      if (isFull) return;
+      setPill('다시 연결 중…');
+      scheduleRetry();
+    };
+    ws.onerror = () => { try { ws && ws.close(); } catch {} };
+  }
+  function scheduleRetry() {
+    clearTimeout(retryTimer);
+    const wait = Math.min(10, 1 * 2 ** retry++) * 1000;   // 1초, 2초, 4초 … 최대 10초
+    retryTimer = setTimeout(connect, wait);
+  }
+  // 휴대폰 화면을 껐다 켜거나 인터넷이 다시 연결되면 바로 재연결
+  window.addEventListener('online', () => { if (nick && !ws && !isFull) { retry = 0; connect(); } });
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && nick && !ws && !isFull) { retry = 0; connect(); }
+  });
+
+  document.getElementById('retryBtn').addEventListener('click', () => {
+    isFull = false; fullModal.classList.remove('show'); retry = 0; connect();
+  });
+
+  function enter(name) {
+    nick = name.trim().slice(0, 10) || '손님';
+    try { localStorage.setItem('botari-nick', nick); } catch {}
+    joinModal.classList.remove('show');
+    nickInput.blur();   // 입력칸에서 빠져나와야 방향키로 걸을 수 있다
+    if (myTag) monk.root.remove(myTag);
+    myTag = makeNameTag(nick); monk.root.add(myTag);
+    connect();
+  }
+  document.getElementById('joinForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!Sound.ctx) Sound.setOn(true);
+    enter(nickInput.value);
+  });
+  // 입력 중에는 방향키·WASD가 캐릭터를 움직이지 않게
+  nickInput.addEventListener('keydown', (e) => e.stopPropagation());
+
+  if (online) {
+    try { nickInput.value = localStorage.getItem('botari-nick') || ''; } catch {}
+    joinModal.classList.add('show');
+    setTimeout(() => nickInput.focus(), 50);
+  }
+
+  // 매 화면마다: 내 위치 보내기 + 다른 사람 움직이기
+  function update(dt, myAct) {
+    const t = now();
+    if (ws && ws.readyState === 1 && t - lastSend >= 1 / C.room.sendPerSec) {
+      const p = monk.root.position;
+      const cur = { x: +p.x.toFixed(2), y: +p.y.toFixed(2), z: +p.z.toFixed(2), ry: +monk.root.rotation.y.toFixed(2), act: myAct ? 1 : 0 };
+      const changed = !last || cur.x !== last.x || cur.y !== last.y || cur.z !== last.z || cur.ry !== last.ry || cur.act !== last.act;
+      if (changed) { ws.send(JSON.stringify({ t: 'pos', ...cur })); last = cur; lastSend = t; }
+    }
+    const rt = t - DELAY;
+    others.forEach((o) => {
+      const sn = o.snaps;
+      while (sn.length > 2 && sn[1].t <= rt) sn.shift();
+      let a = sn[0], b = sn[1] || sn[0];
+      let k = b.t > a.t ? THREE.MathUtils.clamp((rt - a.t) / (b.t - a.t), 0, 1) : 1;
+      const r = o.m.root, px = r.position.x, pz = r.position.z;
+      const tx = a.x + (b.x - a.x) * k, ty = a.y + (b.y - a.y) * k, tz = a.z + (b.z - a.z) * k;
+      r.position.x += (tx - r.position.x) * damp(12, dt);
+      r.position.y += (ty - r.position.y) * damp(12, dt);
+      r.position.z += (tz - r.position.z) * damp(12, dt);
+      r.rotation.y = angleLerp(r.rotation.y, angleLerp(a.ry, b.ry, k), damp(10, dt));
+      const speed = Math.hypot(r.position.x - px, r.position.z - pz) / Math.max(dt, 1e-3);
+      if (b.act) poseSit(o.m, dt);
+      else poseWalk(o.m, dt, THREE.MathUtils.clamp(speed / C.character.speed, 0, 1));
+    });
+  }
+  return {
+    update,
+    anyoneSitting: () => [...others.values()].some((o) => o.m.sitting && o.m.body.position.y < -0.25),
+    forEachSitting: (fn) => others.forEach((o) => { if (o.m.sitting) fn(o.m); })
+  };
+})();
+
 /* ---------------- 그리기 반복 ---------------- */
 const clock = new THREE.Clock();
 function loop() {
   const dt = Math.min(clock.getDelta(), 0.05);
   update(dt);
+  Net.update(dt, state === 'sit');
   renderer.render(scene, camera);
   requestAnimationFrame(loop);
 }
