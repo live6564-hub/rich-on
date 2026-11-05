@@ -33,7 +33,7 @@ window.CONFIG = {
     bellTower: { name: "범종각", x: -13, z: 7, face: "east" },
     pagoda:    { name: "삼층석탑", x: 0, z: 5 },
     lanterns:  [ { x: -3.2, z: 0.6 }, { x: 3.2, z: 0.6 } ],   // 대웅전 앞 석등 2개
-    pines: 120                                                // 둘레 소나무 수
+    pines: 60                                                 // 둘레 소나무 수
   },
 
   // 3) 내 캐릭터 (STEP 2에서 사용)
@@ -713,7 +713,8 @@ if (O.pines) {
     });
     inst.castShadow = true; inst.receiveShadow = true; scene.add(inst);
   });
-  spots.forEach((p) => colliders.circles.push({ x: p.x, z: p.z, r: 0.45 * p.s }));
+  // 소나무는 통과 못 함: 줄기만이 아니라 아래쪽 솔잎 둘레까지 막는다
+  spots.forEach((p) => colliders.circles.push({ x: p.x, z: p.z, r: 1.05 * p.s }));
 }
 
 // 걸어 다니는 곳의 높이 (기단·계단·마루)
