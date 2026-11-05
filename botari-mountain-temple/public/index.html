@@ -32,6 +32,7 @@ window.CONFIG = {
     ],
     bellTower: { name: "범종각", x: -13, z: 7, face: "east" },
     pagoda:    { name: "삼층석탑", x: 0, z: 5 },
+    pond:      { name: "연못", x: -13, z: 1.4, r: 1.8 },            // 마당 한쪽 작은 연못 (물소리)
     lanterns:  [ { x: -3.2, z: 0.6 }, { x: 3.2, z: 0.6 } ],   // 대웅전 앞 석등 2개
     pines: 60,                                                // 둘레 소나무 수
     // 마당 돌길: 점 [x, z] 를 이어 디딤돌을 깐다. 건물 이름을 쓰면 그 건물 계단 앞이 된다.
@@ -55,7 +56,8 @@ window.CONFIG = {
     target: "cushion",       // 방석
     radius: 1.5,             // 반경 1.5m 안에 들어가면 단추가 뜸 (모든 법당 방석)
     bpm: 72,                 // 목탁 박자
-    bell: { label: "타종", radius: 2.2 }   // 범종각 종 가까이 가면 "타종" 단추
+    bell: { label: "타종", radius: 2.2 },  // 범종각 종 가까이 가면 "타종" 단추
+    goal: 108                              // 108배 · 염주 한 바퀴
   },
 
   // 함께 걷기 (STEP 5) — 한 방 최대 인원 (서버 src/worker.js 의 MAX_PEOPLE 과 같게)
@@ -136,6 +138,21 @@ window.CONFIG = {
   #goPanel .chips button { height: 28px; font-size: 11px; padding: 0 6px; background: #f6eedd; }
   #goPanel .help { font-size: 10.5px; color: #8a7a66; margin: -2px 0 8px 34px; }
   #goPanel .go { background: #8e2a35; color: #fff; flex: 1; font-size: 15px; }
+
+  /* 오른쪽 = 염주·독경 단추 (합장 단추 위) */
+  #sideBtns {
+    position: fixed; z-index: 10; display: flex; gap: 8px;
+    right: calc(16px + env(safe-area-inset-right)); bottom: calc(254px + env(safe-area-inset-bottom));
+  }
+  #sideBtns button {
+    width: 54px; height: 54px; border-radius: 50%; border: none; cursor: pointer;
+    background: rgba(255,255,255,0.88); color: #3b2a1a; box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 10.5px; font-weight: 800; line-height: 1.1; touch-action: manipulation;
+  }
+  #sideBtns button .ico { font-size: 19px; line-height: 1; margin-bottom: 1px; }
+  #sideBtns button.on { background: #8e2a35; color: #fff; }
+  body.panel-open #sideBtns { visibility: hidden; }
 
   #dpad .corner { grid-column: 3; grid-row: 1; font-size: 16px; background: rgba(255,248,232,0.95); }
 
@@ -290,6 +307,10 @@ window.CONFIG = {
     </div>
     <div class="row" style="margin:8px 0 0"><button type="button" class="go" id="goBtn">🚶 가기</button><button type="button" id="goClose">닫기</button></div>
   </div>
+  <div id="sideBtns">
+    <button id="btnBeads" type="button" aria-label="염주 굴리기"><span class="ico">📿</span>염주</button>
+    <button id="btnChant" type="button" aria-label="독경 듣기"><span class="ico">📖</span>독경</button>
+  </div>
   <div id="moveBtns">
     <button id="btnFast" type="button" aria-label="빨리 걷기"><span class="key">Shift</span><span class="ico">🏃</span>빨리</button>
     <button id="btnSlow" type="button" aria-label="천천히 걷기"><span class="key">Z</span><span class="ico">🐢</span>천천히</button>
@@ -308,6 +329,7 @@ window.CONFIG = {
       <h2>🙏 산속 절에 들어가기</h2>
       <p>머리 위에 보일 이름을 적어 주세요</p>
       <input id="nickInput" maxlength="10" placeholder="예) 로아" autocomplete="off">
+      <button type="button" id="nickDice" style="margin-top:8px;background:#efe4cf;color:#3b2a1a;height:38px">🎲 다른 이름 지어 주기</button>
       <button type="submit">입장하기</button>
     </form>
   </div>
@@ -546,22 +568,30 @@ function addStatue(F, kind, y0, z) {
 }
 
 // 방석 + 목탁
-function addCushion(F, lx, lz, y0, faceYaw, name) {
+const cushionGeo = new THREE.CylinderGeometry(0.42, 0.45, 0.12, 24), cushionTopGeo = new THREE.CylinderGeometry(0.3, 0.3, 0.125, 24);
+const cushionMat = mat(0x8e2a35), cushionTopMat = mat(0xc79a3c);
+// 방석 (id = 자리 번호, 함께 걷기 때 자리 맡기에 씀). moktak 이 없으면 새 목탁을 하나 놓는다.
+function addCushion(F, lx, lz, y0, faceYaw, name, id, moktakRef) {
   const g = F.g;
-  part(new THREE.CylinderGeometry(0.42, 0.45, 0.12, 24), mat(0x8e2a35), lx, y0 + 0.06, lz, g);
-  part(new THREE.CylinderGeometry(0.3, 0.3, 0.125, 24), mat(0xc79a3c), lx, y0 + 0.065, lz, g).castShadow = false;
-  const mk = new THREE.Group(); mk.position.set(lx + 0.75, y0, lz + 0.3); g.add(mk);
+  part(cushionGeo, cushionMat, lx, y0 + 0.06, lz, g);
+  part(cushionTopGeo, cushionTopMat, lx, y0 + 0.065, lz, g).castShadow = false;
+  const [x, z] = F.toW(lx, lz);
+  if (moktakRef) {   // 이 법당 목탁을 같이 씀 ('later' = 가운데 방석을 만든 뒤 연결)
+    targets.push({ type: 'cushion', id, x, z, face: faceYaw, moktak: moktakRef === 'later' ? null : moktakRef, name, label: C.action.label, icon: '🙏', radius: C.action.radius });
+    return moktakRef;
+  }
+  const mk = new THREE.Group(); mk.position.set(lx + 0.62, y0, lz - 0.55); g.add(mk);
   const body = part(new THREE.SphereGeometry(0.16, 20, 16), mat(0x8b3a1e, { roughness: 0.5 }), 0, 0.13, 0, mk);
   body.scale.set(1, 0.8, 1.1);
   part(new THREE.BoxGeometry(0.2, 0.02, 0.03), mat(0x2a1208), 0, 0.15, 0.16, mk);
   const stick = new THREE.Group(); stick.position.set(0.05, 0.42, 0.05); mk.add(stick);
   part(new THREE.CylinderGeometry(0.015, 0.015, 0.3, 8), wood, 0, 0, 0, stick).rotation.z = Math.PI / 2.4;
   part(new THREE.SphereGeometry(0.035, 10, 8), wood, -0.13, -0.05, 0, stick);
-  const [mx, mz] = F.toW(lx + 0.75, lz + 0.3);
+  const [mx, mz] = F.toW(lx + 0.62, lz - 0.55);
   const moktak = { g: mk, stick, x: mx, z: mz, hit: 0 };
   moktaks.push(moktak);
-  const [x, z] = F.toW(lx, lz);
-  targets.push({ type: 'cushion', x, z, face: faceYaw, moktak, name, label: C.action.label, icon: '🙏', radius: C.action.radius });
+  targets.push({ type: 'cushion', id, x, z, face: faceYaw, moktak, name, label: C.action.label, icon: '🙏', radius: C.action.radius });
+  return moktak;
 }
 
 // 법당 (앞면이 열림) / 요사채 (closed: 앞면에 문이 닫혀 있음)
@@ -621,8 +651,20 @@ function buildHall(o) {
   if (o.statue) {
     const sz = -D / 2 + 1.0;
     addStatue(F, o.statue, floorH, sz);
-    const cz = Math.min(D / 2 - 0.9, sz + 1.9);
-    addCushion(F, 0, cz, floorH, yaw + Math.PI, o.name);
+    // 방석을 여러 줄로 (법당 크기에 맞춰) — 맨 앞줄 가운데 방석 옆에 목탁
+    const cz0 = Math.min(D / 2 - 0.9, sz + 1.9);
+    const cols = W >= 9 ? 5 : 3, gapX = W >= 9 ? 1.6 : W >= 6 ? 1.4 : 1.2;
+    let hallMoktak = null, r = 0;
+    for (let cz = cz0; cz <= D / 2 - 0.85 || r === 0; cz += 1.25, r++) {
+      for (let c = 0; c < cols; c++) {
+        const cx = (c - (cols - 1) / 2) * gapX;
+        const m = addCushion(F, cx, cz, floorH, yaw + Math.PI, o.name, `${o.name}-${r}-${c}`, (r === 0 && c === (cols - 1) / 2) ? null : (hallMoktak || 'later'));
+        if (r === 0 && c === (cols - 1) / 2) hallMoktak = m;
+      }
+      if (r === 0) {   // 가운데 방석의 목탁을 같은 줄 다른 방석에도 연결
+        targets.filter((t) => t.name === o.name && !t.moktak).forEach((t) => { t.moktak = hallMoktak; });
+      }
+    }
     const lt = new THREE.PointLight(0xffc98a, 6, Math.max(W, D) + 2, 1.6);
     const [lx, lz] = F.toW(0, 0); lt.position.set(lx, bh + H * 0.75, lz); scene.add(lt);
   }
@@ -779,6 +821,34 @@ function buildPagoda(o) {
   F.map(-1.0, 1.0, -1.0, 1.0, 'pagoda', '');
 }
 
+// 연못 (돌 테두리 + 물 + 연잎·연꽃)
+let pondWater = null;
+function buildPond(o) {
+  const { x, z, r } = o;
+  pondWater = part(new THREE.CylinderGeometry(r, r, 0.05, 40), new THREE.MeshStandardMaterial({ color: 0x4f8fa8, roughness: 0.15, metalness: 0.2, transparent: true, opacity: 0.88 }), x, 0.03, z);
+  pondWater.castShadow = false;
+  const rock = mat(0x8a877e);
+  for (let i = 0; i < 22; i++) {
+    const a = (i / 22) * Math.PI * 2, s = 0.22 + ((i * 37) % 7) * 0.02;
+    const st = part(new THREE.SphereGeometry(s, 8, 6), rock, x + Math.cos(a) * (r + 0.12), 0.06, z + Math.sin(a) * (r + 0.12));
+    st.scale.set(1.3, 0.55, 1);
+  }
+  const leaf = mat(0x4f8a3c), pink = mat(0xf2a0b8), yellow = mat(0xf5d76e);
+  [[-0.7, 0.4], [0.5, -0.6], [0.8, 0.7], [-0.3, -0.9], [0.1, 0.2]].forEach(([dx, dz], i) => {
+    part(new THREE.CylinderGeometry(0.32, 0.32, 0.02, 14), leaf, x + dx, 0.07, z + dz).castShadow = false;
+    if (i % 2 === 0) {
+      [0, 1, 2, 3, 4].forEach((k) => {
+        const pe = part(new THREE.ConeGeometry(0.07, 0.22, 6), pink, x + dx + Math.cos(k * 1.256) * 0.06, 0.16, z + dz + Math.sin(k * 1.256) * 0.06);
+        pe.rotation.set(Math.sin(k * 1.256) * 0.5, 0, -Math.cos(k * 1.256) * 0.5);
+      });
+      part(new THREE.SphereGeometry(0.05, 8, 6), yellow, x + dx, 0.15, z + dz);
+    }
+  });
+  colliders.circles.push({ x, z, r: r + 0.2 });
+  areas.unshift({ cx: x, cz: z, yaw: 0, minX: -r - 1.2, maxX: r + 1.2, minZ: -r - 1.2, maxZ: r + 1.2, name: o.name });
+  mapItems.push({ minX: x - r, maxX: x + r, minZ: z - r, maxZ: z + r, type: 'pond', name: o.name });
+}
+
 // 석등
 function buildLantern(x, z) {
   part(new THREE.BoxGeometry(0.7, 0.25, 0.7), stoneDark, x, 0.125, z);
@@ -798,6 +868,7 @@ O.gates.forEach(buildGate);
 if (O.wall) buildWall(O.wall);
 if (O.bellTower) buildBellTower(O.bellTower);
 if (O.pagoda) buildPagoda(O.pagoda);
+if (O.pond) buildPond(O.pond);
 (O.lanterns || []).forEach((l) => buildLantern(l.x, l.z));
 
 // 들어오는 숲길 돌 (일주문 앞 → 불이문)
@@ -954,6 +1025,14 @@ const Sound = {
 
     noise.connect(lp).connect(windGain).connect(this.master);
     noise.start(); lfo.start(); lfo2.start();
+
+    // 물소리 (연못 가까이 갈수록 커짐): 같은 소음을 높은 대역으로 걸러 졸졸
+    const wbp = ctx.createBiquadFilter(); wbp.type = 'bandpass'; wbp.frequency.value = 1100; wbp.Q.value = 1.2;
+    const wlfo = ctx.createOscillator(); wlfo.frequency.value = 3.1;
+    const wlfoAmt = ctx.createGain(); wlfoAmt.gain.value = 450;
+    wlfo.connect(wlfoAmt).connect(wbp.frequency); wlfo.start();
+    this.waterGain = ctx.createGain(); this.waterGain.gain.value = 0;
+    noise.connect(wbp).connect(this.waterGain).connect(this.master);
   },
 
   // 풍경 소리: 맑은 금속음 몇 개가 짧게 겹쳐 딸랑
@@ -1036,6 +1115,30 @@ const Sound = {
     n.connect(lp).connect(ng).connect(this.master); n.start(t);
   },
 
+  setWater(v) { if (this.waterGain) this.waterGain.gain.setTargetAtTime(v, this.ctx.currentTime, 0.3); },
+  // 산새 소리: 짧게 올라가는 휘파람 몇 번
+  bird() {
+    if (!this.ctx || !this.on) return;
+    const ctx = this.ctx, t0 = ctx.currentTime, base = 2300 + Math.random() * 900, n = 2 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < n; i++) {
+      const t = t0 + i * (0.13 + Math.random() * 0.06);
+      const o = ctx.createOscillator(); o.type = 'sine';
+      o.frequency.setValueAtTime(base, t); o.frequency.exponentialRampToValueAtTime(base * 1.45, t + 0.08);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.05, t + 0.01);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + 0.1);
+      o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.12);
+    }
+  },
+  // 염주 알 넘기는 "딸깍"
+  click() {
+    if (!this.ctx || !this.on) return;
+    const ctx = this.ctx, t = ctx.currentTime;
+    const o = ctx.createOscillator(); o.type = 'triangle'; o.frequency.setValueAtTime(1900, t); o.frequency.exponentialRampToValueAtTime(1200, t + 0.03);
+    const g = ctx.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.25, t + 0.002); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.05);
+    o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.06);
+  },
+
   scheduleChime() {
     clearTimeout(this.chimeTimer);
     const [a, b] = C.ambience.chimeEverySec;
@@ -1049,8 +1152,12 @@ const Sound = {
     const t = this.ctx.currentTime;
     this.master.gain.cancelScheduledValues(t);
     this.master.gain.setTargetAtTime(v ? 1 : 0, t, 0.4);
-    if (v) { this.scheduleChime(); setTimeout(() => this.chime(), 1200); }
-    else clearTimeout(this.chimeTimer);
+    if (v) {
+      this.scheduleChime(); setTimeout(() => this.chime(), 1200);
+      clearTimeout(this.birdTimer);
+      const nextBird = () => { this.birdTimer = setTimeout(() => { this.bird(); nextBird(); }, 5000 + Math.random() * 11000); };
+      nextBird();
+    } else { clearTimeout(this.chimeTimer); clearTimeout(this.birdTimer); if (window.speechSynthesis) speechSynthesis.cancel(); }
     soundBtn.textContent = v ? '🔊' : '🔇';
     hint.style.opacity = 0;
   }
@@ -1127,12 +1234,22 @@ function makeMonk(cfg) {
   add(head, new THREE.SphereGeometry(0.035, 8, 8), cheek, -0.14, -0.06, 0.19);
   add(head, new THREE.SphereGeometry(0.035, 8, 8), cheek, 0.14, -0.06, 0.19);
 
+  // 오른손 염주 (알 14개를 둥글게) — 염주 단추를 누를 때 보임
+  const mala = new THREE.Group(); mala.position.set(0, -0.4, 0.06); mala.rotation.x = Math.PI / 2; mala.visible = false;
+  const beadMat = new THREE.MeshStandardMaterial({ color: 0x5a3418, roughness: 0.5 });
+  for (let i = 0; i < 14; i++) {
+    const a = (i / 14) * Math.PI * 2;
+    const bd = new THREE.Mesh(new THREE.SphereGeometry(i === 0 ? 0.03 : 0.022, 8, 6), i === 0 ? new THREE.MeshStandardMaterial({ color: 0xb8892c }) : beadMat);
+    bd.position.set(Math.cos(a) * 0.1, Math.sin(a) * 0.1, 0); mala.add(bd);
+  }
+  arms[1].add(mala);
+
   // 손에 드는 작은 목탁 (T 키로 두드릴 때만 보임)
   const handMoktak = new THREE.Mesh(new THREE.SphereGeometry(0.075, 14, 10), new THREE.MeshStandardMaterial({ color: 0x8b3a1e, roughness: 0.5 }));
   handMoktak.scale.set(1, 0.8, 1.1); handMoktak.position.set(0, -0.42, 0.04); handMoktak.visible = false; handMoktak.castShadow = true;
   arms[0].add(handMoktak);
 
-  return { root, body, upper, legs, arms, head, handMoktak, phase: 0, moveAmt: 0, sitting: false, bowT: 0, tapT: 0, tapShow: 0, gassho: false, holding: false };
+  return { root, body, upper, legs, arms, head, handMoktak, mala, malaShow: 0, phase: 0, moveAmt: 0, sitting: false, bowT: 0, tapT: 0, tapShow: 0, gassho: false, holding: false };
 }
 
 // 걷는 몸짓 (amt = 0 멈춤 ~ 1 걷기). 앉은 자세에서도 부드럽게 풀린다.
@@ -1205,6 +1322,11 @@ function poseOverlay(m, dt) {
     m.handMoktak.visible = true;
     m.arms[0].rotation.x = -0.85; m.arms[0].rotation.z = 0.3;
   }
+  // 염주: 오른손을 가슴 앞으로 들고 알을 굴림
+  if (m.malaShow > 0) {
+    m.malaShow -= dt; m.mala.visible = true;
+    if (!m.gassho && !(m.bowT > 0) && !(m.tapShow > 0)) { m.arms[1].rotation.x = -1.0; m.arms[1].rotation.z = -0.35; }
+  } else m.mala.visible = false;
   // 목탁 두드리기: 왼손에 든 목탁을 오른손으로 똑
   if (m.tapShow > 0) {
     m.tapShow -= dt;
@@ -1318,18 +1440,27 @@ function ringBell() {
   bellSwing = 1; bellCount++;
   Sound.bell();
 }
+let seatAsking = false;
 function startAction() {
-  if (state !== 'walk' || !actTarget) return;
+  if (state !== 'walk' || !actTarget || seatAsking) return;
   if (!Sound.ctx) Sound.setOn(true);
   if (actTarget.type === 'bell') { ringBell(); return; }
-  sitTarget = actTarget;
-  resting = false; monk.bowT = 0;
-  state = 'sit'; sitT = 0; beatT = 0;
-  sitFrom.copy(monk.root.position);
-  actBtn.classList.remove('show');
-  if (!Sound.ctx) Sound.setOn(true);
+  const tgt = actTarget;
+  seatAsking = true;
+  // 함께 걷기 중이면 서버에 "이 방석 비었나요?" 물어보고 앉는다 (겹쳐 앉기 방지)
+  Net.claimSeat(tgt.id).then((ok) => {
+    seatAsking = false;
+    if (!ok) { toast('누가 먼저 앉았어요 — 옆 방석에 앉아 주세요'); return; }
+    if (state !== 'walk') return;
+    sitTarget = tgt;
+    resting = false; monk.bowT = 0;
+    state = 'sit'; sitT = 0; beatT = 0;
+    sitFrom.copy(monk.root.position);
+    actBtn.classList.remove('show');
+  });
 }
 function stopAction() {
+  if (state === 'sit') Net.releaseSeat();
   state = 'walk';
   camYaw = monk.root.rotation.y;       // 일어나면 다시 뒤쪽 시점으로 (카메라는 천천히 돌아옴)
 }
@@ -1346,6 +1477,8 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'KeyX') doStand();
   if (e.code === 'KeyP') doPray();
   if (e.code === 'KeyE') doHold();
+  if (e.code === 'KeyR') doBeads();
+  if (e.code === 'KeyV') doChant();
   if (e.code === 'KeyH') goHome();
   if (e.code === 'KeyG') setPanel(!goPanel.classList.contains('show'));
 });
@@ -1397,7 +1530,7 @@ function goHome() {
   const fade = document.getElementById('fade');
   fade.style.opacity = 1;
   setTimeout(() => {
-    if (state === 'sit') state = 'walk';
+    if (state === 'sit') { Net.releaseSeat(); state = 'walk'; }
     resting = false; monk.bowT = 0; uTurnT = 0; autoGo = null;
     monk.root.position.set(C.world.start.x, 0, C.world.start.z);
     monk.root.rotation.y = Math.PI;
@@ -1414,10 +1547,71 @@ function toggleRest() {
   if (!resting) camYaw = monk.root.rotation.y;
   updateBtns();
 }
-// 절하기
+// 오늘 기록 (108배·염주) — 이 휴대폰에만 저장
+const today = new Date().toISOString().slice(0, 10);
+let rec = { date: today, bows: 0, beads: 0, rounds: 0 };
+try { const r = JSON.parse(localStorage.getItem('botari-rec') || 'null'); if (r && r.date === today) rec = r; } catch {}
+const saveRec = () => { try { localStorage.setItem('botari-rec', JSON.stringify(rec)); } catch {} };
+const GOAL = C.action.goal || 108;
+// 절하기 — 서서·앉아서·방석에서 모두 가능, 한 번 할 때마다 108배를 센다
 function doBow() {
-  if (state === 'walk' && !resting && monk.bowT === 0) monk.bowT = 0.001;
+  if (monk.bowT !== 0 || autoGo) return;
+  if (state === 'sit' && sitT < 1) return;
+  monk.bowT = 0.001;
+  rec.bows++; saveRec();
+  if (rec.bows % GOAL === 0) { Sound.chime(); toast(`🙇 ${GOAL}배를 마쳤어요 🎉 (오늘 ${rec.bows}배)`, 2600); }
+  else toast(`🙇 ${rec.bows % GOAL} / ${GOAL}배`, 1000);
 }
+// 📿 염주 굴리기 — 누를 때마다 한 알, 108알이면 한 바퀴
+function doBeads() {
+  monk.malaShow = 2.5;
+  monk.mala.rotation.z += (Math.PI * 2) / 14;
+  rec.beads++; saveRec();
+  if (!Sound.ctx) Sound.setOn(true);
+  Sound.click();
+  if (rec.beads % GOAL === 0) { rec.rounds++; saveRec(); Sound.chime(); toast(`📿 염주 한 바퀴 (${GOAL}알) 🎉 오늘 ${rec.rounds}바퀴`, 2600); }
+  else toast(`📿 ${rec.beads % GOAL} / ${GOAL}`, 900);
+  beadCount++;
+}
+let beadCount = 0;
+// 📖 독경 — 휴대폰에 들어 있는 한국어 읽기 목소리로 반야심경(한문 음독)을 읽는다
+const SUTRA = [
+  '마하반야바라밀다심경',
+  '관자재보살 행심반야바라밀다시 조견오온개공 도일체고액',
+  '사리자 색불이공 공불이색 색즉시공 공즉시색 수상행식 역부여시',
+  '사리자 시제법공상 불생불멸 불구부정 부증불감',
+  '시고 공중무색 무수상행식 무안이비설신의 무색성향미촉법 무안계 내지 무의식계',
+  '무무명 역무무명진 내지 무노사 역무노사진 무고집멸도 무지역무득 이무소득고',
+  '보리살타 의반야바라밀다고 심무가애 무가애고 무유공포 원리전도몽상 구경열반',
+  '삼세제불 의반야바라밀다고 득아뇩다라삼먁삼보리',
+  '고지반야바라밀다 시대신주 시대명주 시무상주 시무등등주 능제일체고 진실불허',
+  '고설반야바라밀다주 즉설주왈',
+  '아제아제 바라아제 바라승아제 모지 사바하',
+  '아제아제 바라아제 바라승아제 모지 사바하',
+  '아제아제 바라아제 바라승아제 모지 사바하'
+];
+let chanting = false;
+function doChant() {
+  const synth = window.speechSynthesis;
+  if (!synth || typeof SpeechSynthesisUtterance === 'undefined') { toast('이 휴대폰(브라우저)은 읽어 주기 기능이 없어요'); return; }
+  if (chanting) { synth.cancel(); chanting = false; updateBtns(); toast('독경을 멈췄어요'); return; }
+  if (!Sound.on) Sound.setOn(true);
+  const voices = synth.getVoices();
+  const ko = voices.find((v) => /^ko/i.test(v.lang));
+  if (voices.length && !ko) toast('한국어 목소리가 없어서 다른 목소리로 읽어요', 2200);
+  synth.cancel();
+  chanting = true; updateBtns();
+  SUTRA.forEach((line, i) => {
+    const u = new SpeechSynthesisUtterance(line);
+    u.lang = 'ko-KR'; if (ko) u.voice = ko;
+    u.rate = 0.78; u.pitch = 0.6; u.volume = 0.9;
+    if (i === SUTRA.length - 1) u.onend = () => { chanting = false; updateBtns(); toast('🙏 독경을 마쳤어요'); };
+    u.onerror = () => { if (i === SUTRA.length - 1) { chanting = false; updateBtns(); } };
+    synth.speak(u);
+  });
+  toast('📖 반야심경 독경 (한 번 더 누르면 멈춤)', 1800);
+}
+if (window.speechSynthesis) { try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => {}; } catch {} }
 // 가까이 놓여 있는 목탁 (누가 들고 있지 않은 것)
 function nearMoktak(x, z, r = ACT.radius) {
   let best = null, bd = r;
@@ -1482,6 +1676,7 @@ function updateBtns() {
   $('btnSit').classList.toggle('on', resting || state === 'sit');
   $('btnPray').classList.toggle('on', monk.gassho || state === 'sit');
   $('btnHold').classList.toggle('on', !!heldMoktak);
+  $('btnChant').classList.toggle('on', chanting);
   $('btnHold').querySelector('.lbl').textContent = heldMoktak ? '내려놓기' : '목탁집기';
   const mp = monk.root.position;
   $('btnTap').classList.toggle('off', !heldMoktak && !nearMoktak(mp.x, mp.z));
@@ -1506,6 +1701,8 @@ onBtn(document.getElementById('btnBow'), doBow);
 onBtn(document.getElementById('btnPray'), doPray);
 onBtn(document.getElementById('btnHold'), doHold);
 onBtn(document.getElementById('btnTap'), doTap);
+onBtn(document.getElementById('btnBeads'), doBeads);
+onBtn(document.getElementById('btnChant'), doChant);
 onBtn(document.getElementById('btnHome'), goHome);
 onBtn(document.getElementById('btnTurn'), doUTurn);
 const dp = { f: false, b: false, l: false, r: false };
@@ -1593,6 +1790,7 @@ function update(dt) {
     // 행동 단추: 가장 가까운 방석·종 반경 안에서만 보임
     let best = null, bestD = 1e9;
     for (const t of targets) {
+      if (t.type === 'cushion' && Net.seatTaken(t.id)) continue;     // 다른 사람이 앉은 방석은 건너뜀
       const d = Math.hypot(p.x - t.x, p.z - t.z);
       if (d <= t.radius && d < bestD) { best = t; bestD = d; }
     }
@@ -1624,11 +1822,11 @@ function update(dt) {
       let sound = false;
       if (meSitting) {
         const mk = sitTarget.moktak;
-        if (!mk.held && Math.hypot(mk.x - sitTarget.x, mk.z - sitTarget.z) < 2) { mk.hit = 1; sound = true; }
+        if (mk && !mk.held && Math.hypot(mk.x - sitTarget.x, mk.z - sitTarget.z) < 5) { mk.hit = 1; sound = true; }   // 이 법당 목탁
         else if (heldMoktak) { startTap(monk); sound = true; }       // 들고 있는 목탁으로
       }
       Net.forEachSitting((m) => {          // 다른 사람이 앉은 곳 옆에 목탁이 있을 때만
-        const k = nearMoktak(m.root.position.x, m.root.position.z, 2.5);
+        const k = nearMoktak(m.root.position.x, m.root.position.z, 5);
         if (k) { k.hit = 1; sound = true; }
       });
       if (sound) Sound.tok();             // 목탁이 없으면 소리 안 남
@@ -1657,6 +1855,13 @@ function update(dt) {
   if (an !== areaNow) { areaNow = an; renderPill(); }
   // 해 그림자가 캐릭터를 따라옴
   sun.position.set(p.x + 12, 20, p.z + 8); sun.target.position.set(p.x, 0, p.z);
+  // 연못 물소리: 가까울수록 크게 (10m 밖이면 안 들림)
+  if (O.pond && Sound.ctx) {
+    const d = Math.hypot(p.x - O.pond.x, p.z - O.pond.z) - O.pond.r;
+    const v = Math.max(0, Math.min(1, 1 - d / 10)) * 0.22;
+    if (Math.abs(v - (Sound._wv || 0)) > 0.01) { Sound._wv = v; Sound.setWater(v); }
+  }
+  if (pondWater) pondWater.position.y = 0.03 + Math.sin(performance.now() / 900) * 0.004;
 
   // 5) 카메라 — 캐릭터 둘레를 원을 그리며 돈다 (몸을 뚫고 지나가지 않음)
   const gy = p.y;
@@ -1717,6 +1922,13 @@ function renderPill() {
   document.getElementById('placePill').textContent = parts.join(' · ');
 }
 
+// 자동 이름 짓기 (예: 맑은 솔방울)
+function randomName() {
+  const a = ['맑은', '고요한', '포근한', '푸른', '작은', '따뜻한', '잔잔한', '소박한', '느긋한', '반짝이는'];
+  const b = ['솔방울', '이슬', '산바람', '연꽃', '구름', '종소리', '달빛', '다람쥐', '오솔길', '물결'];
+  return a[Math.floor(Math.random() * a.length)] + ' ' + b[Math.floor(Math.random() * b.length)];
+}
+
 const Net = (() => {
   const pill = document.getElementById('placePill');
   const joinModal = document.getElementById('joinModal');
@@ -1727,6 +1939,8 @@ const Net = (() => {
   const DELAY = 0.25;              // 0.25초 늦게 그려서 받은 위치 사이를 부드럽게 잇는다
   let ws = null, myId = null, nick = '', retry = 0, retryTimer = null, pingTimer = null;
   let isFull = false, lastSend = 0, last = null, myTag = null;
+  let roomIdx = 1, hopping = false, seatWait = null;
+  const MAX_ROOMS = 9;
 
   const now = () => performance.now() / 1000;
   const setPill = (extra) => { pillNet = extra || ''; renderPill(); };
@@ -1739,7 +1953,8 @@ const Net = (() => {
     m.root.position.set(info.x ?? C.world.start.x, info.y ?? 0, info.z ?? C.world.start.z);
     m.root.rotation.y = info.ry ?? Math.PI;
     scene.add(m.root);
-    others.set(info.id, { m, tag, act: info.act || 0, tap: info.tap, bell: info.bell, snaps: [{ t: now(), ...info }] });
+    others.set(info.id, { m, tag, act: info.act || 0, tap: info.tap, bell: info.bell, bead: info.bead, seat: info.seat || null, snaps: [{ t: now(), ...info }] });
+    m.gassho = !!(info.fx & 1); m.holding = !!(info.fx & 2);
   }
   function removeOther(id) {
     const o = others.get(id); if (!o) return;
@@ -1748,12 +1963,12 @@ const Net = (() => {
     others.delete(id);
   }
   function clearOthers() { [...others.keys()].forEach(removeOther); }
-  function countText() { setPill('👥 ' + (others.size + 1) + '명'); }
+  function countText() { setPill('👥 ' + (others.size + 1) + '명' + (roomIdx > 1 ? ` · ${roomIdx}번 방` : '')); }
 
   function connect() {
     clearTimeout(retryTimer);
     const url = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host +
-      '/ws?room=' + encodeURIComponent(C.room.name) + '&name=' + encodeURIComponent(nick);
+      '/ws?room=' + encodeURIComponent(C.room.name + (roomIdx > 1 ? '-' + roomIdx : '')) + '&name=' + encodeURIComponent(nick);
     try { ws = new WebSocket(url); } catch (e) { scheduleRetry(); return; }
     setPill('연결 중…');
     ws.onopen = () => {
@@ -1784,15 +1999,24 @@ const Net = (() => {
         // 다른 사람이 종을 침 (절 어디서나 들림)
         if (o.bell !== undefined && msg.bell !== o.bell) { bellSwing = 1; Sound.bell(); }
         o.bell = msg.bell;
+        if (o.bead !== undefined && msg.bead !== o.bead) { o.m.malaShow = 2.5; o.m.mala.rotation.z += (Math.PI * 2) / 14; }
+        o.bead = msg.bead;
+        o.seat = msg.seat || null;
         if (o.snaps.length > 30) o.snaps.shift();
+      } else if (msg.t === 'seat') {
+        if (seatWait) { seatWait(!!msg.ok); seatWait = null; }
       } else if (msg.t === 'full') {
-        isFull = true; fullModal.classList.add('show'); setPill('방이 꽉 찼어요');
+        // 방이 꽉 차면 다음 방(2번, 3번 …)으로 자동으로 옮겨 간다
+        if (roomIdx < MAX_ROOMS) { roomIdx++; hopping = true; }
+        else { isFull = true; fullModal.classList.add('show'); setPill('방이 모두 꽉 찼어요'); }
       }
     };
     ws.onclose = () => {
       clearInterval(pingTimer);
       ws = null; clearOthers();
+      if (seatWait) { seatWait(true); seatWait = null; }
       if (isFull) return;
+      if (hopping) { hopping = false; retry = 0; connect(); return; }
       setPill('다시 연결 중…');
       scheduleRetry();
     };
@@ -1810,7 +2034,7 @@ const Net = (() => {
   });
 
   document.getElementById('retryBtn').addEventListener('click', () => {
-    isFull = false; fullModal.classList.remove('show'); retry = 0; connect();
+    isFull = false; fullModal.classList.remove('show'); retry = 0; roomIdx = 1; connect();
   });
 
   function enter(name) {
@@ -1827,6 +2051,7 @@ const Net = (() => {
     if (!Sound.ctx) Sound.setOn(true);
     enter(nickInput.value);
   });
+  document.getElementById('nickDice').addEventListener('click', () => { nickInput.value = randomName(); });
   // 입력 중에는 방향키·WASD가 캐릭터를 움직이지 않게
   nickInput.addEventListener('keydown', (e) => e.stopPropagation());
 
@@ -1837,6 +2062,7 @@ const Net = (() => {
       .then((r) => {
         if (r.status !== 426) return;
         try { nickInput.value = localStorage.getItem('botari-nick') || ''; } catch {}
+        if (!nickInput.value) nickInput.value = randomName();   // 이름이 없으면 자동으로 지어 줌
         joinModal.classList.add('show');
         setTimeout(() => nickInput.focus(), 50);
       })
@@ -1844,12 +2070,12 @@ const Net = (() => {
   }
 
   // 매 화면마다: 내 위치 보내기 + 다른 사람 움직이기
-  function update(dt, myAct, myTap, myBell, myFx) {
+  function update(dt, myAct, myTap, myBell, myFx, myBead) {
     const t = now();
     if (ws && ws.readyState === 1 && t - lastSend >= 1 / C.room.sendPerSec) {
       const p = monk.root.position;
-      const cur = { x: +p.x.toFixed(2), y: +p.y.toFixed(2), z: +p.z.toFixed(2), ry: +monk.root.rotation.y.toFixed(2), act: myAct, tap: myTap, bell: myBell, fx: myFx };
-      const changed = !last || cur.x !== last.x || cur.y !== last.y || cur.z !== last.z || cur.ry !== last.ry || cur.act !== last.act || cur.tap !== last.tap || cur.bell !== last.bell || cur.fx !== last.fx;
+      const cur = { x: +p.x.toFixed(2), y: +p.y.toFixed(2), z: +p.z.toFixed(2), ry: +monk.root.rotation.y.toFixed(2), act: myAct, tap: myTap, bell: myBell, fx: myFx, bead: myBead };
+      const changed = !last || cur.x !== last.x || cur.y !== last.y || cur.z !== last.z || cur.ry !== last.ry || cur.act !== last.act || cur.tap !== last.tap || cur.bell !== last.bell || cur.fx !== last.fx || cur.bead !== last.bead;
       if (changed) { ws.send(JSON.stringify({ t: 'pos', ...cur })); last = cur; lastSend = t; }
     }
     const rt = t - DELAY;
@@ -1877,7 +2103,17 @@ const Net = (() => {
     update,
     anyoneSitting: () => [...others.values()].some((o) => o.m.sitting && o.m.body.position.y < -0.25),
     forEachSitting: (fn) => others.forEach((o) => { if (o.m.sitting) fn(o.m); }),
-    forEachOther: (fn) => others.forEach((o) => fn(o.m))
+    forEachOther: (fn) => others.forEach((o) => fn(o.m)),
+    seatTaken: (id) => [...others.values()].some((o) => o.seat === id),
+    // 방석 맡기: 서버가 "비었음" 하면 true (혼자 걷기·연결 끊김이면 바로 true)
+    claimSeat(id) {
+      if (!ws || ws.readyState !== 1) return Promise.resolve(true);
+      return new Promise((res) => {
+        seatWait = res; ws.send(JSON.stringify({ t: 'seat', id }));
+        setTimeout(() => { if (seatWait === res) { seatWait = null; res(true); } }, 1500);
+      });
+    },
+    releaseSeat() { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: 'seat', id: null })); }
   };
 })();
 
@@ -1915,9 +2151,10 @@ const MiniMap = (() => {
     b.textAlign = 'center'; b.textBaseline = 'middle'; b.font = `bold ${9 * k}px ${FONT}`;
     for (const it of mapItems) {
       const x = mx(it.minX), z = mz(it.minZ), ww = (it.maxX - it.minX) * sc, hh = (it.maxZ - it.minZ) * sc;
-      b.fillStyle = it.type === 'hall' ? '#2b2f33' : it.type === 'gate' ? '#a3262a' : it.type === 'bell' ? '#2f7a6a' : '#7d7b74';
-      b.fillRect(x, z, ww, hh);
-      if (it.name && it.type !== 'gate') {
+      b.fillStyle = it.type === 'hall' ? '#2b2f33' : it.type === 'gate' ? '#a3262a' : it.type === 'bell' ? '#2f7a6a' : it.type === 'pond' ? '#4f8fa8' : '#7d7b74';
+      if (it.type === 'pond') { b.beginPath(); b.ellipse(x + ww / 2, z + hh / 2, ww / 2, hh / 2, 0, 0, Math.PI * 2); b.fill(); }
+      else b.fillRect(x, z, ww, hh);
+      if (it.name && it.type !== 'gate' && (big || it.type !== 'pond')) {   // 연못 이름은 크게 볼 때만
         const label = big ? it.name : (it.name.length > 2 ? it.name.slice(0, 2) : it.name);   // 크게 볼 땐 이름 전부
         b.lineWidth = 2.5 * k; b.strokeStyle = 'rgba(30,30,30,0.9)'; b.lineJoin = 'round';
         b.strokeText(label, x + ww / 2, z + hh / 2 + 0.5); b.fillStyle = '#fff'; b.fillText(label, x + ww / 2, z + hh / 2 + 0.5);
@@ -1982,7 +2219,7 @@ function loop() {
   // 행동 번호: 0 걷기 · 1 합장 · 2 제자리 앉기 · 3 절하기
   const actCode = state === 'sit' ? 1 : resting ? 2 : monk.bowT > 0 ? 3 : 0;
   const fx = (monk.gassho ? 1 : 0) | (heldMoktak ? 2 : 0);   // 서서 합장 · 목탁 들고 있음
-  Net.update(dt, actCode, tapCount, bellCount, fx);
+  Net.update(dt, actCode, tapCount, bellCount, fx, beadCount);
   renderer.render(scene, camera);
   requestAnimationFrame(loop);
 }

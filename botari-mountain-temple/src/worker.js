@@ -64,10 +64,23 @@ export class Room extends DurableObject {
     if (typeof message !== "string" || message.length > 300) return;
     let msg;
     try { msg = JSON.parse(message); } catch { return; }
-    if (msg.t !== "pos") return;
-
     const me = ws.deserializeAttachment();
     if (!me) return;
+
+    // 방석 자리 맡기: 이미 누가 앉은 자리면 거절 (겹쳐 앉기 방지)
+    if (msg.t === "seat") {
+      const id = msg.id == null ? null : String(msg.id).slice(0, 40);
+      if (id) {
+        const taken = this.ctx.getWebSockets().some((o) => o !== ws && o.deserializeAttachment()?.seat === id);
+        if (taken) { ws.send(JSON.stringify({ t: "seat", ok: false, id })); return; }
+      }
+      me.seat = id;
+      ws.serializeAttachment(me);
+      ws.send(JSON.stringify({ t: "seat", ok: true, id }));
+      this.broadcast({ t: "pos", ...publicInfo(me) }, ws);
+      return;
+    }
+    if (msg.t !== "pos") return;
 
     // 너무 자주 보내면 무시
     const now = Date.now();
@@ -82,6 +95,7 @@ export class Room extends DurableObject {
     me.tap = Math.max(0, Math.min(1e6, Math.round(Number(msg.tap) || 0)));  // 목탁 두드린 횟수
     me.bell = Math.max(0, Math.min(1e6, Math.round(Number(msg.bell) || 0))); // 종 친 횟수
     me.fx = Math.max(0, Math.min(3, Math.round(Number(msg.fx) || 0)));      // 1 서서 합장 · 2 목탁 들고 있음
+    me.bead = Math.max(0, Math.min(1e6, Math.round(Number(msg.bead) || 0))); // 염주 알 넘긴 횟수
     ws.serializeAttachment(me);
 
     this.broadcast({ t: "pos", ...publicInfo(me) }, ws);
@@ -112,7 +126,7 @@ export class Room extends DurableObject {
 
 function publicInfo(a) {
   if (!a) return null;
-  return { id: a.id, name: a.name, x: a.x, y: a.y, z: a.z, ry: a.ry, act: a.act, tap: a.tap || 0, bell: a.bell || 0, fx: a.fx || 0 };
+  return { id: a.id, name: a.name, x: a.x, y: a.y, z: a.z, ry: a.ry, act: a.act, tap: a.tap || 0, bell: a.bell || 0, fx: a.fx || 0, bead: a.bead || 0, seat: a.seat || null };
 }
 function num(v, lo, hi) {
   const n = Number(v);
