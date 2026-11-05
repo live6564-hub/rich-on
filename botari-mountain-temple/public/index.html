@@ -104,6 +104,23 @@ window.CONFIG = {
   #actBtn.show { opacity: 1; transform: scale(1); pointer-events: auto; }
   #actBtn:active { transform: scale(0.94); }
 
+  /* 오른쪽 = 휴대폰 동작 단추 4개 (합장 단추 위쪽에 세로로, 휴대폰에서만) */
+  #moveBtns {
+    display: none; position: fixed; z-index: 10;
+    right: calc(16px + env(safe-area-inset-right)); bottom: calc(156px + env(safe-area-inset-bottom));
+    flex-direction: column; gap: 10px;
+  }
+  #moveBtns.show { display: flex; }
+  #moveBtns button {
+    width: 58px; height: 58px; border-radius: 50%; border: none; cursor: pointer;
+    background: rgba(255,255,255,0.86); color: #3b2a1a; box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800; line-height: 1.1; touch-action: manipulation;
+  }
+  #moveBtns button .ico { font-size: 21px; line-height: 1; margin-bottom: 2px; }
+  #moveBtns button:active { transform: scale(0.92); }
+  #moveBtns button.on { background: #8e2a35; color: #fff; }
+
   /* 입장 (닉네임 입력) · 방이 꽉 찼어요 안내 */
   .modal {
     display: none; position: fixed; inset: 0; z-index: 30; align-items: center; justify-content: center;
@@ -148,6 +165,12 @@ window.CONFIG = {
   <button id="soundBtn" aria-label="소리 켜기/끄기">🔇</button>
   <button id="actBtn" aria-label="행동"><span class="ico">🙏</span><span id="actLabel"></span></button>
   <div id="joy"><div id="joyKnob"></div></div>
+  <div id="moveBtns">
+    <button id="btnRun"  type="button" aria-label="빨리 걷기"><span class="ico">🏃</span>빨리</button>
+    <button id="btnRest" type="button" aria-label="앉기"><span class="ico">🧘</span><span class="lbl">앉기</span></button>
+    <button id="btnBow"  type="button" aria-label="절하기"><span class="ico">🙇</span>절</button>
+    <button id="btnTap"  type="button" aria-label="목탁"><span class="ico">🥁</span>목탁</button>
+  </div>
   <div id="hint">화면을 한 번 누르면 소리가 나요</div>
   <div class="modal" id="joinModal">
     <form class="card" id="joinForm">
@@ -806,19 +829,46 @@ window.addEventListener('keydown', (e) => {
   if ((e.code === 'Space' || e.code === 'Enter') && actBtn.classList.contains('show')) { e.preventDefault(); startAction(); }
   if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') keys.run = true;
   if (e.repeat) return;
-  if (e.code === 'KeyC' && state === 'walk') {            // 제자리 앉기 ↔ 서기
-    resting = !resting; monk.bowT = 0;
-    if (!resting) camYaw = monk.root.rotation.y;
-  }
-  if (e.code === 'KeyF' && state === 'walk' && !resting && monk.bowT === 0) monk.bowT = 0.001;   // 절하기
-  if (e.code === 'KeyT' && state === 'walk') {             // 목탁 두드리기
-    startTap(monk); tapCount++;
-    const mp = monk.root.position;
-    if (moktak && Math.hypot(mp.x - L.moktak.x, mp.z - L.moktak.z) < ACT.radius) stickHit = 1;
-    if (!Sound.ctx) Sound.setOn(true);
-    Sound.tok();
-  }
+  if (e.code === 'KeyC') toggleRest();
+  if (e.code === 'KeyF') doBow();
+  if (e.code === 'KeyT') doTap();
 });
+
+// 제자리 앉기 ↔ 서기
+function toggleRest() {
+  if (state !== 'walk') return;
+  resting = !resting; monk.bowT = 0;
+  if (!resting) camYaw = monk.root.rotation.y;
+}
+// 절하기
+function doBow() {
+  if (state === 'walk' && !resting && monk.bowT === 0) monk.bowT = 0.001;
+}
+// 목탁 두드리기
+function doTap() {
+  if (state !== 'walk') return;
+  startTap(monk); tapCount++;
+  const mp = monk.root.position;
+  if (moktak && Math.hypot(mp.x - L.moktak.x, mp.z - L.moktak.z) < ACT.radius) stickHit = 1;
+  if (!Sound.ctx) Sound.setOn(true);
+  Sound.tok();
+}
+
+/* ---------------- 휴대폰 동작 단추 (조이스틱과 같은 조건에서 보임) ---------------- */
+const moveBtns = document.getElementById('moveBtns');
+const btnRun = document.getElementById('btnRun'), btnRest = document.getElementById('btnRest');
+let runOn = false;
+if (isTouch) moveBtns.classList.add('show');
+window.matchMedia('(pointer: coarse)').addEventListener?.('change', (e) => moveBtns.classList.toggle('show', e.matches));
+const onBtn = (el, fn) => el.addEventListener('pointerdown', (e) => {
+  e.preventDefault(); e.stopPropagation();
+  if (!Sound.ctx) Sound.setOn(true);
+  fn();
+});
+onBtn(btnRun, () => { runOn = !runOn; btnRun.classList.toggle('on', runOn); });
+onBtn(btnRest, toggleRest);
+onBtn(document.getElementById('btnBow'), doBow);
+onBtn(document.getElementById('btnTap'), doTap);
 window.addEventListener('keyup', (e) => { if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') keys.run = false; });
 
 function update(dt) {
@@ -843,7 +893,7 @@ function update(dt) {
       const fx = Math.sin(camYaw), fz = Math.cos(camYaw);
       const rx = -Math.cos(camYaw), rz = Math.sin(camYaw);
       const dx = (fx * f + rx * s) / len, dz = (fz * f + rz * s) / len;
-      const run = keys.run ? C.character.run : 1;     // Shift: 빨리 걷기
+      const run = (keys.run || runOn) ? C.character.run : 1;     // Shift 또는 🏃 단추: 빨리 걷기
       const step = C.character.speed * run * mag * dt;
       const nx = THREE.MathUtils.clamp(p.x + dx * step, -LIMIT, LIMIT);
       if (!blocked(nx, p.z)) p.x = nx;
@@ -855,7 +905,7 @@ function update(dt) {
 
     // 3) 걷는 몸짓 + 앉은 자세에서 천천히 풀기
     if (resting) poseRest(monk, dt);
-    else poseWalk(monk, dt, mag * (keys.run && mag > 0 ? 1.35 : 1));
+    else poseWalk(monk, dt, mag * ((keys.run || runOn) && mag > 0 ? 1.35 : 1));
 
     // 행동 단추: 방석 반경 안에서만 보임
     const near = actTarget && Math.hypot(p.x - actTarget.x, p.z - actTarget.z) <= ACT.radius;
@@ -871,6 +921,10 @@ function update(dt) {
     poseSit(monk, dt);
   }
   poseOverlay(monk, dt);
+  if (btnRest.classList.contains('on') !== resting) {
+    btnRest.classList.toggle('on', resting);
+    btnRest.querySelector('.lbl').textContent = resting ? '서기' : '앉기';
+  }
 
   // 목탁: 누군가(나 또는 다른 사람) 합장 중이면 박자에 맞춰 똑똑
   const meSitting = state === 'sit' && sitT >= 1;
