@@ -24,7 +24,7 @@ window.CONFIG = {
   },
 
   // 3) 내 캐릭터 (STEP 2에서 사용)
-  character: { name: "동자승", robe: "#8a8d91", skin: "#f1d3b3", speed: 3.0 }, // 회색 승복 / 걷는 빠르기: 보통(초당 3m)
+  character: { name: "동자승", robe: "#8a8d91", skin: "#f1d3b3", speed: 3.0, run: 1.8 }, // 회색 승복 / 걷는 빠르기: 보통(초당 3m) / Shift 빨리 걷기: 1.8배
 
   // 4) 단추 (STEP 3에서 사용)
   action: {
@@ -585,15 +585,17 @@ function makeMonk(cfg) {
     legs.push(hip);
   });
 
+  // 윗몸 (허리 위) — 절할 때 허리에서 굽혀진다
+  const upper = new THREE.Group(); upper.position.y = 0.45; body.add(upper);
   // 승복 몸통 (원뿔을 잘라 쓴 원기둥: 위가 좁고 아래가 넓은 치마 모양)
-  add(body, new THREE.CylinderGeometry(0.2, 0.32, 0.55, 16), robe, 0, 0.66, 0);
+  add(upper, new THREE.CylinderGeometry(0.2, 0.32, 0.55, 16), robe, 0, 0.21, 0);
   // 앞섶 (상자)
-  add(body, new THREE.BoxGeometry(0.06, 0.4, 0.02), robeDark, 0.05, 0.72, 0.24).rotation.z = 0.35;
+  add(upper, new THREE.BoxGeometry(0.06, 0.4, 0.02), robeDark, 0.05, 0.27, 0.24).rotation.z = 0.35;
 
   // 팔 (원기둥) + 손 (공)
   const arms = [];
   [-1, 1].forEach((side) => {
-    const sh = new THREE.Group(); sh.position.set(side * 0.24, 0.88, 0); body.add(sh);
+    const sh = new THREE.Group(); sh.position.set(side * 0.24, 0.43, 0); upper.add(sh);
     add(sh, new THREE.CylinderGeometry(0.065, 0.085, 0.34, 10), robe, 0, -0.16, 0);
     add(sh, new THREE.SphereGeometry(0.06, 12, 10), skin, 0, -0.35, 0);
     sh.rotation.z = side * 0.12;
@@ -601,7 +603,7 @@ function makeMonk(cfg) {
   });
 
   // 머리 (공, 민머리) + 눈 (작은 공) + 귀 (공)
-  const head = new THREE.Group(); head.position.set(0, 1.15, 0); body.add(head);
+  const head = new THREE.Group(); head.position.set(0, 0.7, 0); upper.add(head);
   add(head, new THREE.SphereGeometry(0.24, 24, 18), skin, 0, 0, 0);
   add(head, new THREE.SphereGeometry(0.03, 8, 8), black, -0.08, 0.02, 0.215);
   add(head, new THREE.SphereGeometry(0.03, 8, 8), black, 0.08, 0.02, 0.215);
@@ -612,7 +614,12 @@ function makeMonk(cfg) {
   add(head, new THREE.SphereGeometry(0.035, 8, 8), cheek, -0.14, -0.06, 0.19);
   add(head, new THREE.SphereGeometry(0.035, 8, 8), cheek, 0.14, -0.06, 0.19);
 
-  return { root, body, legs, arms, head, phase: 0, moveAmt: 0, sitting: false };
+  // 손에 드는 작은 목탁 (T 키로 두드릴 때만 보임)
+  const handMoktak = new THREE.Mesh(new THREE.SphereGeometry(0.075, 14, 10), new THREE.MeshStandardMaterial({ color: 0x8b3a1e, roughness: 0.5 }));
+  handMoktak.scale.set(1, 0.8, 1.1); handMoktak.position.set(0, -0.42, 0.04); handMoktak.visible = false; handMoktak.castShadow = true;
+  arms[0].add(handMoktak);
+
+  return { root, body, upper, legs, arms, head, handMoktak, phase: 0, moveAmt: 0, sitting: false, bowT: 0, tapT: 0, tapShow: 0 };
 }
 
 // 걷는 몸짓 (amt = 0 멈춤 ~ 1 걷기). 앉은 자세에서도 부드럽게 풀린다.
@@ -644,6 +651,51 @@ function poseSit(m, dt) {
   m.moveAmt = 0;
   m.sitting = true;
 }
+
+// 제자리 앉기 (두 손은 무릎 위)
+function poseRest(m, dt) {
+  const k = damp(6, dt);
+  m.body.position.y += (-0.32 - m.body.position.y) * k;
+  m.legs.forEach((l) => { l.rotation.x += (-1.45 - l.rotation.x) * k; });
+  m.arms.forEach((a, i) => {
+    const side = i ? 1 : -1;
+    a.rotation.x += (-0.55 - a.rotation.x) * k;
+    a.rotation.z += (side * 0.18 - a.rotation.z) * k;
+  });
+  m.head.rotation.x += (0 - m.head.rotation.x) * k;
+  m.moveAmt = 0;
+  m.sitting = false;
+}
+// 절하기·목탁 두드리기는 지금 자세 위에 덧입힌다 (내 캐릭터·다른 사람 공통)
+function poseOverlay(m, dt) {
+  // 절하기: 두 손을 모으고 허리를 천천히 굽혔다 편다 (1.6초)
+  if (m.bowT > 0) {
+    m.bowT += dt / 1.6;
+    const bend = Math.sin(Math.PI * Math.min(m.bowT, 1));
+    m.upper.rotation.x = 0.8 * bend;
+    m.head.rotation.x = 0.25 * bend;
+    m.arms.forEach((a, i) => {
+      const side = i ? 1 : -1;
+      a.rotation.x = THREE.MathUtils.lerp(a.rotation.x, -1.3, Math.min(1, bend * 1.6));
+      a.rotation.z = THREE.MathUtils.lerp(a.rotation.z, -side * 0.62, Math.min(1, bend * 1.6));
+    });
+    if (m.bowT >= 1) m.bowT = 0;
+  } else {
+    m.upper.rotation.x += (0 - m.upper.rotation.x) * damp(8, dt);
+  }
+  // 목탁 두드리기: 왼손에 작은 목탁을 들고, 오른손으로 똑
+  if (m.tapShow > 0) {
+    m.tapShow -= dt;
+    m.handMoktak.visible = true;
+    m.arms[0].rotation.x = -1.05; m.arms[0].rotation.z = 0.35;
+    if (m.tapT > 0) {
+      m.tapT = Math.max(0, m.tapT - dt * 5);
+      m.arms[1].rotation.x = -0.6 - 0.55 * Math.sin(Math.PI * m.tapT);
+      m.arms[1].rotation.z = -0.45;
+    } else { m.arms[1].rotation.x = -0.6; m.arms[1].rotation.z = -0.45; }
+  } else m.handMoktak.visible = false;
+}
+function startTap(m) { m.tapT = 1; m.tapShow = 1.6; }
 
 const monk = makeMonk(C.character);
 monk.root.position.set(0, 0, 6);
@@ -728,7 +780,9 @@ const ACT = C.action;
 const actTarget = L[ACT.target];
 const actBtn = document.getElementById('actBtn');
 document.getElementById('actLabel').textContent = ACT.label;
-let state = 'walk';          // 'walk' | 'sit'
+let state = 'walk';          // 'walk' | 'sit'(합장)
+let resting = false;         // C 키: 제자리 앉기
+let tapCount = 0;            // T 키: 목탁 두드린 횟수 (함께 걷기 때 다른 사람에게 알림)
 let sitT = 0;                // 앉기 진행 (0 → 1)
 let beatT = 0, stickHit = 0;
 const sitFrom = new THREE.Vector3();
@@ -737,6 +791,7 @@ const orbit = { yaw: camYaw, dist: CAM.dist, h: CAM.height, lookH: CAM.lookH };
 
 function startAction() {
   if (state !== 'walk') return;
+  resting = false; monk.bowT = 0;
   state = 'sit'; sitT = 0; beatT = 0;
   sitFrom.copy(monk.root.position);
   actBtn.classList.remove('show');
@@ -749,7 +804,22 @@ function stopAction() {
 actBtn.addEventListener('pointerdown', (e) => { e.stopPropagation(); startAction(); });
 window.addEventListener('keydown', (e) => {
   if ((e.code === 'Space' || e.code === 'Enter') && actBtn.classList.contains('show')) { e.preventDefault(); startAction(); }
+  if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') keys.run = true;
+  if (e.repeat) return;
+  if (e.code === 'KeyC' && state === 'walk') {            // 제자리 앉기 ↔ 서기
+    resting = !resting; monk.bowT = 0;
+    if (!resting) camYaw = monk.root.rotation.y;
+  }
+  if (e.code === 'KeyF' && state === 'walk' && !resting && monk.bowT === 0) monk.bowT = 0.001;   // 절하기
+  if (e.code === 'KeyT' && state === 'walk') {             // 목탁 두드리기
+    startTap(monk); tapCount++;
+    const mp = monk.root.position;
+    if (moktak && Math.hypot(mp.x - L.moktak.x, mp.z - L.moktak.z) < ACT.radius) stickHit = 1;
+    if (!Sound.ctx) Sound.setOn(true);
+    Sound.tok();
+  }
 });
+window.addEventListener('keyup', (e) => { if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') keys.run = false; });
 
 function update(dt) {
   // 1) 입력 모으기 (앞 = +1, 오른쪽 = +1)
@@ -761,17 +831,20 @@ function update(dt) {
 
   // 다시 움직이면 일어나서 걷기로
   if (state === 'sit' && mag > 0 && sitT > 0.6) stopAction();
+  if (resting && mag > 0) { resting = false; camYaw = monk.root.rotation.y; }
+  if (monk.bowT > 0 && mag > 0) monk.bowT = 0;
 
   const p = monk.root.position;
 
   if (state === 'walk') {
     // 2) 카메라가 보는 방향 기준으로 움직임 + 충돌 (막히면 그 방향만 멈춰서 벽을 따라 미끄러짐)
-    if (mag > 0) {
+    if (mag > 0 && !resting) {
       const len = Math.hypot(f, s);
       const fx = Math.sin(camYaw), fz = Math.cos(camYaw);
       const rx = -Math.cos(camYaw), rz = Math.sin(camYaw);
       const dx = (fx * f + rx * s) / len, dz = (fz * f + rz * s) / len;
-      const step = C.character.speed * mag * dt;
+      const run = keys.run ? C.character.run : 1;     // Shift: 빨리 걷기
+      const step = C.character.speed * run * mag * dt;
       const nx = THREE.MathUtils.clamp(p.x + dx * step, -LIMIT, LIMIT);
       if (!blocked(nx, p.z)) p.x = nx;
       const nz = THREE.MathUtils.clamp(p.z + dz * step, -LIMIT, LIMIT);
@@ -781,7 +854,8 @@ function update(dt) {
     p.y += (groundHeight(p.x, p.z) - p.y) * damp(14, dt);   // 계단을 부드럽게 오르내림
 
     // 3) 걷는 몸짓 + 앉은 자세에서 천천히 풀기
-    poseWalk(monk, dt, mag);
+    if (resting) poseRest(monk, dt);
+    else poseWalk(monk, dt, mag * (keys.run && mag > 0 ? 1.35 : 1));
 
     // 행동 단추: 방석 반경 안에서만 보임
     const near = actTarget && Math.hypot(p.x - actTarget.x, p.z - actTarget.z) <= ACT.radius;
@@ -796,6 +870,7 @@ function update(dt) {
     monk.root.rotation.y = angleLerp(monk.root.rotation.y, Math.PI, damp(6, dt));   // 불상 쪽(-z)
     poseSit(monk, dt);
   }
+  poseOverlay(monk, dt);
 
   // 목탁: 누군가(나 또는 다른 사람) 합장 중이면 박자에 맞춰 똑똑
   const meSitting = state === 'sit' && sitT >= 1;
@@ -820,7 +895,7 @@ function update(dt) {
   // 5) 카메라 — 캐릭터 둘레를 원을 그리며 돈다 (몸을 뚫고 지나가지 않음)
   const gy = p.y;
   let wantYaw, wantDist, wantH, wantLookH, lag;
-  if (state === 'walk') {
+  if (state === 'walk' && !resting) {
     if (mag > 0 && f > -0.3) camYaw = angleLerp(camYaw, monk.root.rotation.y, damp(CAM.yawLag * mag, dt));
     wantYaw = camYaw; wantDist = CAM.dist; wantH = CAM.height; wantLookH = CAM.lookH; lag = CAM.posLag;
   } else {
@@ -889,7 +964,7 @@ const Net = (() => {
     m.root.position.set(info.x ?? 0, info.y ?? 0, info.z ?? 6);
     m.root.rotation.y = info.ry ?? Math.PI;
     scene.add(m.root);
-    others.set(info.id, { m, tag, act: !!info.act, snaps: [{ t: now(), ...info }] });
+    others.set(info.id, { m, tag, act: info.act || 0, tap: info.tap, snaps: [{ t: now(), ...info }] });
   }
   function removeOther(id) {
     const o = others.get(id); if (!o) return;
@@ -924,6 +999,12 @@ const Net = (() => {
         const o = others.get(msg.id);
         if (!o) { addOther(msg); countText(); return; }
         o.snaps.push({ t: now(), x: msg.x, y: msg.y, z: msg.z, ry: msg.ry, act: msg.act });
+        // 목탁 두드리기 (가까이 있을 때만 소리)
+        if (o.tap !== undefined && msg.tap !== o.tap) {
+          startTap(o.m);
+          if (o.m.root.position.distanceTo(monk.root.position) < 10) Sound.tok();
+        }
+        o.tap = msg.tap;
         if (o.snaps.length > 30) o.snaps.shift();
       } else if (msg.t === 'full') {
         isFull = true; fullModal.classList.add('show'); setPill('방이 꽉 찼어요');
@@ -977,12 +1058,12 @@ const Net = (() => {
   }
 
   // 매 화면마다: 내 위치 보내기 + 다른 사람 움직이기
-  function update(dt, myAct) {
+  function update(dt, myAct, myTap) {
     const t = now();
     if (ws && ws.readyState === 1 && t - lastSend >= 1 / C.room.sendPerSec) {
       const p = monk.root.position;
-      const cur = { x: +p.x.toFixed(2), y: +p.y.toFixed(2), z: +p.z.toFixed(2), ry: +monk.root.rotation.y.toFixed(2), act: myAct ? 1 : 0 };
-      const changed = !last || cur.x !== last.x || cur.y !== last.y || cur.z !== last.z || cur.ry !== last.ry || cur.act !== last.act;
+      const cur = { x: +p.x.toFixed(2), y: +p.y.toFixed(2), z: +p.z.toFixed(2), ry: +monk.root.rotation.y.toFixed(2), act: myAct, tap: myTap };
+      const changed = !last || cur.x !== last.x || cur.y !== last.y || cur.z !== last.z || cur.ry !== last.ry || cur.act !== last.act || cur.tap !== last.tap;
       if (changed) { ws.send(JSON.stringify({ t: 'pos', ...cur })); last = cur; lastSend = t; }
     }
     const rt = t - DELAY;
@@ -998,8 +1079,12 @@ const Net = (() => {
       r.position.z += (tz - r.position.z) * damp(12, dt);
       r.rotation.y = angleLerp(r.rotation.y, angleLerp(a.ry, b.ry, k), damp(10, dt));
       const speed = Math.hypot(r.position.x - px, r.position.z - pz) / Math.max(dt, 1e-3);
-      if (b.act) poseSit(o.m, dt);
-      else poseWalk(o.m, dt, THREE.MathUtils.clamp(speed / C.character.speed, 0, 1));
+      if (b.act === 3 && o.lastAct !== 3) o.m.bowT = 0.001;          // 절하기 시작
+      o.lastAct = b.act;
+      if (b.act === 1) poseSit(o.m, dt);
+      else if (b.act === 2) poseRest(o.m, dt);
+      else poseWalk(o.m, dt, THREE.MathUtils.clamp(speed / C.character.speed, 0, 1.35));
+      poseOverlay(o.m, dt);
     });
   }
   return {
@@ -1014,7 +1099,9 @@ const clock = new THREE.Clock();
 function loop() {
   const dt = Math.min(clock.getDelta(), 0.05);
   update(dt);
-  Net.update(dt, state === 'sit');
+  // 행동 번호: 0 걷기 · 1 합장 · 2 제자리 앉기 · 3 절하기
+  const actCode = state === 'sit' ? 1 : resting ? 2 : monk.bowT > 0 ? 3 : 0;
+  Net.update(dt, actCode, tapCount);
   renderer.render(scene, camera);
   requestAnimationFrame(loop);
 }

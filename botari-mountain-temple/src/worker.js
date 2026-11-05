@@ -78,7 +78,8 @@ export class Room extends DurableObject {
     me.y = num(msg.y, -1, 5);
     me.z = num(msg.z, -40, 40);
     me.ry = num(msg.ry, -1000, 1000);
-    me.act = msg.act ? 1 : 0;
+    me.act = Math.max(0, Math.min(3, Math.round(Number(msg.act) || 0)));   // 0 걷기 · 1 합장 · 2 앉기 · 3 절하기
+    me.tap = Math.max(0, Math.min(1e6, Math.round(Number(msg.tap) || 0)));  // 목탁 두드린 횟수
     ws.serializeAttachment(me);
 
     this.broadcast({ t: "pos", ...publicInfo(me) }, ws);
@@ -109,7 +110,7 @@ export class Room extends DurableObject {
 
 function publicInfo(a) {
   if (!a) return null;
-  return { id: a.id, name: a.name, x: a.x, y: a.y, z: a.z, ry: a.ry, act: a.act };
+  return { id: a.id, name: a.name, x: a.x, y: a.y, z: a.z, ry: a.ry, act: a.act, tap: a.tap || 0 };
 }
 function num(v, lo, hi) {
   const n = Number(v);
