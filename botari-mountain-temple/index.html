@@ -88,6 +88,19 @@ window.CONFIG = {
     pointer-events: none;
   }
 
+  /* 오른쪽 아래 = 행동 단추 (물건 근처에서만 보임) */
+  #actBtn {
+    position: fixed; right: calc(22px + env(safe-area-inset-right)); bottom: calc(40px + env(safe-area-inset-bottom));
+    min-width: 96px; height: 96px; padding: 0 14px; border-radius: 48px; border: none;
+    background: rgba(255,248,232,0.94); color: #5a3a1a; font-size: 18px; font-weight: 800;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2); cursor: pointer; z-index: 10;
+    opacity: 0; transform: scale(0.8); pointer-events: none; transition: opacity .25s, transform .25s;
+  }
+  #actBtn .ico { font-size: 30px; line-height: 1; }
+  #actBtn.show { opacity: 1; transform: scale(1); pointer-events: auto; }
+  #actBtn:active { transform: scale(0.94); }
+
   /* 로딩 실패 안내 (하얀 화면 방지) */
   #loadErr {
     display: none; position: fixed; inset: 0; align-items: center; justify-content: center; text-align: center;
@@ -108,6 +121,7 @@ window.CONFIG = {
   <canvas id="scene"></canvas>
   <div id="placePill"></div>
   <button id="soundBtn" aria-label="소리 켜기/끄기">🔇</button>
+  <button id="actBtn" aria-label="행동"><span class="ico">🙏</span><span id="actLabel"></span></button>
   <div id="joy"><div id="joyKnob"></div></div>
   <div id="hint">화면을 한 번 누르면 소리가 나요</div>
   <div id="loadErr">3D 화면을 불러오지 못했어요.<br>인터넷 연결을 확인한 뒤 새로고침 해 주세요.</div>
@@ -191,6 +205,197 @@ const mountainMat = new THREE.MeshStandardMaterial({ color: 0x5f7a6a, roughness:
     scene.add(m);
   });
 
+/* =====================================================================
+   STEP 3 — 장소 꾸미기 (CONFIG.objects 대로) : 상자·원기둥·원뿔·공만 사용
+   ===================================================================== */
+const O = C.objects;
+const colliders = { circles: [], boxes: [] };   // 통과 못 하는 것들
+const camBlockers = [];                          // 카메라가 뚫고 지나가면 안 되는 것들
+const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.85, ...extra });
+function part(geo, material, x, y, z, parent = scene) {
+  const m = new THREE.Mesh(geo, material);
+  m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true;
+  parent.add(m); return m;
+}
+const addBox = (minX, maxX, minZ, maxZ) => colliders.boxes.push({ minX, maxX, minZ, maxZ });
+const addCircle = (x, z, r) => colliders.circles.push({ x, z, r });
+
+// 배치 (단위: m) — 법당은 캐릭터 앞쪽(-z)에 있다
+const L = {
+  base:  { minX: -5, maxX: 5, minZ: -10.5, maxZ: -2, h: 0.6 },   // 법당 돌 기단
+  hall:  { minX: -4, maxX: 4, minZ: -9.5, maxZ: -3.5, wallH: 3 }, // 법당 (앞면이 열림)
+  stair: { halfW: 1.5, steps: 3, depth: 0.5 },                    // 돌계단 (기단 앞)
+  buddha:  { x: 0, z: -8.4 },
+  cushion: { x: 0, z: -6.6 },
+  moktak:  { x: 0.75, z: -6.3 }
+};
+const FLOOR_IN = L.base.h + 0.08;   // 법당 마루 높이
+
+const stone = mat(0x9a9890), stoneDark = mat(0x7d7b74), wood = mat(0x8a5a32), floorWood = mat(0xb48a5a);
+const red = mat(O.hall.pillar), roof = mat(O.hall.roof, { roughness: 0.7 }), green = mat(0x2f7a6a);
+const gold = mat(0xd4a640, { metalness: 0.6, roughness: 0.35 });
+
+// --- 돌 기단 ---
+{
+  const b = L.base;
+  part(new THREE.BoxGeometry(b.maxX - b.minX, b.h, b.maxZ - b.minZ), stone, 0, b.h / 2, (b.minZ + b.maxZ) / 2);
+  // 기단 가장자리는 계단 말고는 올라갈 수 없음
+  const t = 0.1, hw = L.stair.halfW;
+  addBox(b.minX, -hw, b.maxZ - t, b.maxZ + t);
+  addBox(hw, b.maxX, b.maxZ - t, b.maxZ + t);
+  addBox(b.minX - t, b.minX + t, b.minZ, b.maxZ);
+  addBox(b.maxX - t, b.maxX + t, b.minZ, b.maxZ);
+  addBox(b.minX, b.maxX, b.minZ - t, b.minZ + t);
+}
+
+// --- 돌계단 ---
+if (O.stairs) {
+  const st = L.stair, stepH = L.base.h / st.steps;
+  for (let i = 0; i < st.steps; i++) {
+    const h = stepH * (i + 1);
+    const zFront = L.base.maxZ + st.depth * (st.steps - i);
+    part(new THREE.BoxGeometry(st.halfW * 2, h, st.depth), i % 2 ? stone : stoneDark, 0, h / 2, zFront - st.depth / 2);
+  }
+  // 계단 앞 돌길
+  for (let z = L.base.maxZ + st.depth * st.steps + 0.4; z < 9; z += 1.1)
+    part(new THREE.BoxGeometry(1.4, 0.04, 0.9), stoneDark, 0, 0.02, z + 0.45).castShadow = false;
+}
+
+// --- 법당 ---
+{
+  const h = L.hall, y0 = L.base.h, H = h.wallH, t = 0.3;
+  const W = h.maxX - h.minX, D = h.maxZ - h.minZ, cz = (h.minZ + h.maxZ) / 2;
+  // 마루
+  part(new THREE.BoxGeometry(W, 0.08, D), floorWood, 0, y0 + 0.04, cz);
+  // 벽 (뒤·왼쪽·오른쪽) — 앞면은 열려 있음
+  const wallMat = mat(0xefe6d2);
+  const back = part(new THREE.BoxGeometry(W + t, H, t), wallMat, 0, y0 + H / 2, h.minZ);
+  const left = part(new THREE.BoxGeometry(t, H, D), wallMat, h.minX, y0 + H / 2, cz);
+  const right = part(new THREE.BoxGeometry(t, H, D), wallMat, h.maxX, y0 + H / 2, cz);
+  camBlockers.push(back, left, right);
+  addBox(h.minX - t / 2, h.maxX + t / 2, h.minZ - t / 2, h.minZ + t / 2);
+  addBox(h.minX - t / 2, h.minX + t / 2, h.minZ, h.maxZ);
+  addBox(h.maxX - t / 2, h.maxX + t / 2, h.minZ, h.maxZ);
+  // 붉은 기둥 (앞 4개 + 뒤 모서리 2개)
+  const pillarGeo = new THREE.CylinderGeometry(0.18, 0.2, H, 14);
+  [h.minX, -1.6, 1.6, h.maxX].forEach((x) => { part(pillarGeo, red, x, y0 + H / 2, h.maxZ); addCircle(x, h.maxZ, 0.22); });
+  [h.minX, h.maxX].forEach((x) => part(pillarGeo, red, x, y0 + H / 2, h.minZ));
+  // 단청 띠 (초록 들보)
+  part(new THREE.BoxGeometry(W + 0.4, 0.3, 0.25), green, 0, y0 + H - 0.15, h.maxZ);
+  part(new THREE.BoxGeometry(W + 0.4, 0.12, 0.27), red, 0, y0 + H - 0.36, h.maxZ);
+  // 처마 + 검은 기와지붕 (사각뿔)
+  const eaveY = y0 + H + 0.12;
+  const eave = part(new THREE.BoxGeometry(W + 2.4, 0.24, D + 2.2), roof, 0, eaveY, cz);
+  camBlockers.push(eave);
+  const roofGeo = new THREE.ConeGeometry(1, 1, 4); roofGeo.rotateY(Math.PI / 4);
+  const r = part(roofGeo, roof, 0, eaveY + 0.12 + 0.9, cz);
+  r.scale.set((W / 2 + 1.1) / 0.7071, 1.8, (D / 2 + 1.0) / 0.7071);
+  part(new THREE.BoxGeometry(W * 0.55, 0.22, 0.3), roof, 0, eaveY + 1.85, cz);     // 용마루
+  // 처마 끝이 살짝 들린 모서리 (작은 원뿔)
+  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => {
+    const c = part(new THREE.ConeGeometry(0.12, 0.6, 6), roof, sx * (W / 2 + 1.15), eaveY + 0.25, cz + sz * (D / 2 + 1.05));
+    c.rotation.set(sz * 0.5, 0, -sx * 0.5);
+  });
+  // 법당 안 따뜻한 불빛
+  const inLight = new THREE.PointLight(0xffc98a, 8, 9, 1.6);
+  inLight.position.set(0, y0 + 2.4, -6.8);
+  scene.add(inLight);
+}
+
+// --- 불상 ---
+if (O.buddha) {
+  const { x, z } = L.buddha, y0 = FLOOR_IN;
+  part(new THREE.BoxGeometry(1.6, 0.5, 1.2), wood, x, y0 + 0.25, z);                        // 불단
+  part(new THREE.CylinderGeometry(0.75, 0.8, 0.25, 20), gold, x, y0 + 0.62, z);             // 연꽃 대좌
+  part(new THREE.CylinderGeometry(0.62, 0.7, 0.35, 20), gold, x, y0 + 0.9, z);              // 앉은 다리
+  part(new THREE.CylinderGeometry(0.32, 0.5, 0.75, 20), gold, x, y0 + 1.42, z);             // 몸
+  part(new THREE.SphereGeometry(0.11, 12, 10), gold, x - 0.08, y0 + 1.25, z + 0.42);        // 모은 손
+  part(new THREE.SphereGeometry(0.11, 12, 10), gold, x + 0.08, y0 + 1.25, z + 0.42);
+  part(new THREE.SphereGeometry(0.3, 20, 16), gold, x, y0 + 2.06, z);                       // 머리
+  part(new THREE.SphereGeometry(0.13, 12, 10), gold, x, y0 + 2.36, z);                      // 육계
+  const halo = part(new THREE.CylinderGeometry(0.9, 0.9, 0.05, 32), mat(0xe8c766, { metalness: 0.4, roughness: 0.4 }), x, y0 + 1.9, z - 0.45);
+  halo.rotation.x = Math.PI / 2;                                                            // 광배
+  // 초 2개
+  [-0.62, 0.62].forEach((dx) => {
+    part(new THREE.CylinderGeometry(0.05, 0.05, 0.3, 10), mat(0xfaf5e8), x + dx, y0 + 0.65, z + 0.45);
+    part(new THREE.SphereGeometry(0.04, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffd27a }), x + dx, y0 + 0.84, z + 0.45);
+  });
+  addCircle(x, z, 1.0);
+}
+
+// --- 방석 + 목탁 ---
+let moktak = null, moktakStick = null;
+if (O.cushion) {
+  const { x, z } = L.cushion;
+  part(new THREE.CylinderGeometry(0.42, 0.45, 0.12, 24), mat(0x8e2a35), x, FLOOR_IN + 0.06, z);
+  part(new THREE.CylinderGeometry(0.3, 0.3, 0.125, 24), mat(0xc79a3c), x, FLOOR_IN + 0.065, z).castShadow = false;
+  // 목탁 (납작한 공 + 홈) + 채
+  moktak = new THREE.Group(); moktak.position.set(L.moktak.x, FLOOR_IN, L.moktak.z); scene.add(moktak);
+  const body = part(new THREE.SphereGeometry(0.16, 20, 16), mat(0x8b3a1e, { roughness: 0.5 }), 0, 0.13, 0, moktak);
+  body.scale.set(1, 0.8, 1.1);
+  part(new THREE.BoxGeometry(0.2, 0.02, 0.03), mat(0x2a1208), 0, 0.15, 0.16, moktak);
+  moktakStick = new THREE.Group(); moktakStick.position.set(0.05, 0.42, 0.05); moktak.add(moktakStick);
+  const stickRod = part(new THREE.CylinderGeometry(0.015, 0.015, 0.3, 8), wood, 0, 0, 0, moktakStick);
+  stickRod.rotation.z = Math.PI / 2.4;
+  part(new THREE.SphereGeometry(0.035, 10, 8), wood, -0.13, -0.05, 0, moktakStick);
+}
+
+// --- 석등 2개 (계단 양옆) ---
+for (let i = 0; i < O.lanterns; i++) {
+  const x = i % 2 ? 3.2 : -3.2, z = 0.2 - Math.floor(i / 2) * 3;
+  part(new THREE.BoxGeometry(0.7, 0.25, 0.7), stoneDark, x, 0.125, z);
+  part(new THREE.CylinderGeometry(0.12, 0.15, 0.9, 10), stone, x, 0.7, z);
+  part(new THREE.BoxGeometry(0.6, 0.12, 0.6), stoneDark, x, 1.2, z);
+  part(new THREE.BoxGeometry(0.42, 0.42, 0.42), stone, x, 1.47, z);
+  part(new THREE.BoxGeometry(0.2, 0.22, 0.44), new THREE.MeshStandardMaterial({ color: 0xffd38a, emissive: 0xffa640, emissiveIntensity: 1.2 }), x, 1.47, z).castShadow = false;
+  const capGeo = new THREE.ConeGeometry(0.5, 0.35, 4); capGeo.rotateY(Math.PI / 4);
+  part(capGeo, stoneDark, x, 1.86, z);
+  part(new THREE.SphereGeometry(0.09, 10, 8), stone, x, 2.08, z);
+  const glow = new THREE.PointLight(0xffb060, 1.5, 4, 2); glow.position.set(x, 1.5, z); scene.add(glow);
+  addCircle(x, z, 0.45);
+}
+
+// --- 둘레 소나무 ---
+if (O.pines) {
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const trunk = mat(0x6b4a30), leafA = mat(0x2e5b3a), leafB = mat(0x3c6e44);
+  const lim = C.world.size / 2 - 2;
+  let placed = 0, tries = 0;
+  while (placed < 46 && tries++ < 800) {
+    const a = rnd() * Math.PI * 2, rad = 13 + rnd() * 14;
+    const x = Math.cos(a) * rad, z = -4 + Math.sin(a) * rad;
+    if (Math.abs(x) > lim || Math.abs(z) > lim) continue;
+    if (Math.abs(x) < 5 && z > 0) continue;                          // 시작 자리·카메라 쪽은 비워 둠
+    if (colliders.circles.some((c) => Math.hypot(c.x - x, c.z - z) < 2.2)) continue;
+    const s = 0.8 + rnd() * 0.6, g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = rnd() * 6;
+    part(new THREE.CylinderGeometry(0.14 * s, 0.22 * s, 2.2 * s, 8), trunk, 0, 1.1 * s, 0, g).rotation.z = (rnd() - 0.5) * 0.15;
+    [[1.3, 1.4, 1.9], [1.0, 1.2, 2.6], [0.65, 1.0, 3.25]].forEach(([r, hh, y], k) =>
+      part(new THREE.ConeGeometry(r * s, hh * s, 8), k % 2 ? leafB : leafA, 0, y * s, 0, g));
+    scene.add(g);
+    addCircle(x, z, 0.45 * s);
+    placed++;
+  }
+}
+
+// 걸어 다니는 곳의 높이 (기단·계단·마루)
+function groundHeight(x, z) {
+  const b = L.base, h = L.hall, st = L.stair;
+  if (x > h.minX && x < h.maxX && z > h.minZ && z < h.maxZ) return FLOOR_IN;
+  if (x > b.minX && x < b.maxX && z > b.minZ && z < b.maxZ) return b.h;
+  if (O.stairs && Math.abs(x) < st.halfW && z >= b.maxZ && z < b.maxZ + st.depth * st.steps) {
+    const i = Math.floor((z - b.maxZ) / st.depth);                  // 0 = 맨 위 칸
+    return (b.h / st.steps) * (st.steps - i);
+  }
+  return 0;
+}
+const BODY_R = 0.3;
+function blocked(x, z) {
+  for (const c of colliders.circles) if (Math.hypot(c.x - x, c.z - z) < c.r + BODY_R) return true;
+  for (const b of colliders.boxes)
+    if (x > b.minX - BODY_R && x < b.maxX + BODY_R && z > b.minZ - BODY_R && z < b.maxZ + BODY_R) return true;
+  return false;
+}
+
 /* ---------------- 화면 크기 바뀔 때 ---------------- */
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -259,6 +464,25 @@ const Sound = {
     }
   },
 
+  // 목탁: 나무를 두드리는 "똑" (짧은 소음 + 맑은 울림)
+  tok() {
+    if (!this.ctx || !this.on) return;
+    const ctx = this.ctx, t = ctx.currentTime;
+    const o = ctx.createOscillator(); o.type = 'sine';
+    o.frequency.setValueAtTime(620, t); o.frequency.exponentialRampToValueAtTime(480, t + 0.12);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.5, t + 0.003);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
+    o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.25);
+    const n = ctx.createBufferSource();
+    const len = Math.floor(ctx.sampleRate * 0.03), buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+    n.buffer = buf;
+    const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 1800; bp.Q.value = 1.5;
+    const ng = ctx.createGain(); ng.gain.value = 0.35;
+    n.connect(bp).connect(ng).connect(this.master); n.start(t);
+  },
+
   scheduleChime() {
     clearTimeout(this.chimeTimer);
     const [a, b] = C.ambience.chimeEverySec;
@@ -275,6 +499,7 @@ const Sound = {
     if (v) { this.scheduleChime(); setTimeout(() => this.chime(), 1200); }
     else clearTimeout(this.chimeTimer);
     soundBtn.textContent = v ? '🔊' : '🔇';
+    hint.style.opacity = 0;
   }
 };
 window.Sound = Sound; // 다음 STEP(목탁)에서 같이 쓴다
@@ -425,10 +650,37 @@ function placeCameraNow() {
 }
 placeCameraNow();
 
-/* ---------------- 걷기 ---------------- */
+/* ---------------- 걷기 + 행동(합장) ---------------- */
 const LIMIT = C.world.size / 2 - 0.6;   // 땅 끝 밖으로 못 나감
 let walkPhase = 0, moveAmt = 0;
 const tmpTarget = new THREE.Vector3();
+const tmpLook = new THREE.Vector3();
+const ACT = C.action;
+const actTarget = L[ACT.target];
+const actBtn = document.getElementById('actBtn');
+document.getElementById('actLabel').textContent = ACT.label;
+let state = 'walk';          // 'walk' | 'sit'
+let sitT = 0;                // 앉기 진행 (0 → 1)
+let beatT = 0, stickHit = 0;
+const sitFrom = new THREE.Vector3();
+const camRay = new THREE.Raycaster();
+const orbit = { yaw: camYaw, dist: CAM.dist, h: CAM.height, lookH: CAM.lookH };
+
+function startAction() {
+  if (state !== 'walk') return;
+  state = 'sit'; sitT = 0; beatT = 0;
+  sitFrom.copy(monk.root.position);
+  actBtn.classList.remove('show');
+  if (!Sound.ctx) Sound.setOn(true);
+}
+function stopAction() {
+  state = 'walk';
+  camYaw = monk.root.rotation.y;       // 일어나면 다시 뒤쪽 시점으로 (카메라는 천천히 돌아옴)
+}
+actBtn.addEventListener('pointerdown', (e) => { e.stopPropagation(); startAction(); });
+window.addEventListener('keydown', (e) => {
+  if ((e.code === 'Space' || e.code === 'Enter') && actBtn.classList.contains('show')) { e.preventDefault(); startAction(); }
+});
 
 function update(dt) {
   // 1) 입력 모으기 (앞 = +1, 오른쪽 = +1)
@@ -438,36 +690,108 @@ function update(dt) {
   let mag = Math.min(1, Math.hypot(f, s));
   if (mag < 0.12) mag = 0;
 
-  // 2) 카메라가 보는 방향 기준으로 움직임
-  if (mag > 0) {
-    const len = Math.hypot(f, s);
-    const fx = Math.sin(camYaw), fz = Math.cos(camYaw);     // 카메라 앞
-    const rx = -Math.cos(camYaw), rz = Math.sin(camYaw);    // 카메라 오른쪽
-    const dx = (fx * f + rx * s) / len, dz = (fz * f + rz * s) / len;
-    const speed = C.character.speed * mag;
-    const p = monk.root.position;
-    p.x = THREE.MathUtils.clamp(p.x + dx * speed * dt, -LIMIT, LIMIT);
-    p.z = THREE.MathUtils.clamp(p.z + dz * speed * dt, -LIMIT, LIMIT);
-    // 몸을 가는 방향으로 부드럽게 돌림
-    monk.root.rotation.y = angleLerp(monk.root.rotation.y, Math.atan2(dx, dz), damp(10, dt));
+  // 다시 움직이면 일어나서 걷기로
+  if (state === 'sit' && mag > 0 && sitT > 0.6) stopAction();
+
+  const p = monk.root.position;
+
+  if (state === 'walk') {
+    // 2) 카메라가 보는 방향 기준으로 움직임 + 충돌 (막히면 그 방향만 멈춰서 벽을 따라 미끄러짐)
+    if (mag > 0) {
+      const len = Math.hypot(f, s);
+      const fx = Math.sin(camYaw), fz = Math.cos(camYaw);
+      const rx = -Math.cos(camYaw), rz = Math.sin(camYaw);
+      const dx = (fx * f + rx * s) / len, dz = (fz * f + rz * s) / len;
+      const step = C.character.speed * mag * dt;
+      const nx = THREE.MathUtils.clamp(p.x + dx * step, -LIMIT, LIMIT);
+      if (!blocked(nx, p.z)) p.x = nx;
+      const nz = THREE.MathUtils.clamp(p.z + dz * step, -LIMIT, LIMIT);
+      if (!blocked(p.x, nz)) p.z = nz;
+      monk.root.rotation.y = angleLerp(monk.root.rotation.y, Math.atan2(dx, dz), damp(10, dt));
+    }
+    p.y += (groundHeight(p.x, p.z) - p.y) * damp(14, dt);   // 계단을 부드럽게 오르내림
+
+    // 3) 걷는 몸짓 + 앉은 자세에서 천천히 풀기
+    moveAmt += (mag - moveAmt) * damp(8, dt);
+    walkPhase += dt * 9 * moveAmt;
+    const sw = Math.sin(walkPhase) * 0.6 * moveAmt;
+    const k = damp(8, dt);
+    monk.legs[0].rotation.x += (sw - monk.legs[0].rotation.x) * k;
+    monk.legs[1].rotation.x += (-sw - monk.legs[1].rotation.x) * k;
+    monk.arms.forEach((a, i) => {
+      const side = i ? 1 : -1;
+      a.rotation.x += ((i ? sw : -sw) * 0.8 - a.rotation.x) * k;
+      a.rotation.z += (side * 0.12 - a.rotation.z) * k;
+    });
+    monk.body.position.y += (Math.abs(Math.sin(walkPhase)) * 0.05 * moveAmt - monk.body.position.y) * k;
+    monk.head.rotation.x += (0 - monk.head.rotation.x) * k;
+
+    // 행동 단추: 방석 반경 안에서만 보임
+    const near = actTarget && Math.hypot(p.x - actTarget.x, p.z - actTarget.z) <= ACT.radius;
+    actBtn.classList.toggle('show', !!near);
+  } else {
+    // 4) 합장: 방석으로 가서 불상을 향해 앉고, 두 손을 모은다
+    sitT = Math.min(1, sitT + dt / 0.9);
+    const e = sitT * sitT * (3 - 2 * sitT);
+    p.x = THREE.MathUtils.lerp(sitFrom.x, actTarget.x, e);
+    p.z = THREE.MathUtils.lerp(sitFrom.z, actTarget.z, e);
+    p.y += (groundHeight(p.x, p.z) + 0.1 - p.y) * damp(10, dt);
+    monk.root.rotation.y = angleLerp(monk.root.rotation.y, Math.PI, damp(6, dt));   // 불상 쪽(-z)
+    const k = damp(6, dt);
+    monk.body.position.y += (-0.32 - monk.body.position.y) * k;
+    monk.legs.forEach((l, i) => { l.rotation.x += (-1.45 - l.rotation.x) * k; });
+    monk.arms.forEach((a, i) => {
+      const side = i ? 1 : -1;
+      a.rotation.x += (-1.3 - a.rotation.x) * k;
+      a.rotation.z += (-side * 0.62 - a.rotation.z) * k;
+    });
+    moveAmt = 0;
+
+    // 목탁: 박자에 맞춰 똑똑 (앉은 뒤부터)
+    if (sitT >= 1) {
+      beatT += dt;
+      const period = 60 / ACT.bpm;
+      if (beatT >= period) { beatT -= period; stickHit = 1; Sound.tok(); }
+      // 박자마다 고개를 살짝 숙임
+      monk.head.rotation.x = 0.12 * Math.exp(-beatT * 5);
+    }
   }
 
-  // 3) 걷는 몸짓 (다리·팔 흔들기, 통통 튀기)
-  moveAmt += ((mag > 0 ? mag : 0) - moveAmt) * damp(8, dt);
-  walkPhase += dt * 9 * moveAmt;
-  const sw = Math.sin(walkPhase) * 0.6 * moveAmt;
-  monk.legs[0].rotation.x = sw;  monk.legs[1].rotation.x = -sw;
-  monk.arms[0].rotation.x = -sw * 0.8; monk.arms[1].rotation.x = sw * 0.8;
-  monk.body.position.y = Math.abs(Math.sin(walkPhase)) * 0.05 * moveAmt;
+  // 목탁 채 움직임 (때리고 → 천천히 올라감)
+  if (moktakStick) {
+    stickHit = Math.max(0, stickHit - dt * 6);
+    moktakStick.rotation.z = -0.5 * (1 - stickHit) + 0.25;
+    moktakStick.position.y = 0.42 - 0.18 * stickHit;
+    moktak.scale.setScalar(1 + 0.05 * stickHit);
+  }
 
-  // 4) 카메라: 걸을 때만 캐릭터 뒤쪽으로 천천히 돈다 (뒤로 걸을 땐 돌지 않음 → 어지럼 방지)
-  if (mag > 0 && f > -0.3) camYaw = angleLerp(camYaw, monk.root.rotation.y, damp(CAM.yawLag * mag, dt));
-  const p = monk.root.position;
-  tmpTarget.set(p.x - Math.sin(camYaw) * CAM.dist, CAM.height, p.z - Math.cos(camYaw) * CAM.dist);
-  camera.position.lerp(tmpTarget, damp(CAM.posLag, dt));
-  camLook.lerp(tmpTarget.set(p.x, CAM.lookH, p.z), damp(CAM.lookLag, dt));
+  // 5) 카메라 — 캐릭터 둘레를 원을 그리며 돈다 (몸을 뚫고 지나가지 않음)
+  const gy = p.y;
+  let wantYaw, wantDist, wantH, wantLookH, lag;
+  if (state === 'walk') {
+    if (mag > 0 && f > -0.3) camYaw = angleLerp(camYaw, monk.root.rotation.y, damp(CAM.yawLag * mag, dt));
+    wantYaw = camYaw; wantDist = CAM.dist; wantH = CAM.height; wantLookH = CAM.lookH; lag = CAM.posLag;
+  } else {
+    // 행동 중: 얼굴 쪽(비스듬한 앞)으로 천천히 돈다
+    wantYaw = monk.root.rotation.y + Math.PI + 0.85; wantDist = 2.8; wantH = 1.5; wantLookH = 0.55; lag = 0.9;
+  }
+  orbit.yaw = angleLerp(orbit.yaw, wantYaw, damp(lag, dt));
+  orbit.dist += (wantDist - orbit.dist) * damp(lag, dt);
+  orbit.h += (wantH - orbit.h) * damp(lag, dt);
+  orbit.lookH += (wantLookH - orbit.lookH) * damp(lag, dt);
+  tmpLook.set(p.x, gy + orbit.lookH, p.z);
+  tmpTarget.set(p.x - Math.sin(orbit.yaw) * orbit.dist, gy + orbit.h, p.z - Math.cos(orbit.yaw) * orbit.dist);
+  // 벽·지붕을 뚫지 않게 카메라를 앞으로 당김
+  const dir = tmpTarget.clone().sub(tmpLook), dist = dir.length();
+  camRay.set(tmpLook, dir.normalize()); camRay.far = dist;
+  const hit = camRay.intersectObjects(camBlockers, false)[0];
+  if (hit) tmpTarget.copy(tmpLook).addScaledVector(dir, Math.max(0.6, hit.distance - 0.3));
+
+  camera.position.lerp(tmpTarget, damp(4, dt));
+  camLook.lerp(tmpLook, damp(CAM.lookLag, dt));
   camera.lookAt(camLook);
 }
+window.__debug = { get state() { return state; }, startAction, groundHeight, blocked };
 
 /* ---------------- 그리기 반복 ---------------- */
 const clock = new THREE.Clock();
