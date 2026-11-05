@@ -24,7 +24,7 @@ window.CONFIG = {
   },
 
   // 3) 내 캐릭터 (STEP 2에서 사용)
-  character: { name: "동자승", robe: "#8a8d91", skin: "#f1d3b3" }, // 회색 승복
+  character: { name: "동자승", robe: "#8a8d91", skin: "#f1d3b3", speed: 3.0 }, // 회색 승복 / 걷는 빠르기: 보통(초당 3m)
 
   // 4) 단추 (STEP 3에서 사용)
   action: {
@@ -68,9 +68,24 @@ window.CONFIG = {
 
   /* 처음 안내 (화면을 한 번 누르면 사라짐) */
   #hint {
-    position: fixed; bottom: calc(28px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
-    padding: 8px 14px; border-radius: 12px; background: rgba(0,0,0,0.45); color: #fff;
+    position: fixed; top: calc(62px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%);
+    padding: 8px 14px; white-space: nowrap; border-radius: 12px; background: rgba(0,0,0,0.45); color: #fff;
     font-size: 13px; pointer-events: none; z-index: 10; transition: opacity .6s;
+  }
+
+  /* 왼쪽 아래 = 조이스틱 (휴대폰에서만) */
+  #joy {
+    display: none; position: fixed;
+    left: calc(22px + env(safe-area-inset-left)); bottom: calc(26px + env(safe-area-inset-bottom));
+    width: 124px; height: 124px; border-radius: 50%;
+    background: rgba(255,255,255,0.28); border: 2px solid rgba(255,255,255,0.65);
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15); touch-action: none; z-index: 10;
+  }
+  #joy.show { display: block; }
+  #joyKnob {
+    position: absolute; left: 50%; top: 50%; width: 54px; height: 54px; margin: -27px 0 0 -27px;
+    border-radius: 50%; background: rgba(255,255,255,0.9); box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    pointer-events: none;
   }
 
   /* 로딩 실패 안내 (하얀 화면 방지) */
@@ -93,6 +108,7 @@ window.CONFIG = {
   <canvas id="scene"></canvas>
   <div id="placePill"></div>
   <button id="soundBtn" aria-label="소리 켜기/끄기">🔇</button>
+  <div id="joy"><div id="joyKnob"></div></div>
   <div id="hint">화면을 한 번 누르면 소리가 나요</div>
   <div id="loadErr">3D 화면을 불러오지 못했어요.<br>인터넷 연결을 확인한 뒤 새로고침 해 주세요.</div>
 
@@ -279,13 +295,185 @@ window.addEventListener('pointerdown', function firstTouch() {
   hint.style.opacity = 0;
 }, { once: true });
 
+/* =====================================================================
+   STEP 2 — 캐릭터 (회색 승복 동자승) : 상자·원기둥·원뿔·공만 사용
+   ===================================================================== */
+function makeMonk(cfg) {
+  const root = new THREE.Group();      // 위치·방향
+  const body = new THREE.Group();      // 걸을 때 통통 튀는 부분
+  root.add(body);
+  const robe = new THREE.MeshStandardMaterial({ color: cfg.robe, roughness: 0.9 });
+  const robeDark = new THREE.MeshStandardMaterial({ color: new THREE.Color(cfg.robe).multiplyScalar(0.75), roughness: 0.9 });
+  const skin = new THREE.MeshStandardMaterial({ color: cfg.skin, roughness: 0.7 });
+  const black = new THREE.MeshStandardMaterial({ color: 0x222222 });
+  const shoe = new THREE.MeshStandardMaterial({ color: 0xe8e2d4, roughness: 0.9 });
+  const add = (parent, geo, mat, x, y, z) => {
+    const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = true; parent.add(m); return m;
+  };
+
+  // 다리 (원기둥) + 신발 (상자)
+  const legs = [];
+  [-0.11, 0.11].forEach((x) => {
+    const hip = new THREE.Group(); hip.position.set(x, 0.42, 0); body.add(hip);
+    add(hip, new THREE.CylinderGeometry(0.075, 0.075, 0.36, 10), robeDark, 0, -0.18, 0);
+    add(hip, new THREE.BoxGeometry(0.14, 0.07, 0.22), shoe, 0, -0.38, 0.03);
+    legs.push(hip);
+  });
+
+  // 승복 몸통 (원뿔을 잘라 쓴 원기둥: 위가 좁고 아래가 넓은 치마 모양)
+  add(body, new THREE.CylinderGeometry(0.2, 0.32, 0.55, 16), robe, 0, 0.66, 0);
+  // 앞섶 (상자)
+  add(body, new THREE.BoxGeometry(0.06, 0.4, 0.02), robeDark, 0.05, 0.72, 0.24).rotation.z = 0.35;
+
+  // 팔 (원기둥) + 손 (공)
+  const arms = [];
+  [-1, 1].forEach((side) => {
+    const sh = new THREE.Group(); sh.position.set(side * 0.24, 0.88, 0); body.add(sh);
+    add(sh, new THREE.CylinderGeometry(0.065, 0.085, 0.34, 10), robe, 0, -0.16, 0);
+    add(sh, new THREE.SphereGeometry(0.06, 12, 10), skin, 0, -0.35, 0);
+    sh.rotation.z = side * 0.12;
+    arms.push(sh);
+  });
+
+  // 머리 (공, 민머리) + 눈 (작은 공) + 귀 (공)
+  const head = new THREE.Group(); head.position.set(0, 1.15, 0); body.add(head);
+  add(head, new THREE.SphereGeometry(0.24, 24, 18), skin, 0, 0, 0);
+  add(head, new THREE.SphereGeometry(0.03, 8, 8), black, -0.08, 0.02, 0.215);
+  add(head, new THREE.SphereGeometry(0.03, 8, 8), black, 0.08, 0.02, 0.215);
+  add(head, new THREE.SphereGeometry(0.05, 10, 8), skin, -0.24, 0, 0);
+  add(head, new THREE.SphereGeometry(0.05, 10, 8), skin, 0.24, 0, 0);
+  // 볼 (살짝 붉은 공)
+  const cheek = new THREE.MeshStandardMaterial({ color: 0xf2a7a0, transparent: true, opacity: 0.6 });
+  add(head, new THREE.SphereGeometry(0.035, 8, 8), cheek, -0.14, -0.06, 0.19);
+  add(head, new THREE.SphereGeometry(0.035, 8, 8), cheek, 0.14, -0.06, 0.19);
+
+  return { root, body, legs, arms, head };
+}
+
+const monk = makeMonk(C.character);
+monk.root.position.set(0, 0, 6);
+monk.root.rotation.y = Math.PI;   // 처음엔 안쪽(앞쪽)을 바라봄
+scene.add(monk.root);
+window.monk = monk; // STEP 3(합장)에서 같이 쓴다
+
+/* ---------------- 입력: 방향키 + WASD ---------------- */
+const keys = {};
+const KEYMAP = { ArrowUp: 'f', KeyW: 'f', ArrowDown: 'b', KeyS: 'b', ArrowLeft: 'l', KeyA: 'l', ArrowRight: 'r', KeyD: 'r' };
+window.addEventListener('keydown', (e) => {
+  if (KEYMAP[e.code]) { keys[KEYMAP[e.code]] = true; e.preventDefault(); }
+  if (!Sound.on && !Sound.ctx) { Sound.setOn(true); hint.style.opacity = 0; }
+});
+window.addEventListener('keyup', (e) => { if (KEYMAP[e.code]) keys[KEYMAP[e.code]] = false; });
+window.addEventListener('blur', () => { for (const k in keys) keys[k] = false; });
+
+/* ---------------- 입력: 조이스틱 (휴대폰에서만) ---------------- */
+const joyEl = document.getElementById('joy');
+const knob = document.getElementById('joyKnob');
+const joy = { x: 0, y: 0, id: null };
+const isTouch = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+if (isTouch) joyEl.classList.add('show');
+// 크롬 개발자 도구에서 휴대폰 모드로 바꾸면 바로 반영
+window.matchMedia('(pointer: coarse)').addEventListener?.('change', (e) => joyEl.classList.toggle('show', e.matches));
+
+function joyMove(e) {
+  const r = joyEl.getBoundingClientRect();
+  const max = r.width / 2 - 14;
+  let dx = e.clientX - (r.left + r.width / 2);
+  let dy = e.clientY - (r.top + r.height / 2);
+  const len = Math.hypot(dx, dy);
+  if (len > max) { dx *= max / len; dy *= max / len; }
+  knob.style.transform = `translate(${dx}px, ${dy}px)`;
+  joy.x = dx / max; joy.y = dy / max;
+}
+function joyEnd(e) {
+  if (e.pointerId !== joy.id) return;
+  joy.id = null; joy.x = joy.y = 0;
+  knob.style.transform = '';
+}
+joyEl.addEventListener('pointerdown', (e) => {
+  e.preventDefault();
+  joy.id = e.pointerId; joyEl.setPointerCapture(e.pointerId); joyMove(e);
+});
+joyEl.addEventListener('pointermove', (e) => { if (e.pointerId === joy.id) joyMove(e); });
+joyEl.addEventListener('pointerup', joyEnd);
+joyEl.addEventListener('pointercancel', joyEnd);
+
+/* =====================================================================
+   카메라 — 캐릭터 뒤쪽 위 3인칭. 위치·회전 모두 늦고 부드럽게 따라간다.
+   ===================================================================== */
+const CAM = {
+  dist: 5.2, height: 2.6, lookH: 1.0,
+  posLag: 2.2,   // 클수록 빨리 따라옴 (작게 = 더 늦고 부드럽게)
+  yawLag: 1.4,   // 뒤쪽으로 도는 빠르기
+  lookLag: 4.0
+};
+let camYaw = monk.root.rotation.y;              // 카메라가 서 있는 방향 (캐릭터 뒤쪽)
+const camLook = new THREE.Vector3(0, CAM.lookH, 6);
+window.CAM = CAM;
+
+function angleLerp(a, b, t) {
+  let d = ((b - a + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
+  return a + d * t;
+}
+const damp = (lag, dt) => 1 - Math.exp(-lag * dt);   // 화면 빠르기와 상관없이 같은 부드러움
+
+function placeCameraNow() {
+  const p = monk.root.position;
+  camera.position.set(p.x - Math.sin(camYaw) * CAM.dist, CAM.height, p.z - Math.cos(camYaw) * CAM.dist);
+  camLook.set(p.x, CAM.lookH, p.z);
+  camera.lookAt(camLook);
+}
+placeCameraNow();
+
+/* ---------------- 걷기 ---------------- */
+const LIMIT = C.world.size / 2 - 0.6;   // 땅 끝 밖으로 못 나감
+let walkPhase = 0, moveAmt = 0;
+const tmpTarget = new THREE.Vector3();
+
+function update(dt) {
+  // 1) 입력 모으기 (앞 = +1, 오른쪽 = +1)
+  let f = (keys.f ? 1 : 0) - (keys.b ? 1 : 0);
+  let s = (keys.r ? 1 : 0) - (keys.l ? 1 : 0);
+  if (joy.id !== null) { f = -joy.y; s = joy.x; }
+  let mag = Math.min(1, Math.hypot(f, s));
+  if (mag < 0.12) mag = 0;
+
+  // 2) 카메라가 보는 방향 기준으로 움직임
+  if (mag > 0) {
+    const len = Math.hypot(f, s);
+    const fx = Math.sin(camYaw), fz = Math.cos(camYaw);     // 카메라 앞
+    const rx = -Math.cos(camYaw), rz = Math.sin(camYaw);    // 카메라 오른쪽
+    const dx = (fx * f + rx * s) / len, dz = (fz * f + rz * s) / len;
+    const speed = C.character.speed * mag;
+    const p = monk.root.position;
+    p.x = THREE.MathUtils.clamp(p.x + dx * speed * dt, -LIMIT, LIMIT);
+    p.z = THREE.MathUtils.clamp(p.z + dz * speed * dt, -LIMIT, LIMIT);
+    // 몸을 가는 방향으로 부드럽게 돌림
+    monk.root.rotation.y = angleLerp(monk.root.rotation.y, Math.atan2(dx, dz), damp(10, dt));
+  }
+
+  // 3) 걷는 몸짓 (다리·팔 흔들기, 통통 튀기)
+  moveAmt += ((mag > 0 ? mag : 0) - moveAmt) * damp(8, dt);
+  walkPhase += dt * 9 * moveAmt;
+  const sw = Math.sin(walkPhase) * 0.6 * moveAmt;
+  monk.legs[0].rotation.x = sw;  monk.legs[1].rotation.x = -sw;
+  monk.arms[0].rotation.x = -sw * 0.8; monk.arms[1].rotation.x = sw * 0.8;
+  monk.body.position.y = Math.abs(Math.sin(walkPhase)) * 0.05 * moveAmt;
+
+  // 4) 카메라: 걸을 때만 캐릭터 뒤쪽으로 천천히 돈다 (뒤로 걸을 땐 돌지 않음 → 어지럼 방지)
+  if (mag > 0 && f > -0.3) camYaw = angleLerp(camYaw, monk.root.rotation.y, damp(CAM.yawLag * mag, dt));
+  const p = monk.root.position;
+  tmpTarget.set(p.x - Math.sin(camYaw) * CAM.dist, CAM.height, p.z - Math.cos(camYaw) * CAM.dist);
+  camera.position.lerp(tmpTarget, damp(CAM.posLag, dt));
+  camLook.lerp(tmpTarget.set(p.x, CAM.lookH, p.z), damp(CAM.lookLag, dt));
+  camera.lookAt(camLook);
+}
+
 /* ---------------- 그리기 반복 ---------------- */
 const clock = new THREE.Clock();
 function loop() {
-  const t = clock.getElapsedTime();
-  // STEP 1: 카메라가 아주 천천히 숨 쉬듯 움직인다 (STEP 2에서 3인칭 카메라로 바뀜)
-  camera.position.x = Math.sin(t * 0.1) * 1.2;
-  camera.lookAt(0, 1, 0);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  update(dt);
   renderer.render(scene, camera);
   requestAnimationFrame(loop);
 }
