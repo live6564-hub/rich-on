@@ -47,7 +47,7 @@ window.CONFIG = {
   },
 
   // 3) 내 캐릭터 (STEP 2에서 사용)
-  character: { name: "동자승", robe: "#8a8d91", skin: "#f1d3b3", speed: 3.0, run: 1.8 }, // 회색 승복 / 걷는 빠르기: 보통(초당 3m) / Shift 빨리 걷기: 1.8배
+  character: { name: "동자승", robe: "#8a8d91", skin: "#f1d3b3", speed: 3.0, run: 2.0, turn: 2.2 }, // 회색 승복 / 걷기: 초당 3m / 🏃 뛰기: 2배 / 방향 돌기 빠르기
 
   // 4) 단추 (STEP 3에서 사용)
   action: {
@@ -139,14 +139,35 @@ window.CONFIG = {
   #actBtn.show { opacity: 1; transform: scale(1); pointer-events: auto; }
   #actBtn:active { transform: scale(0.94); }
 
-  /* 맨 아래 가운데 = 조작 단추 4개 (PC·휴대폰 모두) */
+  /* 왼쪽 아래 = 방향 단추 (▲ 앞으로 · ▼ 뒤로 · ◀▶ 몸 돌리기 · 가운데 🔄 돌아서기) */
+  #dpad {
+    position: fixed; z-index: 10; display: grid; gap: 4px;
+    grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(3, 50px);
+    left: calc(14px + env(safe-area-inset-left)); bottom: calc(84px + env(safe-area-inset-bottom));
+    touch-action: none; user-select: none; -webkit-user-select: none;
+  }
+  #dpad button {
+    border: none; border-radius: 14px; cursor: pointer; touch-action: none;
+    background: rgba(255,255,255,0.86); color: #3b2a1a; box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+    font-size: 22px; font-weight: 900; line-height: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  #dpad button small { font-size: 9px; font-weight: 800; margin-top: 2px; }
+  #dpad button.on { background: #8e2a35; color: #fff; }
+  #dpad .up { grid-column: 2; grid-row: 1; } #dpad .left { grid-column: 1; grid-row: 2; }
+  #dpad .mid { grid-column: 2; grid-row: 2; font-size: 18px; background: rgba(255,248,232,0.95); }
+  #dpad .right { grid-column: 3; grid-row: 2; } #dpad .down { grid-column: 2; grid-row: 3; }
+
+  /* 장면이 바뀔 때 잠깐 어두워지기 (되돌아가기) */
+  #fade { position: fixed; inset: 0; background: #000; opacity: 0; pointer-events: none; transition: opacity .25s; z-index: 25; }
+
+  /* 맨 아래 가운데 = 조작 단추 5개 (PC·휴대폰 모두) */
   #moveBtns {
-    position: fixed; z-index: 10; display: flex; flex-direction: row; gap: 8px;
+    position: fixed; z-index: 10; display: flex; flex-direction: row; gap: 5px;
     left: 50%; transform: translateX(-50%); bottom: calc(10px + env(safe-area-inset-bottom));
     padding: 6px; border-radius: 20px; background: rgba(255,255,255,0.35); backdrop-filter: blur(6px);
   }
   #moveBtns button {
-    width: 66px; height: 56px; border-radius: 15px; border: none; cursor: pointer;
+    width: 54px; height: 54px; border-radius: 14px; border: none; cursor: pointer;
     background: rgba(255,255,255,0.9); color: #3b2a1a; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     font-size: 12px; font-weight: 800; line-height: 1.1; touch-action: manipulation; position: relative;
@@ -204,11 +225,20 @@ window.CONFIG = {
   <button id="soundBtn" aria-label="소리 켜기/끄기">🔇</button>
   <button id="actBtn" aria-label="행동"><span class="ico">🙏</span><span id="actLabel"></span></button>
   <div id="joy"><div id="joyKnob"></div></div>
+  <div id="dpad">
+    <button class="up" data-k="f" aria-label="앞으로">▲<small>앞으로</small></button>
+    <button class="left" data-k="l" aria-label="왼쪽으로 돌기">◀<small>왼쪽</small></button>
+    <button class="mid" id="btnTurn" aria-label="돌아서기">🔄<small>돌아서기</small></button>
+    <button class="right" data-k="r" aria-label="오른쪽으로 돌기">▶<small>오른쪽</small></button>
+    <button class="down" data-k="b" aria-label="뒤로">▼<small>뒤로</small></button>
+  </div>
+  <div id="fade"></div>
   <div id="moveBtns">
-    <button id="btnRun"  type="button" aria-label="빨리 걷기"><span class="key">Shift</span><span class="ico">🏃</span>빨리</button>
+    <button id="btnRun"  type="button" aria-label="뛰어가기"><span class="key">Shift</span><span class="ico">🏃</span>뛰기</button>
     <button id="btnRest" type="button" aria-label="앉기"><span class="key">C</span><span class="ico">🧘</span><span class="lbl">앉기</span></button>
     <button id="btnBow"  type="button" aria-label="절하기"><span class="key">F</span><span class="ico">🙇</span>절</button>
     <button id="btnTap"  type="button" aria-label="목탁"><span class="key">T</span><span class="ico">🥁</span>목탁</button>
+    <button id="btnHome" type="button" aria-label="처음 자리로 되돌아가기"><span class="key">H</span><span class="ico">↩️</span>처음으로</button>
   </div>
   <canvas id="miniMap" aria-label="건물 위치 도면"></canvas>
   <div id="hint">화면을 한 번 누르면 소리가 나요</div>
@@ -1116,9 +1146,9 @@ const joyEl = document.getElementById('joy');
 const knob = document.getElementById('joyKnob');
 const joy = { x: 0, y: 0, id: null };
 const isTouch = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
-if (isTouch) joyEl.classList.add('show');
+// (조이스틱 대신 방향 단추를 씀)
 // 크롬 개발자 도구에서 휴대폰 모드로 바꾸면 바로 반영
-window.matchMedia('(pointer: coarse)').addEventListener?.('change', (e) => joyEl.classList.toggle('show', e.matches));
+
 
 function joyMove(e) {
   const r = joyEl.getBoundingClientRect();
@@ -1217,7 +1247,32 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'KeyC') toggleRest();
   if (e.code === 'KeyF') doBow();
   if (e.code === 'KeyT') doTap();
+  if (e.code === 'KeyQ') doUTurn();
+  if (e.code === 'KeyH') goHome();
 });
+
+// 🔄 돌아서기: 제자리에서 뒤로 휙 돈다 (0.7초)
+let uTurnT = 0, uTurnFrom = 0;
+function doUTurn() {
+  if (state === 'sit') stopAction();
+  resting = false; monk.bowT = 0;
+  if (uTurnT > 0) return;
+  uTurnFrom = monk.root.rotation.y; uTurnT = 0.001;
+}
+// ↩️ 처음으로: 일주문 앞 처음 자리로 되돌아가기
+function goHome() {
+  const fade = document.getElementById('fade');
+  fade.style.opacity = 1;
+  setTimeout(() => {
+    if (state === 'sit') state = 'walk';
+    resting = false; monk.bowT = 0; uTurnT = 0;
+    monk.root.position.set(C.world.start.x, 0, C.world.start.z);
+    monk.root.rotation.y = Math.PI;
+    camYaw = Math.PI; orbit.yaw = Math.PI; orbit.dist = CAM.dist; orbit.h = CAM.height; orbit.lookH = CAM.lookH;
+    placeCameraNow();
+    fade.style.opacity = 0;
+  }, 260);
+}
 
 // 제자리 앉기 ↔ 서기
 function toggleRest() {
@@ -1255,15 +1310,33 @@ onBtn(btnRun, () => { runOn = !runOn; btnRun.classList.toggle('on', runOn); });
 onBtn(btnRest, toggleRest);
 onBtn(document.getElementById('btnBow'), doBow);
 onBtn(document.getElementById('btnTap'), doTap);
+onBtn(document.getElementById('btnHome'), goHome);
+onBtn(document.getElementById('btnTurn'), doUTurn);
+const dp = { f: false, b: false, l: false, r: false };
+document.querySelectorAll('#dpad button[data-k]').forEach((el) => {
+  const k = el.dataset.k;
+  const down = (e) => {
+    e.preventDefault(); e.stopPropagation();
+    try { el.setPointerCapture(e.pointerId); } catch {}
+    if (!Sound.ctx) Sound.setOn(true);
+    dp[k] = true; el.classList.add('on');
+  };
+  const up = () => { dp[k] = false; el.classList.remove('on'); };
+  el.addEventListener('pointerdown', down);
+  el.addEventListener('pointerup', up);
+  el.addEventListener('pointercancel', up);
+  el.addEventListener('lostpointercapture', up);
+  el.addEventListener('contextmenu', (e) => e.preventDefault());
+});
+window.addEventListener('blur', () => { for (const k in dp) dp[k] = false; document.querySelectorAll('#dpad button').forEach((b) => b.classList.remove('on')); });
 window.addEventListener('keyup', (e) => { if (e.code === 'ShiftLeft' || e.code === 'ShiftRight') keys.run = false; });
 
 function update(dt) {
-  // 1) 입력 모으기 (앞 = +1, 오른쪽 = +1)
-  let f = (keys.f ? 1 : 0) - (keys.b ? 1 : 0);
-  let s = (keys.r ? 1 : 0) - (keys.l ? 1 : 0);
-  if (joy.id !== null) { f = -joy.y; s = joy.x; }
-  let mag = Math.min(1, Math.hypot(f, s));
-  if (mag < 0.12) mag = 0;
+  // 1) 입력 모으기 — 캐릭터 몸 기준: ▲ 앞으로 · ▼ 뒤로 · ◀▶ 제자리에서 몸 돌리기
+  const f = ((keys.f || dp.f) ? 1 : 0) - ((keys.b || dp.b) ? 1 : 0);
+  const turn = ((keys.r || dp.r) ? 1 : 0) - ((keys.l || dp.l) ? 1 : 0);
+  const running = (keys.run || runOn) && f > 0;
+  const mag = f !== 0 ? 1 : (turn !== 0 || uTurnT > 0) ? 0.35 : 0;
 
   // 다시 움직이면 일어나서 걷기로
   if (state === 'sit' && mag > 0 && sitT > 0.6) stopAction();
@@ -1273,25 +1346,29 @@ function update(dt) {
   const p = monk.root.position;
 
   if (state === 'walk') {
-    // 2) 카메라가 보는 방향 기준으로 움직임 + 충돌 (막히면 그 방향만 멈춰서 벽을 따라 미끄러짐)
-    if (mag > 0 && !resting) {
-      const len = Math.hypot(f, s);
-      const fx = Math.sin(camYaw), fz = Math.cos(camYaw);
-      const rx = -Math.cos(camYaw), rz = Math.sin(camYaw);
-      const dx = (fx * f + rx * s) / len, dz = (fz * f + rz * s) / len;
-      const run = (keys.run || runOn) ? C.character.run : 1;     // Shift 또는 🏃 단추: 빨리 걷기
-      const step = C.character.speed * run * mag * dt;
-      const nx = THREE.MathUtils.clamp(p.x + dx * step, -LIMIT, LIMIT);
-      if (!blocked(nx, p.z)) p.x = nx;
-      const nz = THREE.MathUtils.clamp(p.z + dz * step, -LIMIT, LIMIT);
-      if (!blocked(p.x, nz)) p.z = nz;
-      monk.root.rotation.y = angleLerp(monk.root.rotation.y, Math.atan2(dx, dz), damp(10, dt));
+    // 2) 몸 돌리기 (◀▶ / 🔄) + 바라보는 쪽으로 앞뒤 걷기 + 충돌 (막히면 벽을 따라 미끄러짐)
+    if (!resting) {
+      if (uTurnT > 0) {
+        uTurnT = Math.min(1, uTurnT + dt / 0.7);
+        const e = uTurnT * uTurnT * (3 - 2 * uTurnT);
+        monk.root.rotation.y = uTurnFrom + Math.PI * e;
+        if (uTurnT >= 1) uTurnT = 0;
+      } else if (turn) monk.root.rotation.y -= turn * C.character.turn * dt;
+      if (f !== 0) {
+        const ry = monk.root.rotation.y, dx = Math.sin(ry) * f, dz = Math.cos(ry) * f;
+        const spd = f > 0 ? (running ? C.character.run : 1) : 0.55;   // 뒤로는 천천히
+        const step = C.character.speed * spd * dt;
+        const nx = THREE.MathUtils.clamp(p.x + dx * step, -LIMIT, LIMIT);
+        if (!blocked(nx, p.z)) p.x = nx;
+        const nz = THREE.MathUtils.clamp(p.z + dz * step, -LIMIT, LIMIT);
+        if (!blocked(p.x, nz)) p.z = nz;
+      }
     }
     p.y += (groundHeight(p.x, p.z) - p.y) * damp(14, dt);   // 계단을 부드럽게 오르내림
 
     // 3) 걷는 몸짓 + 앉은 자세에서 천천히 풀기
     if (resting) poseRest(monk, dt);
-    else poseWalk(monk, dt, mag * ((keys.run || runOn) && mag > 0 ? 1.35 : 1));
+    else poseWalk(monk, dt, mag * (running ? 1.5 : 1));   // 뛰면 팔다리를 더 크고 빠르게
 
     // 행동 단추: 가장 가까운 방석·종 반경 안에서만 보임
     let best = null, bestD = 1e9;
@@ -1363,7 +1440,7 @@ function update(dt) {
   const gy = p.y;
   let wantYaw, wantDist, wantH, wantLookH, lag;
   if (state === 'walk' && !resting) {
-    if (mag > 0 && f > -0.3) camYaw = angleLerp(camYaw, monk.root.rotation.y, damp(CAM.yawLag * mag, dt));
+    camYaw = angleLerp(camYaw, monk.root.rotation.y, damp(CAM.yawLag, dt));   // 카메라는 늘 등 뒤로 천천히
     wantYaw = camYaw; wantDist = CAM.dist; wantH = CAM.height; wantLookH = CAM.lookH; lag = CAM.posLag;
     if (isIndoor(p.x, p.z)) { wantDist = 3.6; wantH = 1.7; wantLookH = 1.1; }   // 법당 안: 현판·들보에 안 가리게 낮고 가깝게
   } else {
