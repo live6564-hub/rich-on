@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>폴드7 부품 해부도</title>
+<meta name="description" content="갤럭시 Z 폴드7 스타일 폴더블폰을 7개 층으로 분해해 보는 인터랙티브 등각 해부도">
+<style>
+:root{
+  --bg:#101113; --card:#16181b; --line:#2a2d32; --ink:#e7e8ea; --ink2:#9a9ea6; --ink3:#5f636b;
+  --stroke:rgba(230,232,236,.30); --stroke2:rgba(230,232,236,.14); --lit:#ffffff; --halo:#000;
+  --accent:#ffb454;
+}
+@media (prefers-color-scheme: light){
+  :root:not([data-theme="dark"]){
+    --bg:#f1eee7; --card:#faf8f3; --line:#dcd7cc; --ink:#1b1b19; --ink2:#5d5a53; --ink3:#9a958a;
+    --stroke:rgba(27,27,25,.55); --stroke2:rgba(27,27,25,.22); --lit:#000; --halo:#6b6355; --accent:#c26a00;
+  }
+}
+:root[data-theme="light"]{
+  --bg:#f1eee7; --card:#faf8f3; --line:#dcd7cc; --ink:#1b1b19; --ink2:#5d5a53; --ink3:#9a958a;
+  --stroke:rgba(27,27,25,.55); --stroke2:rgba(27,27,25,.22); --lit:#000; --halo:#6b6355; --accent:#c26a00;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 "Pretendard","Apple SD Gothic Neo","Noto Sans KR",system-ui,sans-serif;padding:24px 16px 48px}
+.wrap{max-width:780px;margin:0 auto}
+h1{font-size:22px;margin:0 0 4px;letter-spacing:-.01em}
+.sub{color:var(--ink2);margin:0 0 18px;font-size:14px}
+.card{position:relative;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:44px 12px 46px;overflow:hidden}
+.corner{position:absolute;font:12px/1.3 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink2);letter-spacing:.02em}
+.tl{top:14px;left:16px}.tr{top:14px;right:16px;text-align:right}
+.bl{bottom:14px;left:16px}.br{bottom:14px;right:16px;text-align:right;color:var(--ink)}
+svg{display:block;width:100%;height:auto;touch-action:pan-y}
+.ln{fill:none;stroke:var(--stroke);stroke-width:.6;stroke-linejoin:round;stroke-linecap:round}
+.lf{fill:none;stroke:var(--stroke2);stroke-width:.5;stroke-linecap:round}
+.fc{stroke:var(--stroke);stroke-width:.6;stroke-linejoin:round}
+.dot{fill:var(--stroke)}
+.layer{transition:opacity .35s ease;cursor:pointer}
+.layer.dim{opacity:.16}
+.layer.on .fc{stroke:var(--accent);stroke-width:.9}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:16px 0 6px}
+.controls label{font-size:13px;color:var(--ink2)}
+input[type=range]{flex:1;min-width:160px;accent-color:var(--accent)}
+button{font:inherit;font-size:13px;background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+button[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.legend{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:6px}
+.legend li{display:grid;grid-template-columns:28px 1fr;gap:8px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;cursor:pointer;background:var(--card)}
+.legend li.on{border-color:var(--accent)}
+.legend b{font-size:14px}.legend span{display:block;color:var(--ink2);font-size:13px}
+.num{font:600 13px ui-monospace,Menlo,monospace;color:var(--accent);padding-top:1px}
+.spec{margin:22px 0 0;border-top:1px solid var(--line);padding-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.spec div{font-size:13px;color:var(--ink2)}.spec strong{display:block;font-size:17px;color:var(--ink)}
+.cap{color:var(--ink3);font-size:12.5px;margin-top:14px}
+.shop{margin-top:26px;border-top:1px solid var(--line);padding-top:16px}
+.shop h2{font-size:15px;margin:0 0 10px}
+.shop .links{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.shop a{display:block;text-align:center;text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 6px;font-size:14px}
+.shop a:hover{border-color:var(--accent)}
+.shop small{display:block;color:var(--ink3);font-size:11.5px;margin-top:10px}
+@media (max-width:480px){.corner{font-size:10.5px}.card{padding:40px 4px 44px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>폴드7 속을 열어보면</h1>
+  <p class="sub">펼친 폴더블폰을 뒤집어 눕히고, 7개 층으로 띄워서 본 해부도예요. 층을 누르면 이름과 역할이 나와요.</p>
+
+  <div class="card" id="card">
+    <div class="corner tl">Fig 1</div>
+    <div class="corner tr">폴더블폰 분해도</div>
+    <svg id="fig" role="img" aria-label="폴더블폰 7개 층 분해 등각도"></svg>
+    <div class="corner bl" id="hint">밀어서 분해 · 층 누르기 · 1~7</div>
+    <div class="corner br" id="readout">분해 0%</div>
+  </div>
+
+  <div class="controls">
+    <label for="ex">분해</label>
+    <input id="ex" type="range" min="0" max="100" value="0" aria-label="분해 정도">
+    <button id="tour" aria-pressed="true">자동 투어</button>
+    <button id="theme">밝게/어둡게</button>
+  </div>
+
+  <ol class="legend" id="legend"></ol>
+
+  <div class="spec">
+    <div><strong>8.9 mm</strong>접었을 때 두께</div>
+    <div><strong>4.2 mm</strong>펼쳤을 때 두께</div>
+    <div><strong>215 g</strong>무게</div>
+    <div><strong>8.0형 / 6.5형</strong>안쪽 / 커버 화면</div>
+    <div><strong>4,400 mAh</strong>배터리 (2개 합계)</div>
+    <div><strong>200 MP</strong>메인 카메라</div>
+  </div>
+  <p class="cap">수치는 2025년 7월 삼성 발표 사양 기준이에요. 내부 배치는 실제 분해 사진을 옮긴 게 아니라 구조를 이해하기 쉽게 그린 일러스트이고, 층 두께는 잘 보이도록 과장했어요. 제조사와 관계없는 비공식 그림이에요.</p>
+
+  <div class="shop">
+    <h2>폴더블폰 · 액세서리 둘러보기</h2>
+    <div class="links">
+      <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener sponsored">🛒 쿠팡</a>
+      <a href="https://bitl.bz/qQEIlA" target="_blank" rel="noopener sponsored">🛍️ 테무</a>
+      <a href="https://bitl.bz/fjcH9p" target="_blank" rel="noopener sponsored">🛒 알리익스프레스</a>
+      <a href="https://kr.trip.com/?Allianceid=8001792&amp;SID=302477743&amp;trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&amp;trip_sub3=D14461428" target="_blank" rel="noopener sponsored">✈️ 트립닷컴</a>
+    </div>
+    <small>이 페이지에는 쿠팡 파트너스 등 제휴 링크가 있어요. 링크로 구매하면 리치온이 일정액의 수수료를 받을 수 있어요.</small>
+  </div>
+</div>
+
+<script>
+(() => {
+"use strict";
+/* ---------- camera: azimuth 45°, elevation 30°, 1 unit = 1 mm ---------- */
+const S = 2.5, C = Math.cos(Math.PI / 6), H = 0.5;
+const P = (x, y, z) => [(x - y) * C * S, (x + y) * H * S - z * S];
+const f = n => n.toFixed(1);
+const pts = a => a.map(p => f(p[0]) + "," + f(p[1])).join(" ");
+const poly = (a, cls, fill) => `<polygon points="${pts(a)}" class="${cls}" style="fill:${fill}"/>`;
+
+/* ---------- materials: top, +x side, +y side (dark); light derived ---------- */
+const MAT = {
+  glass:  ["#1d2331", "#131720", "#0e1118"],
+  screen: ["#0b0f18", "#0b0f18", "#0b0f18"],
+  steel:  ["#9aa0a8", "#7b8189", "#62676e"],
+  alu:    ["#b7bac0", "#93969c", "#75787e"],
+  aluD:   ["#5b5f66", "#4a4d53", "#3b3e43"],
+  hinge:  ["#767b83", "#5b5f66", "#474a50"],
+  gear:   ["#a3a7ad", "#83878d", "#696c72"],
+  pcb:    ["#26473c", "#1c352c", "#152820"],
+  shield: ["#aab0b6", "#888c92", "#6d7176"],
+  chip:   ["#2b2d31", "#202226", "#18191c"],
+  flex:   ["#b8792c", "#8f5d21", "#704919"],
+  batt:   ["#2d3138", "#22252b", "#1a1c21"],
+  label:  ["#3d434d", "#3d434d", "#3d434d"],
+  ferrite:["#2a2a2e", "#202023", "#18181b"],
+  copper: ["#c27a3a", "#9c5f2a", "#7d4b21"],
+  camB:   ["#4f535a", "#3e4147", "#303237"],
+  lens:   ["#1a1c20", "#141518", "#0f1012"],
+  back:   ["#3c4250", "#2f3440", "#262a33"],
+  island: ["#4c5262", "#3c4150", "#313542"],
+  spk:    ["#3a3d42", "#2e3034", "#242629"],
+  black:  ["#08090b", "#08090b", "#08090b"]
+};
+const mix = (hex, t) => { const n = parseInt(hex.slice(1), 16), p = [244, 241, 234];
+  const c = [n >> 16, (n >> 8) & 255, n & 255].map((v, i) => Math.round(v + (p[i] - v) * t));
+  return "#" + c.map(v => v.toString(16).padStart(2, "0")).join(""); };
+let css = ":root{";
+for (const k in MAT) MAT[k].forEach((c, i) => css += `--${k}${i}:${c};`);
+css += "}";
+const light = "{" + Object.keys(MAT).map(k => MAT[k].map((c, i) => `--${k}${i}:${mix(c, k === "screen" || k === "black" ? .08 : .32)};`).join("")).join("") + "}";
+css += `@media (prefers-color-scheme: light){:root:not([data-theme="dark"])${light}} :root[data-theme="light"]${light}`;
+const st = document.createElement("style"); st.textContent = css; document.head.appendChild(st);
+const v = (m, i) => `var(--${m}${i})`;
+
+/* ---------- primitives ---------- */
+function box(x, y, w, d, z, h, m) {
+  const a = P(x, y, z + h), b = P(x + w, y, z + h), c = P(x + w, y + d, z + h), e = P(x, y + d, z + h);
+  const b0 = P(x + w, y, z), c0 = P(x + w, y + d, z), e0 = P(x, y + d, z);
+  return poly([b, c, c0, b0], "fc", v(m, 1)) + poly([e, c, c0, e0], "fc", v(m, 2)) + poly([a, b, c, e], "fc", v(m, 0));
+}
+const ln = (x1, y1, x2, y2, z, cls = "ln") => { const a = P(x1, y1, z), b = P(x2, y2, z);
+  return `<path class="${cls}" d="M${f(a[0])} ${f(a[1])}L${f(b[0])} ${f(b[1])}"/>`; };
+const rectOn = (x, y, w, d, z, cls, fill) => fill
+  ? poly([P(x, y, z), P(x + w, y, z), P(x + w, y + d, z), P(x, y + d, z)], cls, fill)
+  : `<polygon class="${cls}" points="${pts([P(x, y, z), P(x + w, y, z), P(x + w, y + d, z), P(x, y + d, z)])}"/>`;
+const RX = Math.SQRT2 * C * S, RY = Math.SQRT2 * H * S;
+const ell = (cx, cy, z, r, cls, fill) => { const p = P(cx, cy, z);
+  return `<ellipse cx="${f(p[0])}" cy="${f(p[1])}" rx="${f(r * RX)}" ry="${f(r * RY)}" class="${cls}"${fill ? ` style="fill:${fill}"` : ""}/>`; };
+function cyl(cx, cy, z, r, h, m) {
+  const b = P(cx, cy, z), t = P(cx, cy, z + h), rx = r * RX, ry = r * RY;
+  return `<path class="fc" style="fill:${v(m, 1)}" d="M${f(b[0] - rx)} ${f(b[1])}A${f(rx)} ${f(ry)} 0 0 0 ${f(b[0] + rx)} ${f(b[1])}L${f(t[0] + rx)} ${f(t[1])}L${f(t[0] - rx)} ${f(t[1])}Z"/>`
+    + ell(cx, cy, z + h, r, "fc", v(m, 0));
+}
+const screw = (x, y, z) => { const p = P(x, y, z);
+  return `<ellipse cx="${f(p[0])}" cy="${f(p[1])}" rx="${f(.9 * RX)}" ry="${f(.9 * RY)}" class="ln"/><circle cx="${f(p[0])}" cy="${f(p[1])}" r=".55" class="dot"/>`; };
+
+/* ---------- footprint: unfolded, lying screen-down. x = width 143, y = height 158 ---------- */
+const W = 143, D = 158, HX = 68, HW = 7;   /* hinge band x 68..75 */
+const layers = [];
+function layer(name, spec, build) { const items = []; build(items); layers.push({ name, spec, items }); }
+/* each item: [lvl, depth, svg, topZ] */
+const it = (arr, lvl, depth, svg, top) => arr.push([lvl, depth, svg, top]);
+
+/* 1. inner foldable display */
+layer("안쪽 메인 화면", "8.0형 폴더블 OLED + UTP 초박형 유리. 접히는 가운데가 휘어지는 화면", L => {
+  it(L, 0, 0, box(0, 0, W, D, 0, .9, "glass"), .9);
+  let s = rectOn(3, 3, W - 6, D - 6, .9, "fc", v("screen", 0));
+  for (let y = 10; y < D - 6; y += 8) s += ln(4, y, W - 4, y, .9, "lf");
+  s += ln(HX + HW / 2, 3, HX + HW / 2, D - 3, .9, "ln");
+  s += ell(108, 12, .9, 1.6, "fc", v("black", 0));
+  it(L, 1, 0, s, .9);
+});
+
+/* 2. support plate with laser lattice at the fold */
+layer("화면 지지판", "스테인리스 판. 접히는 부분은 레이저로 촘촘한 격자를 뚫어 휘어져요", L => {
+  it(L, 0, 0, box(1, 1, W - 2, D - 2, 0, .4, "steel"), .4);
+  let s = "";
+  for (let k = 0; k < 13; k++) {
+    const x = 60 + k * 1.8, off = k % 2 ? 4 : 0;
+    for (let y = 6 + off; y + 6 < D - 6; y += 8) s += ln(x, y, x, y + 6, .4, "ln");
+  }
+  for (const [x, y] of [[6, 6], [W - 6, 6], [6, D - 6], [W - 6, D - 6], [40, 6], [103, 6], [40, D - 6], [103, D - 6]]) s += screw(x, y, .4);
+  it(L, 1, 0, s, .4);
+});
+
+/* 3. aluminium frames + hinge */
+layer("프레임 2개 + 힌지", "알루미늄 프레임 반쪽 2개를 가운데 힌지가 이어줘요. 톱니(기어)가 양쪽을 똑같이 움직여요", L => {
+  const half = (x0, n) => {
+    it(L, 0, x0, box(x0 + 2.5, 2.5, 65 - 2.5 * 2 + 2.5, D - 5, 0, .6, "aluD"), .6);
+    it(L, 1, x0 + 0, box(x0, 0, 68, 2.5, 0, 3, "alu"), 3);
+    it(L, 1, x0 + 1, box(x0, 2.5, 2.5, D - 5, 0, 3, "alu"), 3);
+    it(L, 1, x0 + 200, box(x0 + 65.5, 2.5, 2.5, D - 5, 0, 3, "alu"), 3);
+    it(L, 1, x0 + 300, box(x0, D - 2.5, 68, 2.5, 0, 3, "alu"), 3);
+    let s = "";
+    for (let y = 20; y < D - 10; y += 34) s += screw(x0 + 34, y, .6);
+    it(L, 2, x0, s, .6);
+    if (n) { /* side keys on outer +x wall, USB-C on +y wall */
+      it(L, 3, 900, box(x0 + 68, 58, .9, 15, .8, 1.4, "alu"), 3);
+      it(L, 3, 901, box(x0 + 68, 80, .9, 20, .8, 1.4, "alu"), 3);
+      const a = P(x0 + 30, D, .9), b = P(x0 + 39, D, .9), c = P(x0 + 39, D, 2.2), d = P(x0 + 30, D, 2.2);
+      let g = poly([a, b, c, d], "fc", v("black", 0));
+      for (let k = 0; k < 6; k++) { const p = P(x0 + 46 + k * 2.2, D, 1.5); g += `<circle cx="${f(p[0])}" cy="${f(p[1])}" r=".7" class="dot"/>`; }
+      it(L, 3, 902, g, 3);
+    }
+  };
+  half(0, 0);
+  it(L, 1, 140, box(HX, 4, HW, D - 8, 0, 3.2, "hinge"), 3.2);
+  let s = "";
+  for (const y0 of [10, 72, 136]) {
+    s += box(HX - .5, y0, HW + 1, 12, 3.2, .8, "gear");
+    for (let y = y0 + 1.5; y < y0 + 12; y += 1.5) s += ln(HX - .3, y, HX + HW + .3, y, 4, "lf");
+    s += screw(HX + HW / 2, y0 + 6, 4);
+  }
+  for (let y = 26; y < 70; y += 9) s += ln(HX + 1, y, HX + HW - 1, y, 3.2, "lf");
+  for (let y = 88; y < 134; y += 9) s += ln(HX + 1, y, HX + HW - 1, y, 3.2, "lf");
+  it(L, 2, 140, s, 4);
+  half(75, 1);
+});
+
+/* 4. boards + flex cables */
+layer("메인보드 + 연결 케이블", "칩(AP·메모리)이 모인 메인보드와, 힌지를 건너 양쪽을 잇는 구리빛 연성 케이블(FPCB)", L => {
+  it(L, 0, 0, box(78, 6, 60, 52, 0, .8, "pcb"), .8);
+  it(L, 0, 1, box(8, 6, 54, 20, 0, .8, "pcb"), .8);
+  it(L, 0, 2, box(80, 138, 56, 15, 0, .8, "pcb"), .8);
+  let s = "";
+  s += box(88, 14, 22, 20, .8, 1.1, "shield");
+  for (let x = 90; x < 110; x += 3) s += ln(x, 15, x, 33, 1.9, "lf");
+  s += box(114, 14, 16, 12, .8, .9, "shield");
+  s += box(114, 30, 7, 7, .8, .6, "chip") + box(124, 30, 6, 7, .8, .6, "chip");
+  s += box(88, 40, 12, 9, .8, .6, "chip") + box(104, 40, 9, 9, .8, .5, "chip");
+  s += box(118, 42, 14, 5, .8, .8, "chip");
+  s += box(16, 10, 14, 10, .8, .6, "chip") + box(36, 11, 10, 8, .8, .5, "chip");
+  s += box(100, 141, 9, 8, .8, 1.1, "alu");
+  s += box(86, 142, 8, 6, .8, .5, "chip") + box(116, 142, 12, 6, .8, .6, "chip");
+  for (const [x, y] of [[80, 8], [136, 8], [80, 56], [136, 56], [10, 8], [60, 8], [10, 24], [60, 24], [82, 140], [134, 151]]) s += screw(x, y, .8);
+  it(L, 1, 10, s, 2);
+  let fx = "";
+  for (const y of [12, 17]) fx += box(50, y, 34, 3.2, .8, .15, "flex");
+  fx += box(54, 100, 30, 3.2, .8, .15, "flex") + box(70, 112, 14, 26, .8, .15, "flex");
+  it(L, 2, 20, fx, 1);
+});
+
+/* 5. two battery cells */
+layer("배터리 2개", "반쪽마다 1개씩, 합쳐서 4,400mAh. 무게를 양쪽에 나눠 들기 편해요", L => {
+  for (const [x, y, w, d] of [[6, 30, 56, 108], [79, 62, 58, 72]]) {
+    it(L, 0, x, box(x, y, w, d, 0, 2.6, "batt"), 2.6);
+    let s = rectOn(x + 6, y + 8, w - 12, d * .42, 2.6, "fc", v("label", 0));
+    for (let k = 0; k < 3; k++) s += ln(x + 10, y + 16 + k * 6, x + w - 18 - k * 8, y + 16 + k * 6, 2.6, "ln");
+    s += box(x + w / 2 - 6, y - 3, 12, 3, .8, .4, "flex");
+    it(L, 1, x, s, 2.6);
+  }
+});
+
+/* 6. cameras, wireless coil, speakers */
+layer("카메라 3개 + 무선충전 코일 + 스피커", "2억 화소 메인·초광각·3배 망원 카메라, 구리 코일(무선충전), 위아래 스피커", L => {
+  it(L, 0, 0, box(82, 66, 48, 48, 0, .3, "ferrite"), .3);
+  let c = "";
+  for (let r = 21; r > 6; r -= 2.4) c += ell(106, 90, .3, r, "ln");
+  c += ell(106, 90, .3, 6, "fc", v("copper", 0));
+  it(L, 1, 0, c, .3);
+  it(L, 1, 5, box(110, 6, 24, 46, 0, 1.2, "camB"), 1.2);
+  let s = "";
+  for (const [y, r] of [[16, 6], [30, 5], [43, 5]]) {
+    s += cyl(122, y, 1.2, r, 3.2, "lens");
+    s += ell(122, y, 4.4, r * .7, "ln") + ell(122, y, 4.4, r * .42, "fc", v("glass", 0));
+  }
+  it(L, 2, 5, s, 4.4);
+  it(L, 1, 6, box(10, 142, 20, 10, 0, 1.6, "spk") + box(112, 143, 20, 9, 0, 1.6, "spk"), 1.6);
+  let g = "";
+  for (let k = 0; k < 6; k++) g += ln(12 + k * 3.2, 144, 12 + k * 3.2, 150, 1.6, "lf") + ln(114 + k * 3.2, 145, 114 + k * 3.2, 150, 1.6, "lf");
+  it(L, 2, 6, g, 1.6);
+});
+
+/* 7. cover screen + back glass + hinge cover */
+layer("커버 화면 + 뒷면 유리 + 힌지 커버", "접었을 때 쓰는 6.5형 바깥 화면, 카메라 섬이 있는 뒷면 유리, 가운데 척추 같은 힌지 커버", L => {
+  it(L, 0, 0, box(1, 1, 66, D - 2, 0, .8, "glass"), .8);
+  let s = rectOn(4, 5, 60, D - 10, .8, "fc", v("screen", 0));
+  for (let y = 12; y < D - 6; y += 8) s += ln(5, y, 63, y, .8, "lf");
+  s += ell(34, 11, .8, 1.5, "fc", v("black", 0));
+  it(L, 1, 0, s, .8);
+  it(L, 0, 140, box(HX - 1, 0, HW + 2, D, 0, 1.6, "alu"), 1.6);
+  it(L, 1, 141, ln(HX + HW / 2, 1, HX + HW / 2, D - 1, 1.6, "lf"), 1.6);
+  it(L, 0, 200, box(76, 1, 66, D - 2, 0, .8, "back"), .8);
+  it(L, 2, 200, box(108, 4, 28, 50, .8, 1.3, "island"), 2.1);
+  let k = "";
+  for (const [y, r] of [[16, 6], [30, 5], [43, 5]]) k += ell(122, y, 2.1, r + .8, "ln") + ell(122, y, 2.1, r, "fc", v("lens", 0)) + ell(122, y, 2.1, r * .45, "fc", v("glass", 0));
+  k += ell(131, 50, 2.1, 1.4, "fc", "#e9e3c9");
+  it(L, 3, 200, k, 2.1);
+});
+
+/* ---------- assemble ---------- */
+const NS = "http://www.w3.org/2000/svg", svg = document.getElementById("fig");
+const GAP = 40, MID = (layers.length - 1) / 2;
+let base = 0;
+layers.forEach(l => { l.base = base; base += Math.max(...l.items.map(i => i[3])) + .2; });
+const topZ = layers[layers.length - 1].base + 6 + MID * GAP, lowZ = -MID * GAP;
+const corners = [P(0, 0, topZ), P(W, 0, topZ), P(0, D, topZ), P(W, D, lowZ), P(0, D, lowZ), P(W, 0, lowZ)];
+const minX = Math.min(...corners.map(p => p[0])) - 18, maxX = Math.max(...corners.map(p => p[0])) + 18;
+const minY = Math.min(...corners.map(p => p[1])) - 14, maxY = Math.max(...corners.map(p => p[1])) + 26;
+svg.setAttribute("viewBox", `${f(minX)} ${f(minY)} ${f(maxX - minX)} ${f(maxY - minY)}`);
+let html = `<defs><filter id="blur" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="9"/></filter></defs>`;
+html += `<g id="halo"><g filter="url(#blur)" opacity=".45" transform="translate(0 8)"><polygon points="${pts([P(0, 0, 0), P(W, 0, 0), P(W, D, 0), P(0, D, 0)])}" style="fill:var(--halo)"/></g></g>`;
+layers.forEach((l, i) => {
+  const body = l.items.slice().sort((a, b) => a[0] - b[0] || a[1] - b[1]).map(x => x[2]).join("");
+  html += `<g class="layer" data-i="${i}"><g transform="translate(0 ${f(-l.base * S)})">${body}</g></g>`;
+});
+svg.innerHTML = html;
+const groups = [...svg.querySelectorAll(".layer")];
+const halo = document.getElementById("halo");
+
+/* ---------- legend ---------- */
+const leg = document.getElementById("legend");
+leg.innerHTML = layers.map((l, i) => `<li data-i="${i}"><span class="num">${i + 1}</span><div><b>${l.name}</b><span>${l.spec}</span></div></li>`).join("");
+const items = [...leg.children];
+
+/* ---------- live state ---------- */
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const range = document.getElementById("ex"), readout = document.getElementById("readout"), tourBtn = document.getElementById("tour");
+let e = reduce ? .7 : 0, target = e, sel = -1, tour = !reduce, t0 = performance.now(), visible = true, raf = 0, last = performance.now();
+function setSel(i) {
+  sel = i;
+  groups.forEach((g, k) => { g.classList.toggle("dim", i >= 0 && k !== i); g.classList.toggle("on", k === i); });
+  items.forEach((li, k) => li.classList.toggle("on", k === i));
+}
+function stopTour() { tour = false; tourBtn.setAttribute("aria-pressed", "false"); }
+function draw() {
+  groups.forEach((g, i) => g.setAttribute("transform", `translate(0 ${f(-(i - MID) * GAP * e * S)})`));
+  halo.setAttribute("transform", `translate(0 ${f(MID * GAP * e * S)})`);
+  range.value = Math.round(e * 100);
+  readout.textContent = sel >= 0 ? `${sel + 1}. ${layers[sel].name}` : `분해 ${Math.round(e * 100)}% · 층 간격 ${(GAP * e).toFixed(1)} mm`;
+}
+const ease = x => x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+function tick(now) {
+  raf = 0;
+  const dt = Math.min(.05, (now - last) / 1000); last = now;
+  if (tour) {
+    const T = ((now - t0) / 1000) % 24;
+    if (T < 3) { target = ease(T / 3); setSel(-1); }
+    else if (T < 3 + 2 * layers.length) { target = 1; setSel(Math.floor((T - 3) / 2)); }
+    else if (T < 21) { target = 1 - ease(Math.min(1, (T - 3 - 2 * layers.length) / 3)); setSel(-1); }
+    else { target = 0; setSel(-1); }
+  }
+  e += (target - e) * (1 - Math.exp(-dt * 7));
+  draw();
+  if (visible && (tour || Math.abs(target - e) > .001)) raf = requestAnimationFrame(tick);
+}
+const kick = () => { if (!raf && visible) { last = performance.now(); raf = requestAnimationFrame(tick); } };
+range.addEventListener("input", () => { stopTour(); target = range.value / 100; kick(); });
+tourBtn.addEventListener("click", () => { tour = !tour; tourBtn.setAttribute("aria-pressed", String(tour)); t0 = performance.now(); if (!tour) setSel(-1); kick(); });
+const pick = i => { stopTour(); setSel(sel === i ? -1 : i); if (e < .6) target = 1; kick(); draw(); };
+groups.forEach((g, i) => g.addEventListener("click", () => pick(i)));
+items.forEach((li, i) => li.addEventListener("click", () => pick(i)));
+addEventListener("keydown", ev => {
+  if (ev.target.tagName === "INPUT") return;
+  if (ev.key >= "1" && ev.key <= String(layers.length)) pick(+ev.key - 1);
+  else if (ev.key === "ArrowUp" || ev.key === "ArrowRight") { stopTour(); target = Math.min(1, target + .1); kick(); }
+  else if (ev.key === "ArrowDown" || ev.key === "ArrowLeft") { stopTour(); target = Math.max(0, target - .1); kick(); }
+  else if (ev.key === "Escape") { setSel(-1); draw(); }
+});
+document.getElementById("theme").addEventListener("click", () => {
+  const r = document.documentElement, dark = r.dataset.theme ? r.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  r.dataset.theme = dark ? "light" : "dark";
+});
+if (reduce) tourBtn.setAttribute("aria-pressed", "false");
+new IntersectionObserver(es => { visible = es[0].isIntersecting; if (visible) kick(); }).observe(document.getElementById("card"));
+draw(); kick();
+})();
+</script>
+</body>
+</html>
