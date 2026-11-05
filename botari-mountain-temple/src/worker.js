@@ -7,7 +7,8 @@
 import { DurableObject } from "cloudflare:workers";
 
 const MAX_PEOPLE = 20;          // 한 방 인원 (public/index.html 의 CONFIG.room.maxPeople 과 같게)
-const MAX_MSG_PER_SEC = 8;      // 이보다 자주 보내면 무시 (화면은 1초에 5번만 보냄)
+const MAX_MSG_PER_SEC = 8;
+const ROOMS = 9;                // 고를 수 있는 방 수 (public/index.html 의 CONFIG.room.halls 와 같게)      // 이보다 자주 보내면 무시 (화면은 1초에 5번만 보냄)
 
 export default {
   async fetch(request, env) {
@@ -19,6 +20,18 @@ export default {
       const room = (url.searchParams.get("room") || "main").slice(0, 32);
       const stub = env.ROOM.get(env.ROOM.idFromName(room));
       return stub.fetch(request);
+    }
+    // 방 고르기: 방 9개의 지금 인원을 한 번에 알려 줌
+    if (url.pathname === "/rooms") {
+      const base = (url.searchParams.get("base") || "main").slice(0, 24);
+      const names = Array.from({ length: ROOMS }, (_, i) => (i === 0 ? base : `${base}-${i + 1}`));
+      const rooms = await Promise.all(names.map(async (n) => {
+        try {
+          const r = await env.ROOM.get(env.ROOM.idFromName(n)).fetch("https://room/count");
+          return (await r.json()).n;
+        } catch { return 0; }
+      }));
+      return Response.json({ rooms, max: MAX_PEOPLE }, { headers: { "cache-control": "no-store" } });
     }
     // 그 밖의 주소는 정적 파일(public/)이 처리한다. 여기까지 오면 없는 주소.
     return new Response("Not found", { status: 404 });
@@ -34,6 +47,7 @@ export class Room extends DurableObject {
 
   async fetch(request) {
     const url = new URL(request.url);
+    if (url.pathname === "/count") return Response.json({ n: this.ctx.getWebSockets().length });
     const pair = new WebSocketPair();
     const [client, server] = Object.values(pair);
 

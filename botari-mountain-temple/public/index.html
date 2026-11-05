@@ -61,7 +61,8 @@ window.CONFIG = {
   },
 
   // 함께 걷기 (STEP 5) — 한 방 최대 인원 (서버 src/worker.js 의 MAX_PEOPLE 과 같게)
-  room: { name: "main", maxPeople: 20, sendPerSec: 5 },
+  room: { name: "main", maxPeople: 20, sendPerSec: 5,
+          halls: ["연화당", "솔바람당", "달빛당", "이슬당", "구름당", "산새당", "물소리당", "풍경당", "종소리당"] },   // 들어갈 때 고르는 방 (최대 9개)
 
   // 배경음: 잔잔한 바람 + 이따금 풍경 소리
   ambience: { wind: 0.18, chimeEverySec: [6, 14] },
@@ -159,6 +160,41 @@ window.CONFIG = {
   #moreSheet button.on { background: #8e2a35; color: #fff; }
   #moreSheet button.on .key { color: #f3d6d9; }
 
+  /* 📿 염주 판: 손가락으로 염주를 굴림 */
+  #malaPanel { display: none; position: fixed; inset: 0; z-index: 28; background: rgba(12,18,16,0.55);
+               align-items: center; justify-content: center; flex-direction: column; gap: 10px; touch-action: none; }
+  #malaPanel.show { display: flex; }
+  #malaCv { width: min(300px, 82vw); height: min(300px, 82vw); touch-action: none; cursor: grab; }
+  #malaPanel .help { color: #f5efe2; font-size: 14px; font-weight: 700; text-align: center; word-break: keep-all; }
+  #malaPanel button { height: 42px; padding: 0 22px; border: none; border-radius: 21px; background: #fffaf0; color: #3b2a1a; font-size: 15px; font-weight: 800; cursor: pointer; }
+
+  /* 📖 독경 판: 한 줄씩 따라 읽기 */
+  #chantPanel { display: none; position: fixed; z-index: 16; left: calc(12px + env(safe-area-inset-left)); right: calc(12px + env(safe-area-inset-right));
+                top: calc(60px + env(safe-area-inset-top)); max-width: 520px; margin: 0 auto;
+                padding: 12px 14px; border-radius: 16px; background: rgba(255,250,240,0.95); box-shadow: 0 4px 16px rgba(0,0,0,0.22); color: #3b2a1a; }
+  #chantPanel.show { display: block; }
+  body.chant-open #miniMap:not(.big) { visibility: hidden; }
+  #chantPanel .head { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; color: #8a7a66; }
+  #chantPanel .head span { flex: 1; }
+  #chantPanel .lines { margin: 8px 0 10px; text-align: center; word-break: keep-all; }
+  #chantPanel .prev, #chantPanel .next { font-size: 13px; color: #a3937e; min-height: 20px; }
+  #chantPanel .cur { font-family: "Gowun Batang", "Nanum Myeongjo", serif; font-size: 19px; font-weight: 700; color: #3b2a1a; line-height: 1.5; margin: 4px 0; min-height: 56px; }
+  #chantPanel .cur b { color: #8e2a35; }
+  #chantPanel .row { display: flex; gap: 6px; }
+  #chantPanel button { flex: 1; height: 40px; border: none; border-radius: 11px; background: #efe4cf; color: #3b2a1a; font-size: 14px; font-weight: 800; cursor: pointer; }
+  #chantPanel button.on { background: #8e2a35; color: #fff; }
+  #chantPanel .bar { height: 4px; border-radius: 2px; background: #e8dcc6; overflow: hidden; margin-top: 8px; }
+  #chantPanel .bar i { display: block; height: 100%; width: 0; background: #8e2a35; transition: width .3s; }
+
+  /* 🏯 방 고르기 (입장할 때) */
+  #roomList { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0 2px; }
+  #roomList button { margin: 0; height: 52px; border-radius: 11px; background: #f3eadb; color: #3b2a1a; font-size: 13px; font-weight: 800;
+                     display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; border: 2px solid transparent; }
+  #roomList button small { font-size: 11px; font-weight: 700; color: #8a7a66; }
+  #roomList button.sel { border-color: #8e2a35; background: #fff; }
+  #roomList button:disabled { opacity: 0.45; }
+  #roomMsg { font-size: 12.5px; color: #8e2a35; min-height: 18px; margin-top: 4px; }
+
   /* 처음 안내 (3장) */
   #guide { display: none; position: fixed; inset: 0; z-index: 30; align-items: center; justify-content: center;
            background: rgba(20,30,35,0.5); padding: 16px; }
@@ -177,7 +213,7 @@ window.CONFIG = {
 
   /* 🎬 촬영 모드: 화면의 단추·글자를 모두 숨김 */
   body.film #placePill, body.film #soundBtn, body.film #miniMap, body.film #dpad, body.film #moveBtns,
-  body.film #actBtn, body.film #hint, body.film #moreSheet, body.film #goPanel, body.film #joy { display: none !important; }
+  body.film #actBtn, body.film #hint, body.film #moreSheet, body.film #goPanel, body.film #joy, body.film #chantPanel { display: none !important; }
   #filmBar { display: none; position: fixed; z-index: 26; top: calc(12px + env(safe-area-inset-top)); right: calc(12px + env(safe-area-inset-right));
              gap: 6px; transition: opacity .4s; }
   body.film #filmBar { display: flex; }
@@ -359,6 +395,7 @@ window.CONFIG = {
     <button id="btnGoPanel" type="button"><span class="key">G</span><span class="ico">📐</span>각도·거리</button>
     <button id="btnHome" type="button"><span class="key">H</span><span class="ico">↩️</span>처음으로</button>
     <button id="btnFilm" type="button"><span class="key">B</span><span class="ico">🎬</span>촬영 모드</button>
+    <button id="btnRoom" type="button"><span class="ico">🏯</span>방 바꾸기</button>
     <button id="btnGuide" type="button"><span class="ico">❓</span>안내 보기</button>
   </div>
   <div id="guide" role="dialog" aria-label="처음 안내">
@@ -370,6 +407,21 @@ window.CONFIG = {
       <div class="row"><button class="skip" id="gSkip" type="button">닫기</button><button class="next" id="gNext" type="button">다음</button></div>
     </div>
   </div>
+  <div id="malaPanel" role="dialog" aria-label="염주 굴리기">
+    <div class="help">손가락으로 염주를 쓸어 굴려 보세요 (위·아래·빙글 모두 돼요)</div>
+    <canvas id="malaCv"></canvas>
+    <button id="malaClose" type="button">닫기</button>
+  </div>
+  <div id="chantPanel" role="dialog" aria-label="독경">
+    <div class="head"><span>📖 반야심경 — 따라 읽어 보세요</span></div>
+    <div class="lines"><div class="prev" id="cPrev"></div><div class="cur" id="cCur"></div><div class="next" id="cNext"></div></div>
+    <div class="row">
+      <button id="cPlay" type="button">▶ 시작</button>
+      <button id="cVoice" type="button" class="on">🔊 목소리</button>
+      <button id="cClose" type="button">닫기</button>
+    </div>
+    <div class="bar"><i id="cBar"></i></div>
+  </div>
   <div id="filmTap"></div>
   <div id="filmBar"><button id="filmShot" type="button">🎥 장면 바꾸기</button><button id="filmExit" type="button">✕ 촬영 끝</button></div>
   <canvas id="miniMap" aria-label="건물 위치 도면"></canvas>
@@ -380,7 +432,10 @@ window.CONFIG = {
       <p>머리 위에 보일 이름을 적어 주세요</p>
       <input id="nickInput" maxlength="10" placeholder="예) 로아" autocomplete="off">
       <button type="button" id="nickDice" style="margin-top:8px;background:#efe4cf;color:#3b2a1a;height:38px">🎲 다른 이름 지어 주기</button>
-      <button type="submit">입장하기</button>
+      <p style="margin:14px 0 0">들어갈 법당(방)을 골라 주세요</p>
+      <div id="roomList"></div>
+      <div id="roomMsg"></div>
+      <button type="submit" id="joinBtn">입장하기</button>
     </form>
   </div>
   <div class="modal" id="fullModal">
@@ -1528,7 +1583,7 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'KeyX') doStand();
   if (e.code === 'KeyP') doPray();
   if (e.code === 'KeyE') doHold();
-  if (e.code === 'KeyR') doBeads();
+  if (e.code === 'KeyR') beadStep();
   if (e.code === 'KeyB') setFilm(!film);
   if (e.code === 'Escape' && film) setFilm(false);
   if (e.code === 'KeyV') doChant();
@@ -1615,18 +1670,69 @@ function doBow() {
   if (rec.bows % GOAL === 0) { Sound.chime(); toast(`🙇 ${GOAL}배를 마쳤어요 🎉 (오늘 ${rec.bows}배)`, 2600); }
   else toast(`🙇 ${rec.bows % GOAL} / ${GOAL}배`, 1000);
 }
-// 📿 염주 굴리기 — 누를 때마다 한 알, 108알이면 한 바퀴
-function doBeads() {
+// 📿 염주: 단추를 누르면 염주 판이 열리고, 손가락으로 쓸면 한 알씩 넘어간다
+function doBeads() { MalaPanel.toggle(); }
+function beadStep() {
   monk.malaShow = 2.5;
   monk.mala.rotation.z += (Math.PI * 2) / 14;
   rec.beads++; saveRec();
   if (!Sound.ctx) Sound.setOn(true);
   Sound.click();
   if (rec.beads % GOAL === 0) { rec.rounds++; saveRec(); Sound.chime(); toast(`📿 염주 한 바퀴 (${GOAL}알) 🎉 오늘 ${rec.rounds}바퀴`, 2600); }
-  else toast(`📿 ${rec.beads % GOAL} / ${GOAL}`, 900);
   beadCount++;
+  MalaPanel.draw();
 }
 let beadCount = 0;
+const MalaPanel = (() => {
+  const el = document.getElementById('malaPanel'), cv = document.getElementById('malaCv');
+  const g = cv.getContext('2d'), N = 18, STEP = 34;            // 알 18개, 34px 쓸 때마다 한 알
+  let rot = 0, dragging = false, last = null, acc = 0;
+  function size() { const r = cv.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 2); cv.width = r.width * d; cv.height = r.height * d; g.setTransform(d, 0, 0, d, 0, 0); return r.width; }
+  let W = 300;
+  function draw() {
+    if (!el.classList.contains('show')) return;
+    const cx = W / 2, cy = W / 2, R = W * 0.36;
+    g.clearRect(0, 0, W, W);
+    g.strokeStyle = 'rgba(214,190,140,0.8)'; g.lineWidth = 2; g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.stroke();   // 줄
+    for (let i = 0; i < N; i++) {
+      const a = rot + (i / N) * Math.PI * 2 - Math.PI / 2, x = cx + Math.cos(a) * R, y = cy + Math.sin(a) * R;
+      const big = i === 0, r = big ? W * 0.06 : W * 0.045;
+      const grd = g.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r);
+      grd.addColorStop(0, big ? '#f0cf7a' : '#a8703f'); grd.addColorStop(1, big ? '#9a6f1c' : '#4a2a12');
+      g.fillStyle = grd; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
+    }
+    // 가운데: 몇 알째인지
+    g.fillStyle = '#f5efe2'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.font = `bold ${W * 0.14}px -apple-system, "Apple SD Gothic Neo", sans-serif`;
+    g.fillText(String(rec.beads % GOAL), cx, cy - W * 0.03);
+    g.font = `bold ${W * 0.05}px -apple-system, "Apple SD Gothic Neo", sans-serif`;
+    g.fillStyle = 'rgba(245,239,226,0.75)';
+    g.fillText(`/ ${GOAL}알 · 오늘 ${rec.rounds}바퀴`, cx, cy + W * 0.09);
+  }
+  function pos(e) { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+  cv.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); dragging = true; last = pos(e); try { cv.setPointerCapture(e.pointerId); } catch {} });
+  cv.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const q = pos(e), dx = q.x - last.x, dy = q.y - last.y, len = Math.hypot(dx, dy);
+    if (len < 1) return;
+    // 원 둘레를 따라 도는 방향(시계/반시계)을 계산해서 염주도 같은 쪽으로 돈다
+    const cx = W / 2, cy = W / 2, cross = (last.x - cx) * dy - (last.y - cy) * dx;
+    const dir = Math.abs(cross) > 1 ? Math.sign(cross) : (dy >= 0 ? 1 : -1);
+    rot += dir * (len / (W * 0.36));
+    acc += len; last = q;
+    while (acc >= STEP) { acc -= STEP; beadStep(); }
+    draw();
+  });
+  const end = () => { dragging = false; };
+  cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
+  el.addEventListener('pointerdown', (e) => e.stopPropagation());
+  document.getElementById('malaClose').addEventListener('click', () => toggle(false));
+  function toggle(v = !el.classList.contains('show')) {
+    el.classList.toggle('show', v); document.getElementById('btnBeads').classList.toggle('on', v);
+    if (v) { if (!Sound.ctx) Sound.setOn(true); requestAnimationFrame(() => { W = size(); draw(); }); }
+  }
+  return { toggle, draw };
+})();
 // 📖 독경 — 휴대폰에 들어 있는 한국어 읽기 목소리로 반야심경(한문 음독)을 읽는다
 const SUTRA = [
   '마하반야바라밀다심경',
@@ -1644,26 +1750,80 @@ const SUTRA = [
   '아제아제 바라아제 바라승아제 모지 사바하'
 ];
 let chanting = false;
-function doChant() {
+function doChant() { Chant.toggle(); }
+// 📖 독경 판: 한 줄씩 크게 보여 주며 읽어 준다.
+//  - 목소리: 휴대폰의 무료 읽어 주기 기능 (없으면 글자만 박자에 맞춰 넘어감)
+//  - 목탁: 들고 있거나 옆에 있으면 박자에 맞춰 함께 울림 (없으면 소리 안 남)
+const Chant = (() => {
+  const el = document.getElementById('chantPanel');
+  const $ = (id) => document.getElementById(id);
+  let line = 0, voiceOn = true, timer = null, beatTimer = null, run = 0;
   const synth = window.speechSynthesis;
-  if (!synth || typeof SpeechSynthesisUtterance === 'undefined') { toast('이 휴대폰(브라우저)은 읽어 주기 기능이 없어요'); return; }
-  if (chanting) { synth.cancel(); chanting = false; updateBtns(); toast('독경을 멈췄어요'); return; }
-  if (!Sound.on) Sound.setOn(true);
-  const voices = synth.getVoices();
-  const ko = voices.find((v) => /^ko/i.test(v.lang));
-  if (voices.length && !ko) toast('한국어 목소리가 없어서 다른 목소리로 읽어요', 2200);
-  synth.cancel();
-  chanting = true; updateBtns();
-  SUTRA.forEach((line, i) => {
-    const u = new SpeechSynthesisUtterance(line);
-    u.lang = 'ko-KR'; if (ko) u.voice = ko;
-    u.rate = 0.78; u.pitch = 0.6; u.volume = 0.9;
-    if (i === SUTRA.length - 1) u.onend = () => { chanting = false; updateBtns(); toast('🙏 독경을 마쳤어요'); };
-    u.onerror = () => { if (i === SUTRA.length - 1) { chanting = false; updateBtns(); } };
-    synth.speak(u);
+  const canSpeak = !!synth && typeof SpeechSynthesisUtterance !== 'undefined';
+  const koVoice = () => (canSpeak ? synth.getVoices().find((v) => /^ko/i.test(v.lang)) : null);
+  function show() {
+    $('cPrev').textContent = SUTRA[line - 1] || '';
+    $('cCur').innerHTML = `<b>${SUTRA[line] || ''}</b>`;
+    $('cNext').textContent = SUTRA[line + 1] || '';
+    $('cBar').style.width = `${(line / SUTRA.length) * 100}%`;
+    $('cPlay').textContent = chanting ? '⏸ 멈춤' : (line > 0 ? '▶ 이어서' : '▶ 시작');
+    $('cPlay').classList.toggle('on', chanting);
+    $('cVoice').classList.toggle('on', voiceOn);
+    $('cVoice').textContent = voiceOn ? '🔊 목소리' : '🔇 글자만';
+  }
+  function hasMoktak() { const mp = monk.root.position; return !!heldMoktak || !!nearMoktak(mp.x, mp.z, 3); }
+  function beat() {             // 목탁 박자 (한 줄 읽는 동안 0.75초마다)
+    if (!chanting) return;
+    if (hasMoktak()) {
+      Sound.tok(); tapCount++;
+      if (heldMoktak) startTap(monk); else { const mp = monk.root.position, k = nearMoktak(mp.x, mp.z, 3); if (k) k.hit = 1; }
+    }
+    beatTimer = setTimeout(beat, 750);
+  }
+  function next() {
+    if (!chanting) return;
+    if (line >= SUTRA.length) { stop(); line = 0; show(); toast('🙏 독경을 마쳤어요'); return; }
+    show();
+    const my = ++run, text = SUTRA[line];
+    const go = () => { if (my !== run || !chanting) return; line++; next(); };
+    const wait = Math.max(1600, text.replace(/\s/g, '').length * 330);   // 글자 수만큼 기다리기 (목소리가 없을 때)
+    if (voiceOn && canSpeak && Sound.on) {
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = 'ko-KR'; const v = koVoice(); if (v) u.voice = v;
+      u.rate = 0.72; u.pitch = 0.55; u.volume = 1;
+      let done = false; const fin = () => { if (done) return; done = true; clearTimeout(timer); timer = setTimeout(go, 350); };
+      u.onend = fin; u.onerror = fin;
+      timer = setTimeout(fin, wait * 2.2);              // 목소리가 안 나오는 휴대폰 대비
+      synth.speak(u);
+    } else timer = setTimeout(go, wait);
+  }
+  function start() {
+    if (!Sound.ctx) Sound.setOn(true);
+    chanting = true; updateBtns();
+    if (voiceOn && canSpeak && !koVoice() && synth.getVoices().length) toast('한국어 목소리가 없어서 다른 목소리로 읽어요', 2000);
+    if (voiceOn && !canSpeak) toast('읽어 주기 기능이 없어서 글자만 넘어가요', 2000);
+    clearTimeout(beatTimer); beat();
+    next();
+  }
+  function stop() {
+    chanting = false; run++; clearTimeout(timer); clearTimeout(beatTimer);
+    if (canSpeak) synth.cancel();
+    updateBtns(); show();
+  }
+  function toggle(v = !el.classList.contains('show')) {
+    el.classList.toggle('show', v); document.body.classList.toggle('chant-open', v);
+    if (!v) stop(); else show();
+  }
+  $('cPlay').addEventListener('click', () => (chanting ? stop() : start()));
+  $('cVoice').addEventListener('click', () => {
+    voiceOn = !voiceOn; if (!voiceOn && canSpeak) synth.cancel();
+    if (chanting) { run++; clearTimeout(timer); next(); }   // 지금 줄부터 다시
+    show();
   });
-  toast('📖 반야심경 독경 (한 번 더 누르면 멈춤)', 1800);
-}
+  $('cClose').addEventListener('click', () => toggle(false));
+  el.addEventListener('pointerdown', (e) => e.stopPropagation());
+  return { toggle, stop };
+})();
 if (window.speechSynthesis) { try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => {}; } catch {} }
 // 가까이 놓여 있는 목탁 (누가 들고 있지 않은 것)
 function nearMoktak(x, z, r = ACT.radius) {
@@ -1729,7 +1889,7 @@ function updateBtns() {
   $('btnSit').classList.toggle('on', resting || state === 'sit');
   $('btnPray').classList.toggle('on', monk.gassho || state === 'sit');
   $('btnHold').classList.toggle('on', !!heldMoktak);
-  $('btnChant').classList.toggle('on', chanting);
+  $('btnChant').classList.toggle('on', chanting || document.getElementById('chantPanel').classList.contains('show'));
   $('btnHold').querySelector('.lbl').textContent = heldMoktak ? '내려놓기' : '목탁집기';
   const mp = monk.root.position;
   $('btnTap').classList.toggle('off', !heldMoktak && !nearMoktak(mp.x, mp.z));
@@ -2068,8 +2228,36 @@ const Net = (() => {
   const DELAY = 0.25;              // 0.25초 늦게 그려서 받은 위치 사이를 부드럽게 잇는다
   let ws = null, myId = null, nick = '', retry = 0, retryTimer = null, pingTimer = null;
   let isFull = false, lastSend = 0, last = null, myTag = null;
-  let roomIdx = 1, hopping = false, seatWait = null;
-  const MAX_ROOMS = 9;
+  let roomIdx = 1, hopping = false, seatWait = null, switching = false;
+  const HALLS = (C.room.halls || ['1번 방']).slice(0, 9), MAX_ROOMS = HALLS.length;
+  const roomKey = (i) => C.room.name + (i > 1 ? '-' + i : '');
+  const roomList = document.getElementById('roomList'), roomMsg = document.getElementById('roomMsg');
+  let pickIdx = 1, counts = [];
+  // 방마다 지금 몇 명인지 서버에 물어서 단추로 보여 줌
+  function loadRooms(msg = '') {
+    roomMsg.textContent = msg || '방 사람 수를 불러오는 중…';
+    roomList.innerHTML = HALLS.map((n, i) => `<button type="button" data-i="${i + 1}">${n}<small>…</small></button>`).join('');
+    fetch('/rooms', { cache: 'no-store' }).then((r) => r.json()).then((d) => {
+      counts = d.rooms || [];
+      const firstFree = counts.findIndex((c) => c < C.room.maxPeople);
+      if (counts[pickIdx - 1] >= C.room.maxPeople || !counts.length) pickIdx = firstFree >= 0 ? firstFree + 1 : 1;
+      renderRooms(); roomMsg.textContent = msg;
+    }).catch(() => { counts = []; renderRooms(); roomMsg.textContent = msg; });
+  }
+  function renderRooms() {
+    roomList.innerHTML = HALLS.map((n, i) => {
+      const c = counts[i], full = c >= C.room.maxPeople;
+      const label = c === undefined ? '' : full ? '꽉 참' : `${c}명`;
+      return `<button type="button" data-i="${i + 1}" class="${pickIdx === i + 1 ? 'sel' : ''}" ${full ? 'disabled' : ''}>${n}<small>${label}</small></button>`;
+    }).join('');
+    const allFull = counts.length && counts.every((c) => c >= C.room.maxPeople);
+    document.getElementById('joinBtn').disabled = !!allFull;
+    if (allFull) roomMsg.textContent = '지금은 모든 방이 꽉 찼어요. 조금 뒤에 다시 와 주세요.';
+  }
+  roomList.addEventListener('click', (e) => {
+    const b = e.target.closest('button[data-i]'); if (!b || b.disabled) return;
+    pickIdx = +b.dataset.i; renderRooms();
+  });
 
   const now = () => performance.now() / 1000;
   const setPill = (extra) => { pillNet = extra || ''; renderPill(); };
@@ -2092,12 +2280,12 @@ const Net = (() => {
     others.delete(id);
   }
   function clearOthers() { [...others.keys()].forEach(removeOther); }
-  function countText() { setPill('👥 ' + (others.size + 1) + '명' + (roomIdx > 1 ? ` · ${roomIdx}번 방` : '')); }
+  function countText() { setPill(`${HALLS[roomIdx - 1] || ''} · 👥 ${others.size + 1}명`); }
 
   function connect() {
     clearTimeout(retryTimer);
     const url = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host +
-      '/ws?room=' + encodeURIComponent(C.room.name + (roomIdx > 1 ? '-' + roomIdx : '')) + '&name=' + encodeURIComponent(nick);
+      '/ws?room=' + encodeURIComponent(roomKey(roomIdx)) + '&name=' + encodeURIComponent(nick);
     try { ws = new WebSocket(url); } catch (e) { scheduleRetry(); return; }
     setPill('연결 중…');
     ws.onopen = () => {
@@ -2135,9 +2323,9 @@ const Net = (() => {
       } else if (msg.t === 'seat') {
         if (seatWait) { seatWait(!!msg.ok); seatWait = null; }
       } else if (msg.t === 'full') {
-        // 방이 꽉 차면 다음 방(2번, 3번 …)으로 자동으로 옮겨 간다
-        if (roomIdx < MAX_ROOMS) { roomIdx++; hopping = true; }
-        else { isFull = true; fullModal.classList.add('show'); setPill('방이 모두 꽉 찼어요'); }
+        // 고른 방이 그사이 꽉 참 → 방 고르기 창을 다시 띄움
+        isFull = true; setPill('방이 꽉 찼어요');
+        openPicker('그 방은 방금 꽉 찼어요. 다른 방을 골라 주세요.');
       }
     };
     ws.onclose = () => {
@@ -2145,6 +2333,7 @@ const Net = (() => {
       ws = null; clearOthers();
       if (seatWait) { seatWait(true); seatWait = null; }
       if (isFull) return;
+      if (switching) { switching = false; retry = 0; connect(); return; }   // 방 바꾸기
       if (hopping) { hopping = false; retry = 0; connect(); return; }
       setPill('다시 연결 중…');
       scheduleRetry();
@@ -2163,10 +2352,22 @@ const Net = (() => {
   });
 
   document.getElementById('retryBtn').addEventListener('click', () => {
-    isFull = false; fullModal.classList.remove('show'); retry = 0; roomIdx = 1; connect();
+    isFull = false; fullModal.classList.remove('show'); retry = 0; openPicker('');
   });
 
+  function openPicker(msg) {
+    joinModal.classList.add('show'); loadRooms(msg);
+    document.getElementById('joinBtn').textContent = ws ? '이 방으로 옮기기' : '입장하기';
+  }
   function enter(name) {
+    roomIdx = pickIdx; isFull = false;
+    if (ws) {                                         // 들어와 있던 방을 나가고 새 방으로
+      if (state === 'sit') stopAction();
+      const old = ws; ws = null;
+      old.onclose = old.onmessage = old.onerror = null;
+      try { old.close(); } catch {}
+      clearInterval(pingTimer); clearOthers();
+    }
     nick = name.trim().slice(0, 10) || '손님';
     try { localStorage.setItem('botari-nick', nick); } catch {}
     joinModal.classList.remove('show');
@@ -2187,13 +2388,20 @@ const Net = (() => {
 
   // 함께 걷기 서버가 있을 때만 이름 입력창을 띄운다.
   // (서버의 /ws 는 일반 요청에 426 으로 답함) — 없으면 혼자 걷기로 그냥 시작
+  let serverOn = false;
+  document.getElementById('btnRoom').addEventListener('pointerdown', (e) => {
+    e.preventDefault(); e.stopPropagation();
+    if (!serverOn) { toast('방 고르기는 함께 걷기 주소("올려" 뒤)에서 돼요'); return; }
+    openPicker('');
+  });
   if (online) {
     fetch('/ws', { method: 'GET', cache: 'no-store' })
       .then((r) => {
         if (r.status !== 426) return;
         try { nickInput.value = localStorage.getItem('botari-nick') || ''; } catch {}
         if (!nickInput.value) nickInput.value = randomName();   // 이름이 없으면 자동으로 지어 줌
-        joinModal.classList.add('show');
+        serverOn = true;
+        openPicker('');
         setTimeout(() => nickInput.focus(), 50);
       })
       .catch(() => {});   // 서버 없음 → 혼자 걷기
