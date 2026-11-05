@@ -116,7 +116,7 @@ window.CONFIG = {
   /* 각도·거리 입력판 (방향 단추 위) */
   #goPanel {
     display: none; position: fixed; z-index: 12;
-    left: calc(14px + env(safe-area-inset-left)); bottom: calc(300px + env(safe-area-inset-bottom));
+    left: calc(14px + env(safe-area-inset-left)); bottom: calc(246px + env(safe-area-inset-bottom));
     width: 250px; padding: 10px 10px 8px; border-radius: 16px;
     background: rgba(255,250,240,0.96); box-shadow: 0 4px 16px rgba(0,0,0,0.22); color: #3b2a1a;
   }
@@ -139,20 +139,53 @@ window.CONFIG = {
   #goPanel .help { font-size: 10.5px; color: #8a7a66; margin: -2px 0 8px 34px; }
   #goPanel .go { background: #8e2a35; color: #fff; flex: 1; font-size: 15px; }
 
-  /* 오른쪽 = 염주·독경 단추 (합장 단추 위) */
-  #sideBtns {
-    position: fixed; z-index: 10; display: flex; gap: 8px;
-    right: calc(16px + env(safe-area-inset-right)); bottom: calc(254px + env(safe-area-inset-bottom));
+  /* ⋯ 더보기 판 (아래 단추 줄 위) */
+  #moreSheet {
+    display: none; position: fixed; z-index: 15; left: 50%; transform: translateX(-50%);
+    bottom: calc(76px + env(safe-area-inset-bottom)); width: min(312px, calc(100vw - 16px));
+    padding: 10px; border-radius: 18px; background: rgba(255,250,240,0.97); box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    grid-template-columns: repeat(4, 1fr); gap: 6px;
   }
-  #sideBtns button {
-    width: 54px; height: 54px; border-radius: 50%; border: none; cursor: pointer;
-    background: rgba(255,255,255,0.88); color: #3b2a1a; box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+  #moreSheet.show { display: grid; }
+  #moreSheet .title { grid-column: 1 / -1; font-size: 12px; font-weight: 800; color: #8a7a66; padding: 0 2px 2px; }
+  #moreSheet button {
+    height: 56px; border: none; border-radius: 13px; cursor: pointer; background: #f3eadb; color: #3b2a1a;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    font-size: 10.5px; font-weight: 800; line-height: 1.1; touch-action: manipulation;
+    font-size: 11px; font-weight: 800; line-height: 1.15; position: relative; touch-action: manipulation;
   }
-  #sideBtns button .ico { font-size: 19px; line-height: 1; margin-bottom: 1px; }
-  #sideBtns button.on { background: #8e2a35; color: #fff; }
-  body.panel-open #sideBtns { visibility: hidden; }
+  #moreSheet button .ico { font-size: 19px; line-height: 1; margin-bottom: 2px; }
+  #moreSheet button .key { position: absolute; top: 3px; right: 5px; font-size: 9px; color: #9a8a76; }
+  .touch #moreSheet button .key { display: none; }
+  #moreSheet button.on { background: #8e2a35; color: #fff; }
+  #moreSheet button.on .key { color: #f3d6d9; }
+
+  /* 처음 안내 (3장) */
+  #guide { display: none; position: fixed; inset: 0; z-index: 30; align-items: center; justify-content: center;
+           background: rgba(20,30,35,0.5); padding: 16px; }
+  #guide.show { display: flex; }
+  #guide .card { max-width: 320px; width: 100%; background: #fffaf0; border-radius: 20px; padding: 22px 20px 16px; text-align: center; color: #3b2a1a; }
+  #guide .big { font-size: 44px; line-height: 1.1; }
+  #guide h3 { font-size: 19px; margin: 10px 0 6px; }
+  #guide p { font-size: 14.5px; color: #6b5a48; line-height: 1.6; margin: 0; word-break: keep-all; }
+  #guide .dots { margin: 14px 0 12px; display: flex; gap: 6px; justify-content: center; }
+  #guide .dots i { width: 7px; height: 7px; border-radius: 50%; background: #e2d3b8; }
+  #guide .dots i.on { background: #8e2a35; }
+  #guide .row { display: flex; gap: 8px; }
+  #guide button { flex: 1; height: 46px; border: none; border-radius: 12px; font-size: 16px; font-weight: 800; cursor: pointer; }
+  #guide .skip { background: #efe4cf; color: #3b2a1a; flex: 0 0 90px; }
+  #guide .next { background: #8e2a35; color: #fff; }
+
+  /* 🎬 촬영 모드: 화면의 단추·글자를 모두 숨김 */
+  body.film #placePill, body.film #soundBtn, body.film #miniMap, body.film #dpad, body.film #moveBtns,
+  body.film #actBtn, body.film #hint, body.film #moreSheet, body.film #goPanel, body.film #joy { display: none !important; }
+  #filmBar { display: none; position: fixed; z-index: 26; top: calc(12px + env(safe-area-inset-top)); right: calc(12px + env(safe-area-inset-right));
+             gap: 6px; transition: opacity .4s; }
+  body.film #filmBar { display: flex; }
+  #filmBar.hide { opacity: 0; pointer-events: none; }
+  #filmBar button { height: 38px; padding: 0 12px; border: none; border-radius: 19px; background: rgba(0,0,0,0.55); color: #fff;
+                    font-size: 13px; font-weight: 800; cursor: pointer; }
+  #filmTap { display: none; position: fixed; inset: 0; z-index: 24; }
+  body.film #filmTap { display: block; }
 
   #dpad .corner { grid-column: 3; grid-row: 1; font-size: 16px; background: rgba(255,248,232,0.95); }
 
@@ -184,7 +217,7 @@ window.CONFIG = {
 
   /* 오른쪽 아래 = 행동 단추 (물건 근처에서만 보임) */
   #actBtn {
-    position: fixed; right: calc(22px + env(safe-area-inset-right)); bottom: calc(146px + env(safe-area-inset-bottom));
+    position: fixed; right: calc(22px + env(safe-area-inset-right)); bottom: calc(92px + env(safe-area-inset-bottom));
     min-width: 96px; height: 96px; padding: 0 14px; border-radius: 48px; border: none;
     background: rgba(255,248,232,0.94); color: #5a3a1a; font-size: 18px; font-weight: 800;
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
@@ -199,7 +232,7 @@ window.CONFIG = {
   #dpad {
     position: fixed; z-index: 10; display: grid; gap: 4px;
     grid-template-columns: repeat(3, 50px); grid-template-rows: repeat(3, 50px);
-    left: calc(14px + env(safe-area-inset-left)); bottom: calc(134px + env(safe-area-inset-bottom));
+    left: calc(14px + env(safe-area-inset-left)); bottom: calc(80px + env(safe-area-inset-bottom));
     touch-action: none; user-select: none; -webkit-user-select: none;
   }
   #dpad button {
@@ -289,7 +322,6 @@ window.CONFIG = {
     <button class="mid" id="btnTurn" aria-label="돌아서기">🔄<small>돌아서기</small></button>
     <button class="right" data-k="r" aria-label="오른쪽으로 돌기">▶<small>오른쪽</small></button>
     <button class="down" data-k="b" aria-label="뒤로">▼<small>뒤로</small></button>
-    <button class="corner" id="btnGoPanel" aria-label="각도와 거리로 가기">📐<small>각도·거리</small></button>
   </div>
   <div id="fade"></div>
   <div id="mapShade"></div>
@@ -307,21 +339,39 @@ window.CONFIG = {
     </div>
     <div class="row" style="margin:8px 0 0"><button type="button" class="go" id="goBtn">🚶 가기</button><button type="button" id="goClose">닫기</button></div>
   </div>
-  <div id="sideBtns">
-    <button id="btnBeads" type="button" aria-label="염주 굴리기"><span class="ico">📿</span>염주</button>
-    <button id="btnChant" type="button" aria-label="독경 듣기"><span class="ico">📖</span>독경</button>
-  </div>
+  <!-- 기본 단추 (꼭 필요한 것만) -->
   <div id="moveBtns">
-    <button id="btnFast" type="button" aria-label="빨리 걷기"><span class="key">Shift</span><span class="ico">🏃</span>빨리</button>
-    <button id="btnSlow" type="button" aria-label="천천히 걷기"><span class="key">Z</span><span class="ico">🐢</span>천천히</button>
-    <button id="btnSit"  type="button" aria-label="앉기"><span class="key">C</span><span class="ico">🧘</span>앉기</button>
-    <button id="btnStand" type="button" aria-label="서기"><span class="key">X</span><span class="ico">🧍</span>서기</button>
-    <button id="btnBow"  type="button" aria-label="절하기"><span class="key">F</span><span class="ico">🙇</span>절</button>
     <button id="btnPray" type="button" aria-label="합장"><span class="key">P</span><span class="ico">🙏</span>합장</button>
-    <button id="btnHold" type="button" aria-label="목탁 집기"><span class="key">E</span><span class="ico">🤲</span><span class="lbl">목탁집기</span></button>
-    <button id="btnTap"  type="button" aria-label="목탁 소리"><span class="key">T</span><span class="ico">🥁</span>목탁소리</button>
-    <button id="btnHome" type="button" aria-label="처음 자리로 되돌아가기"><span class="key">H</span><span class="ico">↩️</span>처음으로</button>
+    <button id="btnBow"  type="button" aria-label="절하기"><span class="key">F</span><span class="ico">🙇</span>절</button>
+    <button id="btnBeads" type="button" aria-label="염주 굴리기"><span class="key">R</span><span class="ico">📿</span>염주</button>
+    <button id="btnTap"  type="button" aria-label="목탁 소리"><span class="key">T</span><span class="ico">🥁</span>목탁</button>
+    <button id="btnMore" type="button" aria-label="더보기"><span class="key">M</span><span class="ico">⋯</span>더보기</button>
   </div>
+  <!-- ⋯ 더보기 (나머지 기능) -->
+  <div id="moreSheet">
+    <div class="title">더보기 — 누르면 바로 실행돼요</div>
+    <button id="btnSit"  type="button"><span class="key">C</span><span class="ico">🧘</span>앉기</button>
+    <button id="btnStand" type="button"><span class="key">X</span><span class="ico">🧍</span>서기</button>
+    <button id="btnFast" type="button"><span class="key">Shift</span><span class="ico">🏃</span>빨리</button>
+    <button id="btnSlow" type="button"><span class="key">Z</span><span class="ico">🐢</span>천천히</button>
+    <button id="btnHold" type="button"><span class="key">E</span><span class="ico">🤲</span><span class="lbl">목탁집기</span></button>
+    <button id="btnChant" type="button"><span class="key">V</span><span class="ico">📖</span>독경</button>
+    <button id="btnGoPanel" type="button"><span class="key">G</span><span class="ico">📐</span>각도·거리</button>
+    <button id="btnHome" type="button"><span class="key">H</span><span class="ico">↩️</span>처음으로</button>
+    <button id="btnFilm" type="button"><span class="key">B</span><span class="ico">🎬</span>촬영 모드</button>
+    <button id="btnGuide" type="button"><span class="ico">❓</span>안내 보기</button>
+  </div>
+  <div id="guide" role="dialog" aria-label="처음 안내">
+    <div class="card">
+      <div class="big" id="gIco">🧒</div>
+      <h3 id="gTitle"></h3>
+      <p id="gText"></p>
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="row"><button class="skip" id="gSkip" type="button">닫기</button><button class="next" id="gNext" type="button">다음</button></div>
+    </div>
+  </div>
+  <div id="filmTap"></div>
+  <div id="filmBar"><button id="filmShot" type="button">🎥 장면 바꾸기</button><button id="filmExit" type="button">✕ 촬영 끝</button></div>
   <canvas id="miniMap" aria-label="건물 위치 도면"></canvas>
   <div id="hint">화면을 한 번 누르면 소리가 나요</div>
   <div class="modal" id="joinModal">
@@ -1473,11 +1523,14 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'KeyF') doBow();
   if (e.code === 'KeyT') doTap();
   if (e.code === 'KeyQ') doUTurn();
+  if (e.code === 'KeyM') setMore(!moreSheet.classList.contains('show'));
   if (e.code === 'KeyZ') setSpeed('slow');
   if (e.code === 'KeyX') doStand();
   if (e.code === 'KeyP') doPray();
   if (e.code === 'KeyE') doHold();
   if (e.code === 'KeyR') doBeads();
+  if (e.code === 'KeyB') setFilm(!film);
+  if (e.code === 'Escape' && film) setFilm(false);
   if (e.code === 'KeyV') doChant();
   if (e.code === 'KeyH') goHome();
   if (e.code === 'KeyG') setPanel(!goPanel.classList.contains('show'));
@@ -1512,7 +1565,7 @@ function startAuto(deg, dist) {
 function stopAuto(msg) { autoGo = null; if (msg) toast(msg); }
 function setPanel(v) { goPanel.classList.toggle('show', v); document.body.classList.toggle('panel-open', v); }
 document.getElementById('btnGoPanel').addEventListener('pointerdown', (e) => {
-  e.preventDefault(); e.stopPropagation(); setPanel(!goPanel.classList.contains('show'));
+  e.preventDefault(); e.stopPropagation(); setMore(false); setPanel(!goPanel.classList.contains('show'));
 });
 goPanel.addEventListener('pointerdown', (e) => e.stopPropagation());
 goPanel.querySelectorAll('[data-da]').forEach((b) => b.addEventListener('click', () => { goAngle.value = Math.max(-180, Math.min(180, (+goAngle.value || 0) + +b.dataset.da)); }));
@@ -1703,6 +1756,62 @@ onBtn(document.getElementById('btnHold'), doHold);
 onBtn(document.getElementById('btnTap'), doTap);
 onBtn(document.getElementById('btnBeads'), doBeads);
 onBtn(document.getElementById('btnChant'), doChant);
+
+/* ---------------- ⋯ 더보기 ---------------- */
+const moreSheet = document.getElementById('moreSheet');
+function setMore(v) { moreSheet.classList.toggle('show', v); document.getElementById('btnMore').classList.toggle('on', v); }
+onBtn(document.getElementById('btnMore'), () => { setPanel(false); setMore(!moreSheet.classList.contains('show')); });
+// 더보기 안 단추를 누르면 실행하고 판을 닫음
+moreSheet.querySelectorAll('button').forEach((b) => b.addEventListener('pointerup', () => setTimeout(() => setMore(false), 120)));
+moreSheet.addEventListener('pointerdown', (e) => e.stopPropagation());
+// 바깥(화면)을 누르면 닫힘
+window.addEventListener('pointerdown', () => { if (moreSheet.classList.contains('show')) setMore(false); });
+
+/* ---------------- ❓ 처음 안내 (3장) ---------------- */
+const GUIDE = [
+  ['🧒', '걷기', '왼쪽 아래 ▲ 를 누르고 있으면 앞으로 걸어요.<br>◀ ▶ 로 몸을 돌려 가고 싶은 쪽을 봐요.'],
+  ['🙏', '합장', '법당 방석 앞에 가서 🙏 합장 을 누르면<br>방석에 앉아 두 손을 모아요.'],
+  ['📿', '염주 · 목탁 · 더보기', '📿 염주 를 누를 때마다 한 알씩, 🥁 목탁 은 똑.<br>나머지 기능은 ⋯ 더보기 에 있어요.']
+];
+let gStep = 0;
+const guideEl = document.getElementById('guide');
+function showGuide(i = 0) {
+  gStep = i;
+  const [ico, t, txt] = GUIDE[i];
+  document.getElementById('gIco').textContent = ico;
+  document.getElementById('gTitle').textContent = t;
+  document.getElementById('gText').innerHTML = txt;
+  guideEl.querySelectorAll('.dots i').forEach((d, k) => d.classList.toggle('on', k === i));
+  document.getElementById('gNext').textContent = i === GUIDE.length - 1 ? '시작하기' : '다음';
+  guideEl.classList.add('show');
+}
+function closeGuide() { guideEl.classList.remove('show'); try { localStorage.setItem('botari-guide', '1'); } catch {} }
+guideEl.addEventListener('pointerdown', (e) => e.stopPropagation());
+document.getElementById('gNext').addEventListener('click', () => { if (gStep < GUIDE.length - 1) showGuide(gStep + 1); else closeGuide(); });
+document.getElementById('gSkip').addEventListener('click', closeGuide);
+onBtn(document.getElementById('btnGuide'), () => showGuide(0));
+window.maybeGuide = () => { if (document.getElementById('joinModal').classList.contains('show')) return; let seen = false; try { seen = localStorage.getItem('botari-guide') === '1'; } catch {} if (!seen) showGuide(0); };
+
+/* ---------------- 🎬 촬영 모드 ---------------- */
+// 단추를 모두 숨기고 카메라가 천천히 움직여요. 휴대폰 화면 녹화로 숏폼을 찍으면 됩니다.
+// 장면 1: 내 둘레 돌기 · 장면 2: 하늘에서 절 한 바퀴 · 장면 3: 숲길 따라 들어가기
+let film = false, filmShot = 0, filmT = 0, filmBarTimer = null;
+const FILM_NAMES = ['내 둘레 돌기', '하늘에서 절 한 바퀴', '숲길 따라 들어가기'];
+const filmBar = document.getElementById('filmBar');
+function showFilmBar() { filmBar.classList.remove('hide'); clearTimeout(filmBarTimer); filmBarTimer = setTimeout(() => filmBar.classList.add('hide'), 4000); }
+function setFilm(v) {
+  film = v; document.body.classList.toggle('film', v);
+  setMore(false); setPanel(false);
+  if (v) { filmShot = 0; filmT = 0; showFilmBar(); toast(''); }
+  else { orbit.yaw = camYaw; }
+}
+onBtn(document.getElementById('btnFilm'), () => setFilm(true));
+document.getElementById('filmTap').addEventListener('pointerdown', (e) => { e.preventDefault(); showFilmBar(); });
+document.getElementById('filmShot').addEventListener('pointerdown', (e) => {
+  e.stopPropagation(); filmShot = (filmShot + 1) % FILM_NAMES.length; filmT = 0; showFilmBar();
+  document.getElementById('filmShot').textContent = '🎥 ' + FILM_NAMES[filmShot];
+});
+document.getElementById('filmExit').addEventListener('pointerdown', (e) => { e.stopPropagation(); setFilm(false); });
 onBtn(document.getElementById('btnHome'), goHome);
 onBtn(document.getElementById('btnTurn'), doUTurn);
 const dp = { f: false, b: false, l: false, r: false };
@@ -1886,6 +1995,26 @@ function update(dt) {
   const hit = camRay.intersectObjects(camBlockers, false)[0];
   if (hit) tmpTarget.copy(tmpLook).addScaledVector(dir, Math.max(0.6, hit.distance - 0.3));
 
+  if (film) {
+    filmT += dt;
+    if (filmShot === 0) {          // 내 둘레를 천천히 돌기
+      const a = monk.root.rotation.y + Math.PI + filmT * 0.18;
+      tmpTarget.set(p.x + Math.sin(a) * 5.5, gy + 2.2, p.z + Math.cos(a) * 5.5);
+      tmpLook.set(p.x, gy + 0.9, p.z);
+    } else if (filmShot === 1) {   // 하늘에서 절 한 바퀴
+      const a = filmT * 0.05;
+      tmpTarget.set(Math.sin(a) * 34, 17, -3 + Math.cos(a) * 34);
+      tmpLook.set(0, 1, -3);
+    } else {                       // 숲길 따라 일주문부터 대웅전 쪽으로
+      const z = C.world.start.z - ((filmT * 1.6) % (C.world.start.z - 8));
+      tmpTarget.set(0.6, 2.0, z);
+      tmpLook.set(0, 1.8, z - 10);
+    }
+    camera.position.lerp(tmpTarget, damp(filmT < 0.5 ? 3 : 1.5, dt));
+    camLook.lerp(tmpLook, damp(2, dt));
+    camera.lookAt(camLook);
+    return;
+  }
   camera.position.lerp(tmpTarget, damp(4, dt));
   camLook.lerp(tmpLook, damp(CAM.lookLag, dt));
   camera.lookAt(camLook);
@@ -2045,6 +2174,7 @@ const Net = (() => {
     if (myTag) monk.root.remove(myTag);
     myTag = makeNameTag(nick); monk.root.add(myTag);
     connect();
+    setTimeout(() => window.maybeGuide && window.maybeGuide(), 400);
   }
   document.getElementById('joinForm').addEventListener('submit', (e) => {
     e.preventDefault();
@@ -2175,7 +2305,7 @@ const MiniMap = (() => {
   cv.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); toggle(); });
   shade.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); toggle(false); });
   window.addEventListener('resize', () => requestAnimationFrame(build));
-  window.addEventListener('keydown', (e) => { if (e.code === 'KeyM' && !e.repeat) toggle(); if (e.code === 'Escape' && big) toggle(false); });
+  window.addEventListener('keydown', (e) => { if (e.code === 'KeyN' && !e.repeat) toggle(); if (e.code === 'Escape' && big) toggle(false); });
 
   let acc = 0;
   function dot(x, z, r, fill, stroke) {
@@ -2224,6 +2354,8 @@ function loop() {
   requestAnimationFrame(loop);
 }
 window.__sceneReady = true;
+// 처음 온 사람에게 안내 (이름 입력창이 떠 있으면 입장한 뒤에)
+setTimeout(() => { if (!document.getElementById('joinModal').classList.contains('show')) window.maybeGuide(); }, 1200);
 loop();
 </script>
 </body>
