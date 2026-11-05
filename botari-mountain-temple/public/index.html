@@ -79,7 +79,7 @@ window.CONFIG = {
   /* 왼쪽 아래 = 조이스틱 (휴대폰에서만) */
   #joy {
     display: none; position: fixed;
-    left: calc(22px + env(safe-area-inset-left)); bottom: calc(26px + env(safe-area-inset-bottom));
+    left: calc(22px + env(safe-area-inset-left)); bottom: calc(92px + env(safe-area-inset-bottom));
     width: 124px; height: 124px; border-radius: 50%;
     background: rgba(255,255,255,0.28); border: 2px solid rgba(255,255,255,0.65);
     box-shadow: 0 2px 12px rgba(0,0,0,0.15); touch-action: none; z-index: 10;
@@ -93,7 +93,7 @@ window.CONFIG = {
 
   /* 오른쪽 아래 = 행동 단추 (물건 근처에서만 보임) */
   #actBtn {
-    position: fixed; right: calc(22px + env(safe-area-inset-right)); bottom: calc(40px + env(safe-area-inset-bottom));
+    position: fixed; right: calc(22px + env(safe-area-inset-right)); bottom: calc(96px + env(safe-area-inset-bottom));
     min-width: 96px; height: 96px; padding: 0 14px; border-radius: 48px; border: none;
     background: rgba(255,248,232,0.94); color: #5a3a1a; font-size: 18px; font-weight: 800;
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
@@ -104,22 +104,26 @@ window.CONFIG = {
   #actBtn.show { opacity: 1; transform: scale(1); pointer-events: auto; }
   #actBtn:active { transform: scale(0.94); }
 
-  /* 오른쪽 = 휴대폰 동작 단추 4개 (합장 단추 위쪽에 세로로, 휴대폰에서만) */
+  /* 맨 아래 가운데 = 조작 단추 4개 (PC·휴대폰 모두) */
   #moveBtns {
-    display: none; position: fixed; z-index: 10;
-    right: calc(16px + env(safe-area-inset-right)); bottom: calc(156px + env(safe-area-inset-bottom));
-    flex-direction: column; gap: 10px;
+    position: fixed; z-index: 10; display: flex; flex-direction: row; gap: 8px;
+    left: 50%; transform: translateX(-50%); bottom: calc(10px + env(safe-area-inset-bottom));
+    padding: 6px; border-radius: 20px; background: rgba(255,255,255,0.35); backdrop-filter: blur(6px);
   }
-  #moveBtns.show { display: flex; }
   #moveBtns button {
-    width: 58px; height: 58px; border-radius: 50%; border: none; cursor: pointer;
-    background: rgba(255,255,255,0.86); color: #3b2a1a; box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+    width: 66px; height: 56px; border-radius: 15px; border: none; cursor: pointer;
+    background: rgba(255,255,255,0.9); color: #3b2a1a; box-shadow: 0 2px 8px rgba(0,0,0,0.15);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    font-size: 11px; font-weight: 800; line-height: 1.1; touch-action: manipulation;
+    font-size: 12px; font-weight: 800; line-height: 1.1; touch-action: manipulation; position: relative;
   }
   #moveBtns button .ico { font-size: 21px; line-height: 1; margin-bottom: 2px; }
+  #moveBtns button .key {
+    position: absolute; top: 3px; right: 5px; font-size: 9px; font-weight: 700; color: #9a8a76;
+  }
   #moveBtns button:active { transform: scale(0.92); }
   #moveBtns button.on { background: #8e2a35; color: #fff; }
+  #moveBtns button.on .key { color: #f3d6d9; }
+  .touch #moveBtns button .key { display: none; }   /* 휴대폰에서는 키 글자 숨김 */
 
   /* 입장 (닉네임 입력) · 방이 꽉 찼어요 안내 */
   .modal {
@@ -166,10 +170,10 @@ window.CONFIG = {
   <button id="actBtn" aria-label="행동"><span class="ico">🙏</span><span id="actLabel"></span></button>
   <div id="joy"><div id="joyKnob"></div></div>
   <div id="moveBtns">
-    <button id="btnRun"  type="button" aria-label="빨리 걷기"><span class="ico">🏃</span>빨리</button>
-    <button id="btnRest" type="button" aria-label="앉기"><span class="ico">🧘</span><span class="lbl">앉기</span></button>
-    <button id="btnBow"  type="button" aria-label="절하기"><span class="ico">🙇</span>절</button>
-    <button id="btnTap"  type="button" aria-label="목탁"><span class="ico">🥁</span>목탁</button>
+    <button id="btnRun"  type="button" aria-label="빨리 걷기"><span class="key">Shift</span><span class="ico">🏃</span>빨리</button>
+    <button id="btnRest" type="button" aria-label="앉기"><span class="key">C</span><span class="ico">🧘</span><span class="lbl">앉기</span></button>
+    <button id="btnBow"  type="button" aria-label="절하기"><span class="key">F</span><span class="ico">🙇</span>절</button>
+    <button id="btnTap"  type="button" aria-label="목탁"><span class="key">T</span><span class="ico">🥁</span>목탁</button>
   </div>
   <div id="hint">화면을 한 번 누르면 소리가 나요</div>
   <div class="modal" id="joinModal">
@@ -858,8 +862,9 @@ function doTap() {
 const moveBtns = document.getElementById('moveBtns');
 const btnRun = document.getElementById('btnRun'), btnRest = document.getElementById('btnRest');
 let runOn = false;
-if (isTouch) moveBtns.classList.add('show');
-window.matchMedia('(pointer: coarse)').addEventListener?.('change', (e) => moveBtns.classList.toggle('show', e.matches));
+const setTouchClass = (v) => document.body.classList.toggle('touch', v);
+setTouchClass(isTouch);
+window.matchMedia('(pointer: coarse)').addEventListener?.('change', (e) => setTouchClass(e.matches));
 const onBtn = (el, fn) => el.addEventListener('pointerdown', (e) => {
   e.preventDefault(); e.stopPropagation();
   if (!Sound.ctx) Sound.setOn(true);
