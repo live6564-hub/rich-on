@@ -85,6 +85,7 @@ window.CONFIG = {
     font-size: 15px; font-weight: 700; letter-spacing: 0.02em;
     box-shadow: 0 2px 10px rgba(0,0,0,0.12); backdrop-filter: blur(6px);
     pointer-events: none; white-space: nowrap; z-index: 10;
+    max-width: calc(100vw - 136px); overflow: hidden; text-overflow: ellipsis;   /* 소리 단추·도면과 안 겹치게 */
   }
 
   /* 왼쪽 위 = 소리 켜기/끄기 단추 */
@@ -194,6 +195,13 @@ window.CONFIG = {
   #roomList button.sel { border-color: #8e2a35; background: #fff; }
   #roomList button:disabled { opacity: 0.45; }
   #roomMsg { font-size: 12.5px; color: #8e2a35; min-height: 18px; margin-top: 4px; }
+
+  /* 🌏 언어 고르기 */
+  #langModal { z-index: 31; }
+  #langList { display: grid; gap: 6px; margin: 12px 0 4px; }
+  #langList button { margin: 0; height: 46px; border-radius: 12px; background: #f3eadb; color: #3b2a1a; font-size: 16px; font-weight: 800; border: 2px solid transparent; }
+  #langList button.sel { border-color: #8e2a35; background: #fff; }
+  .card .lang-mini { width: auto; height: 30px; margin: -8px -6px 6px auto; display: block; padding: 0 10px; font-size: 12px; background: #efe4cf; color: #3b2a1a; border-radius: 15px; }
 
   /* 처음 안내 (3장) */
   #guide { display: none; position: fixed; inset: 0; z-index: 30; align-items: center; justify-content: center;
@@ -353,50 +361,51 @@ window.CONFIG = {
   <button id="actBtn" aria-label="행동"><span class="ico">🙏</span><span id="actLabel"></span></button>
   <div id="joy"><div id="joyKnob"></div></div>
   <div id="dpad">
-    <button class="up" data-k="f" aria-label="앞으로">▲<small>앞으로</small></button>
-    <button class="left" data-k="l" aria-label="왼쪽으로 돌기">◀<small>왼쪽</small></button>
-    <button class="mid" id="btnTurn" aria-label="돌아서기">🔄<small>돌아서기</small></button>
-    <button class="right" data-k="r" aria-label="오른쪽으로 돌기">▶<small>오른쪽</small></button>
-    <button class="down" data-k="b" aria-label="뒤로">▼<small>뒤로</small></button>
+    <button class="up" data-k="f" aria-label="앞으로">▲<small data-i18n="fwd">앞으로</small></button>
+    <button class="left" data-k="l" aria-label="왼쪽으로 돌기">◀<small data-i18n="left">왼쪽</small></button>
+    <button class="mid" id="btnTurn" aria-label="돌아서기">🔄<small data-i18n="uturn">돌아서기</small></button>
+    <button class="right" data-k="r" aria-label="오른쪽으로 돌기">▶<small data-i18n="right">오른쪽</small></button>
+    <button class="down" data-k="b" aria-label="뒤로">▼<small data-i18n="back">뒤로</small></button>
   </div>
   <div id="fade"></div>
   <div id="mapShade"></div>
   <div id="goPanel">
-    <div class="row"><span>각도</span>
-      <button type="button" data-da="-15">−</button><input id="goAngle" type="number" value="0" min="-180" max="180" step="5"><button type="button" data-da="15">+</button><span>도</span>
+    <div class="row"><span data-i18n="angle">각도</span>
+      <button type="button" data-da="-15">−</button><input id="goAngle" type="number" value="0" min="-180" max="180" step="5"><button type="button" data-da="15">+</button><span data-i18n="deg">도</span>
     </div>
-    <div class="help">＋오른쪽 · −왼쪽 · 지금 보는 쪽 = 0도</div>
+    <div class="help" data-i18n="angleHelp">＋오른쪽 · −왼쪽 · 지금 보는 쪽 = 0도</div>
     <div class="chips">
-      <button type="button" data-a="-90">◀ 왼쪽90</button><button type="button" data-a="0">▲ 앞</button>
-      <button type="button" data-a="90">오른쪽90 ▶</button><button type="button" data-a="180">🔄 뒤</button>
+      <button type="button" data-a="-90" data-i18n="chipL">◀ 왼쪽90</button><button type="button" data-a="0" data-i18n="chipF">▲ 앞</button>
+      <button type="button" data-a="90" data-i18n="chipR">오른쪽90 ▶</button><button type="button" data-a="180" data-i18n="chipB">🔄 뒤</button>
     </div>
-    <div class="row"><span>거리</span>
-      <button type="button" data-dd="-1">−</button><input id="goDist" type="number" inputmode="decimal" value="5" min="0.5" max="60" step="0.5"><button type="button" data-dd="1">+</button><span>m</span>
+    <div class="row"><span data-i18n="dist">거리</span>
+      <button type="button" data-dd="-1">−</button><input id="goDist" type="number" inputmode="decimal" value="5" min="0.5" max="60" step="0.5"><button type="button" data-dd="1">+</button><span data-i18n="meter">m</span>
     </div>
-    <div class="row" style="margin:8px 0 0"><button type="button" class="go" id="goBtn">🚶 가기</button><button type="button" id="goClose">닫기</button></div>
+    <div class="row" style="margin:8px 0 0"><button type="button" class="go" id="goBtn" data-i18n="goBtn">🚶 가기</button><button type="button" id="goClose" data-i18n="close">닫기</button></div>
   </div>
   <!-- 기본 단추 (꼭 필요한 것만) -->
   <div id="moveBtns">
-    <button id="btnPray" type="button" aria-label="합장"><span class="key">P</span><span class="ico">🙏</span>합장</button>
-    <button id="btnBow"  type="button" aria-label="절하기"><span class="key">F</span><span class="ico">🙇</span>절</button>
-    <button id="btnBeads" type="button" aria-label="염주 굴리기"><span class="key">R</span><span class="ico">📿</span>염주</button>
-    <button id="btnTap"  type="button" aria-label="목탁 소리"><span class="key">T</span><span class="ico">🥁</span>목탁</button>
-    <button id="btnMore" type="button" aria-label="더보기"><span class="key">M</span><span class="ico">⋯</span>더보기</button>
+    <button id="btnPray" type="button" aria-label="합장"><span class="key">P</span><span class="ico">🙏</span><span data-i18n="pray">합장</span></button>
+    <button id="btnBow"  type="button" aria-label="절하기"><span class="key">F</span><span class="ico">🙇</span><span data-i18n="bow">절</span></button>
+    <button id="btnBeads" type="button" aria-label="염주 굴리기"><span class="key">R</span><span class="ico">📿</span><span data-i18n="beads">염주</span></button>
+    <button id="btnTap"  type="button" aria-label="목탁 소리"><span class="key">T</span><span class="ico">🥁</span><span data-i18n="moktak">목탁</span></button>
+    <button id="btnMore" type="button" aria-label="더보기"><span class="key">M</span><span class="ico">⋯</span><span data-i18n="more">더보기</span></button>
   </div>
   <!-- ⋯ 더보기 (나머지 기능) -->
   <div id="moreSheet">
-    <div class="title">더보기 — 누르면 바로 실행돼요</div>
-    <button id="btnSit"  type="button"><span class="key">C</span><span class="ico">🧘</span>앉기</button>
-    <button id="btnStand" type="button"><span class="key">X</span><span class="ico">🧍</span>서기</button>
-    <button id="btnFast" type="button"><span class="key">Shift</span><span class="ico">🏃</span>빨리</button>
-    <button id="btnSlow" type="button"><span class="key">Z</span><span class="ico">🐢</span>천천히</button>
+    <div class="title" data-i18n="moreTitle">더보기 — 누르면 바로 실행돼요</div>
+    <button id="btnSit"  type="button"><span class="key">C</span><span class="ico">🧘</span><span data-i18n="sit">앉기</span></button>
+    <button id="btnStand" type="button"><span class="key">X</span><span class="ico">🧍</span><span data-i18n="stand">서기</span></button>
+    <button id="btnFast" type="button"><span class="key">Shift</span><span class="ico">🏃</span><span data-i18n="fast">빨리</span></button>
+    <button id="btnSlow" type="button"><span class="key">Z</span><span class="ico">🐢</span><span data-i18n="slow">천천히</span></button>
     <button id="btnHold" type="button"><span class="key">E</span><span class="ico">🤲</span><span class="lbl">목탁집기</span></button>
-    <button id="btnChant" type="button"><span class="key">V</span><span class="ico">📖</span>독경</button>
-    <button id="btnGoPanel" type="button"><span class="key">G</span><span class="ico">📐</span>각도·거리</button>
-    <button id="btnHome" type="button"><span class="key">H</span><span class="ico">↩️</span>처음으로</button>
-    <button id="btnFilm" type="button"><span class="key">B</span><span class="ico">🎬</span>촬영 모드</button>
-    <button id="btnRoom" type="button"><span class="ico">🏯</span>방 바꾸기</button>
-    <button id="btnGuide" type="button"><span class="ico">❓</span>안내 보기</button>
+    <button id="btnChant" type="button"><span class="key">V</span><span class="ico">📖</span><span data-i18n="chant">독경</span></button>
+    <button id="btnGoPanel" type="button"><span class="key">G</span><span class="ico">📐</span><span data-i18n="goTo">각도·거리</span></button>
+    <button id="btnHome" type="button"><span class="key">H</span><span class="ico">↩️</span><span data-i18n="home">처음으로</span></button>
+    <button id="btnFilm" type="button"><span class="key">B</span><span class="ico">🎬</span><span data-i18n="film">촬영 모드</span></button>
+    <button id="btnRoom" type="button"><span class="ico">🏯</span><span data-i18n="room">방 바꾸기</span></button>
+    <button id="btnLang" type="button"><span class="ico">🌏</span><span>Language</span></button>
+    <button id="btnGuide" type="button"><span class="ico">❓</span><span data-i18n="guide">안내 보기</span></button>
   </div>
   <div id="guide" role="dialog" aria-label="처음 안내">
     <div class="card">
@@ -404,39 +413,47 @@ window.CONFIG = {
       <h3 id="gTitle"></h3>
       <p id="gText"></p>
       <div class="dots"><i></i><i></i><i></i></div>
-      <div class="row"><button class="skip" id="gSkip" type="button">닫기</button><button class="next" id="gNext" type="button">다음</button></div>
+      <div class="row"><button class="skip" id="gSkip" type="button" data-i18n="close">닫기</button><button class="next" id="gNext" type="button">다음</button></div>
     </div>
   </div>
   <div id="malaPanel" role="dialog" aria-label="염주 굴리기">
-    <div class="help">손가락으로 염주를 쓸어 굴려 보세요 (위·아래·빙글 모두 돼요)</div>
+    <div class="help" data-i18n="malaHelp">손가락으로 염주를 쓸어 굴려 보세요 (위·아래·빙글 모두 돼요)</div>
     <canvas id="malaCv"></canvas>
-    <button id="malaClose" type="button">닫기</button>
+    <button id="malaClose" type="button" data-i18n="close">닫기</button>
   </div>
   <div id="chantPanel" role="dialog" aria-label="독경">
-    <div class="head"><span>📖 반야심경 — 따라 읽어 보세요</span></div>
+    <div class="head"><span data-i18n="chantHead">📖 반야심경 — 따라 읽어 보세요</span></div>
     <div class="lines"><div class="prev" id="cPrev"></div><div class="cur" id="cCur"></div><div class="next" id="cNext"></div></div>
     <div class="row">
       <button id="cPlay" type="button">▶ 시작</button>
       <button id="cVoice" type="button" class="on">🔊 목소리</button>
-      <button id="cClose" type="button">닫기</button>
+      <button id="cClose" type="button" data-i18n="close">닫기</button>
     </div>
     <div class="bar"><i id="cBar"></i></div>
   </div>
   <div id="filmTap"></div>
-  <div id="filmBar"><button id="filmShot" type="button">🎥 장면 바꾸기</button><button id="filmExit" type="button">✕ 촬영 끝</button></div>
+  <div id="filmBar"><button id="filmShot" type="button">🎥 장면 바꾸기</button><button id="filmExit" type="button" data-i18n="filmExit">✕ 촬영 끝</button></div>
   <canvas id="miniMap" aria-label="건물 위치 도면"></canvas>
-  <div id="hint">화면을 한 번 누르면 소리가 나요</div>
+  <div id="hint" data-i18n="hintTap">화면을 한 번 누르면 소리가 나요</div>
   <div class="modal" id="joinModal">
     <form class="card" id="joinForm">
-      <h2>🙏 산속 절에 들어가기</h2>
-      <p>머리 위에 보일 이름을 적어 주세요</p>
-      <input id="nickInput" maxlength="10" placeholder="예) 로아" autocomplete="off">
-      <button type="button" id="nickDice" style="margin-top:8px;background:#efe4cf;color:#3b2a1a;height:38px">🎲 다른 이름 지어 주기</button>
-      <p style="margin:14px 0 0">들어갈 법당(방)을 골라 주세요</p>
+      <button type="button" id="joinLang" class="lang-mini">🌏 Language</button>
+      <h2 data-i18n="joinTitle">🙏 산속 절에 들어가기</h2>
+      <p data-i18n="joinSub">머리 위에 보일 이름을 적어 주세요</p>
+      <input id="nickInput" maxlength="16" placeholder="예) 로아" data-i18n-ph="namePh" autocomplete="off">
+      <button type="button" id="nickDice" style="margin-top:8px;background:#efe4cf;color:#3b2a1a;height:38px" data-i18n="dice">🎲 다른 이름 지어 주기</button>
+      <p style="margin:14px 0 0" data-i18n="pickRoom">들어갈 법당(방)을 골라 주세요</p>
       <div id="roomList"></div>
       <div id="roomMsg"></div>
       <button type="submit" id="joinBtn">입장하기</button>
     </form>
+  </div>
+  <div class="modal" id="langModal">
+    <div class="card">
+      <h2>🌏 언어 · Language</h2>
+      <div id="langList"></div>
+      <button id="langClose" type="button" data-i18n="close">닫기</button>
+    </div>
   </div>
   <div class="modal" id="fullModal">
     <div class="card">
@@ -457,9 +474,157 @@ import * as THREE from 'three';
 
 const C = window.CONFIG;
 
+/* =====================================================================
+   🌏 언어 — 한국어 · English · 繁體中文(대만) · Tiếng Việt · ไทย
+   글자를 바꾸려면 아래 표의 해당 칸만 고친다.
+   ===================================================================== */
+const LANGS = [['ko', '한국어'], ['en', 'English'], ['zh', '繁體中文'], ['vi', 'Tiếng Việt'], ['th', 'ไทย']];
+const I18N = {
+  place: ['산속 절', 'Mountain Temple', '山中寺', 'Chùa trên núi', 'วัดบนภูเขา'],
+  hintTap: ['화면을 한 번 누르면 소리가 나요', 'Tap the screen once to turn on sound', '輕觸畫面一次即可開啟聲音', 'Chạm màn hình một lần để bật âm thanh', 'แตะหน้าจอหนึ่งครั้งเพื่อเปิดเสียง'],
+  fwd: ['앞으로', 'Forward', '前進', 'Tiến', 'เดินหน้า'],
+  left: ['왼쪽', 'Left', '左轉', 'Trái', 'ซ้าย'],
+  uturn: ['돌아서기', 'Turn back', '轉身', 'Quay lại', 'หันกลับ'],
+  right: ['오른쪽', 'Right', '右轉', 'Phải', 'ขวา'],
+  back: ['뒤로', 'Back', '後退', 'Lùi', 'ถอยหลัง'],
+  pray: ['합장', 'Palms', '合掌', 'Chắp tay', 'พนมมือ'],
+  bow: ['절', 'Bow', '禮拜', 'Lạy', 'กราบ'],
+  beads: ['염주', 'Beads', '念珠', 'Tràng hạt', 'ลูกประคำ'],
+  moktak: ['목탁', 'Moktak', '木魚', 'Mõ', 'ปลาไม้'],
+  more: ['더보기', 'More', '更多', 'Thêm', 'เพิ่มเติม'],
+  moreTitle: ['더보기 — 누르면 바로 실행돼요', 'More — tap to use', '更多 — 點一下就執行', 'Thêm — chạm để dùng ngay', 'เพิ่มเติม — แตะเพื่อใช้ทันที'],
+  sit: ['앉기', 'Sit', '坐下', 'Ngồi', 'นั่ง'],
+  stand: ['서기', 'Stand', '站起', 'Đứng', 'ยืน'],
+  fast: ['빨리', 'Fast', '快走', 'Nhanh', 'เร็ว'],
+  slow: ['천천히', 'Slow', '慢走', 'Chậm', 'ช้า'],
+  hold: ['목탁집기', 'Pick up', '拿起木魚', 'Cầm mõ', 'หยิบปลาไม้'],
+  putdown: ['내려놓기', 'Put down', '放下', 'Đặt xuống', 'วางลง'],
+  chant: ['독경', 'Chant', '誦經', 'Tụng kinh', 'สวดมนต์'],
+  goTo: ['각도·거리', 'Angle·Dist', '角度·距離', 'Góc·K.cách', 'มุม·ระยะ'],
+  home: ['처음으로', 'Start', '回起點', 'Về đầu', 'จุดเริ่ม'],
+  film: ['촬영 모드', 'Film', '拍攝模式', 'Quay phim', 'โหมดถ่าย'],
+  room: ['방 바꾸기', 'Rooms', '換房間', 'Đổi phòng', 'เปลี่ยนห้อง'],
+  guide: ['안내 보기', 'Help', '使用說明', 'Hướng dẫn', 'วิธีใช้'],
+  lang: ['언어', 'Language', '語言', 'Ngôn ngữ', 'ภาษา'],
+  bellAct: ['타종', 'Ring bell', '敲鐘', 'Đánh chuông', 'ตีระฆัง'],
+  angle: ['각도', 'Angle', '角度', 'Góc', 'มุม'],
+  deg: ['도', '°', '°', '°', '°'],
+  angleHelp: ['＋오른쪽 · −왼쪽 · 지금 보는 쪽 = 0도', '+ right · − left · facing = 0°', '＋右 · −左 · 目前方向 = 0°', '+ phải · − trái · hướng đang nhìn = 0°', '+ ขวา · − ซ้าย · ทิศที่มอง = 0°'],
+  chipL: ['◀ 왼쪽90', '◀ Left 90', '◀ 左90', '◀ Trái 90', '◀ ซ้าย 90'],
+  chipF: ['▲ 앞', '▲ Ahead', '▲ 前', '▲ Trước', '▲ หน้า'],
+  chipR: ['오른쪽90 ▶', 'Right 90 ▶', '右90 ▶', 'Phải 90 ▶', 'ขวา 90 ▶'],
+  chipB: ['🔄 뒤', '🔄 Behind', '🔄 後', '🔄 Sau', '🔄 หลัง'],
+  dist: ['거리', 'Dist.', '距離', 'K.cách', 'ระยะ'],
+  meter: ['m', 'm', '公尺', 'm', 'ม.'],
+  goBtn: ['🚶 가기', '🚶 Go', '🚶 出發', '🚶 Đi', '🚶 ไป'],
+  close: ['닫기', 'Close', '關閉', 'Đóng', 'ปิด'],
+  malaHelp: ['손가락으로 염주를 쓸어 굴려 보세요 (위·아래·빙글 모두 돼요)', 'Swipe the beads with your finger (up, down or round)', '用手指撥動念珠（上下或轉圈都可以）', 'Vuốt tràng hạt bằng ngón tay (lên, xuống hay xoay tròn)', 'ใช้นิ้วปัดลูกประคำ (ขึ้น ลง หรือหมุนก็ได้)'],
+  malaCount: [(g, r) => `/ ${g}알 · 오늘 ${r}바퀴`, (g, r) => `/ ${g} · today ${r} rounds`, (g, r) => `/ ${g}顆 · 今天${r}圈`, (g, r) => `/ ${g} hạt · hôm nay ${r} vòng`, (g, r) => `/ ${g} เม็ด · วันนี้ ${r} รอบ`],
+  chantHead: ['📖 반야심경 — 따라 읽어 보세요', '📖 Heart Sutra — read along', '📖 般若心經 — 跟著念', '📖 Bát Nhã Tâm Kinh — đọc theo', '📖 ปรัชญาปารมิตาหฤทัยสูตร — อ่านตาม'],
+  cStart: ['▶ 시작', '▶ Start', '▶ 開始', '▶ Bắt đầu', '▶ เริ่ม'],
+  cPause: ['⏸ 멈춤', '⏸ Pause', '⏸ 暫停', '⏸ Dừng', '⏸ หยุด'],
+  cResume: ['▶ 이어서', '▶ Resume', '▶ 繼續', '▶ Tiếp tục', '▶ ต่อ'],
+  cVoice: ['🔊 목소리', '🔊 Voice', '🔊 語音', '🔊 Giọng đọc', '🔊 เสียง'],
+  cText: ['🔇 글자만', '🔇 Text only', '🔇 只看字', '🔇 Chỉ chữ', '🔇 ตัวอักษร'],
+  chantDone: ['🙏 독경을 마쳤어요', '🙏 Chanting finished', '🙏 誦經圓滿', '🙏 Đã tụng xong', '🙏 สวดจบแล้ว'],
+  noVoiceLang: ['이 언어 목소리가 없어서 다른 목소리로 읽어요', 'No voice for this language — using another', '沒有此語言的語音，改用其他語音', 'Không có giọng cho ngôn ngữ này — dùng giọng khác', 'ไม่มีเสียงภาษานี้ ใช้เสียงอื่นแทน'],
+  noTTS: ['읽어 주기 기능이 없어서 글자만 넘어가요', 'Text-to-speech not available — text only', '不支援語音朗讀，只顯示文字', 'Không hỗ trợ đọc — chỉ hiện chữ', 'ไม่รองรับการอ่านออกเสียง แสดงเฉพาะตัวอักษร'],
+  joinTitle: ['🙏 산속 절에 들어가기', '🙏 Enter the Mountain Temple', '🙏 進入山中寺', '🙏 Vào chùa trên núi', '🙏 เข้าวัดบนภูเขา'],
+  joinSub: ['머리 위에 보일 이름을 적어 주세요', 'Your name, shown above your head', '寫下顯示在頭上的名字', 'Tên hiện trên đầu bạn', 'ชื่อที่จะแสดงเหนือหัว'],
+  namePh: ['예) 로아', 'e.g. Roa', '例：Roa', 'Ví dụ: Roa', 'เช่น Roa'],
+  dice: ['🎲 다른 이름 지어 주기', '🎲 Another name', '🎲 換個名字', '🎲 Tên khác', '🎲 สุ่มชื่ออื่น'],
+  pickRoom: ['들어갈 법당(방)을 골라 주세요', 'Choose a hall (room)', '選擇要進入的殿堂（房間）', 'Chọn điện (phòng) để vào', 'เลือกห้องที่จะเข้า'],
+  join: ['입장하기', 'Enter', '進入', 'Vào', 'เข้า'],
+  moveRoom: ['이 방으로 옮기기', 'Move to this room', '移到這個房間', 'Chuyển sang phòng này', 'ย้ายไปห้องนี้'],
+  roomFull: ['꽉 참', 'Full', '已滿', 'Đầy', 'เต็ม'],
+  people: [(n) => `${n}명`, (n) => `${n} here`, (n) => `${n}人`, (n) => `${n} người`, (n) => `${n} คน`],
+  roomLoading: ['방 사람 수를 불러오는 중…', 'Loading rooms…', '載入房間中…', 'Đang tải phòng…', 'กำลังโหลดห้อง…'],
+  allFull: ['지금은 모든 방이 꽉 찼어요. 조금 뒤에 다시 와 주세요.', 'All rooms are full. Please come back later.', '所有房間都滿了，請稍後再來。', 'Tất cả phòng đã đầy. Vui lòng quay lại sau.', 'ทุกห้องเต็ม โปรดกลับมาใหม่ภายหลัง'],
+  justFull: ['그 방은 방금 꽉 찼어요. 다른 방을 골라 주세요.', 'That room just filled up. Please pick another.', '那個房間剛滿了，請選別的。', 'Phòng đó vừa đầy. Hãy chọn phòng khác.', 'ห้องนั้นเพิ่งเต็ม โปรดเลือกห้องอื่น'],
+  connecting: ['연결 중…', 'Connecting…', '連線中…', 'Đang kết nối…', 'กำลังเชื่อมต่อ…'],
+  reconnecting: ['다시 연결 중…', 'Reconnecting…', '重新連線中…', 'Đang kết nối lại…', 'กำลังเชื่อมต่อใหม่…'],
+  roomFullPill: ['방이 꽉 찼어요', 'Room is full', '房間已滿', 'Phòng đầy', 'ห้องเต็ม'],
+  roomOnlyOnline: ['방 고르기는 함께 걷기 주소("올려" 뒤)에서 돼요', 'Rooms work on the online address', '房間功能只在線上網址可用', 'Chọn phòng chỉ dùng trên địa chỉ trực tuyến', 'เลือกห้องได้เฉพาะบนเว็บออนไลน์'],
+  seatTaken: ['누가 먼저 앉았어요 — 옆 방석에 앉아 주세요', 'Someone just sat there — try the next cushion', '有人先坐了，請坐旁邊的蒲團', 'Có người ngồi rồi — hãy ngồi bồ đoàn bên cạnh', 'มีคนนั่งแล้ว ลองเบาะข้างๆ'],
+  needNum: ['숫자를 넣어 주세요', 'Please enter numbers', '請輸入數字', 'Vui lòng nhập số', 'กรุณาใส่ตัวเลข'],
+  going: [
+    (d, m) => `${d > 0 ? '오른쪽 ' + d : d < 0 ? '왼쪽 ' + -d : '앞'}도 → ${m}m 가는 중…`,
+    (d, m) => `${d > 0 ? 'Right ' + d + '°' : d < 0 ? 'Left ' + -d + '°' : 'Ahead'} → walking ${m} m…`,
+    (d, m) => `${d > 0 ? '右' + d + '°' : d < 0 ? '左' + -d + '°' : '前方'} → 走${m}公尺…`,
+    (d, m) => `${d > 0 ? 'Phải ' + d + '°' : d < 0 ? 'Trái ' + -d + '°' : 'Phía trước'} → đi ${m} m…`,
+    (d, m) => `${d > 0 ? 'ขวา ' + d + '°' : d < 0 ? 'ซ้าย ' + -d + '°' : 'ข้างหน้า'} → เดิน ${m} ม.…`],
+  stopManual: ['직접 움직여서 멈췄어요', 'Stopped — you moved', '你移動了，已停止', 'Đã dừng vì bạn di chuyển', 'หยุดแล้วเพราะคุณขยับ'],
+  onlyTurned: ['방향만 바꿨어요', 'Turned only', '只轉了方向', 'Chỉ đổi hướng', 'หันอย่างเดียว'],
+  bumped: ['부딪혀서 멈췄어요 🧱', 'Bumped into something 🧱', '撞到了，已停止 🧱', 'Va phải vật cản 🧱', 'ชนสิ่งกีดขวาง 🧱'],
+  arrived: ['도착했어요 ✅', 'Arrived ✅', '到了 ✅', 'Đã đến ✅', 'ถึงแล้ว ✅'],
+  bowsDone: [(g, n) => `🙇 ${g}배를 마쳤어요 🎉 (오늘 ${n}배)`, (g, n) => `🙇 ${g} bows done 🎉 (today ${n})`, (g, n) => `🙇 完成${g}拜 🎉（今天${n}拜）`, (g, n) => `🙇 Xong ${g} lạy 🎉 (hôm nay ${n})`, (g, n) => `🙇 กราบครบ ${g} ครั้ง 🎉 (วันนี้ ${n})`],
+  bowsN: [(c, g) => `🙇 ${c} / ${g}배`, (c, g) => `🙇 ${c} / ${g} bows`, (c, g) => `🙇 ${c} / ${g}拜`, (c, g) => `🙇 ${c} / ${g} lạy`, (c, g) => `🙇 ${c} / ${g} ครั้ง`],
+  beadsRound: [(g, r) => `📿 염주 한 바퀴 (${g}알) 🎉 오늘 ${r}바퀴`, (g, r) => `📿 One full round (${g}) 🎉 today ${r}`, (g, r) => `📿 念珠一圈（${g}顆）🎉 今天${r}圈`, (g, r) => `📿 Xong một vòng (${g} hạt) 🎉 hôm nay ${r}`, (g, r) => `📿 ครบหนึ่งรอบ (${g} เม็ด) 🎉 วันนี้ ${r}`],
+  putDown: ['목탁을 내려놓았어요', 'Put the moktak down', '放下木魚了', 'Đã đặt mõ xuống', 'วางปลาไม้แล้ว'],
+  noMoktakNear: ['가까이에 목탁이 없어요 (법당 방석 옆에 있어요)', 'No moktak nearby (look by a hall cushion)', '附近沒有木魚（在殿內蒲團旁）', 'Không có mõ gần đây (ở cạnh bồ đoàn trong điện)', 'ไม่มีปลาไม้ใกล้ๆ (อยู่ข้างเบาะในวิหาร)'],
+  pickedUp: ['목탁을 집었어요 🤲 — 🥁 목탁을 눌러 보세요', 'Picked up the moktak 🤲 — now tap 🥁', '拿起木魚了 🤲 — 按 🥁 敲看看', 'Đã cầm mõ 🤲 — hãy bấm 🥁', 'หยิบปลาไม้แล้ว 🤲 — ลองกด 🥁'],
+  noMoktak: ['목탁이 없어요 — 먼저 🤲 목탁집기', 'No moktak — pick one up first 🤲', '沒有木魚 — 先拿起 🤲', 'Chưa có mõ — hãy cầm mõ trước 🤲', 'ยังไม่มีปลาไม้ — หยิบก่อน 🤲'],
+  already: ['이미 서 있어요', 'Already standing', '已經站著了', 'Đang đứng rồi', 'ยืนอยู่แล้ว'],
+  spFast: ['빨리 걸어요 🏃', 'Walking fast 🏃', '快走 🏃', 'Đi nhanh 🏃', 'เดินเร็ว 🏃'],
+  spSlow: ['천천히 걸어요 🐢', 'Walking slowly 🐢', '慢走 🐢', 'Đi chậm 🐢', 'เดินช้า 🐢'],
+  spNormal: ['보통 빠르기', 'Normal speed', '一般速度', 'Tốc độ thường', 'ความเร็วปกติ'],
+  gNext: ['다음', 'Next', '下一步', 'Tiếp', 'ถัดไป'],
+  gStart: ['시작하기', 'Start', '開始', 'Bắt đầu', 'เริ่มเลย'],
+  g1t: ['걷기', 'Walk', '行走', 'Đi bộ', 'เดิน'],
+  g1: ['왼쪽 아래 ▲ 를 누르고 있으면 앞으로 걸어요.<br>◀ ▶ 로 몸을 돌려 가고 싶은 쪽을 봐요.', 'Hold ▲ (bottom left) to walk forward.<br>Use ◀ ▶ to turn toward where you want to go.', '按住左下角 ▲ 就會往前走。<br>用 ◀ ▶ 轉身面向想去的方向。', 'Giữ ▲ (góc dưới trái) để đi tới.<br>Dùng ◀ ▶ để xoay về hướng muốn đi.', 'กด ▲ (ซ้ายล่าง) ค้างไว้เพื่อเดินหน้า<br>ใช้ ◀ ▶ หันไปทางที่อยากไป'],
+  g2t: ['합장', 'Palms together', '合掌', 'Chắp tay', 'พนมมือ'],
+  g2: ['법당 방석 앞에 가서 🙏 합장 을 누르면<br>방석에 앉아 두 손을 모아요.', 'Go to a cushion in a hall and tap 🙏<br>to sit and put your palms together.', '走到殿內蒲團前按 🙏 合掌，<br>就會坐下雙手合十。', 'Đến trước bồ đoàn trong điện và bấm 🙏<br>để ngồi xuống chắp tay.', 'ไปที่เบาะในวิหารแล้วกด 🙏<br>เพื่อนั่งพนมมือ'],
+  g3t: ['염주 · 목탁 · 더보기', 'Beads · Moktak · More', '念珠 · 木魚 · 更多', 'Tràng hạt · Mõ · Thêm', 'ลูกประคำ · ปลาไม้ · เพิ่มเติม'],
+  g3: ['📿 염주 를 누르고 손가락으로 굴려요. 🥁 목탁 은 똑.<br>나머지 기능은 ⋯ 더보기 에 있어요.', 'Tap 📿 and roll the beads with your finger. 🥁 goes tok.<br>Everything else is in ⋯ More.', '按 📿 用手指撥念珠，🥁 木魚咚咚。<br>其他功能在 ⋯ 更多。', 'Bấm 📿 rồi lần hạt bằng ngón tay, 🥁 gõ mõ.<br>Các chức năng khác ở ⋯ Thêm.', 'กด 📿 แล้วใช้นิ้วนับลูกประคำ 🥁 เคาะปลาไม้<br>ฟังก์ชันอื่นอยู่ใน ⋯ เพิ่มเติม'],
+  filmShot: ['🎥 장면 바꾸기', '🎥 Next shot', '🎥 換鏡頭', '🎥 Đổi cảnh', '🎥 เปลี่ยนมุม'],
+  filmExit: ['✕ 촬영 끝', '✕ End filming', '✕ 結束拍攝', '✕ Kết thúc quay', '✕ จบการถ่าย'],
+  filmNames: [['내 둘레 돌기', '하늘에서 절 한 바퀴', '숲길 따라 들어가기'], ['Circle around me', 'Temple from the sky', 'Along the forest path'], ['繞著我轉', '從空中繞寺一圈', '沿林間小路進寺'], ['Xoay quanh tôi', 'Ngắm chùa từ trên cao', 'Đi theo đường rừng'], ['หมุนรอบตัวฉัน', 'มองวัดจากฟ้า', 'เดินตามทางป่า']],
+  halls: [null,
+    ['Lotus', 'Pine Breeze', 'Moonlight', 'Dewdrop', 'Cloud', 'Mountain Bird', 'Water Sound', 'Wind Chime', 'Bell Sound'],
+    ['蓮花堂', '松風堂', '月光堂', '露珠堂', '雲堂', '山鳥堂', '水聲堂', '風磬堂', '鐘聲堂'],
+    ['Liên Hoa', 'Tùng Phong', 'Nguyệt Quang', 'Giọt Sương', 'Mây Trắng', 'Chim Núi', 'Tiếng Nước', 'Chuông Gió', 'Tiếng Chuông'],
+    ['ห้องบัว', 'ห้องลมสน', 'ห้องแสงจันทร์', 'ห้องน้ำค้าง', 'ห้องเมฆ', 'ห้องนกภูเขา', 'ห้องเสียงน้ำ', 'ห้องกระดิ่งลม', 'ห้องเสียงระฆัง']],
+  guest: ['손님', 'Guest', '訪客', 'Khách', 'ผู้มาเยือน'],
+  mapClose: ['누르면 작게 ✕', 'Tap to close ✕', '點一下縮小 ✕', 'Chạm để thu nhỏ ✕', 'แตะเพื่อย่อ ✕']
+};
+// 건물·구역 이름 (현판은 한국 절 그대로 한글, 알약·도면은 고른 언어로)
+const AREA_I18N = {
+  '대웅전': ['Main Hall', '大雄殿', 'Đại Hùng Điện', 'วิหารใหญ่'],
+  '극락전': ['Paradise Hall', '極樂殿', 'Điện Cực Lạc', 'วิหารสุขาวดี'],
+  '관음전': ['Guanyin Hall', '觀音殿', 'Điện Quan Âm', 'วิหารกวนอิม'],
+  '산신각': ['Mountain Spirit Shrine', '山神閣', 'Miếu Sơn Thần', 'ศาลเจ้าภูเขา'],
+  '요사채': ["Monks' Quarters", '寮舍', 'Tăng xá', 'กุฏิพระ'],
+  '범종각': ['Bell Pavilion', '梵鐘閣', 'Lầu chuông', 'หอระฆัง'],
+  '삼층석탑': ['Stone Pagoda', '三層石塔', 'Tháp đá', 'เจดีย์หิน'],
+  '연못': ['Lotus Pond', '蓮池', 'Hồ sen', 'สระบัว'],
+  '일주문': ['One-Pillar Gate', '一柱門', 'Cổng Nhất Trụ', 'ประตูเสาเดียว'],
+  '천왕문': ['Heavenly Kings Gate', '天王門', 'Cổng Thiên Vương', 'ประตูจตุโลกบาล'],
+  '불이문': ['Gate of Non-duality', '不二門', 'Cổng Bất Nhị', 'ประตูอทวิภาวะ'],
+  '마당': ['Courtyard', '庭院', 'Sân chùa', 'ลานวัด']
+};
+// 반야심경: 한글 음독(읽는 소리) · 한문 원문(대만) · 로마자(영어·베트남어·태국어 화면용)
+const SUTRA_ZH = ['摩訶般若波羅蜜多心經', '觀自在菩薩 行深般若波羅蜜多時 照見五蘊皆空 度一切苦厄', '舍利子 色不異空 空不異色 色即是空 空即是色 受想行識 亦復如是', '舍利子 是諸法空相 不生不滅 不垢不淨 不增不減', '是故空中無色 無受想行識 無眼耳鼻舌身意 無色聲香味觸法 無眼界 乃至無意識界', '無無明 亦無無明盡 乃至無老死 亦無老死盡 無苦集滅道 無智亦無得 以無所得故', '菩提薩埵 依般若波羅蜜多故 心無罣礙 無罣礙故 無有恐怖 遠離顛倒夢想 究竟涅槃', '三世諸佛 依般若波羅蜜多故 得阿耨多羅三藐三菩提', '故知般若波羅蜜多 是大神咒 是大明咒 是無上咒 是無等等咒 能除一切苦 真實不虛', '故說般若波羅蜜多咒 即說咒曰', '揭諦揭諦 波羅揭諦 波羅僧揭諦 菩提薩婆訶', '揭諦揭諦 波羅揭諦 波羅僧揭諦 菩提薩婆訶', '揭諦揭諦 波羅揭諦 波羅僧揭諦 菩提薩婆訶'];
+const SUTRA_ROMA = ['Maha banya baramilda simgyeong', 'Gwanjajae bosal haengsim banya baramilda si jogyeon oon gaegong doilche goaek', 'Sarija saek buli gong gong buli saek saek jeuksi gong gong jeuksi saek su sang haeng sik yeok buyeosi', 'Sarija si jebeop gongsang bulsaeng bulmyeol bulgu bujeong bujeung bulgam', 'Sigo gongjung musaek mu su sang haeng sik mu an i bi seol sin ui mu saek seong hyang mi chok beop mu angye naeji mu uisikgye', 'Mu mumyeong yeok mu mumyeongjin naeji mu nosa yeok mu nosajin mu go jip myeol do mu ji yeok mu deuk i musodeukgo', 'Borisalta ui banya baramilda go sim mu gaae mu gaae go mu yu gongpo wolli jeondo mongsang gugyeong yeolban', 'Samse jebul ui banya baramilda go deug anyokdara sammyak sambori', 'Goji banya baramilda sidae sinju sidae myeongju si musangju si mudeungdeungju neungje ilche go jinsil bulheo', 'Goseol banya baramilda ju jeukseol juwal', 'Aje aje bara aje barasung aje moji sabaha', 'Aje aje bara aje barasung aje moji sabaha', 'Aje aje bara aje barasung aje moji sabaha'];
+
+let LANG = 'ko';
+try {
+  const saved = localStorage.getItem('botari-lang');
+  if (saved && LANGS.some((l) => l[0] === saved)) LANG = saved;
+  else { const nav = (navigator.language || 'ko').slice(0, 2).toLowerCase(); if (LANGS.some((l) => l[0] === nav)) LANG = nav; }
+} catch {}
+const LI = () => Math.max(0, LANGS.findIndex((l) => l[0] === LANG));
+function T(key, ...args) {
+  const row = I18N[key]; if (!row) return key;
+  const v = row[LI()] ?? row[0];
+  return typeof v === 'function' ? v(...args) : v;
+}
+function AREA(name) { if (!name || LANG === 'ko') return name; const r = AREA_I18N[name]; return r ? r[LI() - 1] : name; }
+function hallName(i, koName) { const r = I18N.halls[LI()]; return (r && r[i]) || koName; }
+
+
 /* ---------------- 장소 이름 알약 ---------------- */
-document.getElementById('placePill').textContent = C.placeName;
-document.title = '보따리 · ' + C.placeName;
+document.getElementById('placePill').textContent = T('place');
+document.title = '보따리 · ' + T('place');
 
 /* ---------------- 3D 기본 ---------------- */
 const canvas = document.getElementById('scene');
@@ -1530,7 +1695,7 @@ let actTarget = null;         // 지금 단추가 가리키는 대상 (방석 �
 let sitTarget = null;         // 앉아 있는 방석
 const actBtn = document.getElementById('actBtn');
 const actLabel = document.getElementById('actLabel'), actIco = actBtn.querySelector('.ico');
-actLabel.textContent = ACT.label;
+actLabel.textContent = T('pray');
 let areaNow = null;
 let state = 'walk';          // 'walk' | 'sit'(합장)
 let resting = false;         // C 키: 제자리 앉기
@@ -1555,7 +1720,7 @@ function startAction() {
   // 함께 걷기 중이면 서버에 "이 방석 비었나요?" 물어보고 앉는다 (겹쳐 앉기 방지)
   Net.claimSeat(tgt.id).then((ok) => {
     seatAsking = false;
-    if (!ok) { toast('누가 먼저 앉았어요 — 옆 방석에 앉아 주세요'); return; }
+    if (!ok) { toast(T('seatTaken')); return; }
     if (state !== 'walk') return;
     sitTarget = tgt;
     resting = false; monk.bowT = 0;
@@ -1609,18 +1774,18 @@ function toast(msg, ms = 1800) {
   clearTimeout(toast.t); toast.t = setTimeout(() => { h.style.opacity = 0; }, ms);
 }
 function startAuto(deg, dist) {
-  if (!Number.isFinite(deg) || !Number.isFinite(dist)) { toast('숫자를 넣어 주세요'); return; }
+  if (!Number.isFinite(deg) || !Number.isFinite(dist)) { toast(T('needNum')); return; }
   deg = Math.max(-180, Math.min(180, deg)); dist = Math.max(0, Math.min(60, dist));
   if (state === 'sit') stopAction();
   resting = false; monk.bowT = 0; uTurnT = 0;
   autoGo = { phase: 'turn', ry: monk.root.rotation.y - deg * Math.PI / 180, left: dist };   // ＋ = 오른쪽
   setPanel(false);
-  toast(`${deg > 0 ? '오른쪽 ' + deg : deg < 0 ? '왼쪽 ' + (-deg) : '앞'}도 → ${dist}m 가는 중…`, 1500);
+  toast(T('going', deg, dist), 1500);
 }
 function stopAuto(msg) { autoGo = null; if (msg) toast(msg); }
 function setPanel(v) { goPanel.classList.toggle('show', v); document.body.classList.toggle('panel-open', v); }
-document.getElementById('btnGoPanel').addEventListener('pointerdown', (e) => {
-  e.preventDefault(); e.stopPropagation(); setMore(false); setPanel(!goPanel.classList.contains('show'));
+document.getElementById('btnGoPanel').addEventListener('click', (e) => {
+  e.stopPropagation(); setMore(false); setPanel(!goPanel.classList.contains('show'));
 });
 goPanel.addEventListener('pointerdown', (e) => e.stopPropagation());
 goPanel.querySelectorAll('[data-da]').forEach((b) => b.addEventListener('click', () => { goAngle.value = Math.max(-180, Math.min(180, (+goAngle.value || 0) + +b.dataset.da)); }));
@@ -1667,8 +1832,8 @@ function doBow() {
   if (state === 'sit' && sitT < 1) return;
   monk.bowT = 0.001;
   rec.bows++; saveRec();
-  if (rec.bows % GOAL === 0) { Sound.chime(); toast(`🙇 ${GOAL}배를 마쳤어요 🎉 (오늘 ${rec.bows}배)`, 2600); }
-  else toast(`🙇 ${rec.bows % GOAL} / ${GOAL}배`, 1000);
+  if (rec.bows % GOAL === 0) { Sound.chime(); toast(T('bowsDone', GOAL, rec.bows), 2600); }
+  else toast(T('bowsN', rec.bows % GOAL, GOAL), 1000);
 }
 // 📿 염주: 단추를 누르면 염주 판이 열리고, 손가락으로 쓸면 한 알씩 넘어간다
 function doBeads() { MalaPanel.toggle(); }
@@ -1678,7 +1843,7 @@ function beadStep() {
   rec.beads++; saveRec();
   if (!Sound.ctx) Sound.setOn(true);
   Sound.click();
-  if (rec.beads % GOAL === 0) { rec.rounds++; saveRec(); Sound.chime(); toast(`📿 염주 한 바퀴 (${GOAL}알) 🎉 오늘 ${rec.rounds}바퀴`, 2600); }
+  if (rec.beads % GOAL === 0) { rec.rounds++; saveRec(); Sound.chime(); toast(T('beadsRound', GOAL, rec.rounds), 2600); }
   beadCount++;
   MalaPanel.draw();
 }
@@ -1707,7 +1872,7 @@ const MalaPanel = (() => {
     g.fillText(String(rec.beads % GOAL), cx, cy - W * 0.03);
     g.font = `bold ${W * 0.05}px -apple-system, "Apple SD Gothic Neo", sans-serif`;
     g.fillStyle = 'rgba(245,239,226,0.75)';
-    g.fillText(`/ ${GOAL}알 · 오늘 ${rec.rounds}바퀴`, cx, cy + W * 0.09);
+    g.fillText(T('malaCount', GOAL, rec.rounds), cx, cy + W * 0.09);
   }
   function pos(e) { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
   cv.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); dragging = true; last = pos(e); try { cv.setPointerCapture(e.pointerId); } catch {} });
@@ -1760,16 +1925,23 @@ const Chant = (() => {
   let line = 0, voiceOn = true, timer = null, beatTimer = null, run = 0;
   const synth = window.speechSynthesis;
   const canSpeak = !!synth && typeof SpeechSynthesisUtterance !== 'undefined';
-  const koVoice = () => (canSpeak ? synth.getVoices().find((v) => /^ko/i.test(v.lang)) : null);
+  // 대만(繁體中文)은 한문 원문을 중국어 목소리로, 나머지는 한글 음독을 한국어 목소리로 읽음
+  const speakZh = () => LANG === 'zh';
+  const koVoice = () => {
+    if (!canSpeak) return null;
+    const vs = synth.getVoices();
+    return speakZh() ? (vs.find((v) => /^zh[-_]TW/i.test(v.lang)) || vs.find((v) => /^zh/i.test(v.lang))) : vs.find((v) => /^ko/i.test(v.lang));
+  };
+  const disp = (i) => (i < 0 || i >= SUTRA.length) ? '' : LANG === 'zh' ? SUTRA_ZH[i] : LANG === 'ko' ? SUTRA[i] : SUTRA_ROMA[i];
   function show() {
-    $('cPrev').textContent = SUTRA[line - 1] || '';
-    $('cCur').innerHTML = `<b>${SUTRA[line] || ''}</b>`;
-    $('cNext').textContent = SUTRA[line + 1] || '';
+    $('cPrev').textContent = disp(line - 1);
+    $('cCur').innerHTML = `<b>${disp(line)}</b>` + (LANG !== 'ko' && LANG !== 'zh' && SUTRA[line] ? `<div style="font-size:13px;color:#8a7a66;font-weight:400">${SUTRA[line]}</div>` : '');
+    $('cNext').textContent = disp(line + 1);
     $('cBar').style.width = `${(line / SUTRA.length) * 100}%`;
-    $('cPlay').textContent = chanting ? '⏸ 멈춤' : (line > 0 ? '▶ 이어서' : '▶ 시작');
+    $('cPlay').textContent = chanting ? T('cPause') : (line > 0 ? T('cResume') : T('cStart'));
     $('cPlay').classList.toggle('on', chanting);
     $('cVoice').classList.toggle('on', voiceOn);
-    $('cVoice').textContent = voiceOn ? '🔊 목소리' : '🔇 글자만';
+    $('cVoice').textContent = voiceOn ? T('cVoice') : T('cText');
   }
   function hasMoktak() { const mp = monk.root.position; return !!heldMoktak || !!nearMoktak(mp.x, mp.z, 3); }
   function beat() {             // 목탁 박자 (한 줄 읽는 동안 0.75초마다)
@@ -1782,14 +1954,14 @@ const Chant = (() => {
   }
   function next() {
     if (!chanting) return;
-    if (line >= SUTRA.length) { stop(); line = 0; show(); toast('🙏 독경을 마쳤어요'); return; }
+    if (line >= SUTRA.length) { stop(); line = 0; show(); toast(T('chantDone')); return; }
     show();
     const my = ++run, text = SUTRA[line];
     const go = () => { if (my !== run || !chanting) return; line++; next(); };
     const wait = Math.max(1600, text.replace(/\s/g, '').length * 330);   // 글자 수만큼 기다리기 (목소리가 없을 때)
     if (voiceOn && canSpeak && Sound.on) {
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang = 'ko-KR'; const v = koVoice(); if (v) u.voice = v;
+      const u = new SpeechSynthesisUtterance(speakZh() ? SUTRA_ZH[line] : text);
+      u.lang = speakZh() ? 'zh-TW' : 'ko-KR'; const v = koVoice(); if (v) u.voice = v;
       u.rate = 0.72; u.pitch = 0.55; u.volume = 1;
       let done = false; const fin = () => { if (done) return; done = true; clearTimeout(timer); timer = setTimeout(go, 350); };
       u.onend = fin; u.onerror = fin;
@@ -1800,8 +1972,8 @@ const Chant = (() => {
   function start() {
     if (!Sound.ctx) Sound.setOn(true);
     chanting = true; updateBtns();
-    if (voiceOn && canSpeak && !koVoice() && synth.getVoices().length) toast('한국어 목소리가 없어서 다른 목소리로 읽어요', 2000);
-    if (voiceOn && !canSpeak) toast('읽어 주기 기능이 없어서 글자만 넘어가요', 2000);
+    if (voiceOn && canSpeak && !koVoice() && synth.getVoices().length) toast(T('noVoiceLang'), 2000);
+    if (voiceOn && !canSpeak) toast(T('noTTS'), 2000);
     clearTimeout(beatTimer); beat();
     next();
   }
@@ -1822,7 +1994,7 @@ const Chant = (() => {
   });
   $('cClose').addEventListener('click', () => toggle(false));
   el.addEventListener('pointerdown', (e) => e.stopPropagation());
-  return { toggle, stop };
+  return { toggle, stop, show };
 })();
 if (window.speechSynthesis) { try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => {}; } catch {} }
 // 가까이 놓여 있는 목탁 (누가 들고 있지 않은 것)
@@ -1841,12 +2013,12 @@ function doHold() {
     scene.attach(m.g); m.g.position.set(x, groundHeight(x, z), z); m.g.rotation.set(0, ry, 0);
     m.x = x; m.z = z; m.held = false; m.g.visible = true;
     heldMoktak = null; monk.holding = false;
-    toast('목탁을 내려놓았어요');
+    toast(T('putDown'));
   } else {
     const m = nearMoktak(mp.x, mp.z);
-    if (!m) { toast('가까이에 목탁이 없어요 (법당 방석 옆에 있어요)'); return; }
+    if (!m) { toast(T('noMoktakNear')); return; }
     m.held = true; m.g.visible = false; heldMoktak = m; monk.holding = true;
-    toast('목탁을 집었어요 🤲 — 🥁 목탁소리를 눌러 보세요');
+    toast(T('pickedUp'));
   }
   updateBtns();
 }
@@ -1857,7 +2029,7 @@ function doTap() {
   if (heldMoktak) { startTap(monk); }
   else {
     const m = nearMoktak(mp.x, mp.z);
-    if (!m) { toast('목탁이 없어요 — 먼저 🤲 목탁집기'); return; }   // 목탁 없으면 소리 안 남
+    if (!m) { toast(T('noMoktak')); return; }   // 목탁 없으면 소리 안 남
     m.hit = 1;
   }
   tapCount++;
@@ -1876,12 +2048,12 @@ function doSit() { if (state === 'walk' && !resting) { resting = true; monk.bowT
 function doStand() {
   if (state === 'sit') stopAction();
   else if (resting) { resting = false; camYaw = monk.root.rotation.y; }
-  else { toast('이미 서 있어요'); return; }
+  else { toast(T('already')); return; }
   updateBtns();
 }
 // 🏃 빨리 / 🐢 천천히 (한 번 더 누르면 보통)
 let speedMode = 'normal';
-function setSpeed(m) { speedMode = speedMode === m ? 'normal' : m; updateBtns(); toast(speedMode === 'fast' ? '빨리 걸어요 🏃' : speedMode === 'slow' ? '천천히 걸어요 🐢' : '보통 빠르기'); }
+function setSpeed(m) { speedMode = speedMode === m ? 'normal' : m; updateBtns(); toast(T(speedMode === 'fast' ? 'spFast' : speedMode === 'slow' ? 'spSlow' : 'spNormal')); }
 function updateBtns() {
   const $ = (id) => document.getElementById(id);
   $('btnFast').classList.toggle('on', speedMode === 'fast');
@@ -1890,7 +2062,7 @@ function updateBtns() {
   $('btnPray').classList.toggle('on', monk.gassho || state === 'sit');
   $('btnHold').classList.toggle('on', !!heldMoktak);
   $('btnChant').classList.toggle('on', chanting || document.getElementById('chantPanel').classList.contains('show'));
-  $('btnHold').querySelector('.lbl').textContent = heldMoktak ? '내려놓기' : '목탁집기';
+  $('btnHold').querySelector('.lbl').textContent = heldMoktak ? T('putdown') : T('hold');
   const mp = monk.root.position;
   $('btnTap').classList.toggle('off', !heldMoktak && !nearMoktak(mp.x, mp.z));
 }
@@ -1928,35 +2100,32 @@ moreSheet.addEventListener('pointerdown', (e) => e.stopPropagation());
 window.addEventListener('pointerdown', () => { if (moreSheet.classList.contains('show')) setMore(false); });
 
 /* ---------------- ❓ 처음 안내 (3장) ---------------- */
-const GUIDE = [
-  ['🧒', '걷기', '왼쪽 아래 ▲ 를 누르고 있으면 앞으로 걸어요.<br>◀ ▶ 로 몸을 돌려 가고 싶은 쪽을 봐요.'],
-  ['🙏', '합장', '법당 방석 앞에 가서 🙏 합장 을 누르면<br>방석에 앉아 두 손을 모아요.'],
-  ['📿', '염주 · 목탁 · 더보기', '📿 염주 를 누를 때마다 한 알씩, 🥁 목탁 은 똑.<br>나머지 기능은 ⋯ 더보기 에 있어요.']
-];
+const GUIDE = { length: 3 };
+const guideCard = (i) => [['🧒', 'g1t', 'g1'], ['🙏', 'g2t', 'g2'], ['📿', 'g3t', 'g3']][i].map((v, k) => (k ? T(v) : v));
 let gStep = 0;
 const guideEl = document.getElementById('guide');
 function showGuide(i = 0) {
   gStep = i;
-  const [ico, t, txt] = GUIDE[i];
+  const [ico, t, txt] = guideCard(i);
   document.getElementById('gIco').textContent = ico;
   document.getElementById('gTitle').textContent = t;
   document.getElementById('gText').innerHTML = txt;
   guideEl.querySelectorAll('.dots i').forEach((d, k) => d.classList.toggle('on', k === i));
-  document.getElementById('gNext').textContent = i === GUIDE.length - 1 ? '시작하기' : '다음';
+  document.getElementById('gNext').textContent = i === GUIDE.length - 1 ? T('gStart') : T('gNext');
   guideEl.classList.add('show');
 }
 function closeGuide() { guideEl.classList.remove('show'); try { localStorage.setItem('botari-guide', '1'); } catch {} }
 guideEl.addEventListener('pointerdown', (e) => e.stopPropagation());
 document.getElementById('gNext').addEventListener('click', () => { if (gStep < GUIDE.length - 1) showGuide(gStep + 1); else closeGuide(); });
 document.getElementById('gSkip').addEventListener('click', closeGuide);
-onBtn(document.getElementById('btnGuide'), () => showGuide(0));
+document.getElementById('btnGuide').addEventListener('click', (e) => { e.stopPropagation(); showGuide(0); });
 window.maybeGuide = () => { if (document.getElementById('joinModal').classList.contains('show')) return; let seen = false; try { seen = localStorage.getItem('botari-guide') === '1'; } catch {} if (!seen) showGuide(0); };
 
 /* ---------------- 🎬 촬영 모드 ---------------- */
 // 단추를 모두 숨기고 카메라가 천천히 움직여요. 휴대폰 화면 녹화로 숏폼을 찍으면 됩니다.
 // 장면 1: 내 둘레 돌기 · 장면 2: 하늘에서 절 한 바퀴 · 장면 3: 숲길 따라 들어가기
 let film = false, filmShot = 0, filmT = 0, filmBarTimer = null;
-const FILM_NAMES = ['내 둘레 돌기', '하늘에서 절 한 바퀴', '숲길 따라 들어가기'];
+const FILM_NAMES = { length: 3 };
 const filmBar = document.getElementById('filmBar');
 function showFilmBar() { filmBar.classList.remove('hide'); clearTimeout(filmBarTimer); filmBarTimer = setTimeout(() => filmBar.classList.add('hide'), 4000); }
 function setFilm(v) {
@@ -1969,7 +2138,7 @@ onBtn(document.getElementById('btnFilm'), () => setFilm(true));
 document.getElementById('filmTap').addEventListener('pointerdown', (e) => { e.preventDefault(); showFilmBar(); });
 document.getElementById('filmShot').addEventListener('pointerdown', (e) => {
   e.stopPropagation(); filmShot = (filmShot + 1) % FILM_NAMES.length; filmT = 0; showFilmBar();
-  document.getElementById('filmShot').textContent = '🎥 ' + FILM_NAMES[filmShot];
+  document.getElementById('filmShot').textContent = '🎥 ' + T('filmNames')[filmShot];
 });
 document.getElementById('filmExit').addEventListener('pointerdown', (e) => { e.stopPropagation(); setFilm(false); });
 onBtn(document.getElementById('btnHome'), goHome);
@@ -1997,7 +2166,7 @@ function update(dt) {
   // 1) 입력 모으기 — 캐릭터 몸 기준: ▲ 앞으로 · ▼ 뒤로 · ◀▶ 제자리에서 몸 돌리기
   let f = ((keys.f || dp.f) ? 1 : 0) - ((keys.b || dp.b) ? 1 : 0);
   const turn = ((keys.r || dp.r) ? 1 : 0) - ((keys.l || dp.l) ? 1 : 0);
-  if (autoGo && (f !== 0 || turn !== 0)) stopAuto('직접 움직여서 멈췄어요');   // 손으로 움직이면 자동 걷기 멈춤
+  if (autoGo && (f !== 0 || turn !== 0)) stopAuto(T('stopManual'));   // 손으로 움직이면 자동 걷기 멈춤
   const autoTurning = autoGo && autoGo.phase === 'turn';
   if (autoGo && autoGo.phase === 'walk') f = 1;
   const running = (keys.run || speedMode === 'fast') && f > 0;
@@ -2025,7 +2194,7 @@ function update(dt) {
         const ry = monk.root.rotation.y;
         const diff = ((autoGo.ry - ry + Math.PI) % (Math.PI * 2) + Math.PI * 2) % (Math.PI * 2) - Math.PI;
         const stepA = C.character.turn * 1.3 * dt;
-        if (Math.abs(diff) <= stepA) { monk.root.rotation.y = ry + diff; autoGo.phase = 'walk'; if (autoGo.left <= 0) stopAuto('방향만 바꿨어요'); }
+        if (Math.abs(diff) <= stepA) { monk.root.rotation.y = ry + diff; autoGo.phase = 'walk'; if (autoGo.left <= 0) stopAuto(T('onlyTurned')); }
         else monk.root.rotation.y = ry + Math.sign(diff) * stepA;
       } else if (turn) monk.root.rotation.y -= turn * C.character.turn * dt;
       if (f !== 0) {
@@ -2042,11 +2211,11 @@ function update(dt) {
         // 부딪힘: 가려는 만큼 거의 못 갔으면 "쿵" (0.5초에 한 번만)
         if (step > 0.001 && moved < step * 0.3) {
           if (bumpT === 0) { Sound.bump(); bumpT = 0.5; monk.body.position.y = 0.06; }
-          if (autoGo) stopAuto('부딪혀서 멈췄어요 🧱');
+          if (autoGo) stopAuto(T('bumped'));
         }
         if (autoGo && autoGo.phase === 'walk') {
           autoGo.left -= moved;
-          if (autoGo.left <= 0.01) stopAuto('도착했어요 ✅');
+          if (autoGo.left <= 0.01) stopAuto(T('arrived'));
         }
       }
     }
@@ -2065,7 +2234,7 @@ function update(dt) {
     }
     if (best !== actTarget) {
       actTarget = best;
-      if (best) { actLabel.textContent = best.label; actIco.textContent = best.icon; }
+      if (best) { actLabel.textContent = T(best.type === 'bell' ? 'bellAct' : 'pray'); actIco.textContent = best.icon; }
     }
     actBtn.classList.toggle('show', !!best);
   } else {
@@ -2205,17 +2374,25 @@ function makeNameTag(text) {
 
 let pillNet = '';
 function renderPill() {
-  const parts = [C.placeName];
-  if (areaNow) parts.push(areaNow);
+  const parts = [T('place')];
+  if (areaNow) parts.push(AREA(areaNow));
   if (pillNet) parts.push(pillNet);
   document.getElementById('placePill').textContent = parts.join(' · ');
 }
 
 // 자동 이름 짓기 (예: 맑은 솔방울)
 function randomName() {
-  const a = ['맑은', '고요한', '포근한', '푸른', '작은', '따뜻한', '잔잔한', '소박한', '느긋한', '반짝이는'];
-  const b = ['솔방울', '이슬', '산바람', '연꽃', '구름', '종소리', '달빛', '다람쥐', '오솔길', '물결'];
-  return a[Math.floor(Math.random() * a.length)] + ' ' + b[Math.floor(Math.random() * b.length)];
+  const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+  const L = {
+    ko: [['맑은', '고요한', '포근한', '푸른', '작은', '따뜻한', '잔잔한', '소박한', '느긋한', '반짝이는'], ['솔방울', '이슬', '산바람', '연꽃', '구름', '종소리', '달빛', '다람쥐', '오솔길', '물결'], 'ab'],
+    en: [['Calm', 'Quiet', 'Gentle', 'Little', 'Warm', 'Clear', 'Soft', 'Kind'], ['Pine', 'Dew', 'Breeze', 'Lotus', 'Cloud', 'Moon', 'Bell', 'Stream'], 'ab'],
+    zh: [['安靜的', '清澈的', '溫暖的', '小小的', '悠閒的', '柔和的'], ['松果', '露珠', '山風', '蓮花', '白雲', '月光', '鐘聲'], 'ab0'],
+    vi: [['nhỏ', 'hiền', 'êm', 'ấm', 'trong'], ['Sương', 'Gió', 'Sen', 'Mây', 'Trăng', 'Suối', 'Chuông'], 'ba'],
+    th: [['น้อย', 'สงบ', 'อุ่น', 'ใส'], ['ดอกบัว', 'เมฆ', 'จันทร์', 'สายลม', 'ระฆัง', 'ธารน้ำ'], 'ba']
+  }[LANG] || null;
+  const [A, B, order] = L;
+  const a = pick(A), b = pick(B);
+  return order === 'ab' ? `${a} ${b}` : order === 'ab0' ? `${a}${b}` : `${b} ${a}`;
 }
 
 const Net = (() => {
@@ -2235,8 +2412,8 @@ const Net = (() => {
   let pickIdx = 1, counts = [];
   // 방마다 지금 몇 명인지 서버에 물어서 단추로 보여 줌
   function loadRooms(msg = '') {
-    roomMsg.textContent = msg || '방 사람 수를 불러오는 중…';
-    roomList.innerHTML = HALLS.map((n, i) => `<button type="button" data-i="${i + 1}">${n}<small>…</small></button>`).join('');
+    roomMsg.textContent = msg || T('roomLoading');
+    roomList.innerHTML = HALLS.map((n, i) => `<button type="button" data-i="${i + 1}">${hallName(i, n)}<small>…</small></button>`).join('');
     fetch('/rooms', { cache: 'no-store' }).then((r) => r.json()).then((d) => {
       counts = d.rooms || [];
       const firstFree = counts.findIndex((c) => c < C.room.maxPeople);
@@ -2247,12 +2424,12 @@ const Net = (() => {
   function renderRooms() {
     roomList.innerHTML = HALLS.map((n, i) => {
       const c = counts[i], full = c >= C.room.maxPeople;
-      const label = c === undefined ? '' : full ? '꽉 참' : `${c}명`;
-      return `<button type="button" data-i="${i + 1}" class="${pickIdx === i + 1 ? 'sel' : ''}" ${full ? 'disabled' : ''}>${n}<small>${label}</small></button>`;
+      const label = c === undefined ? '' : full ? T('roomFull') : T('people', c);
+      return `<button type="button" data-i="${i + 1}" class="${pickIdx === i + 1 ? 'sel' : ''}" ${full ? 'disabled' : ''}>${hallName(i, n)}<small>${label}</small></button>`;
     }).join('');
     const allFull = counts.length && counts.every((c) => c >= C.room.maxPeople);
     document.getElementById('joinBtn').disabled = !!allFull;
-    if (allFull) roomMsg.textContent = '지금은 모든 방이 꽉 찼어요. 조금 뒤에 다시 와 주세요.';
+    if (allFull) roomMsg.textContent = T('allFull');
   }
   roomList.addEventListener('click', (e) => {
     const b = e.target.closest('button[data-i]'); if (!b || b.disabled) return;
@@ -2265,7 +2442,7 @@ const Net = (() => {
   function addOther(info) {
     if (info.id === myId || others.has(info.id)) return;
     const m = makeMonk(C.character);
-    const tag = makeNameTag(info.name || '손님');
+    const tag = makeNameTag(info.name || T('guest'));
     m.root.add(tag);
     m.root.position.set(info.x ?? C.world.start.x, info.y ?? 0, info.z ?? C.world.start.z);
     m.root.rotation.y = info.ry ?? Math.PI;
@@ -2280,14 +2457,14 @@ const Net = (() => {
     others.delete(id);
   }
   function clearOthers() { [...others.keys()].forEach(removeOther); }
-  function countText() { setPill(`${HALLS[roomIdx - 1] || ''} · 👥 ${others.size + 1}명`); }
+  function countText() { setPill(`${hallName(roomIdx - 1, HALLS[roomIdx - 1] || '')} · 👥 ${others.size + 1}`); }
 
   function connect() {
     clearTimeout(retryTimer);
     const url = (location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host +
       '/ws?room=' + encodeURIComponent(roomKey(roomIdx)) + '&name=' + encodeURIComponent(nick);
     try { ws = new WebSocket(url); } catch (e) { scheduleRetry(); return; }
-    setPill('연결 중…');
+    setPill(T('connecting'));
     ws.onopen = () => {
       retry = 0;
       clearInterval(pingTimer);
@@ -2324,8 +2501,8 @@ const Net = (() => {
         if (seatWait) { seatWait(!!msg.ok); seatWait = null; }
       } else if (msg.t === 'full') {
         // 고른 방이 그사이 꽉 참 → 방 고르기 창을 다시 띄움
-        isFull = true; setPill('방이 꽉 찼어요');
-        openPicker('그 방은 방금 꽉 찼어요. 다른 방을 골라 주세요.');
+        isFull = true; setPill(T('roomFullPill'));
+        openPicker(T('justFull'));
       }
     };
     ws.onclose = () => {
@@ -2335,7 +2512,7 @@ const Net = (() => {
       if (isFull) return;
       if (switching) { switching = false; retry = 0; connect(); return; }   // 방 바꾸기
       if (hopping) { hopping = false; retry = 0; connect(); return; }
-      setPill('다시 연결 중…');
+      setPill(T('reconnecting'));
       scheduleRetry();
     };
     ws.onerror = () => { try { ws && ws.close(); } catch {} };
@@ -2357,7 +2534,7 @@ const Net = (() => {
 
   function openPicker(msg) {
     joinModal.classList.add('show'); loadRooms(msg);
-    document.getElementById('joinBtn').textContent = ws ? '이 방으로 옮기기' : '입장하기';
+    document.getElementById('joinBtn').textContent = ws ? T('moveRoom') : T('join');
   }
   function enter(name) {
     roomIdx = pickIdx; isFull = false;
@@ -2368,7 +2545,7 @@ const Net = (() => {
       try { old.close(); } catch {}
       clearInterval(pingTimer); clearOthers();
     }
-    nick = name.trim().slice(0, 10) || '손님';
+    nick = name.trim().slice(0, 16) || T('guest');
     try { localStorage.setItem('botari-nick', nick); } catch {}
     joinModal.classList.remove('show');
     nickInput.blur();   // 입력칸에서 빠져나와야 방향키로 걸을 수 있다
@@ -2382,16 +2559,17 @@ const Net = (() => {
     if (!Sound.ctx) Sound.setOn(true);
     enter(nickInput.value);
   });
-  document.getElementById('nickDice').addEventListener('click', () => { nickInput.value = randomName(); });
+  document.getElementById('nickDice').addEventListener('click', () => { nickInput.value = randomName(); nickInput.dataset.auto = '1'; });
+  nickInput.addEventListener('input', () => { nickInput.dataset.auto = ''; });
   // 입력 중에는 방향키·WASD가 캐릭터를 움직이지 않게
   nickInput.addEventListener('keydown', (e) => e.stopPropagation());
 
   // 함께 걷기 서버가 있을 때만 이름 입력창을 띄운다.
   // (서버의 /ws 는 일반 요청에 426 으로 답함) — 없으면 혼자 걷기로 그냥 시작
   let serverOn = false;
-  document.getElementById('btnRoom').addEventListener('pointerdown', (e) => {
-    e.preventDefault(); e.stopPropagation();
-    if (!serverOn) { toast('방 고르기는 함께 걷기 주소("올려" 뒤)에서 돼요'); return; }
+  document.getElementById('btnRoom').addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (!serverOn) { toast(T('roomOnlyOnline')); return; }
     openPicker('');
   });
   if (online) {
@@ -2399,7 +2577,7 @@ const Net = (() => {
       .then((r) => {
         if (r.status !== 426) return;
         try { nickInput.value = localStorage.getItem('botari-nick') || ''; } catch {}
-        if (!nickInput.value) nickInput.value = randomName();   // 이름이 없으면 자동으로 지어 줌
+        if (!nickInput.value) { nickInput.value = randomName(); nickInput.dataset.auto = '1'; }   // 이름이 없으면 자동으로 지어 줌
         serverOn = true;
         openPicker('');
         setTimeout(() => nickInput.focus(), 50);
@@ -2451,13 +2629,24 @@ const Net = (() => {
         setTimeout(() => { if (seatWait === res) { seatWait = null; res(true); } }, 1500);
       });
     },
-    releaseSeat() { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: 'seat', id: null })); }
+    releaseSeat() { if (ws && ws.readyState === 1) ws.send(JSON.stringify({ t: 'seat', id: null })); },
+    relabel() { if (ws && ws.readyState === 1) countText(); if (joinModal.classList.contains('show') && counts.length) renderRooms(); }
   };
 })();
 
 /* =====================================================================
    건물 위치 축소 도면 (오른쪽 위) — 위쪽 = 절 안쪽(대웅전), 아래쪽 = 들어오는 길
    ===================================================================== */
+// 작은 도면용 짧은 이름
+function shortName(name) {
+  const n = AREA(name) || '';
+  if (LANG === 'ko' || LANG === 'zh') return n.length > 2 ? n.slice(0, 2) : n;
+  const skip = { en: [], vi: ['Đại', 'Điện', 'Cổng', 'Miếu', 'Tháp', 'Hồ'], th: [] }[LANG] || [];
+  if (LANG === 'th') return n.replace(/^(วิหาร|ศาลเจ้า|ประตู)/, '');
+  const w = n.split(' ').filter((x) => !skip.includes(x));
+  return w[0] || n;
+}
+
 const MiniMap = (() => {
   const cv = document.getElementById('miniMap'), shade = document.getElementById('mapShade');
   const g = cv.getContext('2d'), dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -2493,17 +2682,17 @@ const MiniMap = (() => {
       if (it.type === 'pond') { b.beginPath(); b.ellipse(x + ww / 2, z + hh / 2, ww / 2, hh / 2, 0, 0, Math.PI * 2); b.fill(); }
       else b.fillRect(x, z, ww, hh);
       if (it.name && it.type !== 'gate' && (big || it.type !== 'pond')) {   // 연못 이름은 크게 볼 때만
-        const label = big ? it.name : (it.name.length > 2 ? it.name.slice(0, 2) : it.name);   // 크게 볼 땐 이름 전부
+        const label = big ? AREA(it.name) : shortName(it.name);   // 크게 볼 땐 이름 전부
         b.lineWidth = 2.5 * k; b.strokeStyle = 'rgba(30,30,30,0.9)'; b.lineJoin = 'round';
         b.strokeText(label, x + ww / 2, z + hh / 2 + 0.5); b.fillStyle = '#fff'; b.fillText(label, x + ww / 2, z + hh / 2 + 0.5);
       }
     }
     b.font = `bold ${7.5 * k}px ${FONT}`; b.textAlign = 'left';
-    for (const it of mapItems) if (it.type === 'gate') { b.fillStyle = '#5a2a1a'; b.fillText(it.name, mx(it.maxX) + 2 * k, mz((it.minZ + it.maxZ) / 2) + 0.5); }
+    for (const it of mapItems) if (it.type === 'gate') { b.fillStyle = '#5a2a1a'; b.fillText(big || LANG === 'ko' || LANG === 'zh' ? AREA(it.name) : '', mx(it.maxX) + 2 * k, mz((it.minZ + it.maxZ) / 2) + 0.5); }
     // 크게 보기 / 작게 보기 안내
     b.font = `bold ${(big ? 12 : 8) * (big ? 1 : 1)}px ${FONT}`; b.textAlign = 'right'; b.textBaseline = 'bottom';
     b.fillStyle = 'rgba(59,42,26,0.85)';
-    b.fillText(big ? '누르면 작게 ✕' : '🔍', W - 5, H - 3);
+    b.fillText(big ? T('mapClose') : '🔍', W - 5, H - 3);
     acc = 1;   // 바로 다시 그림
   }
   function toggle(v = !big) {
@@ -2545,7 +2734,7 @@ const MiniMap = (() => {
     g.closePath(); g.fillStyle = '#f2b51c'; g.fill(); g.strokeStyle = '#5a3a1a'; g.lineWidth = 1; g.stroke();
   }
   build();
-  return { draw, toggle };
+  return { draw, toggle, rebuild: () => requestAnimationFrame(build) };
 })();
 
 /* ---------------- 그리기 반복 ---------------- */
@@ -2561,6 +2750,39 @@ function loop() {
   renderer.render(scene, camera);
   requestAnimationFrame(loop);
 }
+/* ---------------- 🌏 언어 바꾸기 ---------------- */
+function applyLang() {
+  document.documentElement.lang = LANG === 'zh' ? 'zh-Hant' : LANG;
+  document.title = '보따리 · ' + T('place');
+  document.querySelectorAll('[data-i18n]').forEach((el) => { el.textContent = T(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-ph]').forEach((el) => { el.placeholder = T(el.dataset.i18nPh); });
+  const cur = LANGS[LI()][1];
+  document.getElementById('joinLang').textContent = '🌏 ' + cur;
+  document.getElementById('btnLang').querySelector('span:last-child').textContent = cur;
+  if (actTarget) actLabel.textContent = T(actTarget.type === 'bell' ? 'bellAct' : 'pray'); else actLabel.textContent = T('pray');
+  document.getElementById('filmShot').textContent = T('filmShot');
+  updateBtns(); renderPill(); Net.relabel(); MiniMap.rebuild(); Chant.show();
+  if (document.getElementById('guide').classList.contains('show')) showGuide(gStep);
+  if (document.getElementById('joinModal').classList.contains('show')) document.getElementById('joinBtn').textContent = T('join');
+}
+function setLang(l) {
+  LANG = l; try { localStorage.setItem('botari-lang', l); } catch {}
+  // 이름이 자동 이름 그대로면 새 언어 이름으로
+  const ni = document.getElementById('nickInput'); if (ni && ni.dataset.auto === '1') { ni.value = randomName(); }
+  applyLang(); renderLangs();
+}
+const langModal = document.getElementById('langModal');
+function renderLangs() {
+  document.getElementById('langList').innerHTML = LANGS.map(([k, n]) => `<button type="button" data-l="${k}" class="${k === LANG ? 'sel' : ''}">${n}</button>`).join('');
+}
+document.getElementById('langList').addEventListener('click', (e) => { const b = e.target.closest('button[data-l]'); if (b) { setLang(b.dataset.l); langModal.classList.remove('show'); } });
+document.getElementById('langClose').addEventListener('click', () => langModal.classList.remove('show'));
+langModal.addEventListener('pointerdown', (e) => e.stopPropagation());
+const openLang = () => { renderLangs(); langModal.classList.add('show'); };
+document.getElementById('btnLang').addEventListener('click', (e) => { e.stopPropagation(); openLang(); });
+document.getElementById('joinLang').addEventListener('click', openLang);
+applyLang();
+
 window.__sceneReady = true;
 // 처음 온 사람에게 안내 (이름 입력창이 떠 있으면 입장한 뒤에)
 setTimeout(() => { if (!document.getElementById('joinModal').classList.contains('show')) window.maybeGuide(); }, 1200);

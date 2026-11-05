@@ -148,6 +148,6 @@ function num(v, lo, hi) {
   return Math.max(lo, Math.min(hi, Math.round(n * 100) / 100));
 }
 function cleanName(v) {
-  const s = String(v || "").replace(/[<>&"'`]/g, "").trim().slice(0, 10);
+  const s = String(v || "").replace(/[<>&"'`]/g, "").trim().slice(0, 16);
   return s || "손님";
 }
