@@ -83,12 +83,23 @@ window.CONFIG = {
   }
   #soundBtn:active { transform: scale(0.94); }
 
+  /* 오른쪽 위 = 건물 위치 축소 도면 (미니맵) */
+  #miniMap {
+    position: fixed; z-index: 10; pointer-events: none;
+    top: calc(12px + env(safe-area-inset-top)); right: calc(12px + env(safe-area-inset-right));
+    width: 112px; height: 172px; border-radius: 12px;
+    background: rgba(255,255,255,0.55); box-shadow: 0 2px 10px rgba(0,0,0,0.18); backdrop-filter: blur(4px);
+  }
+  /* 휴대폰처럼 좁은 화면: 장소 알약과 겹치지 않게 알약 아래로 */
+  @media (max-width: 560px) { #miniMap { top: calc(60px + env(safe-area-inset-top)); } }
+
   /* 처음 안내 (화면을 한 번 누르면 사라짐) */
   #hint {
     position: fixed; top: calc(62px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%);
     padding: 8px 14px; white-space: nowrap; border-radius: 12px; background: rgba(0,0,0,0.45); color: #fff;
     font-size: 13px; pointer-events: none; z-index: 10; transition: opacity .6s;
   }
+  @media (max-width: 560px) { #hint { top: calc(242px + env(safe-area-inset-top)); } }   /* 미니맵 아래로 */
 
   /* 왼쪽 아래 = 조이스틱 (휴대폰에서만) */
   #joy {
@@ -189,6 +200,7 @@ window.CONFIG = {
     <button id="btnBow"  type="button" aria-label="절하기"><span class="key">F</span><span class="ico">🙇</span>절</button>
     <button id="btnTap"  type="button" aria-label="목탁"><span class="key">T</span><span class="ico">🥁</span>목탁</button>
   </div>
+  <canvas id="miniMap" aria-label="건물 위치 도면"></canvas>
   <div id="hint">화면을 한 번 누르면 소리가 나요</div>
   <div class="modal" id="joinModal">
     <form class="card" id="joinForm">
@@ -297,6 +309,7 @@ const targets = [];                              // 행동 단추 대상 (방석
 const areas = [];                                // 알약에 보일 구역 이름
 const moktaks = [];                              // 법당마다 있는 목탁
 const indoors = [];                              // 법당 안 (카메라를 낮고 가깝게)
+const mapItems = [];                             // 축소 도면에 그릴 것들
 const mat = (color, extra = {}) => new THREE.MeshStandardMaterial({ color, roughness: 0.85, ...extra });
 function part(geo, material, x, y, z, parent = scene) {
   const m = new THREE.Mesh(geo, material);
@@ -318,6 +331,7 @@ function makeFrame(cx, cz, yaw) {
   return {
     g, cx, cz, yaw, toW,
     box(minX, maxX, minZ, maxZ) { colliders.boxes.push(aabb(minX, maxX, minZ, maxZ)); },
+    map(minX, maxX, minZ, maxZ, type, name) { mapItems.push({ ...aabb(minX, maxX, minZ, maxZ), type, name }); },
     circle(lx, lz, r) { const [x, z] = toW(lx, lz); colliders.circles.push({ x, z, r }); },
     walk(minX, maxX, minZ, maxZ, h, stairs) { walkables.push({ cx, cz, yaw, minX, maxX, minZ, maxZ, h, stairs }); },
     area(minX, maxX, minZ, maxZ, name) { areas.push({ cx, cz, yaw, minX, maxX, minZ, maxZ, name }); }
@@ -510,6 +524,7 @@ function buildHall(o) {
     const [lx, lz] = F.toW(0, 0); lt.position.set(lx, bh + H * 0.75, lz); scene.add(lt);
   }
   F.area(bMinX, bMaxX, bMinZ, bMaxZ + depth * steps, o.name);
+  F.map(-W / 2, W / 2, -D / 2, D / 2, 'hall', o.name);
 }
 
 // 일주문 · 천왕문 · 불이문
@@ -526,6 +541,7 @@ function buildGate(gate) {
     addRoof(F, 4.4, 1.0, 4.08, 0.9, 0.8, 1.0);
     const sign = makeSign(C.placeName.replace(/\s/g, ''), 1.6, 0.5); sign.position.set(0, 3.15, 0.25); F.g.add(sign);
     F.area(-3, 3, -1.5, 1.5, '일주문');
+    F.map(-2.4, 2.4, -0.5, 0.5, 'gate', '일주문');
   } else if (gate.type === '천왕문') {
     const W = 8, D = 4.6, H = 3.2, t = 0.3, pw = 1.4;
     part(new THREE.BoxGeometry(W, 0.08, D), floorWood, 0, 0.04, 0, F.g);
@@ -553,6 +569,7 @@ function buildGate(gate) {
     const sign = makeSign('천왕문', 1.5, 0.48); sign.position.set(0, H - 0.55, D / 2 + 0.2); F.g.add(sign);
     const lt = new THREE.PointLight(0xffe0b0, 3, 7, 1.6); lt.position.set(0, 2.6, gate.z); scene.add(lt);
     F.area(-W / 2, W / 2, -D / 2 - 0.5, D / 2 + 0.5, '천왕문');
+    F.map(-W / 2, W / 2, -D / 2, D / 2, 'gate', '천왕문');
   } else if (gate.type === '불이문') {
     const H = 3.0;
     [[-1.6, 0.7], [1.6, 0.7], [-1.6, -0.7], [1.6, -0.7]].forEach(([x, z]) => {
@@ -562,6 +579,7 @@ function buildGate(gate) {
     addRoof(F, 3.4, 1.4, H + 0.12, 0.9, 0.8, 1.1);
     const sign = makeSign('불이문', 1.3, 0.44); sign.position.set(0, H - 0.55, 0.9); F.g.add(sign);
     F.area(-2.5, 2.5, -1.5, 1.5, '불이문');
+    F.map(-2.2, 2.2, -0.9, 0.9, 'gate', '불이문');
   }
 }
 
@@ -633,6 +651,7 @@ function buildBellTower(o) {
   const [tx, tz] = F.toW(2.0, 0.6);
   targets.push({ type: 'bell', x: tx, z: tz, label: C.action.bell.label, icon: '🔔', radius: C.action.bell.radius, name: o.name });
   F.area(-2.7, 2.7, -2.7, 3.6, o.name);
+  F.map(-2.2, 2.2, -2.2, 2.2, 'bell', o.name);
 }
 
 // 삼층석탑
@@ -651,6 +670,7 @@ function buildPagoda(o) {
   [0.18, 0.14, 0.1].forEach((r, i) => part(new THREE.SphereGeometry(r, 10, 8), stoneDark, 0, y + 0.3 + i * 0.25, 0, g));
   F.box(-1.3, 1.3, -1.3, 1.3);
   F.area(-1.8, 1.8, -1.8, 1.8, o.name);
+  F.map(-1.0, 1.0, -1.0, 1.0, 'pagoda', '');
 }
 
 // 석등
@@ -1506,8 +1526,81 @@ const Net = (() => {
   return {
     update,
     anyoneSitting: () => [...others.values()].some((o) => o.m.sitting && o.m.body.position.y < -0.25),
-    forEachSitting: (fn) => others.forEach((o) => { if (o.m.sitting) fn(o.m); })
+    forEachSitting: (fn) => others.forEach((o) => { if (o.m.sitting) fn(o.m); }),
+    forEachOther: (fn) => others.forEach((o) => fn(o.m))
   };
+})();
+
+/* =====================================================================
+   건물 위치 축소 도면 (오른쪽 위) — 위쪽 = 절 안쪽(대웅전), 아래쪽 = 들어오는 길
+   ===================================================================== */
+const MiniMap = (() => {
+  const cv = document.getElementById('miniMap');
+  const W = 112, H = 172, dpr = Math.min(window.devicePixelRatio || 1, 2);
+  cv.width = W * dpr; cv.height = H * dpr;
+  const g = cv.getContext('2d');
+  // 보여 줄 범위: 담장 둘레 + 일주문 앞 시작 자리까지
+  const w = O.wall || { minX: -20, maxX: 20, minZ: -20, maxZ: 10 };
+  const pad = 3, x0 = w.minX - pad, x1 = w.maxX + pad, z0 = w.minZ - pad, z1 = C.world.start.z + 3;
+  const sc = Math.min((W - 8) / (x1 - x0), (H - 8) / (z1 - z0));
+  const ox = (W - (x1 - x0) * sc) / 2, oz = (H - (z1 - z0) * sc) / 2;
+  const mx = (x) => ox + (x - x0) * sc, mz = (z) => oz + (z - z0) * sc;
+  const clampX = (x) => Math.max(x0, Math.min(x1, x)), clampZ = (z) => Math.max(z0, Math.min(z1, z));
+
+  // 바탕 (한 번만 그림)
+  const bg = document.createElement('canvas'); bg.width = cv.width; bg.height = cv.height;
+  const b = bg.getContext('2d'); b.scale(dpr, dpr);
+  b.fillStyle = 'rgba(111,143,90,0.55)'; b.fillRect(mx(x0), mz(z0), (x1 - x0) * sc, (z1 - z0) * sc);   // 숲
+  b.fillStyle = 'rgba(120,120,112,0.9)'; b.fillRect(mx(-0.7), mz(w.maxZ), 1.4 * sc, (C.world.start.z - w.maxZ) * sc);  // 숲길
+  if (O.wall) {
+    b.fillStyle = 'rgba(205,189,152,0.95)'; b.fillRect(mx(w.minX), mz(w.minZ), (w.maxX - w.minX) * sc, (w.maxZ - w.minZ) * sc);   // 마당
+    b.strokeStyle = '#6b665c'; b.lineWidth = 1.5; b.strokeRect(mx(w.minX), mz(w.minZ), (w.maxX - w.minX) * sc, (w.maxZ - w.minZ) * sc);   // 담장
+    b.fillStyle = 'rgba(205,189,152,1)'; b.fillRect(mx(-1.6), mz(w.maxZ) - 1.5, 3.2 * sc, 3);   // 담장 입구
+  }
+  b.textAlign = 'center'; b.textBaseline = 'middle';
+  b.font = 'bold 9px -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif';
+  for (const it of mapItems) {
+    const x = mx(it.minX), z = mz(it.minZ), ww = (it.maxX - it.minX) * sc, hh = (it.maxZ - it.minZ) * sc;
+    b.fillStyle = it.type === 'hall' ? '#2b2f33' : it.type === 'gate' ? '#a3262a' : it.type === 'bell' ? '#2f7a6a' : '#7d7b74';
+    b.fillRect(x, z, ww, hh);
+    if (it.name) {
+      const short = it.name.length > 2 ? it.name.slice(0, 2) : it.name;     // 대웅전 → 대웅
+      const tx = x + ww / 2, tz = z + hh / 2;
+      const label = it.type === 'gate' ? null : short;
+      if (label) {   // 진한 테두리 글씨 (작은 건물 밖으로 나와도 잘 보이게)
+        b.lineWidth = 2.5; b.strokeStyle = 'rgba(30,30,30,0.9)'; b.lineJoin = 'round';
+        b.strokeText(label, tx, tz + 0.5); b.fillStyle = '#fff'; b.fillText(label, tx, tz + 0.5);
+      }
+    }
+  }
+  // 문 이름은 옆에 작게
+  b.font = 'bold 7.5px -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif'; b.textAlign = 'left';
+  for (const it of mapItems) if (it.type === 'gate') {
+    b.fillStyle = '#5a2a1a'; b.fillText(it.name, mx(it.maxX) + 2, mz((it.minZ + it.maxZ) / 2) + 0.5);
+  }
+
+  let acc = 0;
+  function dot(x, z, r, fill, stroke) {
+    g.beginPath(); g.arc(mx(clampX(x)), mz(clampZ(z)), r, 0, Math.PI * 2);
+    g.fillStyle = fill; g.fill(); if (stroke) { g.strokeStyle = stroke; g.lineWidth = 1; g.stroke(); }
+  }
+  function draw(dt) {
+    acc += dt; if (acc < 0.1) return; acc = 0;          // 1초에 10번만 다시 그림 (가볍게)
+    g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, cv.width, cv.height);
+    g.drawImage(bg, 0, 0);
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    Net.forEachOther((m) => dot(m.root.position.x, m.root.position.z, 2.6, '#ffffff', '#3b2a1a'));   // 다른 사람
+    // 나 (보는 방향 화살표)
+    const p = monk.root.position, ry = monk.root.rotation.y;
+    const px = mx(clampX(p.x)), pz = mz(clampZ(p.z));
+    const fx = Math.sin(ry), fz = Math.cos(ry);
+    g.beginPath();
+    g.moveTo(px + fx * 6, pz + fz * 6);
+    g.lineTo(px - fz * 3.6 - fx * 2.5, pz + fx * 3.6 - fz * 2.5);
+    g.lineTo(px + fz * 3.6 - fx * 2.5, pz - fx * 3.6 - fz * 2.5);
+    g.closePath(); g.fillStyle = '#f2b51c'; g.fill(); g.strokeStyle = '#5a3a1a'; g.lineWidth = 1; g.stroke();
+  }
+  return { draw };
 })();
 
 /* ---------------- 그리기 반복 ---------------- */
@@ -1515,6 +1608,7 @@ const clock = new THREE.Clock();
 function loop() {
   const dt = Math.min(clock.getDelta(), 0.05);
   update(dt);
+  MiniMap.draw(dt);
   // 행동 번호: 0 걷기 · 1 합장 · 2 제자리 앉기 · 3 절하기
   const actCode = state === 'sit' ? 1 : resting ? 2 : monk.bowT > 0 ? 3 : 0;
   Net.update(dt, actCode, tapCount, bellCount);
