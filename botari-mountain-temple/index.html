@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>보따리 · 산속 절</title>
+
+<!-- =====================================================================
+     🎒 CONFIG — 장소를 바꿀 때는 이 칸만 고친다 (폴더 1개 = 장소 1개)
+     ===================================================================== -->
+<script>
+window.CONFIG = {
+  // 1) 장소 이름 (위 가운데 알약에 표시)
+  placeName: "산속 절",
+
+  // 2) 놓을 것 (STEP 3에서 사용)
+  objects: {
+    hall:     { roof: "#1f2226", pillar: "#a3262a", openFront: true }, // 법당: 검은 기와지붕, 붉은 기둥, 앞면이 열린 입구
+    stairs:   true,          // 법당 앞 돌계단
+    lanterns: 2,             // 양옆 석등 2개
+    pines:    true,          // 둘레 소나무
+    buddha:   true,          // 법당 안 불상
+    cushion:  true           // 불상 앞 방석
+  },
+
+  // 3) 내 캐릭터 (STEP 2에서 사용)
+  character: { name: "동자승", robe: "#8a8d91", skin: "#f1d3b3" }, // 회색 승복
+
+  // 4) 단추 (STEP 3에서 사용)
+  action: {
+    label: "합장",
+    target: "cushion",       // 방석
+    radius: 1.5,             // 반경 1.5m 안에 들어가면 단추가 뜸
+    bpm: 72                  // 목탁 박자
+  },
+
+  // 배경음: 잔잔한 바람 + 이따금 풍경 소리
+  ambience: { wind: 0.18, chimeEverySec: [6, 14] },
+
+  // 바탕 색
+  world: { size: 60, ground: "#6f8f5a", skyTop: "#7fb2e0", skyBottom: "#e7eef2", fog: "#dfe8ea" }
+};
+</script>
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #dfe8ea; font-family: -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif; }
+  #scene { position: fixed; inset: 0; display: block; touch-action: none; }
+
+  /* 위 가운데 = 장소 이름 알약 */
+  #placePill {
+    position: fixed; top: calc(14px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%);
+    padding: 8px 18px; border-radius: 999px;
+    background: rgba(255,255,255,0.82); color: #2b2f33;
+    font-size: 15px; font-weight: 700; letter-spacing: 0.02em;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.12); backdrop-filter: blur(6px);
+    pointer-events: none; white-space: nowrap; z-index: 10;
+  }
+
+  /* 왼쪽 위 = 소리 켜기/끄기 단추 */
+  #soundBtn {
+    position: fixed; top: calc(12px + env(safe-area-inset-top)); left: calc(12px + env(safe-area-inset-left));
+    width: 44px; height: 44px; border-radius: 50%; border: none;
+    background: rgba(255,255,255,0.82); font-size: 20px; cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.12); z-index: 10;
+  }
+  #soundBtn:active { transform: scale(0.94); }
+
+  /* 처음 안내 (화면을 한 번 누르면 사라짐) */
+  #hint {
+    position: fixed; bottom: calc(28px + env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%);
+    padding: 8px 14px; border-radius: 12px; background: rgba(0,0,0,0.45); color: #fff;
+    font-size: 13px; pointer-events: none; z-index: 10; transition: opacity .6s;
+  }
+
+  /* 로딩 실패 안내 (하얀 화면 방지) */
+  #loadErr {
+    display: none; position: fixed; inset: 0; align-items: center; justify-content: center; text-align: center;
+    padding: 24px; background: #f4f6f7; color: #333; font-size: 15px; line-height: 1.6; z-index: 20;
+  }
+</style>
+
+<!-- three.js — 버전 번호 고정 CDN, importmap으로 불러온다 -->
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
+  }
+}
+</script>
+</head>
+<body>
+  <canvas id="scene"></canvas>
+  <div id="placePill"></div>
+  <button id="soundBtn" aria-label="소리 켜기/끄기">🔇</button>
+  <div id="hint">화면을 한 번 누르면 소리가 나요</div>
+  <div id="loadErr">3D 화면을 불러오지 못했어요.<br>인터넷 연결을 확인한 뒤 새로고침 해 주세요.</div>
+
+<script>
+  // three.js를 못 불러오면 하얀 화면 대신 안내를 띄운다
+  setTimeout(() => { if (!window.__sceneReady) document.getElementById('loadErr').style.display = 'flex'; }, 8000);
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+
+const C = window.CONFIG;
+
+/* ---------------- 장소 이름 알약 ---------------- */
+document.getElementById('placePill').textContent = C.placeName;
+document.title = '보따리 · ' + C.placeName;
+
+/* ---------------- 3D 기본 ---------------- */
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(C.world.fog, 30, 140);
+
+const camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.1, 300);
+camera.position.set(0, 4.5, 12);
+camera.lookAt(0, 1, 0);
+
+/* ---------------- 하늘 (공 모양 안쪽에 위→아래 색 번짐) ---------------- */
+const skyGeo = new THREE.SphereGeometry(150, 32, 16);
+const skyMat = new THREE.ShaderMaterial({
+  side: THREE.BackSide, depthWrite: false, fog: false,
+  uniforms: {
+    top:    { value: new THREE.Color(C.world.skyTop) },
+    bottom: { value: new THREE.Color(C.world.skyBottom) }
+  },
+  vertexShader: `varying vec3 vPos; void main(){ vPos = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
+  fragmentShader: `uniform vec3 top; uniform vec3 bottom; varying vec3 vPos;
+    void main(){ float h = clamp(normalize(vPos).y * 1.6 + 0.15, 0.0, 1.0); gl_FragColor = vec4(mix(bottom, top, h), 1.0); }`
+});
+scene.add(new THREE.Mesh(skyGeo, skyMat));
+
+/* ---------------- 빛 ---------------- */
+scene.add(new THREE.HemisphereLight(0xdfefff, 0x5a6b48, 0.9));
+const sun = new THREE.DirectionalLight(0xfff3dd, 1.4);
+sun.position.set(12, 20, 8);
+sun.castShadow = true;
+sun.shadow.mapSize.set(2048, 2048);
+const S = C.world.size / 2;
+Object.assign(sun.shadow.camera, { left: -S, right: S, top: S, bottom: -S, near: 1, far: 60 });
+scene.add(sun);
+
+/* ---------------- 땅 (납작한 상자) ---------------- */
+const ground = new THREE.Mesh(
+  new THREE.BoxGeometry(C.world.size, 1, C.world.size),
+  new THREE.MeshStandardMaterial({ color: C.world.ground, roughness: 1 })
+);
+ground.position.y = -0.5;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// 땅 바깥의 먼 들판 (보이기만 하고 걸어갈 수는 없음)
+const farLand = new THREE.Mesh(
+  new THREE.BoxGeometry(320, 1, 320),
+  new THREE.MeshStandardMaterial({ color: 0x5d7a4c, roughness: 1 })
+);
+farLand.position.y = -0.52;
+scene.add(farLand);
+
+// 멀리 보이는 산 (원뿔) — 배경 분위기용, 땅 바깥에 둔다
+const mountainMat = new THREE.MeshStandardMaterial({ color: 0x5f7a6a, roughness: 1, flatShading: true });
+[[-40, -80, 14, 22], [-8, -95, 18, 26], [30, -85, 15, 22], [60, -70, 12, 20], [-65, -60, 11, 18]]
+  .forEach(([x, z, h, r]) => {
+    const m = new THREE.Mesh(new THREE.ConeGeometry(r, h, 7), mountainMat);
+    m.position.set(x, h / 2 - 1, z);
+    scene.add(m);
+  });
+
+/* ---------------- 화면 크기 바뀔 때 ---------------- */
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+/* =====================================================================
+   소리 — Web Audio 합성 (파일 없음). 화면을 처음 누른 뒤부터 소리를 낸다.
+   ===================================================================== */
+const Sound = {
+  ctx: null, master: null, on: false, chimeTimer: null,
+
+  init() {
+    if (this.ctx) return;
+    const ctx = this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    this.master = ctx.createGain();
+    this.master.gain.value = 0;
+    this.master.connect(ctx.destination);
+
+    // 바람: 흰 소음 → 낮은 대역 필터 → 천천히 출렁이는 볼륨
+    const len = ctx.sampleRate * 3;
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate);
+    const d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = Math.random() * 2 - 1;
+    const noise = ctx.createBufferSource();
+    noise.buffer = buf; noise.loop = true;
+
+    const lp = ctx.createBiquadFilter();
+    lp.type = 'lowpass'; lp.frequency.value = 420; lp.Q.value = 0.7;
+
+    const windGain = ctx.createGain();
+    windGain.gain.value = C.ambience.wind;
+
+    // 느린 출렁임 (LFO [엘에프오] = 아주 느린 떨림)
+    const lfo = ctx.createOscillator(); lfo.frequency.value = 0.08;
+    const lfoAmt = ctx.createGain(); lfoAmt.gain.value = C.ambience.wind * 0.6;
+    lfo.connect(lfoAmt).connect(windGain.gain);
+    const lfo2 = ctx.createOscillator(); lfo2.frequency.value = 0.05;
+    const lfo2Amt = ctx.createGain(); lfo2Amt.gain.value = 180;
+    lfo2.connect(lfo2Amt).connect(lp.frequency);
+
+    noise.connect(lp).connect(windGain).connect(this.master);
+    noise.start(); lfo.start(); lfo2.start();
+  },
+
+  // 풍경 소리: 맑은 금속음 몇 개가 짧게 겹쳐 딸랑
+  chime() {
+    if (!this.ctx || !this.on) return;
+    const ctx = this.ctx, now = ctx.currentTime;
+    const base = [1318, 1568, 1760, 2093][Math.floor(Math.random() * 4)];
+    const hits = 2 + Math.floor(Math.random() * 3);
+    for (let h = 0; h < hits; h++) {
+      const t = now + h * (0.12 + Math.random() * 0.18);
+      [1, 2.76, 5.4].forEach((ratio, k) => {
+        const o = ctx.createOscillator(); o.type = 'sine';
+        o.frequency.value = base * ratio * (1 + (Math.random() - 0.5) * 0.01);
+        const g = ctx.createGain();
+        const peak = [0.07, 0.025, 0.01][k];
+        g.gain.setValueAtTime(0.0001, t);
+        g.gain.exponentialRampToValueAtTime(peak, t + 0.005);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + 2.2 - k * 0.6);
+        o.connect(g).connect(this.master);
+        o.start(t); o.stop(t + 2.4);
+      });
+    }
+  },
+
+  scheduleChime() {
+    clearTimeout(this.chimeTimer);
+    const [a, b] = C.ambience.chimeEverySec;
+    this.chimeTimer = setTimeout(() => { this.chime(); this.scheduleChime(); }, (a + Math.random() * (b - a)) * 1000);
+  },
+
+  setOn(v) {
+    this.init();
+    this.on = v;
+    if (this.ctx.state === 'suspended') this.ctx.resume();
+    const t = this.ctx.currentTime;
+    this.master.gain.cancelScheduledValues(t);
+    this.master.gain.setTargetAtTime(v ? 1 : 0, t, 0.4);
+    if (v) { this.scheduleChime(); setTimeout(() => this.chime(), 1200); }
+    else clearTimeout(this.chimeTimer);
+    soundBtn.textContent = v ? '🔊' : '🔇';
+  }
+};
+window.Sound = Sound; // 다음 STEP(목탁)에서 같이 쓴다
+
+const soundBtn = document.getElementById('soundBtn');
+const hint = document.getElementById('hint');
+
+soundBtn.addEventListener('pointerdown', (e) => {
+  e.stopPropagation();
+  Sound.setOn(!Sound.on);
+  hint.style.opacity = 0;
+});
+
+// 화면을 처음 누르면 소리 켜기
+window.addEventListener('pointerdown', function firstTouch() {
+  window.removeEventListener('pointerdown', firstTouch);
+  if (!Sound.on) Sound.setOn(true);
+  hint.style.opacity = 0;
+}, { once: true });
+
+/* ---------------- 그리기 반복 ---------------- */
+const clock = new THREE.Clock();
+function loop() {
+  const t = clock.getElapsedTime();
+  // STEP 1: 카메라가 아주 천천히 숨 쉬듯 움직인다 (STEP 2에서 3인칭 카메라로 바뀜)
+  camera.position.x = Math.sin(t * 0.1) * 1.2;
+  camera.lookAt(0, 1, 0);
+  renderer.render(scene, camera);
+  requestAnimationFrame(loop);
+}
+window.__sceneReady = true;
+loop();
+</script>
+</body>
+</html>
