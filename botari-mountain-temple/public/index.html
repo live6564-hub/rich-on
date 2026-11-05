@@ -196,6 +196,27 @@ window.CONFIG = {
   #roomList button:disabled { opacity: 0.45; }
   #roomMsg { font-size: 12.5px; color: #8e2a35; min-height: 18px; margin-top: 4px; }
 
+  /* ✋ 위치 바꾸기 모드 */
+  body.layout-edit, body.layout-edit * { touch-action: none !important; }   /* 끄는 동안 화면이 같이 밀리지 않게 */
+  body.layout-edit .dragme { outline: 3px dashed #f2b51c; outline-offset: 3px; cursor: grab; animation: wiggle .9s ease-in-out infinite; }
+  body.layout-edit .dragme.dragging { cursor: grabbing; animation: none; opacity: .85; }
+  body.layout-edit #actBtn { opacity: 1; transform: none; pointer-events: auto; }
+  @keyframes wiggle { 0%,100% { filter: none } 50% { filter: drop-shadow(0 0 6px rgba(242,181,28,.9)) } }
+  @media (prefers-reduced-motion: reduce) { body.layout-edit .dragme { animation: none; } }
+  #layoutBar { display: none; position: fixed; z-index: 40; left: 50%; transform: translateX(-50%);
+               top: 42%; width: min(300px, calc(100vw - 24px));
+               padding: 10px 12px; border-radius: 14px; background: rgba(32,28,22,0.88); color: #fff; text-align: center; }
+  body.layout-edit #layoutBar { display: block; pointer-events: none; }   /* 글자 부분은 손가락이 통과 → 밑의 단추도 잡을 수 있음 */
+  #layoutBar button { pointer-events: auto; }
+  body.layout-dragging #layoutBar { opacity: .15; }
+  body.layout-dragging #layoutBar button { pointer-events: none; }
+  #layoutBar p { margin: 0 0 8px; font-size: 13.5px; font-weight: 700; word-break: keep-all; }
+  #layoutBar .row { display: flex; gap: 6px; }
+  #layoutBar button { flex: 1; height: 38px; border: none; border-radius: 10px; font-size: 14px; font-weight: 800; cursor: pointer; }
+  #layoutBar .done { background: #f2b51c; color: #2b1e08; }
+  #layoutBar .reset { background: #4a4238; color: #fff; }
+  body.layout-edit #hint, body.layout-edit #moreSheet, body.layout-edit #goPanel { display: none !important; }
+
   /* 🌏 언어 고르기 */
   #langModal { z-index: 31; }
   #langList { display: grid; gap: 6px; margin: 12px 0 4px; }
@@ -404,6 +425,7 @@ window.CONFIG = {
     <button id="btnHome" type="button"><span class="key">H</span><span class="ico">↩️</span><span data-i18n="home">처음으로</span></button>
     <button id="btnFilm" type="button"><span class="key">B</span><span class="ico">🎬</span><span data-i18n="film">촬영 모드</span></button>
     <button id="btnRoom" type="button"><span class="ico">🏯</span><span data-i18n="room">방 바꾸기</span></button>
+    <button id="btnLayout" type="button"><span class="ico">✋</span><span data-i18n="layout">위치 바꾸기</span></button>
     <button id="btnLang" type="button"><span class="ico">🌏</span><span>Language</span></button>
     <button id="btnGuide" type="button"><span class="ico">❓</span><span data-i18n="guide">안내 보기</span></button>
   </div>
@@ -430,6 +452,10 @@ window.CONFIG = {
       <button id="cClose" type="button" data-i18n="close">닫기</button>
     </div>
     <div class="bar"><i id="cBar"></i></div>
+  </div>
+  <div id="layoutBar">
+    <p data-i18n="layoutHelp">✋ 단추·도면을 손가락으로 끌어서 옮기세요</p>
+    <div class="row"><button type="button" class="reset" id="layoutReset" data-i18n="layoutReset">처음 위치로</button><button type="button" class="done" id="layoutDone" data-i18n="layoutDone">완료</button></div>
   </div>
   <div id="filmTap"></div>
   <div id="filmBar"><button id="filmShot" type="button">🎥 장면 바꾸기</button><button id="filmExit" type="button" data-i18n="filmExit">✕ 촬영 끝</button></div>
@@ -585,6 +611,11 @@ const I18N = {
     ['Liên Hoa', 'Tùng Phong', 'Nguyệt Quang', 'Giọt Sương', 'Mây Trắng', 'Chim Núi', 'Tiếng Nước', 'Chuông Gió', 'Tiếng Chuông'],
     ['ห้องบัว', 'ห้องลมสน', 'ห้องแสงจันทร์', 'ห้องน้ำค้าง', 'ห้องเมฆ', 'ห้องนกภูเขา', 'ห้องเสียงน้ำ', 'ห้องกระดิ่งลม', 'ห้องเสียงระฆัง']],
   guest: ['손님', 'Guest', '訪客', 'Khách', 'ผู้มาเยือน'],
+  layout: ['위치 바꾸기', 'Move', '調整位置', 'Đổi vị trí', 'ย้ายตำแหน่ง'],
+  layoutHelp: ['✋ 단추·도면을 손가락으로 끌어서 옮기세요', '✋ Drag the buttons and map where you like', '✋ 用手指拖動按鈕和地圖', '✋ Kéo nút và bản đồ đến chỗ bạn thích', '✋ ลากปุ่มและแผนที่ไปวางตามใจ'],
+  layoutDone: ['완료', 'Done', '完成', 'Xong', 'เสร็จ'],
+  layoutReset: ['처음 위치로', 'Reset', '恢復原位', 'Về mặc định', 'คืนค่าเดิม'],
+  layoutSaved: ['위치를 저장했어요 ✅', 'Layout saved ✅', '位置已儲存 ✅', 'Đã lưu vị trí ✅', 'บันทึกตำแหน่งแล้ว ✅'],
   mapClose: ['누르면 작게 ✕', 'Tap to close ✕', '點一下縮小 ✕', 'Chạm để thu nhỏ ✕', 'แตะเพื่อย่อ ✕']
 };
 // 건물·구역 이름 (현판은 한국 절 그대로 한글, 알약·도면은 고른 언어로)
@@ -2697,6 +2728,7 @@ const MiniMap = (() => {
   }
   function toggle(v = !big) {
     big = v; cv.classList.toggle('big', big); shade.classList.toggle('show', big);
+    if (window.Layout) Layout.apply(cv);          // 크게 볼 땐 가운데, 작게 볼 땐 내가 옮겨 둔 자리
     requestAnimationFrame(build);
   }
   cv.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); toggle(); });
@@ -2709,13 +2741,20 @@ const MiniMap = (() => {
     g.beginPath(); g.arc(mx(clampX(x)), mz(clampZ(z)), r, 0, Math.PI * 2);
     g.fillStyle = fill; g.fill(); if (stroke) { g.strokeStyle = stroke; g.lineWidth = 1; g.stroke(); }
   }
+  // 지나온 길 (발자국 점) — 0.8m 움직일 때마다 하나, 최근 60개
+  const trail = [];
+  let pulse = 0;
   function draw(dt) {
-    acc += dt; if (acc < 0.1 || !bg) return; acc = 0;          // 1초에 10번만 다시 그림 (가볍게)
+    pulse += dt;
+    acc += dt; if (acc < 0.08 || !bg) return; acc = 0;          // 1초에 12번 정도만 다시 그림 (가볍게)
     const k = Math.min(2.2, W / 112);
+    { const q = monk.root.position, l = trail[trail.length - 1];
+      if (!l || Math.hypot(q.x - l.x, q.z - l.z) > 0.8) { trail.push({ x: q.x, z: q.z }); if (trail.length > 60) trail.shift(); }
+      if (l && Math.hypot(q.x - l.x, q.z - l.z) > 15) trail.length = 0; }   // 순간이동(처음으로)하면 지움
     g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, cv.width, cv.height);
     g.drawImage(bg, 0, 0);
     g.setTransform(dpr, 0, 0, dpr, 0, 0);
-    Net.forEachOther((m) => dot(m.root.position.x, m.root.position.z, 2.6 * k, '#ffffff', '#3b2a1a'));   // 다른 사람
+    Net.forEachOther((m) => dot(m.root.position.x, m.root.position.z, 3.2 * k, '#ffffff', '#2b6cb0'));   // 다른 사람 (흰 점·파란 테)
     const p = monk.root.position, ry = monk.root.rotation.y;
     // 자동 걷기 중이면 갈 길을 점선으로
     if (autoGo) {
@@ -2724,14 +2763,23 @@ const MiniMap = (() => {
       g.beginPath(); g.moveTo(mx(p.x), mz(p.z)); g.lineTo(mx(clampX(p.x + Math.sin(a) * L)), mz(clampZ(p.z + Math.cos(a) * L))); g.stroke();
       g.setLineDash([]);
     }
-    // 나 (보는 방향 화살표)
+    // 지나온 길: 오래된 점일수록 흐리고 작게
+    trail.forEach((t, i) => {
+      const a = (i + 1) / trail.length;
+      g.beginPath(); g.arc(mx(clampX(t.x)), mz(clampZ(t.z)), (0.9 + a * 1.3) * k, 0, Math.PI * 2);
+      g.fillStyle = `rgba(242,181,28,${0.15 + a * 0.6})`; g.fill();
+    });
+    // 나: 숨 쉬듯 커졌다 작아지는 테두리 + 보는 방향 화살표
     const px = mx(clampX(p.x)), pz = mz(clampZ(p.z));
-    const fx = Math.sin(ry), fz = Math.cos(ry), s1 = 6 * k, s2 = 3.6 * k, s3 = 2.5 * k;
+    const pr = (6 + Math.sin(pulse * 4) * 1.6) * k;
+    g.beginPath(); g.arc(px, pz, pr + 2 * k, 0, Math.PI * 2); g.fillStyle = 'rgba(242,181,28,0.22)'; g.fill();
+    g.beginPath(); g.arc(px, pz, pr, 0, Math.PI * 2); g.strokeStyle = 'rgba(192,57,43,0.9)'; g.lineWidth = 1.6 * k; g.stroke();
+    const fx = Math.sin(ry), fz = Math.cos(ry), s1 = 8 * k, s2 = 4.6 * k, s3 = 3.2 * k;
     g.beginPath();
     g.moveTo(px + fx * s1, pz + fz * s1);
     g.lineTo(px - fz * s2 - fx * s3, pz + fx * s2 - fz * s3);
     g.lineTo(px + fz * s2 - fx * s3, pz - fx * s2 - fz * s3);
-    g.closePath(); g.fillStyle = '#f2b51c'; g.fill(); g.strokeStyle = '#5a3a1a'; g.lineWidth = 1; g.stroke();
+    g.closePath(); g.fillStyle = '#f2b51c'; g.fill(); g.strokeStyle = '#5a3a1a'; g.lineWidth = 1.2 * k; g.stroke();
   }
   build();
   return { draw, toggle, rebuild: () => requestAnimationFrame(build) };
@@ -2750,6 +2798,72 @@ function loop() {
   renderer.render(scene, camera);
   requestAnimationFrame(loop);
 }
+/* ---------------- ✋ 위치 바꾸기 (단추·도면을 끌어서 옮기기) ---------------- */
+// 저장은 화면 크기에 대한 비율로 → 휴대폰을 돌리거나 다른 휴대폰에서도 비슷한 자리
+const Layout = (() => {
+  const IDS = ['dpad', 'moveBtns', 'miniMap', 'actBtn'];
+  let pos = {};
+  try { pos = JSON.parse(localStorage.getItem('botari-layout') || '{}') || {}; } catch {}
+  const save = () => { try { localStorage.setItem('botari-layout', JSON.stringify(pos)); } catch {} };
+  const els = () => IDS.map((id) => document.getElementById(id)).filter(Boolean);
+  function apply(el) {
+    const p = pos[el.id];
+    if (!p || (el.id === 'miniMap' && el.classList.contains('big'))) {
+      el.style.left = el.style.top = el.style.right = el.style.bottom = el.style.transform = '';
+      return;
+    }
+    const r = el.getBoundingClientRect(), W = innerWidth, H = innerHeight;
+    const x = Math.max(4, Math.min(W - r.width - 4, p.x * W)), y = Math.max(4, Math.min(H - r.height - 4, p.y * H));
+    Object.assign(el.style, { left: x + 'px', top: y + 'px', right: 'auto', bottom: 'auto', transform: 'none' });
+  }
+  const applyAll = () => els().forEach(apply);
+  let drag = null;
+  function onDown(e) {
+    if (!document.body.classList.contains('layout-edit')) return;
+    const el = e.target.closest && e.target.closest('.dragme');
+    if (!el) return;
+    e.preventDefault(); e.stopPropagation();       // 단추가 눌리지 않게 (옮기기만)
+    const r = el.getBoundingClientRect();
+    Object.assign(el.style, { left: r.left + 'px', top: r.top + 'px', right: 'auto', bottom: 'auto', transform: 'none' });
+    drag = { el, id: e.pointerId, dx: e.clientX - r.left, dy: e.clientY - r.top };
+    el.classList.add('dragging'); document.body.classList.add('layout-dragging');
+  }
+  function onMove(e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    e.preventDefault(); e.stopPropagation();
+    const r = drag.el.getBoundingClientRect();
+    const x = Math.max(4, Math.min(innerWidth - r.width - 4, e.clientX - drag.dx));
+    const y = Math.max(4, Math.min(innerHeight - r.height - 4, e.clientY - drag.dy));
+    drag.el.style.left = x + 'px'; drag.el.style.top = y + 'px';
+  }
+  function onUp(e) {
+    if (!drag || e.pointerId !== drag.id) return;
+    e.stopPropagation();
+    const r = drag.el.getBoundingClientRect();
+    pos[drag.el.id] = { x: r.left / innerWidth, y: r.top / innerHeight };
+    drag.el.classList.remove('dragging'); document.body.classList.remove('layout-dragging'); drag = null;
+  }
+  // 잡기 단계(capture)에서 먼저 받아서, 옮기는 동안 단추·도면이 반응하지 않게
+  window.addEventListener('pointerdown', onDown, true);
+  window.addEventListener('pointermove', onMove, true);
+  window.addEventListener('pointerup', onUp, true);
+  window.addEventListener('pointercancel', onUp, true);
+  window.addEventListener('click', (e) => { if (document.body.classList.contains('layout-edit') && e.target.closest && e.target.closest('.dragme')) { e.preventDefault(); e.stopPropagation(); } }, true);
+  window.addEventListener('resize', () => requestAnimationFrame(applyAll));
+  function edit(v) {
+    document.body.classList.toggle('layout-edit', v);
+    els().forEach((el) => el.classList.toggle('dragme', v));
+    if (v) { setMore(false); setPanel(false); if (MiniMap) MiniMap.toggle(false); }
+    else { save(); toast(T('layoutSaved')); }
+  }
+  document.getElementById('layoutDone').addEventListener('click', () => edit(false));
+  document.getElementById('layoutReset').addEventListener('click', () => { pos = {}; save(); applyAll(); });
+  document.getElementById('btnLayout').addEventListener('click', (e) => { e.stopPropagation(); edit(true); });
+  requestAnimationFrame(applyAll);
+  return { apply, applyAll, edit };
+})();
+window.Layout = Layout;
+
 /* ---------------- 🌏 언어 바꾸기 ---------------- */
 function applyLang() {
   document.documentElement.lang = LANG === 'zh' ? 'zh-Hant' : LANG;
