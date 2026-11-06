@@ -108,7 +108,7 @@ export class Room extends DurableObject {
     me.act = Math.max(0, Math.min(3, Math.round(Number(msg.act) || 0)));   // 0 걷기 · 1 합장 · 2 앉기 · 3 절하기
     me.tap = Math.max(0, Math.min(1e6, Math.round(Number(msg.tap) || 0)));  // 목탁 두드린 횟수
     me.bell = Math.max(0, Math.min(1e6, Math.round(Number(msg.bell) || 0))); // 종 친 횟수
-    me.fx = Math.max(0, Math.min(3, Math.round(Number(msg.fx) || 0)));      // 1 서서 합장 · 2 목탁 들고 있음
+    me.fx = Math.max(0, Math.min(7, Math.round(Number(msg.fx) || 0)));      // 1 서서 합장 · 2 목탁 · 4 염주 들고 있음
     me.bead = Math.max(0, Math.min(1e6, Math.round(Number(msg.bead) || 0))); // 염주 알 넘긴 횟수
     ws.serializeAttachment(me);
 

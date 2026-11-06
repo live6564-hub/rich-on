@@ -450,6 +450,7 @@ window.CONFIG = {
     <button id="btnFast" type="button"><span class="key">Shift</span><span class="ico">🏃</span><span data-i18n="fast">빨리</span></button>
     <button id="btnSlow" type="button"><span class="key">Z</span><span class="ico">🐢</span><span data-i18n="slow">천천히</span></button>
     <button id="btnHold" type="button"><span class="key">E</span><span class="ico">🤲</span><span class="lbl">목탁집기</span></button>
+    <button id="btnMalaHold" type="button"><span class="key">K</span><span class="ico">📿</span><span class="lbl">염주잡기</span></button>
     <button id="btnChant" type="button"><span class="key">V</span><span class="ico">📖</span><span data-i18n="chant">독경</span></button>
     <button id="btnGoPanel" type="button"><span class="key">G</span><span class="ico">📐</span><span data-i18n="goTo">각도·거리</span></button>
     <button id="btnHome" type="button"><span class="key">H</span><span class="ico">↩️</span><span data-i18n="home">처음으로</span></button>
@@ -584,6 +585,10 @@ const I18N = {
   goBtn: ['🚶 가기', '🚶 Go', '🚶 出發', '🚶 Đi', '🚶 ไป'],
   close: ['닫기', 'Close', '關閉', 'Đóng', 'ปิด'],
   malaHelp: ['잡고 위아래로 쓸어 넘기기', 'Grab and swipe up or down', '按住上下撥動', 'Giữ và vuốt lên xuống', 'จับแล้วปัดขึ้นลง'],
+  malaHold: ['염주잡기', 'Hold beads', '拿起念珠', 'Cầm tràng hạt', 'ถือลูกประคำ'],
+  malaPut: ['염주 놓기', 'Put away', '放下念珠', 'Cất tràng hạt', 'เก็บลูกประคำ'],
+  malaHeld: ['염주를 손에 들었어요 📿 — 걸으면서도 들고 다녀요', 'Holding the beads 📿 — you carry them as you walk', '拿起念珠了 📿 — 走路時也帶著', 'Đã cầm tràng hạt 📿 — mang theo khi đi', 'ถือลูกประคำแล้ว 📿 — พกไปขณะเดิน'],
+  malaPutDone: ['염주를 손목에 걸었어요', 'Beads back on your wrist', '把念珠掛回手腕', 'Đã đeo tràng hạt vào cổ tay', 'คล้องลูกประคำไว้ที่ข้อมือแล้ว'],
   malaFold: ['염주 접기', 'Put away', '收起念珠', 'Cất tràng hạt', 'เก็บลูกประคำ'],
   malaRound: [(n) => (n === 1 ? '첫 번째 바퀴' : `${n}번째 바퀴`), (n) => `Round ${n}`, (n) => `第${n}圈`, (n) => `Vòng ${n}`, (n) => `รอบที่ ${n}`],
   malaCount: [(g, r) => `/ ${g}알 · 오늘 ${r}바퀴`, (g, r) => `/ ${g} · today ${r} rounds`, (g, r) => `/ ${g}顆 · 今天${r}圈`, (g, r) => `/ ${g} hạt · hôm nay ${r} vòng`, (g, r) => `/ ${g} เม็ด · วันนี้ ${r} รอบ`],
@@ -1610,7 +1615,7 @@ function makeMonk(cfg) {
   handMoktak.scale.set(1, 0.8, 1.1); handMoktak.position.set(0, -0.42, 0.04); handMoktak.visible = false; handMoktak.castShadow = true;
   arms[0].add(handMoktak);
 
-  return { root, body, upper, legs, arms, head, handMoktak, mala, malaShow: 0, phase: 0, moveAmt: 0, sitting: false, bowT: 0, tapT: 0, tapShow: 0, gassho: false, holding: false };
+  return { root, body, upper, legs, arms, head, handMoktak, mala, malaShow: 0, phase: 0, moveAmt: 0, sitting: false, bowT: 0, tapT: 0, tapShow: 0, gassho: false, holding: false, malaHold: false };
 }
 
 // 걷는 몸짓 (amt = 0 멈춤 ~ 1 걷기). 앉은 자세에서도 부드럽게 풀린다.
@@ -1683,10 +1688,20 @@ function poseOverlay(m, dt) {
     m.handMoktak.visible = true;
     m.arms[0].rotation.x = -0.85; m.arms[0].rotation.z = 0.3;
   }
-  // 염주: 오른손을 가슴 앞으로 들고 알을 굴림
+  // 염주: 굴릴 때는 오른손을 가슴 앞으로 들고 알을 굴림
   if (m.malaShow > 0) {
-    m.malaShow -= dt; m.mala.visible = true;
+    m.malaShow -= dt; m.mala.visible = true; m.mala.scale.setScalar(1);
+    m.mala.rotation.x += (Math.PI / 2 - m.mala.rotation.x) * Math.min(1, dt * 10);   // 손바닥 위에 눕힘
+    m.mala.position.y += (-0.4 - m.mala.position.y) * Math.min(1, dt * 10);
     if (!m.gassho && !(m.bowT > 0) && !(m.tapShow > 0)) { m.arms[1].rotation.x = -1.0; m.arms[1].rotation.z = -0.35; }
+  } else if (m.malaHold) {
+    // 📿 염주를 잡고 있으면: 오른손에 쥔 염주가 아래로 늘어져 걸음에 맞춰 살랑 흔들림
+    m.mala.visible = true;
+    m.mala.rotation.x += (0 - m.mala.rotation.x) * Math.min(1, dt * 8);              // 세로로 늘어뜨림
+    m.mala.position.y += (-0.5 - m.mala.position.y) * Math.min(1, dt * 8);
+    m.mala.rotation.y = Math.sin(m.phase * 0.5) * 0.25 * (m.moveAmt || 0);
+    m.mala.scale.setScalar(1.35);                                                    // 들고 있을 땐 잘 보이게 조금 크게
+    if (!m.gassho && !(m.bowT > 0) && !(m.tapShow > 0) && !m.sitting) { m.arms[1].rotation.x = Math.min(m.arms[1].rotation.x, -0.35); m.arms[1].rotation.z = -0.2; }
   } else m.mala.visible = false;
   // 목탁 두드리기: 왼손에 든 목탁을 오른손으로 똑
   if (m.tapShow > 0) {
@@ -1839,6 +1854,7 @@ window.addEventListener('keydown', (e) => {
   if (e.code === 'KeyX') doStand();
   if (e.code === 'KeyP') doPray();
   if (e.code === 'KeyE') doHold();
+  if (e.code === 'KeyK') doMalaHold();
   if (e.code === 'KeyR') beadStep();
   if (e.code === 'KeyB') setFilm(!film);
   if (e.code === 'Escape' && film) setFilm(false);
@@ -1927,7 +1943,7 @@ function doBow() {
   else toast(T('bowsN', rec.bows % GOAL, GOAL), 1000);
 }
 // 📿 염주: 단추를 누르면 염주 판이 열리고, 손가락으로 쓸면 한 알씩 넘어간다
-function doBeads() { MalaPanel.toggle(); }
+function doBeads() { if (!monk.malaHold) { monk.malaHold = true; updateBtns(); } MalaPanel.toggle(); }
 function beadStep(silent) {
   monk.malaShow = 2.5;
   monk.mala.rotation.z += (Math.PI * 2) / 14;
@@ -2231,6 +2247,14 @@ function doHold() {
   }
   updateBtns();
 }
+// 📿 염주 잡기 / 놓기 — 잡으면 손에 들고 다니고, 놓으면 손목에 건 것처럼 숨김
+function doMalaHold(v = !monk.malaHold) {
+  monk.malaHold = v;
+  if (!Sound.ctx) Sound.setOn(true);
+  Sound.clack(0.2);
+  toast(T(v ? 'malaHeld' : 'malaPutDone'));
+  updateBtns();
+}
 // 🥁 목탁 소리 — 목탁을 들고 있거나 바로 옆에 있을 때만 소리가 난다
 function doTap() {
   if (state === 'sit' && sitT < 1) return;
@@ -2272,6 +2296,8 @@ function updateBtns() {
   $('btnHold').classList.toggle('on', !!heldMoktak);
   $('btnChant').classList.toggle('on', chanting || document.getElementById('chantPanel').classList.contains('show'));
   $('btnHold').querySelector('.lbl').textContent = heldMoktak ? T('putdown') : T('hold');
+  $('btnMalaHold').classList.toggle('on', monk.malaHold);
+  $('btnMalaHold').querySelector('.lbl').textContent = monk.malaHold ? T('malaPut') : T('malaHold');
   const mp = monk.root.position;
   $('btnTap').classList.toggle('off', !heldMoktak && !nearMoktak(mp.x, mp.z));
 }
@@ -2296,6 +2322,7 @@ onBtn(document.getElementById('btnPray'), doPray);
 onBtn(document.getElementById('btnHold'), doHold);
 onBtn(document.getElementById('btnTap'), doTap);
 onBtn(document.getElementById('btnBeads'), doBeads);
+onBtn(document.getElementById('btnMalaHold'), () => doMalaHold());
 onBtn(document.getElementById('btnChant'), doChant);
 
 /* ---------------- ⋯ 더보기 ---------------- */
@@ -2657,7 +2684,7 @@ const Net = (() => {
     m.root.rotation.y = info.ry ?? Math.PI;
     scene.add(m.root);
     others.set(info.id, { m, tag, act: info.act || 0, tap: info.tap, bell: info.bell, bead: info.bead, seat: info.seat || null, snaps: [{ t: now(), ...info }] });
-    m.gassho = !!(info.fx & 1); m.holding = !!(info.fx & 2);
+    m.gassho = !!(info.fx & 1); m.holding = !!(info.fx & 2); m.malaHold = !!(info.fx & 4);
   }
   function removeOther(id) {
     const o = others.get(id); if (!o) return;
@@ -2692,7 +2719,7 @@ const Net = (() => {
         const o = others.get(msg.id);
         if (!o) { addOther(msg); countText(); return; }
         o.snaps.push({ t: now(), x: msg.x, y: msg.y, z: msg.z, ry: msg.ry, act: msg.act });
-        o.m.gassho = !!(msg.fx & 1); o.m.holding = !!(msg.fx & 2);
+        o.m.gassho = !!(msg.fx & 1); o.m.holding = !!(msg.fx & 2); o.m.malaHold = !!(msg.fx & 4);
         // 목탁 두드리기 (가까이 있을 때만 소리)
         if (o.tap !== undefined && msg.tap !== o.tap) {
           startTap(o.m);
@@ -2971,7 +2998,7 @@ function loop() {
   MiniMap.draw(dt);
   // 행동 번호: 0 걷기 · 1 합장 · 2 제자리 앉기 · 3 절하기
   const actCode = state === 'sit' ? 1 : resting ? 2 : monk.bowT > 0 ? 3 : 0;
-  const fx = (monk.gassho ? 1 : 0) | (heldMoktak ? 2 : 0);   // 서서 합장 · 목탁 들고 있음
+  const fx = (monk.gassho ? 1 : 0) | (heldMoktak ? 2 : 0) | (monk.malaHold ? 4 : 0);   // 서서 합장 · 목탁 · 염주 들고 있음
   Net.update(dt, actCode, tapCount, bellCount, fx, beadCount);
   renderer.render(scene, camera);
   requestAnimationFrame(loop);
