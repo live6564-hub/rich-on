@@ -174,6 +174,10 @@ window.CONFIG = {
             width: min(420px, calc(100% - 40px)); touch-action: none; cursor: grab; }
   #malaCv:active { cursor: grabbing; }
   #malaCv:focus { outline: none; }
+  .mala-finger { position: absolute; z-index: 2; left: 50%; top: 58%; font-size: 46px; pointer-events: none; opacity: 0; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5)); }
+  #malaPanel.hint .mala-finger { animation: malaFinger 1.6s ease-in-out 3; }
+  @keyframes malaFinger { 0% { opacity: 0; transform: translate(-50%, 40px); } 20% { opacity: .95; } 70% { opacity: .95; transform: translate(-50%, -90px); } 100% { opacity: 0; transform: translate(-50%, -110px); } }
+  @media (prefers-reduced-motion: reduce) { #malaPanel.hint .mala-finger { animation: none; opacity: .9; transform: translate(-50%, 0); } }
   /* 염주를 펴면 다른 단추·도면은 잠깐 숨김 (염주에만 집중) */
   body.mala-open #dpad, body.mala-open #moveBtns, body.mala-open #miniMap, body.mala-open #actBtn,
   body.mala-open #hint, body.mala-open #goPanel, body.mala-open #moreSheet { visibility: hidden; }
@@ -465,6 +469,7 @@ window.CONFIG = {
     </div>
   </div>
   <div id="malaPanel" role="dialog" aria-label="염주 돌리기">
+    <div class="mala-finger" aria-hidden="true">👆</div>
     <canvas id="malaCv" tabindex="0" role="img" aria-label="앞뒤로 이어진 큰 나무 염주. 위아래로 쓸거나 방향키·휠로 돌려요."></canvas>
     <div class="mala-foot">
       <div class="mala-count"><strong id="malaN">0</strong><span>/ 108</span></div>
@@ -1467,6 +1472,25 @@ const Sound = {
       o.connect(g).connect(this.master); o.start(t); o.stop(t + 0.12);
     }
   },
+  // 나무 염주 알끼리 "딱" 부딪히는 소리 (빠를수록 조금 크고 높게)
+  clack(speed = 0) {
+    if (!this.ctx || !this.on) return;
+    const ctx = this.ctx, t = ctx.currentTime, sp = Math.min(1, Math.max(0, speed));
+    const hit = (at, f, vol) => {
+      const len = Math.floor(ctx.sampleRate * 0.025), buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
+      const n = ctx.createBufferSource(); n.buffer = buf;
+      const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = f; bp.Q.value = 6;
+      const g = ctx.createGain(); g.gain.value = vol;
+      n.connect(bp).connect(g).connect(this.master); n.start(at);
+      const o = ctx.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(f * 0.55, at);   // 나무 울림
+      const og = ctx.createGain(); og.gain.setValueAtTime(0.0001, at); og.gain.exponentialRampToValueAtTime(vol * 0.25, at + 0.002); og.gain.exponentialRampToValueAtTime(0.0001, at + 0.06);
+      o.connect(og).connect(this.master); o.start(at); o.stop(at + 0.07);
+    };
+    const f = 1700 + sp * 700 + Math.random() * 120;
+    hit(t, f, 0.55 + sp * 0.35);
+    hit(t + 0.018 + Math.random() * 0.01, f * 1.18, 0.25 + sp * 0.2);   // 옆 알과 한 번 더 "딱"
+  },
   // 염주 알 넘기는 "딸깍"
   click() {
     if (!this.ctx || !this.on) return;
@@ -1904,12 +1928,12 @@ function doBow() {
 }
 // 📿 염주: 단추를 누르면 염주 판이 열리고, 손가락으로 쓸면 한 알씩 넘어간다
 function doBeads() { MalaPanel.toggle(); }
-function beadStep() {
+function beadStep(silent) {
   monk.malaShow = 2.5;
   monk.mala.rotation.z += (Math.PI * 2) / 14;
   rec.beads++; saveRec();
   if (!Sound.ctx) Sound.setOn(true);
-  if (!window.__malaMute) Sound.click();
+  if (!window.__malaMute && !silent) Sound.click();
   if (rec.beads % GOAL === 0) { rec.rounds++; saveRec(); Sound.chime(); toast(T('beadsRound', GOAL, rec.rounds), 2600); }
   beadCount++;
   MalaPanel.draw();
@@ -1923,6 +1947,8 @@ const MalaPanel = (() => {
   const N = 27, STEP = (Math.PI * 2) / N;           // 알 27개 → 4바퀴 = 108알
   let rdr = null, scn, cam, ring, raf = 0, lastT = 0;
   let ang = 0, vel = 0, idx = 0, dragging = false, lastY = 0, lastMt = 0, sndOn = true;
+  let beads = [], grabbed = null, sway = 0, speedNow = 0;
+  const ray = new THREE.Raycaster(), ndc = new THREE.Vector2();
   function build() {
     rdr = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: true });
     rdr.setPixelRatio(Math.min(devicePixelRatio || 1, 2));
@@ -1939,7 +1965,8 @@ const MalaPanel = (() => {
     const beadGeo = new THREE.SphereGeometry(0.205, 28, 20);   // 알 사이에 줄이 살짝 보이게
     for (let i = 0; i < N; i++) {
       const a = i * STEP, y = Math.cos(a) * R, z = Math.sin(a) * R;
-      const b = new THREE.Mesh(beadGeo, i % 9 === 0 ? woodDark : wood);   // 9알마다 조금 진한 알 (도는 게 잘 보이게)
+      const b = new THREE.Mesh(beadGeo, (i % 9 === 0 ? woodDark : wood).clone());   // 9알마다 조금 진한 알 (도는 게 잘 보이게)
+      beads.push(b);
       b.position.set(0, y, z); b.rotation.set(a, i * 0.7, 0); ring.add(b);
       // 알 사이 줄 (가는 원기둥)
       const a2 = a + STEP / 2, seg = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 2 * R * Math.sin(STEP / 2), 8), cord);
@@ -1955,9 +1982,28 @@ const MalaPanel = (() => {
   }
   function counted(steps) {
     for (let i = 0; i < steps; i++) {
-      beadStep();
-      if (sndOn) { try { navigator.vibrate && navigator.vibrate(10); } catch {} }
+      beadStep(true);
+      if (sndOn) { Sound.clack(speedNow); try { navigator.vibrate && navigator.vibrate([14]); } catch {} }   // ③ "톡" 진동 · ④ 나무 소리
     }
+  }
+  // ① 손가락 1px 만큼 알이 화면에서 1px 따라오도록 (잡은 알의 깊이에 맞춰 계산)
+  function pxPerUnit(z) {
+    const h = cv.getBoundingClientRect().height || 400;
+    return h / (2 * Math.max(0.5, cam.position.z - z) * Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)));
+  }
+  let grabZ = 1.7;
+  // ② 손가락 밑의 알을 찾아 살짝 크고 밝게
+  function pick(e) {
+    const r = cv.getBoundingClientRect();
+    ndc.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1);
+    ray.setFromCamera(ndc, cam);
+    const hit = ray.intersectObjects(beads, false)[0];
+    return hit ? hit : null;
+  }
+  function setGrab(b) {
+    if (grabbed && grabbed !== b) { grabbed.scale.setScalar(1); grabbed.material.emissive.setHex(0x000000); }
+    grabbed = b;
+    if (b) { b.scale.setScalar(1.14); b.material.emissive.setHex(0x3a2408); }
   }
   // 한 칸의 65% 이상 넘어가야 한 알로 셈 (살짝 흔들려도 두 번 세지 않게)
   function settle() {
@@ -1979,13 +2025,22 @@ const MalaPanel = (() => {
       if (Math.abs(vel) > 0.02) { ang += vel * dt; vel *= Math.pow(0.12, dt); settle(); }   // 놓은 뒤 관성
       else { vel = 0; ang += (idx * STEP - ang) * Math.min(1, dt * 8); }                      // 가장 가까운 알에 딱 맞춤
     }
-    ring.rotation.x = ang;
+    // ③ 알과 알 사이에서 살짝 걸렸다 넘어가는 느낌 (화면에 보이는 각도만 칸에 끌림)
+    const detent = dragging ? Math.sin((ang / STEP) * Math.PI * 2) * STEP * 0.09 : 0;
+    ring.rotation.x = ang - detent;
+    // ⑤ 세게 튕기면 고리가 살짝 기울었다가 돌아옴
+    const target = Math.max(-0.2, Math.min(0.2, vel * 0.03));
+    sway += (target - sway) * Math.min(1, dt * 6);
+    ring.rotation.z = sway;
+    speedNow = Math.min(1, Math.abs(vel) / 10);
     rdr.render(scn, cam);
   }
-  function rpp() { return STEP / Math.max(40, cv.getBoundingClientRect().height / 7.5); }   // 손가락 1px 당 도는 각도
+  function rpp() { return 1 / (1.9 * pxPerUnit(grabZ)); }   // 손가락 1px 당 도는 각도 (반지름 × 화면 배율)
   cv.addEventListener('pointerdown', (e) => {
     e.preventDefault(); e.stopPropagation(); dragging = true; vel = 0;
-    lastY = e.clientY; lastMt = performance.now(); el.classList.add('touched');
+    lastY = e.clientY; lastMt = performance.now(); el.classList.add('touched'); el.classList.remove('hint');
+    const h = pick(e);                                  // 잡은 알의 깊이 (앞쪽 알일수록 크게 움직임)
+    if (h) { setGrab(h.object); grabZ = h.point.z; } else { setGrab(null); grabZ = 1.7; }
     try { cv.setPointerCapture(e.pointerId); } catch {}
   });
   cv.addEventListener('pointermove', (e) => {
@@ -1994,7 +2049,7 @@ const MalaPanel = (() => {
     ang += d; vel = d / Math.max(0.008, (now - lastMt) / 1000);
     lastY = e.clientY; lastMt = now; settle();
   });
-  const end = () => { if (!dragging) return; dragging = false; vel = Math.max(-14, Math.min(14, vel)); };
+  const end = () => { if (!dragging) return; dragging = false; vel = Math.max(-14, Math.min(14, vel)); setGrab(null); };
   cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
   cv.addEventListener('wheel', (e) => { e.preventDefault(); ang += e.deltaY * 0.004; settle(); el.classList.add('touched'); }, { passive: false });
   cv.addEventListener('keydown', (e) => {
@@ -2011,6 +2066,8 @@ const MalaPanel = (() => {
     document.getElementById('btnBeads').classList.toggle('on', v);
     if (v) {
       el.classList.add('show'); el.classList.remove('touched'); document.body.classList.add('mala-open');
+      let seen = false; try { seen = localStorage.getItem('botari-mala-hint') === '1'; localStorage.setItem('botari-mala-hint', '1'); } catch {}
+      el.classList.toggle('hint', !seen);               // ⑥ 처음 한 번: 👆 이 위로 쓸어 올리는 시늉
       requestAnimationFrame(() => {
         el.classList.add('vis');
         if (!rdr) build();
