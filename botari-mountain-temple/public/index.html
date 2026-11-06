@@ -165,7 +165,7 @@ window.CONFIG = {
   #malaPanel { display: none; position: fixed; inset: 0; z-index: 28; background: rgba(12,18,16,0.55);
                align-items: center; justify-content: center; flex-direction: column; gap: 10px; touch-action: none; }
   #malaPanel.show { display: flex; }
-  #malaCv { width: min(300px, 82vw); height: min(300px, 82vw); touch-action: none; cursor: grab; }
+  #malaCv { width: min(320px, 86vw); height: min(440px, 62vh); touch-action: none; cursor: grab; }
   #malaPanel .help { color: #f5efe2; font-size: 14px; font-weight: 700; text-align: center; word-break: keep-all; }
   #malaPanel button { height: 42px; padding: 0 22px; border: none; border-radius: 21px; background: #fffaf0; color: #3b2a1a; font-size: 15px; font-weight: 800; cursor: pointer; }
 
@@ -544,7 +544,7 @@ const I18N = {
   meter: ['m', 'm', '公尺', 'm', 'ม.'],
   goBtn: ['🚶 가기', '🚶 Go', '🚶 出發', '🚶 Đi', '🚶 ไป'],
   close: ['닫기', 'Close', '關閉', 'Đóng', 'ปิด'],
-  malaHelp: ['손가락으로 염주를 쓸어 굴려 보세요 (위·아래·빙글 모두 돼요)', 'Swipe the beads with your finger (up, down or round)', '用手指撥動念珠（上下或轉圈都可以）', 'Vuốt tràng hạt bằng ngón tay (lên, xuống hay xoay tròn)', 'ใช้นิ้วปัดลูกประคำ (ขึ้น ลง หรือหมุนก็ได้)'],
+  malaHelp: ['엄지로 염주 알을 아래로 한 알씩 끌어내려 보세요', 'Pull the beads down one by one with your thumb', '用拇指把念珠一顆一顆往下撥', 'Dùng ngón cái kéo từng hạt xuống', 'ใช้นิ้วโป้งดึงลูกประคำลงทีละเม็ด'],
   malaCount: [(g, r) => `/ ${g}알 · 오늘 ${r}바퀴`, (g, r) => `/ ${g} · today ${r} rounds`, (g, r) => `/ ${g}顆 · 今天${r}圈`, (g, r) => `/ ${g} hạt · hôm nay ${r} vòng`, (g, r) => `/ ${g} เม็ด · วันนี้ ${r} รอบ`],
   chantHead: ['📖 반야심경 — 따라 읽어 보세요', '📖 Heart Sutra — read along', '📖 般若心經 — 跟著念', '📖 Bát Nhã Tâm Kinh — đọc theo', '📖 ปรัชญาปารมิตาหฤทัยสูตร — อ่านตาม'],
   cStart: ['▶ 시작', '▶ Start', '▶ 開始', '▶ Bắt đầu', '▶ เริ่ม'],
@@ -1880,52 +1880,92 @@ function beadStep() {
 }
 let beadCount = 0;
 const MalaPanel = (() => {
+  // 진짜 염주처럼: 세로로 늘어진 염주 알을 엄지로 한 알씩 끌어내리는 방식
+  //  - 위아래로 쓸면 알이 줄을 따라 굴러 내려가고, 가운데 금빛 고리(엄지 자리)를 지날 때마다 "딸깍" + 진동
+  //  - 세게 튕기면 관성으로 몇 알 더 굴러감
+  //  - 108알마다 큰 모주(母珠)와 술이 지나가며 한 바퀴
   const el = document.getElementById('malaPanel'), cv = document.getElementById('malaCv');
-  const g = cv.getContext('2d'), N = 18, STEP = 34;            // 알 18개, 34px 쓸 때마다 한 알
-  let rot = 0, dragging = false, last = null, acc = 0;
-  function size() { const r = cv.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 2); cv.width = r.width * d; cv.height = r.height * d; g.setTransform(d, 0, 0, d, 0, 0); return r.width; }
-  let W = 300;
+  const g = cv.getContext('2d');
+  let W = 300, H = 300, R = 15, GAP = 34;           // 알 반지름 · 알 사이 간격(px)
+  let off = 0, vel = 0, dragging = false, lastY = 0, lastT = 0, passed = 0, raf = 0;
+  function size() {
+    const r = cv.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 2);
+    cv.width = r.width * d; cv.height = r.height * d; g.setTransform(d, 0, 0, d, 0, 0);
+    W = r.width; H = r.height; R = Math.max(11, W * 0.05); GAP = R * 2.25;
+  }
+  // 줄 모양: 화면 가운데를 지나는 부드러운 S자 (위·아래는 화면 밖으로 이어짐)
+  const pathX = (y) => W / 2 + Math.sin((y / H) * Math.PI * 1.2 - 0.6) * W * 0.12;
+  function bead(x, y, r, gold) {
+    const grd = g.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.1, x, y, r);
+    grd.addColorStop(0, gold ? '#f6d98a' : '#b98250'); grd.addColorStop(0.55, gold ? '#c99a2e' : '#7a4a22'); grd.addColorStop(1, gold ? '#7a5512' : '#3b2210');
+    g.fillStyle = grd; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
+    g.fillStyle = 'rgba(255,255,255,0.35)'; g.beginPath(); g.ellipse(x - r * 0.35, y - r * 0.45, r * 0.28, r * 0.16, -0.6, 0, Math.PI * 2); g.fill();   // 반짝임
+    g.strokeStyle = 'rgba(0,0,0,0.25)'; g.lineWidth = 1; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.stroke();
+  }
   function draw() {
     if (!el.classList.contains('show')) return;
-    const cx = W / 2, cy = W / 2, R = W * 0.36;
-    g.clearRect(0, 0, W, W);
-    g.strokeStyle = 'rgba(214,190,140,0.8)'; g.lineWidth = 2; g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.stroke();   // 줄
-    for (let i = 0; i < N; i++) {
-      const a = rot + (i / N) * Math.PI * 2 - Math.PI / 2, x = cx + Math.cos(a) * R, y = cy + Math.sin(a) * R;
-      const big = i === 0, r = big ? W * 0.06 : W * 0.045;
-      const grd = g.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r);
-      grd.addColorStop(0, big ? '#f0cf7a' : '#a8703f'); grd.addColorStop(1, big ? '#9a6f1c' : '#4a2a12');
-      g.fillStyle = grd; g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
+    g.clearRect(0, 0, W, H);
+    // 줄
+    g.strokeStyle = 'rgba(214,190,140,0.85)'; g.lineWidth = 2; g.beginPath();
+    for (let y = -10; y <= H + 10; y += 6) { const x = pathX(y); y === -10 ? g.moveTo(x, y) : g.lineTo(x, y); }
+    g.stroke();
+    // 엄지 자리 (가운데 금빛 고리)
+    const ty = H * 0.5;
+    g.strokeStyle = 'rgba(242,181,28,0.9)'; g.lineWidth = 3; g.beginPath(); g.arc(pathX(ty), ty, R * 1.45, 0, Math.PI * 2); g.stroke();
+    // 알들: off 만큼 아래로 흘러감. 알 번호 n = 지금까지 넘긴 알과 이어짐
+    const base = Math.floor(off / GAP), frac = off - base * GAP;
+    for (let k = -Math.ceil(H / GAP) - 1; k <= Math.ceil(H / GAP) + 1; k++) {
+      const y = ty + k * GAP + frac, n = base - k;       // 아래로 갈수록 이미 넘긴 알
+      if (y < -R * 2 || y > H + R * 2) continue;
+      const guru = ((n % GOAL) + GOAL) % GOAL === 0;     // 108알마다 모주
+      bead(pathX(y), y, guru ? R * 1.35 : R, guru);
+      if (guru) {                                        // 술 (모주 아래로 늘어짐)
+        g.strokeStyle = 'rgba(160,40,48,0.85)'; g.lineWidth = 2;
+        for (let t = -3; t <= 3; t++) { g.beginPath(); g.moveTo(pathX(y) + t * 2, y + R * 1.3); g.lineTo(pathX(y) + t * 3.2 + R * 1.6, y + R * 3.6); g.stroke(); }
+      }
     }
-    // 가운데: 몇 알째인지
-    g.fillStyle = '#f5efe2'; g.textAlign = 'center'; g.textBaseline = 'middle';
-    g.font = `bold ${W * 0.14}px -apple-system, "Apple SD Gothic Neo", sans-serif`;
-    g.fillText(String(rec.beads % GOAL), cx, cy - W * 0.03);
-    g.font = `bold ${W * 0.05}px -apple-system, "Apple SD Gothic Neo", sans-serif`;
+    // 숫자
+    g.fillStyle = '#f5efe2'; g.textAlign = 'left'; g.textBaseline = 'middle';
+    g.font = `bold ${Math.round(W * 0.13)}px -apple-system, "Apple SD Gothic Neo", sans-serif`;
+    g.fillText(String(rec.beads % GOAL), W * 0.04, H * 0.42);
+    g.font = `bold ${Math.round(W * 0.045)}px -apple-system, "Apple SD Gothic Neo", sans-serif`;
     g.fillStyle = 'rgba(245,239,226,0.75)';
-    g.fillText(T('malaCount', GOAL, rec.rounds), cx, cy + W * 0.09);
+    g.fillText(T('malaCount', GOAL, rec.rounds), W * 0.04, H * 0.52);
   }
-  function pos(e) { const r = cv.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
-  cv.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); dragging = true; last = pos(e); try { cv.setPointerCapture(e.pointerId); } catch {} });
+  // 알이 엄지 자리를 지날 때마다 한 알 세기 (아래로 굴린 만큼만)
+  function advance(dy) {
+    off += dy;
+    const n = Math.floor(off / GAP);
+    while (n > passed) {
+      passed++; beadStep();
+      try { navigator.vibrate && navigator.vibrate(8); } catch {}
+    }
+    if (n < passed - 1) passed = n + 1;                  // 위로 되돌리면 세지 않음
+  }
+  function tick() {                                      // 놓은 뒤 관성으로 굴러감
+    raf = 0;
+    if (dragging || Math.abs(vel) < 0.02) { vel = 0; draw(); return; }
+    advance(vel * 16); vel *= 0.92; draw();
+    raf = requestAnimationFrame(tick);
+  }
+  cv.addEventListener('pointerdown', (e) => {
+    e.preventDefault(); e.stopPropagation(); dragging = true; vel = 0;
+    lastY = e.clientY; lastT = performance.now();
+    try { cv.setPointerCapture(e.pointerId); } catch {}
+  });
   cv.addEventListener('pointermove', (e) => {
     if (!dragging) return;
-    const q = pos(e), dx = q.x - last.x, dy = q.y - last.y, len = Math.hypot(dx, dy);
-    if (len < 1) return;
-    // 원 둘레를 따라 도는 방향(시계/반시계)을 계산해서 염주도 같은 쪽으로 돈다
-    const cx = W / 2, cy = W / 2, cross = (last.x - cx) * dy - (last.y - cy) * dx;
-    const dir = Math.abs(cross) > 1 ? Math.sign(cross) : (dy >= 0 ? 1 : -1);
-    rot += dir * (len / (W * 0.36));
-    acc += len; last = q;
-    while (acc >= STEP) { acc -= STEP; beadStep(); }
-    draw();
+    const now = performance.now(), dy = e.clientY - lastY;
+    advance(dy); vel = dy / Math.max(8, now - lastT);    // px/ms
+    lastY = e.clientY; lastT = now; draw();
   });
-  const end = () => { dragging = false; };
+  const end = () => { if (!dragging) return; dragging = false; vel = Math.max(-1.6, Math.min(1.6, vel)); if (!raf) raf = requestAnimationFrame(tick); };
   cv.addEventListener('pointerup', end); cv.addEventListener('pointercancel', end);
   el.addEventListener('pointerdown', (e) => e.stopPropagation());
   document.getElementById('malaClose').addEventListener('click', () => toggle(false));
   function toggle(v = !el.classList.contains('show')) {
     el.classList.toggle('show', v); document.getElementById('btnBeads').classList.toggle('on', v);
-    if (v) { if (!Sound.ctx) Sound.setOn(true); requestAnimationFrame(() => { W = size(); draw(); }); }
+    if (v) { if (!Sound.ctx) Sound.setOn(true); requestAnimationFrame(() => { size(); passed = Math.floor(off / GAP); draw(); }); }
   }
   return { toggle, draw };
 })();
