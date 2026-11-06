@@ -64,6 +64,9 @@ window.CONFIG = {
   room: { name: "main", maxPeople: 20, sendPerSec: 5,
           halls: ["연화당", "솔바람당", "달빛당", "이슬당", "구름당", "산새당", "물소리당", "풍경당", "종소리당"] },   // 들어갈 때 고르는 방 (최대 9개)
 
+  // 독경 목소리 (피쉬오디오로 만든 소리 주소). 지금은 시험용: 반야심경 첫 두 줄, "70대 노스님" 목소리
+  chantAudio: { ko: { url: "https://platform.r2.fish.audio/tasks/2026-11-06/3c2d72416418497589abbe219fc5abff.mp3", lines: 2 } },
+
   // 배경음: 잔잔한 바람 + 이따금 풍경 소리
   ambience: { wind: 0.18, chimeEverySec: [6, 14] },
 
@@ -451,6 +454,7 @@ window.CONFIG = {
       <button id="cVoice" type="button" class="on">🔊 목소리</button>
       <button id="cClose" type="button" data-i18n="close">닫기</button>
     </div>
+    <button id="cMonk" type="button" style="width:100%;margin-top:6px;height:42px;border:none;border-radius:11px;background:#2f7a6a;color:#fff;font-size:14px;font-weight:800;cursor:pointer">🎧 노스님 목소리 들어 보기 (시험)</button>
     <div class="bar"><i id="cBar"></i></div>
   </div>
   <div id="layoutBar">
@@ -2064,6 +2068,25 @@ const Chant = (() => {
     show();
   });
   $('cClose').addEventListener('click', () => toggle(false));
+  // 🎧 피쉬오디오 노스님 목소리 (시험): 소리에 맞춰 첫 줄부터 글자도 함께 넘어감
+  let monkAudio = null;
+  $('cMonk').addEventListener('click', () => {
+    const a = C.chantAudio && C.chantAudio.ko; if (!a) return;
+    if (monkAudio && !monkAudio.paused) { monkAudio.pause(); monkAudio.currentTime = 0; $('cMonk').textContent = '🎧 노스님 목소리 들어 보기 (시험)'; return; }
+    stop(); line = 0; show();
+    if (!Sound.ctx) Sound.setOn(true);
+    monkAudio = monkAudio || new Audio(a.url);
+    monkAudio.currentTime = 0;
+    const lens = SUTRA.slice(0, a.lines).map((t) => t.replace(/\s/g, '').length), total = lens.reduce((x, y) => x + y, 0);
+    monkAudio.ontimeupdate = () => {        // 지금 몇째 줄인지: 글자 수 비율로 나눔
+      const d = monkAudio.duration || 1, r = monkAudio.currentTime / d * total;
+      let acc = 0, i = 0; for (; i < lens.length - 1; i++) { acc += lens[i]; if (r < acc) break; }
+      if (i !== line) { line = i; show(); }
+    };
+    monkAudio.onended = () => { $('cMonk').textContent = '🎧 노스님 목소리 들어 보기 (시험)'; toast('🙏 시험 독경 끝 — 전체는 승인 후 만들어요'); };
+    monkAudio.play().then(() => { $('cMonk').textContent = '⏹ 멈추기'; })
+      .catch(() => toast('소리를 불러오지 못했어요. 인터넷 연결을 확인해 주세요'));
+  });
   el.addEventListener('pointerdown', (e) => e.stopPropagation());
   return { toggle, stop, show };
 })();
