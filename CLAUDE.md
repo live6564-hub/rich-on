@@ -20,3 +20,8 @@
 - Canva: 유료(왕관) 요소, AI 이미지 생성.
 - Google Flow 영상 생성.
 - 그 밖에 크레딧·결제가 생길 수 있는 모든 도구.
+
+## 🛍️ 상세페이지 스킬
+
+- `.claude/skills/detail-page-maker` — 상품 사진 폴더 + 상품 설명 → 모바일 상세페이지 HTML + 스마트스토어(860px)·쿠팡(780px) 이미지 조각.
+- 다른 컴퓨터·코덱스에 설치할 때는 루트의 `detail-page-maker.zip`을 받아 `~/.claude/skills/` 또는 `~/.codex/skills/`에 풀면 된다. 설치법은 스킬 폴더의 README.md.
