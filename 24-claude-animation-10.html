@@ -1,0 +1,736 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>살림 비법 애니 10종</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Do+Hyeon&family=DotGothic16&family=Gaegu:wght@700&family=Gowun+Batang:wght@400;700&family=Jua&family=Nanum+Pen+Script&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+/* Layout: a dark screening room. Header, two featured 15s reels, a 10-style contact sheet, a recording guide, request cards, partner links. Single dark world by choice. */
+:root{
+  --bg:#111517; --panel:#1a1f22; --panel2:#22282c; --line:#2d3539;
+  --fg:#eceee9; --muted:#9ba5a1; --chalk:#f2c14e; --coral:#ff7a5c;
+  --f-display:"Black Han Sans","Do Hyeon","Noto Sans KR",system-ui,sans-serif;
+  --f-body:"Noto Sans KR",system-ui,-apple-system,sans-serif;
+  color-scheme:dark;
+}
+[hidden]{display:none!important}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 48px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:44px}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;text-wrap:balance;margin:0;letter-spacing:.01em}
+h1{font-size:clamp(32px,7vw,54px);line-height:1.1}
+h2{font-size:clamp(22px,4vw,30px);line-height:1.2}
+p{margin:0}
+.eyebrow{font-size:12px;letter-spacing:.14em;color:var(--chalk);font-weight:700}
+.lead{color:var(--muted);max-width:62ch}
+.hero{display:flex;flex-direction:column;gap:12px;padding-top:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13px;color:var(--fg);background:var(--panel)}
+.chip b{color:var(--chalk);font-weight:700}
+.sec{display:flex;flex-direction:column;gap:16px}
+.sec-head{display:flex;flex-direction:column;gap:6px}
+
+/* stages */
+.stage{position:relative;width:100%;max-width:100%;aspect-ratio:9/16;overflow:hidden;background:#000;border-radius:10px}
+.stage-inner{position:absolute;left:0;top:0;width:360px;height:640px;transform-origin:0 0;overflow:hidden}
+.feature{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.fcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.fcard .stage{max-width:360px;margin:0 auto}
+.fmeta{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.fmeta h3{font-size:20px}
+.fmeta small{color:var(--muted);display:block;font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:14px}
+.gcard{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.gcard .stage{border-radius:8px;cursor:pointer}
+.gname{display:flex;align-items:baseline;gap:6px;padding:0 2px;min-width:0}
+.gname .no{font-family:var(--f-display);color:var(--chalk);font-size:15px}
+.gname b{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.gname span{font-size:12px;color:var(--muted)}
+.gbtns{display:flex;gap:6px}
+.btn{appearance:none;border:1px solid var(--line);background:var(--panel2);color:var(--fg);font:inherit;font-size:13px;font-weight:500;
+  padding:7px 12px;border-radius:8px;cursor:pointer;line-height:1.2}
+.btn:hover{border-color:var(--chalk)}
+.btn:focus-visible{outline:2px solid var(--chalk);outline-offset:2px}
+.btn.pri{background:var(--chalk);color:#1b1607;border-color:var(--chalk);font-weight:700}
+.gbtns .btn{flex:1;padding:6px 4px;font-size:12px}
+.badge{font-size:11px;font-weight:700;color:#1b1607;background:var(--chalk);border-radius:4px;padding:1px 6px;margin-left:4px}
+
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;counter-reset:s;margin:0;padding:0;list-style:none}
+.steps li{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;counter-increment:s;display:flex;flex-direction:column;gap:4px}
+.steps li::before{content:"STEP " counter(s);font-size:11px;letter-spacing:.14em;color:var(--chalk);font-weight:700}
+.steps b{font-size:15px}
+.steps p{color:var(--muted);font-size:14px}
+
+.prompts{display:flex;flex-direction:column;gap:10px}
+details.pc{background:var(--panel);border:1px solid var(--line);border-radius:12px}
+details.pc summary{cursor:pointer;padding:12px 16px;display:flex;align-items:center;gap:10px;list-style:none}
+details.pc summary::-webkit-details-marker{display:none}
+details.pc summary .no{font-family:var(--f-display);color:var(--chalk);min-width:24px}
+details.pc summary .t{flex:1;min-width:0}
+details.pc[open] summary{border-bottom:1px solid var(--line)}
+.pbody{padding:12px 16px 16px;display:flex;flex-direction:column;gap:10px}
+pre.code{margin:0;background:#0b0e10;border:1px solid var(--line);border-radius:8px;padding:12px 14px;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.65;color:#d8ddd8}
+
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.links a{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--fg);background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.links a:hover{border-color:var(--chalk)}
+.links a b{font-size:15px}
+.links a span{font-size:12px;color:var(--muted)}
+.notice{font-size:12px;color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--chalk);color:#1b1607;font-weight:700;
+  padding:8px 16px;border-radius:999px;font-size:14px;z-index:60;transition:opacity .2s}
+
+/* record overlay */
+.rec{position:fixed;inset:0;background:#000;z-index:50;display:flex;align-items:center;justify-content:center}
+.rec .stage{width:min(100vw,calc(100vh * 9 / 16));height:auto;border-radius:0}
+.rec-bar{position:absolute;left:0;right:0;top:0;display:flex;gap:8px;justify-content:center;flex-wrap:wrap;
+  padding:calc(12px + env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) 12px max(16px,env(safe-area-inset-left,0px));
+  background:linear-gradient(#000c,#0000);transition:opacity .3s}
+.rec-bar.off{opacity:0;pointer-events:none}
+.rec-hint{position:absolute;bottom:calc(14px + env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;color:#fff9;font-size:12px;transition:opacity .3s}
+.rec-hint.off{opacity:0}
+.count{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--f-display);font-size:120px;color:#fff;background:#000a;z-index:2}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{opacity:0;transform:scale(.6)}70%{opacity:1;transform:scale(1.06)}100%{opacity:1;transform:scale(1)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.dr{stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.2s ease forwards}
+
+/* ===== 2 chalkboard ===== */
+.ck{position:absolute;inset:0;background:#6b4a2b;padding:14px}
+.ck-board{position:absolute;inset:14px 14px 40px;border-radius:4px;overflow:hidden;
+  background:radial-gradient(120px 60px at 70% 30%,#ffffff0d,#0000),radial-gradient(160px 80px at 25% 75%,#ffffff0b,#0000),radial-gradient(#2f5141,#233e31);
+  box-shadow:inset 0 0 40px #0008;padding:28px 22px;color:#f1efe6;font-family:"Nanum Pen Script","Gaegu",cursive}
+.ck-tray{position:absolute;left:14px;right:14px;bottom:14px;height:22px;background:#4f341c;border-radius:0 0 4px 4px}
+.ck-tray i{position:absolute;bottom:8px;height:7px;border-radius:3px}
+.ck-eye{font-size:24px;color:#f2c14e;opacity:0;animation:fadeIn .6s .1s forwards}
+.ck-title{font-size:56px;line-height:1.02;margin-top:2px;text-shadow:0 0 1px #fff8,1px 1px 0 #ffffff22}
+.ck-title span{display:inline-block;opacity:0;animation:ckIn .25s ease forwards}
+@keyframes ckIn{from{opacity:0;transform:translateY(5px) rotate(-3deg);filter:blur(2px)}to{opacity:.96;transform:none;filter:none}}
+.ck-ul{height:4px;margin:10px 0 14px;background:#f2c14e;border-radius:2px;transform-origin:left;transform:scaleX(0);animation:ckUl .6s 2.6s ease forwards;opacity:.85}
+@keyframes ckUl{to{transform:scaleX(1)}}
+.ck-tip{display:flex;gap:12px;align-items:center;margin-bottom:16px;opacity:0;animation:fadeIn .3s forwards}
+.ck-tip svg{flex:none;width:64px;height:60px}
+.ck-tip svg path{fill:none;stroke:#f1efe6;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.ck-tip b{display:block;white-space:nowrap;font-size:31px;font-weight:400;line-height:1;color:#fff}
+.ck-tip em{display:block;font-style:normal;font-size:24px;color:#cfe3d4;line-height:1.1;margin-top:4px}
+.ck-tip b,.ck-tip em{opacity:0;animation:fadeUp .5s forwards}
+.ck-cta{position:absolute;left:22px;right:22px;bottom:22px;text-align:center;font-size:40px;color:#f2c14e;opacity:0;animation:pop .6s 12s forwards}
+.ck-cta svg{position:absolute;inset:-8px -6px;width:calc(100% + 12px);height:calc(100% + 16px)}
+.ck-cta svg path{fill:none;stroke:#ff9f8a;stroke-width:2.5;stroke-linecap:round}
+.ck-dust{position:absolute;width:90px;height:40px;border-radius:50%;background:radial-gradient(#ffffff26,#0000 70%);opacity:0;animation:ckDust 1.2s forwards}
+@keyframes ckDust{0%{opacity:0;transform:scale(.4)}30%{opacity:1}100%{opacity:0;transform:scale(1.5) translateY(-10px)}}
+
+/* ===== 5 comic ===== */
+.cm{position:absolute;inset:0;background:#ffd84a;background-image:radial-gradient(#e8b81f 1.4px,transparent 1.6px);background-size:9px 9px;font-family:"Jua","Gaegu",sans-serif;color:#111}
+.cm-head{position:absolute;left:12px;right:12px;top:14px;height:46px;display:flex;align-items:center;justify-content:center;background:#111;color:#fff;border-radius:6px;font-size:22px;letter-spacing:.02em;
+  animation:pop .5s .05s both}
+.cm-head b{color:#ffd84a;font-weight:400;margin-right:6px}
+.cm-p{position:absolute;width:162px;height:236px;border:3px solid #111;background:#fff;overflow:hidden;box-shadow:4px 4px 0 #111;opacity:0;animation:pop .45s both}
+.cm-p svg{position:absolute;inset:0;width:100%;height:100%}
+.cm-p .bg1{background:#bfe6ff;background-image:radial-gradient(#9fd2f5 1.3px,transparent 1.5px);background-size:8px 8px}
+.cm-p .bg2{background:#ffd0c4;background-image:radial-gradient(#f5ae9c 1.3px,transparent 1.5px);background-size:8px 8px}
+.cm-p .bg3{background:#c9f2df;background-image:radial-gradient(#a3e0c3 1.3px,transparent 1.5px);background-size:8px 8px}
+.cm-p .bg4{background:#fff1a6;background-image:radial-gradient(#f3dc68 1.3px,transparent 1.5px);background-size:8px 8px}
+.cm-p .bgx{position:absolute;inset:0}
+.cm-b{position:absolute;left:8px;right:8px;top:8px;background:#fff;border:2.5px solid #111;border-radius:14px;padding:6px 8px;font-size:15px;line-height:1.25;text-align:center;opacity:0;animation:pop .35s both;z-index:2}
+.cm-b::after{content:"";position:absolute;bottom:-11px;left:var(--tail,40%);width:14px;height:14px;background:#fff;border-right:2.5px solid #111;border-bottom:2.5px solid #111;transform:rotate(45deg) skew(10deg,10deg)}
+.cm-sfx{position:absolute;font-family:"Black Han Sans",sans-serif;color:#ff5b3a;-webkit-text-stroke:1.5px #111;font-size:24px;transform:rotate(-12deg);opacity:0;animation:pop .3s both;z-index:2}
+.cm-talk{transform-box:fill-box;transform-origin:center;animation:talk .16s ease-in-out infinite alternate}
+@keyframes talk{from{transform:scaleY(.25)}to{transform:scaleY(1)}}
+.cm-pow{position:absolute;left:204px;top:316px;width:146px;height:110px;opacity:0;animation:powIn .5s 11.4s both;z-index:4}
+@keyframes powIn{0%{opacity:0;transform:scale(.2) rotate(-20deg)}70%{opacity:1;transform:scale(1.12) rotate(4deg)}100%{opacity:1;transform:scale(1) rotate(-4deg)}}
+.cm-cta{position:absolute;left:12px;right:12px;bottom:14px;height:58px;background:#ff5b3a;border:3px solid #111;box-shadow:4px 4px 0 #111;border-radius:8px;color:#fff;
+  display:flex;align-items:center;justify-content:center;font-size:21px;opacity:0;animation:pop .45s 12.4s both;text-shadow:1px 1px 0 #111}
+.stink{animation:stink 1.2s ease-in-out infinite alternate}
+@keyframes stink{from{transform:translateY(2px)}to{transform:translateY(-4px)}}
+
+/* ===== 1 pixel ===== */
+.px{position:absolute;inset:0;background:#2b2140;font-family:"DotGothic16","Do Hyeon",monospace;color:#fff}
+.px canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated;image-rendering:crisp-edges}
+.px-hud{position:absolute;left:12px;right:12px;top:14px;display:flex;flex-direction:column;gap:6px}
+.px-q{font-size:15px;color:#ffe066;letter-spacing:.06em}
+.px-t{font-size:24px;text-shadow:2px 2px 0 #000}
+.px-hp{display:flex;align-items:center;gap:6px;font-size:13px}
+.px-bar{flex:1;height:12px;border:2px solid #fff;background:#000;position:relative}
+.px-bar i{position:absolute;inset:0;background:#7cff6b;transform-origin:left}
+.px-dlg{position:absolute;left:12px;right:12px;bottom:16px;min-height:70px;background:#10183a;border:3px solid #fff;box-shadow:0 0 0 3px #10183a;padding:10px 12px;font-size:18px;line-height:1.4;font-family:"Do Hyeon",monospace}
+
+/* ===== 3 glow ===== */
+.gl{position:absolute;inset:0;background:#05080c;background-image:linear-gradient(#0d1a22 1px,transparent 1px),linear-gradient(90deg,#0d1a22 1px,transparent 1px);background-size:24px 24px;font-family:"Do Hyeon",sans-serif;color:#cffbff}
+.gl svg{position:absolute;inset:0}
+.gl .n path,.gl .n line,.gl .n rect,.gl .n circle{fill:none;stroke:#4ff3ff;stroke-width:2.2;stroke-linecap:round;filter:drop-shadow(0 0 3px #4ff3ff) drop-shadow(0 0 8px #00b7ff)}
+.gl .a path,.gl .a line,.gl .a circle{fill:none;stroke:#ffc35a;stroke-width:2;stroke-linecap:round;filter:drop-shadow(0 0 4px #ffb02e)}
+.gl-t{position:absolute;left:20px;right:20px;top:26px;font-size:30px;line-height:1.15;text-shadow:0 0 10px #4ff3ff;animation:fadeIn .8s both}
+.gl-l{position:absolute;font-size:16px;line-height:1.25;color:#ffe2a8;text-shadow:0 0 8px #ffb02e;opacity:0;animation:fadeUp .5s both}
+.gl-b{position:absolute;left:20px;right:20px;bottom:30px;text-align:center;font-size:24px;text-shadow:0 0 12px #4ff3ff;opacity:0;animation:fadeUp .6s 6.2s both}
+
+/* ===== 4 ps2 ===== */
+.ps{position:absolute;inset:0;background:#000;font-family:"Do Hyeon",sans-serif;color:#dfe8ff}
+.ps canvas{position:absolute;inset:0;width:100%;height:100%;image-rendering:pixelated}
+.ps-top{position:absolute;left:16px;right:16px;top:18px;font-size:16px;letter-spacing:.08em;color:#9fb6ff;text-shadow:0 0 6px #2b5bff}
+.ps-top b{display:block;font-size:26px;font-weight:400;color:#fff;letter-spacing:0}
+.ps-box{position:absolute;left:24px;right:24px;bottom:40px;border:1px solid #6d86d8;background:#0a1440cc;padding:12px 14px;font-size:17px;box-shadow:0 0 18px #2b5bff66}
+.ps-pb{height:8px;background:#0d1a55;margin-top:8px;border:1px solid #6d86d8}
+.ps-pb i{display:block;height:100%;background:linear-gradient(90deg,#4f7bff,#b9ccff);width:0}
+
+/* ===== 6 flat ===== */
+.fv{position:absolute;inset:0;background:#d9f1ea;font-family:"Jua",sans-serif;color:#1d3b3a;padding:28px 22px}
+.fv h4{font-family:"Black Han Sans",sans-serif;font-weight:400;font-size:34px;line-height:1.1;margin:0;animation:fadeUp .5s both}
+.fv h4 span{color:#ff7a5c}
+.fv-card{margin-top:22px;background:#fff;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:14px;animation:fadeUp .5s .3s both}
+.fv-row{display:flex;flex-direction:column;gap:6px;font-size:17px}
+.fv-row div{display:flex;justify-content:space-between}
+.fv-tr{height:22px;background:#eef4f2;border-radius:11px;overflow:hidden}
+.fv-tr i{display:block;height:100%;border-radius:11px;transform-origin:left;transform:scaleX(0);animation:grow 1.2s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes grow{to{transform:scaleX(1)}}
+.fv-art{position:absolute;left:0;right:0;bottom:70px;height:230px}
+.fv-art>*{position:absolute;opacity:0;animation:pop .5s both}
+.fv-foot{position:absolute;left:22px;right:22px;bottom:24px;text-align:center;font-size:18px;opacity:0;animation:fadeUp .5s 5.4s both}
+
+/* ===== 7 minimal ===== */
+.ml{position:absolute;inset:0;background:#f3f3f0;color:#1d1d1b;font-family:"Gowun Batang",serif}
+.ml svg{position:absolute;left:0;top:120px;width:360px;height:300px}
+.ml svg path{fill:none;stroke:#1d1d1b;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.ml-a{position:absolute;left:0;right:0;top:60px;text-align:center;font-size:15px;letter-spacing:.3em;color:#7a7a72;opacity:0;animation:fadeIn 1s .3s both}
+.ml-t{position:absolute;left:30px;right:30px;top:440px;text-align:center;font-size:30px;line-height:1.35;font-weight:700;opacity:0;animation:fadeUp 1s 3.6s both}
+.ml-s{position:absolute;left:30px;right:30px;top:540px;text-align:center;font-size:16px;color:#6a6a62;opacity:0;animation:fadeIn 1s 5s both}
+
+/* ===== 8 / 10 three ===== */
+.th{position:absolute;inset:0}
+.th canvas{position:absolute;inset:0;width:100%!important;height:100%!important;display:block}
+.th-top{position:absolute;left:18px;right:18px;top:22px;font-family:"Black Han Sans",sans-serif;font-size:28px;line-height:1.15;color:#fff;text-shadow:0 2px 12px #0008;animation:fadeUp .6s both}
+.th-top small{display:block;font-family:"Do Hyeon",sans-serif;font-size:16px;color:#f2c14e;letter-spacing:.06em}
+.th-cap{position:absolute;left:18px;right:18px;bottom:34px;text-align:center;font-family:"Do Hyeon",sans-serif;font-size:21px;color:#fff;background:#000a;border-radius:10px;padding:10px 12px;transition:opacity .3s}
+.ex .th-top{color:#2a2420;text-shadow:none}
+.ex .th-cap{background:#2a2420e6}
+
+/* ===== 9 lego ===== */
+.lg{position:absolute;inset:0;background:#cfe7ff;font-family:"Black Han Sans",sans-serif;color:#13223a}
+.lg-t{position:absolute;left:18px;right:18px;top:24px;font-size:30px;line-height:1.1;animation:fadeUp .5s both}
+.lg-t small{display:block;font-family:"Jua",sans-serif;font-size:17px;color:#2f5aa8}
+.lg-base{position:absolute;left:20px;right:20px;top:560px;height:30px;background:#2f9d4b;border-radius:3px;
+  background-image:radial-gradient(circle at 10px 6px,#41b85f 5px,transparent 5.5px);background-size:20px 30px;box-shadow:inset 0 -6px 0 #23803b}
+.bk{position:absolute;width:40px;height:30px;border-radius:2px;box-shadow:inset 0 -5px 0 #0002,inset -4px 0 0 #0001;animation:lgDrop .55s cubic-bezier(.3,.7,.4,1) both}
+.bk::before{content:"";position:absolute;left:0;right:0;top:-6px;height:6px;background:radial-gradient(circle at 10px 4px,var(--c) 5px,transparent 5.5px);background-size:20px 6px;filter:brightness(1.05)}
+@keyframes lgDrop{0%{transform:translateY(-640px)}70%{transform:translateY(4px)}85%{transform:translateY(-3px)}100%{transform:none}}
+.lg-tag{position:absolute;font-family:"Jua",sans-serif;font-size:13px;background:#fff;border:2px solid #13223a;border-radius:6px;padding:1px 6px;opacity:0;animation:pop .35s both}
+.lg-b{position:absolute;left:18px;right:18px;bottom:16px;text-align:center;font-family:"Jua",sans-serif;font-size:19px;opacity:0;animation:fadeUp .5s 5.6s both}
+
+@media (prefers-reduced-motion: reduce){ .btn{transition:none} }
+</style>
+</head><body>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">에이로그원 · 코드 애니메이션 스튜디오</div>
+    <h1>살림 비법 애니 10종</h1>
+    <p class="lead">보내주신 릴스의 10가지 스타일을 실제로 움직이게 만들었습니다. 주제는 모두 <b>냉장고 냄새 없애는 비법</b>으로 통일했어요. 화면을 누르면 9:16 녹화 화면이 열립니다. 영상 생성 크레딧은 들지 않습니다.</p>
+    <div class="chips">
+      <span class="chip"><b>9:16</b> 세로</span>
+      <span class="chip">크레딧 <b>0원</b></span>
+      <span class="chip">주인공 <b>15초</b> 2편</span>
+      <span class="chip">스타일 미리보기 <b>10종</b></span>
+    </div>
+  </header>
+
+  <section class="sec">
+    <div class="sec-head">
+      <div class="eyebrow">① 칠판 · ② 만화 — 바로 올릴 수 있는 15초 완성본</div>
+      <h2>냉장고 냄새 없애는 비법 3가지</h2>
+      <p class="lead">말린 커피 찌꺼기, 베이킹소다 한 컵, 남은 소주로 선반 닦기. 같은 내용을 두 가지 스타일로 만들었습니다.</p>
+    </div>
+    <div class="feature">
+      <div class="fcard">
+        <div class="stage" data-style="chalk"></div>
+        <div class="fmeta"><div><h3>칠판 강의형</h3><small>ChalkBoard · 15초 · 50년 고수 노트</small></div>
+          <button class="btn pri" data-rec="chalk">녹화 화면 열기</button></div>
+      </div>
+      <div class="fcard">
+        <div class="stage" data-style="comic"></div>
+        <div class="fmeta"><div><h3>3인 만화 상황극</h3><small>Comic Art · 15초 · 남편·로아·친구</small></div>
+          <button class="btn pri" data-rec="comic">녹화 화면 열기</button></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <div class="eyebrow">③ 10가지 스타일 미리보기</div>
+      <h2>어떤 그림체가 우리 채널에 맞을까</h2>
+      <p class="lead">칸을 누르면 크게 열립니다. 마음에 드는 스타일의 요청문을 복사해서 Claude에게 주제만 바꿔 보내면 됩니다.</p>
+    </div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <div class="eyebrow">녹화해서 숏폼으로 만드는 법</div>
+      <h2>휴대폰 하나로 끝내기</h2>
+    </div>
+    <ol class="steps">
+      <li><b>녹화 화면 열기</b><p>원하는 애니의 ‘녹화 화면 열기’를 누르고 휴대폰 화면 녹화를 켭니다.</p></li>
+      <li><b>‘녹화 시작’ 누르기</b><p>3초 카운트 뒤 처음부터 재생되고 버튼은 자동으로 숨겨집니다.</p></li>
+      <li><b>캡컷에서 다듬기</b><p>CapCut [캡컷] 무료 버전에서 앞뒤를 자르고 효과음과 자막을 넣습니다.</p></li>
+    </ol>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <div class="eyebrow">④ Claude 요청문 10종</div>
+      <h2>주제만 바꿔서 복사하세요</h2>
+      <p class="lead">[ ] 안의 주제를 바꾸면 같은 스타일로 새 에피소드가 나옵니다.</p>
+    </div>
+    <div class="prompts" id="prompts"></div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-head">
+      <div class="eyebrow">파트너스 링크</div>
+      <h2>살림템 구경하러 가기</h2>
+    </div>
+    <div class="links">
+      <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener"><b>쿠팡</b><span>로켓배송 살림템</span></a>
+      <a href="https://bitl.bz/qQEIlA" target="_blank" rel="noopener"><b>테무</b><span>초저가 정리용품</span></a>
+      <a href="https://bitl.bz/fjcH9p" target="_blank" rel="noopener"><b>알리익스프레스</b><span>해외직구 아이디어템</span></a>
+      <a href="https://kr.trip.com/?Allianceid=8001792&amp;SID=302477743&amp;trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&amp;trip_sub3=D14461428" target="_blank" rel="noopener"><b>트립닷컴</b><span>여행·숙소 예약</span></a>
+    </div>
+    <p class="notice">이 페이지에는 쿠팡 파트너스 등 제휴 링크가 포함되어 있으며, 구매 시 일정액의 수수료를 받을 수 있습니다.</p>
+  </section>
+</div>
+
+<div class="rec" id="rec" hidden>
+  <div class="stage" id="recStage"></div>
+  <div class="rec-bar" id="recBar">
+    <button class="btn pri" id="recGo">녹화 시작 (3초 후)</button>
+    <button class="btn" id="recRe">처음부터</button>
+    <button class="btn" id="recFs">전체화면</button>
+    <button class="btn" id="recX">닫기</button>
+  </div>
+  <div class="rec-hint" id="recHint">화면을 누르면 버튼이 다시 나타납니다</div>
+</div>
+<div class="toast" id="toast" hidden>복사했어요</div>
+
+<script>
+(function(){
+"use strict";
+const d=(s,n)=>`animation-delay:${s}s` ;
+function letters(str,start,step){let i=0;return [...str].map(ch=>ch===' '?'<span>&nbsp;</span>':`<span style="animation-delay:${(start+step*(i++)).toFixed(2)}s">${ch}</span>`).join('')}
+
+/* ---------- comic people ---------- */
+function person(o){
+  const s=o.s||1, hair=o.hairC||'#3a2418';
+  let back='',bang='';
+  if(o.hair==='long'){back=`<path d="M-22 -82 q0 -26 22 -26 q22 0 22 26 v34 h-44z" fill="${hair}" stroke="#111" stroke-width="2"/>`;
+    bang=`<path d="M-20 -86 q3 -19 20 -19 q17 0 20 19 q-9 -9 -20 -7 q-11 -2 -20 7z" fill="${hair}"/>`;}
+  else if(o.hair==='bob'){back=`<path d="M-24 -82 q0 -26 24 -26 q24 0 24 26 v18 q-24 6 -48 0z" fill="${hair}" stroke="#111" stroke-width="2"/>`;
+    bang=`<path d="M-20 -88 q2 -17 20 -17 q18 0 20 17z" fill="${hair}"/>`;}
+  else {bang=`<path d="M-21 -83 q0 -22 21 -22 q21 0 21 22 q-6 -7 -12 -6 l-5 -6 l-4 6 q-11 -2 -21 6z" fill="${hair}" stroke="#111" stroke-width="2"/>`;}
+  const mouth=o.talk?`<ellipse class="cm-talk" cx="0" cy="-70" rx="5" ry="4.5" fill="#8a2323" stroke="#111" stroke-width="1.5"/>`
+    :(o.smile?`<path d="M-6 -72 q6 6 12 0" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round"/>`:`<path d="M-5 -70 h10" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round"/>`);
+  const arm=o.arm||'';
+  return `<g transform="translate(${o.x} ${o.y}) scale(${s})">
+    ${back}
+    <rect x="-12" y="-26" width="10" height="26" fill="#2c3550" stroke="#111" stroke-width="2"/>
+    <rect x="2" y="-26" width="10" height="26" fill="#2c3550" stroke="#111" stroke-width="2"/>
+    <rect x="-17" y="-60" width="34" height="38" rx="11" fill="${o.shirt}" stroke="#111" stroke-width="2.5"/>
+    ${arm}
+    <circle cx="0" cy="-80" r="20" fill="#f7d3b5" stroke="#111" stroke-width="2.5"/>
+    ${bang}
+    <circle cx="-7" cy="-80" r="2.4" fill="#111"/><circle cx="7" cy="-80" r="2.4" fill="#111"/>
+    <circle cx="-12" cy="-73" r="3" fill="#ff9b8a" opacity=".6"/><circle cx="12" cy="-73" r="3" fill="#ff9b8a" opacity=".6"/>
+    ${mouth}
+  </g>`;
+}
+const ROA={hair:'long',shirt:'#ff7a5c',hairC:'#3a2418'}, MIN={hair:'short',shirt:'#3b5bdb',hairC:'#1d1d1d'}, SU={hair:'bob',shirt:'#2fb380',hairC:'#6b3b1f'};
+const P=(base,extra)=>person(Object.assign({},base,extra));
+
+/* ---------- three helpers ---------- */
+function makeRenderer(root){
+  const r=new THREE.WebGLRenderer({antialias:true});
+  r.setPixelRatio(Math.min(2,window.devicePixelRatio||1)); r.setSize(360,640,false);
+  root.querySelector('.th').prepend(r.domElement); return r;
+}
+function disposeRenderer(r,scene){
+  scene.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>{if(m.map)m.map.dispose();m.dispose()})}});
+  r.dispose(); try{r.forceContextLoss()}catch(e){}
+}
+const hasThree=()=>typeof THREE!=='undefined';
+function noThree(root,msg){root.innerHTML=`<div class="th" style="background:#222;display:flex;align-items:center;justify-content:center;color:#ccc;font-size:18px;padding:30px;text-align:center">${msg}</div>`}
+
+/* ---------- styles ---------- */
+const S={};
+S.chalk={no:2,name:'ChalkBoard',ko:'칠판',dur:15000,render(el){
+  const ic={
+    cup:'M10 22 h32 v16 a10 10 0 0 1 -10 10 h-12 a10 10 0 0 1 -10 -10z M42 26 h5 a6 6 0 0 1 0 12 h-5 M20 8 q4 5 0 10 M31 8 q4 5 0 10',
+    soda:'M12 16 h36 l-4 34 h-28z M9 16 h42 M20 30 q10 7 20 0 M23 40 h14',
+    bottle:'M24 4 h12 v9 h-12z M21 13 h18 l5 9 v26 a4 4 0 0 1 -4 4 h-20 a4 4 0 0 1 -4 -4 v-26z M18 30 h24 M48 40 q6 -2 8 4 q-4 4 -8 2'};
+  const tip=(t,no,title,sub,icon)=>`<div class="ck-tip" style="${d(t)}">
+      <svg viewBox="0 0 60 56"><path pathLength="1" class="dr" style="${d(t)}" d="${icon}"/></svg>
+      <div><b style="${d(t+.4)}">${no} ${title}</b><em style="${d(t+.9)}">${sub}</em></div></div>
+      <div class="ck-dust" style="left:${30+Math.random()*180}px;top:${t===3?232:t===6?318:404}px;${d(t+.1)}"></div>`;
+  el.innerHTML=`<div class="ck"><div class="ck-board">
+     <div class="ck-eye">50년 살림 고수 노트</div>
+     <div class="ck-title">${letters('냉장고 냄새',0.2,0.16)}<br>${letters('없애는 비법 3',1.2,0.13)}</div>
+     <div class="ck-ul"></div>
+     ${tip(3,'①','말린 커피 찌꺼기','종이컵에 담아 칸마다 하나',ic.cup)}
+     ${tip(6,'②','베이킹소다 한 컵','뚜껑 열어두고 3개월마다 교체',ic.soda)}
+     ${tip(9,'③','소주로 선반 닦기','남은 소주를 키친타월에 묻혀 쓱',ic.bottle)}
+     <div class="ck-cta">프로필 링크에서 확인!<svg viewBox="0 0 300 60" preserveAspectRatio="none"><path pathLength="1" class="dr" style="${d(12.4)}" d="M150 4 C40 2 6 14 8 32 C10 54 120 58 200 56 C280 54 296 40 292 24 C288 8 220 2 140 6"/></svg></div>
+   </div>
+   <div class="ck-tray"><i style="left:40px;width:46px;background:#f4f1e8"></i><i style="left:96px;width:30px;background:#f2c14e"></i><i style="left:230px;width:64px;height:14px;background:#8a8f99;bottom:4px"></i></div></div>`;
+}};
+
+S.comic={no:5,name:'Comic Art',ko:'만화',dur:15000,render(el){
+  const fridge=(x,y,w,h,open)=>`<g><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="#f2f6fa" stroke="#111" stroke-width="2.5"/>
+    <line x1="${x}" y1="${y+h*.38}" x2="${x+w}" y2="${y+h*.38}" stroke="#111" stroke-width="2"/>
+    <rect x="${x+6}" y="${y+10}" width="4" height="${h*.2}" rx="2" fill="#111"/><rect x="${x+6}" y="${y+h*.45}" width="4" height="${h*.25}" rx="2" fill="#111"/></g>`;
+  const stink=(x,y)=>`<g class="stink" fill="none" stroke="#5aa832" stroke-width="3" stroke-linecap="round"><path d="M${x} ${y} q6 -8 0 -16 q-6 -8 0 -16"/><path d="M${x+14} ${y+4} q6 -8 0 -16 q-6 -8 0 -16"/></g>`;
+  const cupArm=`<rect x="14" y="-56" width="20" height="9" rx="4" fill="#ff7a5c" stroke="#111" stroke-width="2"/><rect x="28" y="-70" width="16" height="20" rx="3" fill="#8b5a2b" stroke="#111" stroke-width="2"/><rect x="28" y="-70" width="16" height="5" fill="#5c3a1a"/>`;
+  const nose=`<rect x="-4" y="-64" width="9" height="20" rx="4" fill="#3b5bdb" stroke="#111" stroke-width="2" transform="rotate(-30)"/>`;
+  el.innerHTML=`<div class="cm">
+   <div class="cm-head"><b>에이로그원</b>살림 코믹 · 냉장고 냄새 편</div>
+   <div class="cm-p" style="left:12px;top:72px;animation-delay:.3s"><div class="bgx bg1"></div>
+     <svg viewBox="0 0 162 236">${fridge(98,92,56,140)}${stink(108,90)}${P(MIN,{x:54,y:232,s:1.3,talk:true,arm:nose})}</svg>
+     <div class="cm-b" style="animation-delay:.8s;--tail:30%">냉장고 열 때마다<br>이 냄새 뭐야…</div>
+     <div class="cm-sfx" style="left:96px;top:150px;animation-delay:1.3s">킁킁</div></div>
+   <div class="cm-p" style="left:186px;top:72px;animation-delay:3.3s"><div class="bgx bg2"></div>
+     <svg viewBox="0 0 162 236">${P(ROA,{x:70,y:232,s:1.3,talk:true,arm:cupArm})}</svg>
+     <div class="cm-b" style="animation-delay:3.8s;--tail:35%">엄마 50년 비법!<br>말린 커피 찌꺼기 쏙</div>
+     <div class="cm-sfx" style="left:110px;top:120px;animation-delay:4.3s;color:#3b5bdb">짠</div></div>
+   <div class="cm-p" style="left:12px;top:322px;animation-delay:6.3s"><div class="bgx bg3"></div>
+     <svg viewBox="0 0 162 236">${P(ROA,{x:118,y:232,s:1.05,smile:true})}${P(SU,{x:52,y:232,s:1.3,talk:true})}</svg>
+     <div class="cm-b" style="animation-delay:6.8s;--tail:25%">헐 우리 집도!<br>베이킹소다도 돼?</div></div>
+   <div class="cm-p" style="left:186px;top:322px;animation-delay:9.3s"><div class="bgx bg4"></div>
+     <svg viewBox="0 0 162 236">${fridge(118,110,40,122)}${P(MIN,{x:24,y:232,s:.95,smile:true})}${P(ROA,{x:68,y:232,s:1.1,talk:true})}${P(SU,{x:106,y:232,s:.95,smile:true})}</svg>
+     <div class="cm-b" style="animation-delay:9.8s;--tail:40%">응! 마지막은<br>소주로 선반 닦기</div></div>
+   <svg class="cm-pow" viewBox="0 0 200 150"><polygon points="100,4 118,40 160,18 146,58 196,62 152,86 182,122 132,108 120,146 98,112 70,144 66,106 18,124 46,86 4,64 52,56 36,16 80,40" fill="#ff5b3a" stroke="#111" stroke-width="4"/>
+     <text x="100" y="86" text-anchor="middle" font-family="Black Han Sans" font-size="30" fill="#fff" stroke="#111" stroke-width="1.5">냄새 OUT!</text></svg>
+   <div class="cm-cta">프로필 링크에서 비법 3종 확인!</div></div>`;
+}};
+
+S.pixel={no:1,name:'Pixel Art',ko:'픽셀 아트',dur:9000,render(el){
+  el.innerHTML=`<div class="px"><canvas width="90" height="160"></canvas>
+    <div class="px-hud"><div class="px-q">QUEST 01</div><div class="px-t">냉장고 냄새 퇴치</div>
+    <div class="px-hp">냄새 HP<div class="px-bar"><i></i></div></div></div>
+    <div class="px-dlg">…</div></div>`;
+  const c=el.querySelector('canvas').getContext('2d'), bar=el.querySelector('.px-bar i'), dlg=el.querySelector('.px-dlg');
+  const R=(x,y,w,h,col)=>{c.fillStyle=col;c.fillRect(Math.round(x),Math.round(y),w,h)};
+  let raf,t0=performance.now(),last='';
+  function hero(x,y,step){
+    R(x+1,y,6,3,'#3a2418');R(x,y+2,8,2,'#3a2418');R(x+1,y+3,6,4,'#f7d3b5');R(x+2,y+4,1,1,'#111');R(x+5,y+4,1,1,'#111');R(x,y+4,1,5,'#3a2418');
+    R(x+1,y+7,6,5,'#ff7a5c');R(x,y+8,1,3,'#f7d3b5');R(x+7,y+8,1,3,'#f7d3b5');
+    if(step){R(x+1,y+12,2,3,'#2c3550');R(x+5,y+12,2,2,'#2c3550');R(x+5,y+14,2,1,'#111');R(x+1,y+15,2,1,'#111')}
+    else{R(x+2,y+12,2,3,'#2c3550');R(x+4,y+12,2,3,'#2c3550');R(x+2,y+15,2,1,'#111');R(x+4,y+15,2,1,'#111')}
+  }
+  function frame(now){
+    const t=(now-t0)/1000;
+    R(0,0,90,160,'#2b2140');for(let i=0;i<90;i+=6)R(i,0,1,112,'#32284c');
+    R(0,112,90,48,'#6a4532');for(let i=0;i<90;i+=10)R(i,112,1,48,'#583828');R(0,112,90,2,'#8a5c42');
+    R(8,58,22,18,'#6fc3ff');R(8,66,22,1,'#2b2140');R(18,58,1,18,'#2b2140');R(7,57,24,1,'#fff');R(7,76,24,1,'#fff');
+    R(58,62,26,52,'#dfe7ef');R(58,62,26,1,'#fff');R(58,80,26,1,'#9aa7b5');R(61,66,1,9,'#7b8794');R(61,84,1,14,'#7b8794');R(82,62,2,52,'#b8c3cf');
+    const hp=t<4?1:t<7?Math.max(0,1-(t-4)/3):0;
+    if(hp>0){for(let k=0;k<3;k++){const bx=56+k*9+Math.sin(t*3+k)*2,by=50-k*4+Math.sin(t*2+k*2)*2,col=hp>.5?'#7bd36a':'#a6e39a';
+      R(bx,by,6,4,col);R(bx+1,by-1,4,1,col);R(bx+2,by+1,1,1,'#2b5c22');R(bx+4,by+1,1,1,'#2b5c22');}}
+    const hx=t<3?4+t/3*40:44, step=t<3&&Math.floor(t*6)%2===1;
+    hero(hx,96,step);
+    if(t>=3&&t<4){const p=t-3,ix=48+p*14,iy=100-Math.sin(p*Math.PI)*22;R(ix,iy,4,4,'#8b5a2b');R(ix,iy,4,1,'#5c3a1a')}
+    if(t>=4&&t<7&&Math.floor(t*8)%2===0){R(62,70,2,2,'#fff');R(76,88,2,2,'#fff');R(68,100,2,2,'#ffe066')}
+    if(t>=7){for(let k=0;k<6;k++){const a=t*3+k;R(70+Math.cos(a)*16,86+Math.sin(a)*16,2,2,k%2?'#ffe066':'#fff')}}
+    bar.style.transform=`scaleX(${hp})`; bar.style.background=hp>.5?'#7cff6b':hp>.2?'#ffd23f':'#ff5b3a';
+    const msg=t<3?'냄새 몬스터가 나타났다!':t<4?'로아는 말린 커피 찌꺼기를 던졌다!':t<7?'냄새 HP가 쭉쭉 줄어든다!':'QUEST CLEAR!  살림력 +50';
+    if(msg!==last){dlg.textContent=msg;last=msg}
+    raf=requestAnimationFrame(frame);
+  }
+  raf=requestAnimationFrame(frame); return()=>cancelAnimationFrame(raf);
+}};
+
+S.glow={no:3,name:'Glow Sketch',ko:'글로우 스케치',dur:9000,render(el){
+  el.innerHTML=`<div class="gl"><svg viewBox="0 0 360 640">
+    <g class="n">
+      <path pathLength="1" class="dr" style="animation-duration:1.6s" d="M110 170 h120 a10 10 0 0 1 10 10 v320 a10 10 0 0 1 -10 10 h-120 a10 10 0 0 1 -10 -10 v-320 a10 10 0 0 1 10 -10z"/>
+      <path pathLength="1" class="dr" style="${d(1)}" d="M100 300 h140 M100 390 h140 M100 450 h140"/>
+      <path pathLength="1" class="dr" style="${d(1.3)}" d="M118 200 v40 M118 320 v50"/>
+      <path pathLength="1" class="dr" style="${d(1.6)}" d="M120 248 h40 v40 h-40z M176 258 h46 v30 h-46z"/>
+    </g>
+    <g class="a">
+      <circle pathLength="1" class="dr" style="${d(2.2)}" cx="140" cy="268" r="26"/>
+      <path pathLength="1" class="dr" style="${d(2.5)}" d="M140 242 L80 150"/>
+      <circle pathLength="1" class="dr" style="${d(3.6)}" cx="225" cy="350" r="18"/>
+      <path pathLength="1" class="dr" style="${d(3.9)}" d="M243 350 L262 360"/>
+      <path pathLength="1" class="dr" style="${d(5)}" d="M110 470 h120 M120 470 L70 545"/>
+    </g></svg>
+    <div class="gl-t">냄새 잡는<br>냉장고 지도</div>
+    <div class="gl-l" style="left:150px;top:110px;${d(2.8)}">① 김치·젓갈은<br>꼭 밀폐용기에</div>
+    <div class="gl-l" style="left:248px;top:362px;font-size:15px;${d(4.2)}">② 탈취제는<br>칸마다<br>안쪽 깊숙이</div>
+    <div class="gl-l" style="left:20px;top:548px;${d(5.3)}">③ 문 칸엔 소스류만</div>
+    <div class="gl-b" style="bottom:44px">자리만 바꿔도 냄새가 덜해요</div></div>`;
+}};
+
+S.ps2={no:4,name:'PS2 Style',ko:'옛날 게임 3D',dur:8000,render(el){
+  el.innerHTML=`<div class="ps"><canvas width="120" height="213"></canvas>
+    <div class="ps-top">MEMORY CARD 슬롯 1<b>살림 데이터 저장</b></div>
+    <div class="ps-box"><span class="msg">냉장고 청소 기록을 저장하는 중…</span><div class="ps-pb"><i></i></div></div></div>`;
+  const cv=el.querySelector('canvas'),c=cv.getContext('2d'),pb=el.querySelector('.ps-pb i'),msg=el.querySelector('.msg');
+  const W=120,H=213,w=.55,h=1.05,dd=.5;
+  const V=[[-w,-h,-dd],[w,-h,-dd],[w,h,-dd],[-w,h,-dd],[-w,-h,dd],[w,-h,dd],[w,h,dd],[-w,h,dd]];
+  const F=[[[0,1,2,3],[0,0,-1]],[[5,4,7,6],[0,0,1]],[[4,0,3,7],[-1,0,0]],[[1,5,6,2],[1,0,0]],[[3,2,6,7],[0,1,0]],[[4,5,1,0],[0,-1,0]]];
+  const L=(()=>{const v=[-.5,.7,-.6],m=Math.hypot(...v);return v.map(x=>x/m)})();
+  let raf,t0=performance.now(),done=false;
+  function rot(p,a,b){let[x,y,z]=p;let x1=x*Math.cos(a)+z*Math.sin(a),z1=-x*Math.sin(a)+z*Math.cos(a);let y1=y*Math.cos(b)-z1*Math.sin(b),z2=y*Math.sin(b)+z1*Math.cos(b);return[x1,y1,z2]}
+  function proj(p){const k=150/(p[2]+3.4);return[Math.round(60+p[0]*k),Math.round(108-p[1]*k)]}
+  function frame(now){
+    const t=(now-t0)/1000,a=t*1.1,b=-.22;
+    const g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0a1a6b');g.addColorStop(1,'#000318');c.fillStyle=g;c.fillRect(0,0,W,H);
+    for(let i=0;i<5;i++){c.fillStyle='rgba(120,150,255,.08)';c.beginPath();c.arc(60+Math.sin(t*.7+i)*50,100+Math.cos(t*.5+i*2)*70,18+i*3,0,7);c.fill()}
+    c.fillStyle='rgba(0,0,0,.4)';c.beginPath();c.ellipse(60,152,30,6,0,0,7);c.fill();
+    const P2=V.map(v=>rot(v,a,b));
+    F.forEach(([idx,n])=>{const nr=rot(n,a,b);if(nr[2]>=0)return;
+      const sh=.35+.65*Math.max(0,-(nr[0]*L[0]+nr[1]*L[1]+nr[2]*L[2]));
+      c.fillStyle=`rgb(${Math.round(190*sh+30)},${Math.round(200*sh+30)},${Math.round(215*sh+35)})`;
+      c.beginPath();idx.forEach((i,k)=>{const q=proj(P2[i]);k?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1])});c.closePath();c.fill();
+      if(n[2]===-1){c.strokeStyle='#34405a';c.lineWidth=1;const y0=.3;
+        const l1=proj(rot([-w,y0,-dd],a,b)),l2=proj(rot([w,y0,-dd],a,b));c.beginPath();c.moveTo(l1[0],l1[1]);c.lineTo(l2[0],l2[1]);c.stroke();
+        const h1=proj(rot([-w+.12,.55,-dd-.02],a,b)),h2=proj(rot([-w+.12,.85,-dd-.02],a,b)),h3=proj(rot([-w+.12,-.05,-dd-.02],a,b)),h4=proj(rot([-w+.12,-.5,-dd-.02],a,b));
+        c.lineWidth=2;c.beginPath();c.moveTo(h1[0],h1[1]);c.lineTo(h2[0],h2[1]);c.moveTo(h3[0],h3[1]);c.lineTo(h4[0],h4[1]);c.stroke();}
+    });
+    const p=Math.min(1,t/5.5);pb.style.width=(p*100).toFixed(1)+'%';
+    if(p>=1&&!done){done=true;msg.textContent='저장 완료!  냄새 0  ·  정리 100'}
+    raf=requestAnimationFrame(frame);
+  }
+  raf=requestAnimationFrame(frame);return()=>cancelAnimationFrame(raf);
+}};
+
+S.flat={no:6,name:'Flat Vector',ko:'플랫 벡터',dur:8000,render(el){
+  el.innerHTML=`<div class="fv"><h4>한 달 탈취 비용<br><span>얼마나 차이 날까?</span></h4>
+   <div class="fv-card">
+     <div class="fv-row"><div><span>시판 냉장고 탈취제</span><b>약 3천~5천 원</b></div><div class="fv-tr"><i style="background:#ff7a5c;width:86%;${d(1)}"></i></div></div>
+     <div class="fv-row"><div><span>말린 커피 찌꺼기</span><b>0원</b></div><div class="fv-tr"><i style="background:#2fb380;width:6%;${d(2)}"></i></div></div>
+   </div>
+   <div class="fv-art">
+     <div style="left:120px;top:10px;width:120px;height:200px;background:#fff;border-radius:16px;box-shadow:inset -12px 0 0 #e3ece9;${d(2.6)}"></div>
+     <div style="left:120px;top:78px;width:120px;height:6px;background:#cfdcd8;${d(2.8)}"></div>
+     <div style="left:134px;top:26px;width:8px;height:34px;border-radius:4px;background:#1d3b3a;${d(2.9)}"></div>
+     <div style="left:134px;top:98px;width:8px;height:50px;border-radius:4px;background:#1d3b3a;${d(3)}"></div>
+     <div style="left:56px;top:120px;width:54px;height:62px;border-radius:6px 6px 18px 18px;background:#8b5a2b;${d(3.6)}"></div>
+     <div style="left:60px;top:116px;width:46px;height:10px;border-radius:5px;background:#5c3a1a;${d(3.7)}"></div>
+     <div style="left:250px;top:40px;width:64px;height:64px;border-radius:50%;background:#ffd84a;display:flex;align-items:center;justify-content:center;font-size:22px;${d(4.4)}">0원</div>
+   </div>
+   <div class="fv-foot">카페에서 커피 찌꺼기를 무료로<br>나눠주는 곳도 많아요</div></div>`;
+}};
+
+S.minimal={no:7,name:'Minimal Line',ko:'미니멀 라인',dur:8000,render(el){
+  el.innerHTML=`<div class="ml"><div class="ml-a">살림 한 줄</div>
+   <svg viewBox="0 0 360 300"><path pathLength="1" class="dr" style="animation-duration:3.2s;animation-timing-function:ease-in-out"
+     d="M40 250 H110 C112 200 108 150 112 120 H232 C236 150 232 200 230 250 C228 270 214 280 196 280 H146 C128 280 114 270 110 250 M232 150 C268 146 276 196 238 204 M150 100 C140 80 162 66 152 44 M176 100 C166 80 188 66 178 44 M202 100 C192 80 214 66 204 44 M230 250 H320"/></svg>
+   <div class="ml-t">버리지 마세요<br>커피 찌꺼기</div>
+   <div class="ml-s">잘 말리면 냉장고의 숨은 탈취제</div></div>`;
+}};
+
+S.cgi={no:8,name:'CGI Motion',ko:'CG 모션',dur:9000,render(el){
+  if(!hasThree())return noThree(el,'3D 도구를 불러오지 못했어요.<br>인터넷 연결을 확인해 주세요.');
+  el.innerHTML=`<div class="th"><div class="th-top"><small>비법 ②</small>베이킹소다 한 컵</div><div class="th-cap">뚜껑 열고 칸마다 · 3개월마다 교체</div></div>`;
+  const r=makeRenderer(el);r.outputEncoding=THREE.sRGBEncoding;
+  const scene=new THREE.Scene();scene.background=new THREE.Color(0x0e1216);scene.fog=new THREE.Fog(0x0e1216,6,14);
+  const cam=new THREE.PerspectiveCamera(34,360/640,.1,50);
+  scene.add(new THREE.HemisphereLight(0xcfe0ff,0x111111,.55));
+  const key=new THREE.DirectionalLight(0xffffff,1.1);key.position.set(3,4,4);scene.add(key);
+  const rim=new THREE.DirectionalLight(0xffb85a,1.4);rim.position.set(-3,2,-3);scene.add(rim);
+  const rim2=new THREE.DirectionalLight(0x5ac8ff,.8);rim2.position.set(3,1,-3);scene.add(rim2);
+  const ped=new THREE.Mesh(new THREE.CylinderGeometry(.95,1,.28,64),new THREE.MeshStandardMaterial({color:0x22282e,metalness:.7,roughness:.28}));ped.position.y=-.14;scene.add(ped);
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(.98,.018,8,96),new THREE.MeshBasicMaterial({color:0xf2c14e}));ring.rotation.x=Math.PI/2;scene.add(ring);
+  const floor=new THREE.Mesh(new THREE.CircleGeometry(6,48),new THREE.MeshStandardMaterial({color:0x14181c,metalness:.4,roughness:.6}));floor.rotation.x=-Math.PI/2;floor.position.y=-.28;scene.add(floor);
+  const g=new THREE.Group();scene.add(g);
+  const tc=document.createElement('canvas');tc.width=1024;tc.height=256;const x=tc.getContext('2d');
+  x.fillStyle='#f2c14e';x.fillRect(0,0,1024,256);x.fillStyle='#1b1607';
+  for(const ox of[0,512]){x.font='bold 64px "Black Han Sans","Noto Sans KR",sans-serif';x.fillText('베이킹소다',ox+60,120);x.font='bold 40px "Noto Sans KR",sans-serif';x.fillText('BAKING SODA 100%',ox+60,190)}
+  const tex=new THREE.CanvasTexture(tc);tex.encoding=THREE.sRGBEncoding;
+  const powder=new THREE.Mesh(new THREE.CylinderGeometry(.43,.43,.72,64),new THREE.MeshStandardMaterial({color:0xf7f7f2,roughness:.95}));powder.position.y=.4;g.add(powder);
+  const glass=new THREE.Mesh(new THREE.CylinderGeometry(.46,.46,1.1,64,1,true),new THREE.MeshStandardMaterial({color:0xddeeff,transparent:true,opacity:.22,metalness:.1,roughness:.05,side:THREE.DoubleSide}));glass.position.y=.55;g.add(glass);
+  const label=new THREE.Mesh(new THREE.CylinderGeometry(.465,.465,.42,64,1,true),new THREE.MeshStandardMaterial({map:tex,roughness:.5}));label.position.y=.5;g.add(label);
+  const lid=new THREE.Mesh(new THREE.CylinderGeometry(.49,.49,.16,64),new THREE.MeshStandardMaterial({color:0xf2c14e,metalness:.5,roughness:.3}));lid.position.y=1.18;g.add(lid);
+  const base=new THREE.Mesh(new THREE.CylinderGeometry(.47,.47,.04,64),new THREE.MeshStandardMaterial({color:0xddeeff,transparent:true,opacity:.4}));base.position.y=.02;g.add(base);
+  const sp=[];for(let i=0;i<24;i++){const m=new THREE.Mesh(new THREE.SphereGeometry(.018,8,8),new THREE.MeshBasicMaterial({color:i%2?0xffffff:0xf2c14e}));scene.add(m);sp.push({m,a:i/24*Math.PI*2,r:1.3+(i%3)*.15,y:.2+(i%5)*.3})}
+  let raf,t0=performance.now();
+  function frame(now){const t=(now-t0)/1000;
+    g.rotation.y=t*.9;g.position.y=.02+Math.sin(t*1.6)*.04;
+    const lift=t>4.5?Math.min(1,(t-4.5)/1)*.35:0;lid.position.y=1.18+lift;lid.rotation.z=lift*.6;
+    const ca=Math.sin(t*.35)*.35;cam.position.set(Math.sin(ca)*5.6,1.6,Math.cos(ca)*5.6);cam.lookAt(0,.55,0);
+    sp.forEach((s,i)=>{const a=s.a+t*.6;s.m.position.set(Math.cos(a)*s.r,s.y+Math.sin(t*2+i)*.05,Math.sin(a)*s.r)});
+    r.render(scene,cam);raf=requestAnimationFrame(frame)}
+  raf=requestAnimationFrame(frame);
+  return()=>{cancelAnimationFrame(raf);disposeRenderer(r,scene)};
+}};
+
+S.lego={no:9,name:'Lego Style',ko:'블록',dur:8000,render(el){
+  let h='';let k=0;const B=(x,y,c)=>{h+=`<div class="bk" style="left:${x}px;top:${y}px;background:${c};--c:${c};animation-delay:${(k++*.035).toFixed(3)}s"></div>`};
+  for(let row=0;row<12;row++){const y=530-row*30;B(60,y,'#f4f6f8');B(260,y,'#f4f6f8')}
+  for(let i=0;i<6;i++)B(60+i*40,170,'#f4f6f8');
+  for(let i=0;i<4;i++){B(100+i*40,320,'#dfe5ea');B(100+i*40,440,'#dfe5ea')}
+  const food=[[100,290,'#e8453c'],[140,290,'#f28c28'],[180,260,'#e8453c'],[100,410,'#3fae4a'],[140,410,'#3fae4a'],[180,410,'#8bd14b'],[220,380,'#3fae4a'],[100,530,'#2d6fd6'],[140,530,'#2d6fd6'],[180,530,'#4f9cf5'],[220,500,'#2d6fd6']];
+  k=0;let fh='';food.forEach(([x,y,c],i)=>{fh+=`<div class="bk" style="left:${x}px;top:${y}px;background:${c};--c:${c};animation-delay:${(2+i*.18).toFixed(2)}s"></div>`});
+  el.innerHTML=`<div class="lg"><div class="lg-t"><small>정리 꿀팁</small>블록처럼 칸 정리</div>${h}${fh}
+    <div class="lg-tag" style="left:280px;top:240px;animation-delay:4.2s">반찬</div>
+    <div class="lg-tag" style="left:280px;top:370px;animation-delay:4.5s">채소</div>
+    <div class="lg-tag" style="left:280px;top:490px;animation-delay:4.8s">음료</div>
+    <div class="lg-base"></div>
+    <div class="lg-b">같은 종류끼리 한 칸이면<br>냄새도 섞이지 않아요</div></div>`;
+}};
+
+S.explainer={no:10,name:'Explainer 3D',ko:'설명용 3D',dur:10000,render(el){
+  if(!hasThree())return noThree(el,'3D 도구를 불러오지 못했어요.<br>인터넷 연결을 확인해 주세요.');
+  el.innerHTML=`<div class="th ex"><div class="th-top"><small>비법 ②</small>베이킹소다 넣는 법</div><div class="th-cap">냉장고 앞으로 가서</div></div>`;
+  const cap=el.querySelector('.th-cap');
+  const r=makeRenderer(el);r.shadowMap.enabled=true;r.shadowMap.type=THREE.PCFSoftShadowMap;
+  const scene=new THREE.Scene();scene.background=new THREE.Color(0xeadcc9);
+  const cam=new THREE.PerspectiveCamera(40,360/640,.1,50);cam.position.set(0,1.25,7);cam.lookAt(0,1.05,0);
+  scene.add(new THREE.HemisphereLight(0xffffff,0xb89a7a,.75));
+  const sun=new THREE.DirectionalLight(0xffffff,.75);sun.position.set(-3,6,5);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);
+  Object.assign(sun.shadow.camera,{left:-4,right:4,top:4,bottom:-4});scene.add(sun);
+  const M=c=>new THREE.MeshStandardMaterial({color:c,roughness:.75});
+  const floor=new THREE.Mesh(new THREE.PlaneGeometry(12,12),M(0xd8bd98));floor.rotation.x=-Math.PI/2;floor.receiveShadow=true;scene.add(floor);
+  const wall=new THREE.Mesh(new THREE.PlaneGeometry(12,8),M(0xf3e6d6));wall.position.set(0,4,-1.2);wall.receiveShadow=true;scene.add(wall);
+  const win=new THREE.Mesh(new THREE.PlaneGeometry(1.2,1.1),new THREE.MeshBasicMaterial({color:0xbfe3ff}));win.position.set(-.55,2.05,-1.18);scene.add(win);
+  [[-.55,2.6,1.3,.06],[-.55,1.5,1.3,.06],[-.55,2.05,.05,1.1],[-1.2,2.05,.06,1.16],[.1,2.05,.06,1.16]].forEach(([x,y,w,hh])=>{const f=new THREE.Mesh(new THREE.BoxGeometry(w,hh,.04),M(0xffffff));f.position.set(x,y,-1.16);scene.add(f)});
+  const clock=new THREE.Mesh(new THREE.TorusGeometry(.2,.035,8,40),M(0x6fa3d6));clock.position.set(-1.05,3,-1.16);scene.add(clock);
+  const fr=new THREE.Mesh(new THREE.BoxGeometry(.85,2,.7),M(0xf6f8fa));fr.position.set(.62,1,-.75);fr.castShadow=true;scene.add(fr);
+  const inside=new THREE.Mesh(new THREE.PlaneGeometry(.75,1.15),new THREE.MeshBasicMaterial({color:0xfff4d6}));inside.position.set(.62,1.35,-.39);scene.add(inside);
+  const shelf=new THREE.Mesh(new THREE.BoxGeometry(.75,.03,.1),M(0xd9e2ea));shelf.position.set(.62,1.3,-.37);scene.add(shelf);
+  const hinge=new THREE.Group();hinge.position.set(1.045,1.35,-.38);scene.add(hinge);
+  const door=new THREE.Mesh(new THREE.BoxGeometry(.85,1.25,.05),M(0xeef2f5));door.position.x=-.425;door.castShadow=true;hinge.add(door);
+  const hd=new THREE.Mesh(new THREE.BoxGeometry(.04,.3,.05),M(0x9aa4ae));hd.position.set(-.78,0,.05);hinge.add(hd);
+  const low=new THREE.Mesh(new THREE.BoxGeometry(.85,.02,.02),M(0xc8d0d8));low.position.set(.62,.72,-.39);scene.add(low);
+  const ch=new THREE.Group();scene.add(ch);
+  const limb=(rad,len,col)=>{const p=new THREE.Group();const m=new THREE.Mesh(new THREE.CylinderGeometry(rad,rad,len,16),M(col));m.position.y=-len/2;m.castShadow=true;p.add(m);return p};
+  const legL=limb(.085,.82,0x1f3a7a),legR=limb(.085,.82,0x1f3a7a);legL.position.set(-.1,.9,0);legR.position.set(.1,.9,0);ch.add(legL,legR);
+  [legL,legR].forEach(l=>{const s=new THREE.Mesh(new THREE.BoxGeometry(.16,.08,.3),M(0x3a2418));s.position.set(0,-.84,.06);s.castShadow=true;l.add(s)});
+  const torso=new THREE.Mesh(new THREE.CylinderGeometry(.2,.18,.72,20),M(0xffffff));torso.position.y=1.26;torso.castShadow=true;ch.add(torso);
+  const belt=new THREE.Mesh(new THREE.CylinderGeometry(.185,.185,.05,20),M(0x2a2420));belt.position.y=.92;ch.add(belt);
+  const armL=limb(.06,.62,0xffffff),armR=limb(.06,.62,0xffffff);armL.position.set(-.27,1.56,0);armR.position.set(.27,1.56,0);ch.add(armL,armR);
+  const cup=new THREE.Mesh(new THREE.CylinderGeometry(.08,.07,.14,16),M(0xf2c14e));cup.position.set(0,-.66,.04);armR.add(cup);
+  const head=new THREE.Mesh(new THREE.SphereGeometry(.19,24,20),M(0xf2c9a0));head.position.y=1.82;head.castShadow=true;ch.add(head);
+  const hair=new THREE.Mesh(new THREE.SphereGeometry(.2,24,20,0,Math.PI*2,0,Math.PI*.55),M(0x4a2c1a));hair.position.set(0,1.84,-.015);ch.add(hair);
+  const nose=new THREE.Mesh(new THREE.SphereGeometry(.03,8,8),M(0xe8b48a));nose.position.set(0,1.8,.19);ch.add(nose);
+  let raf,t0=performance.now(),lastCap='';
+  const ease=x=>x<0?0:x>1?1:x*x*(3-2*x);
+  function frame(now){const t=(now-t0)/1000;
+    const walk=t<3.6, px=-1.25+ease(t/3.6)*1.05;
+    ch.position.set(px,0,.1);
+    let ry=Math.PI/2; if(t>8)ry=Math.PI/2-ease((t-8)/.6)*Math.PI/2; ch.rotation.y=ry;
+    const sw=walk?Math.sin(t*9)*.55:0;
+    legL.rotation.x=sw;legR.rotation.x=-sw;armL.rotation.x=-sw*.8;
+    const reach=t>5&&t<7.2?ease((t-5)/.6)*(1-ease((t-6.6)/.6)):0;
+    armR.rotation.x=walk?sw*.8:-reach*1.35;
+    cup.visible=t<6.3;
+    hinge.rotation.y=ease((t-3.9)/.8)*1.75*(1-ease((t-7.2)/.7));
+    if(t>=6.3&&!scene.userData.placed){const c2=new THREE.Mesh(new THREE.CylinderGeometry(.08,.07,.14,16),M(0xf2c14e));c2.position.set(.45,1.39,-.55);scene.add(c2);scene.userData.placed=c2}
+    const y=walk?Math.abs(Math.sin(t*9))*.03:0;ch.position.y=y;
+    const cp=t<3.9?'냉장고 앞으로 가서':t<6.6?'뚜껑 연 컵을 칸 안쪽에 쏙':t<8?'문 닫고':'3개월마다 새것으로 바꾸면 끝!';
+    if(cp!==lastCap){cap.textContent=cp;lastCap=cp}
+    r.render(scene,cam);raf=requestAnimationFrame(frame)}
+  raf=requestAnimationFrame(frame);
+  return()=>{cancelAnimationFrame(raf);disposeRenderer(r,scene)};
+}};
+
+const ORDER=['pixel','chalk','glow','ps2','comic','flat','minimal','cgi','lego','explainer'];
+
+/* ---------- prompts ---------- */
+const LOOK={
+ pixel:'Pixel Art [픽셀 아트]: 16비트 도트 그림, 캔버스 90x160을 4배 확대(image-rendering: pixelated), 게임 퀘스트 화면처럼 상단 HP 바와 하단 대화창',
+ chalk:'ChalkBoard [초크보드]: 진녹색 칠판 + 나무 테두리, 흰색·노란색 분필 손글씨(Nanum Pen Script), 글자가 한 자씩 써지고 아이콘은 선이 그려지는 효과',
+ glow:'Glow Sketch [글로우 스케치]: 검정 모눈 배경 + 네온 시안색 선이 그려지는 효과(stroke-dashoffset), 주황 네온 화살표로 설명 라벨 연결',
+ ps2:'PS2 Style [옛날 게임 3D]: 저해상도 캔버스(120x213)를 확대한 각진 3D 물체 회전, 파란 메모리카드 저장 화면, 진행 막대',
+ comic:'Comic Art [코믹 아트]: 노란 망점 배경, 굵은 검정 테두리 4컷, 말풍선과 효과음 글자. 인물 3명(행동자 로아 / 반응자 남편 / 공감자 친구), 말하는 사람만 입이 움직이고 나머지는 입을 닫음',
+ flat:'Flat Vector [플랫 벡터]: 민트 파스텔 단색 도형, 그림자 없음, 막대그래프가 자라나는 비교 인포그래픽',
+ minimal:'Minimal Line [미니멀 라인]: 밝은 회백색 배경에 한 줄로 이어지는 선 드로잉, 명조체 문구가 천천히 떠오름',
+ cgi:'CGI Motion [씨지아이 모션]: Three.js [쓰리 제이에스]로 받침대 위 상품이 360도 회전, 금색·하늘색 테두리 조명, 반짝이 입자',
+ lego:'Lego Style [블록 스타일]: 볼록한 돌기가 있는 블록이 위에서 떨어져 쌓이며 장면을 완성, 초록 바닥판',
+ explainer:'Explainer 3D [설명용 3D]: Three.js로 원통·구 모양의 단순한 인물이 방 안을 걸어가 행동을 보여줌, 카메라는 눈높이 고정, 아래에 단계 자막'};
+const TOPIC={pixel:'냉장고 냄새 퇴치 퀘스트',chalk:'냉장고 냄새 없애는 비법 3가지',glow:'냄새 잡는 냉장고 지도',ps2:'냉장고 청소 기록 저장',comic:'냉장고 냄새 때문에 생긴 우리 집 이야기',flat:'시판 탈취제 vs 커피 찌꺼기 한 달 비용',minimal:'커피 찌꺼기 버리지 마세요',cgi:'베이킹소다 한 컵',lego:'냉장고 칸 정리',explainer:'베이킹소다 넣는 법'};
+function promptText(id){const s=S[id];return `9:16 세로 비율(360x640 기준, 화면 너비에 맞춰 확대) 단일 HTML 파일로 ${s.dur/1000}초 애니메이션을 만들어줘.
+
+스타일: ${LOOK[id]}
+주제: [${TOPIC[id]}]
+
+구성:
+- 0~3초: 제목 등장
+- 3~${Math.round(s.dur/1000)-3}초: 핵심 내용 3가지가 순서대로 등장
+- 마지막 3초: "프로필 링크에서 확인!" 마무리 문구
+
+조건:
+- 한국어 폰트는 Google Fonts만 사용
+- 유료 요소·외부 이미지 금지, 모든 그림은 코드(CSS/SVG/Canvas)로
+- 자동 재생, 끝나면 처음부터 반복
+- 휴대폰 화면 녹화용이라 버튼·스크롤바 없이 꽉 찬 화면`}
+
+/* ---------- stage manager ---------- */
+const live=new Set();
+function mount(container,id){
+  container.innerHTML='';const inner=document.createElement('div');inner.className='stage-inner';container.appendChild(inner);
+  const st={id,inner,timer:null,cleanup:null,running:false,
+    start(){this.stop();inner.innerHTML='';try{this.cleanup=S[id].render(inner)||null}catch(e){console.error(e)}this.running=true;this.timer=setTimeout(()=>this.start(),S[id].dur)},
+    stop(){clearTimeout(this.timer);if(this.cleanup){try{this.cleanup()}catch(e){}}this.cleanup=null;this.running=false}};
+  const fit=()=>{const w=container.clientWidth;if(w)inner.style.transform=`scale(${w/360})`};
+  new ResizeObserver(fit).observe(container);fit();
+  return st;
+}
+const io=new IntersectionObserver(es=>es.forEach(e=>{const st=e.target._st;if(!st)return;if(e.isIntersecting){if(!st.running)st.start()}else st.stop()}),{threshold:.15});
+function watch(container,id){const st=mount(container,id);container._st=st;io.observe(container);return st}
+
+document.querySelectorAll('.feature .stage').forEach(s=>watch(s,s.dataset.style));
+const grid=document.getElementById('grid');
+ORDER.forEach(id=>{const s=S[id];const card=document.createElement('div');card.className='gcard';
+  card.innerHTML=`<div class="stage" role="button" tabindex="0" aria-label="${s.name} 크게 보기"></div>
+   <div class="gname"><span class="no">${s.no}</span><b>${s.name}</b>${(id==='chalk'||id==='comic')?'<span class="badge">추천</span>':''}</div>
+   <div class="gname" style="margin-top:-6px"><span>${s.ko}</span></div>
+   <div class="gbtns"><button class="btn" data-rec="${id}">녹화</button><button class="btn" data-copy="${id}">요청문 복사</button></div>`;
+  grid.appendChild(card);const stg=card.querySelector('.stage');watch(stg,id);
+  stg.addEventListener('click',()=>openRec(id));stg.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();openRec(id)}});
+});
+const pw=document.getElementById('prompts');
+ORDER.forEach(id=>{const s=S[id];const dt=document.createElement('details');dt.className='pc';
+  dt.innerHTML=`<summary><span class="no">${s.no}</span><span class="t"><b>${s.name}</b> · ${s.ko}</span><button class="btn" data-copy="${id}">복사</button></summary><div class="pbody"><pre class="code"></pre></div>`;
+  dt.querySelector('pre').textContent=promptText(id);pw.appendChild(dt)});
+
+/* ---------- copy ---------- */
+const toast=document.getElementById('toast');let tt;
+function showToast(m){toast.textContent=m;toast.hidden=false;clearTimeout(tt);tt=setTimeout(()=>toast.hidden=true,1600)}
+document.addEventListener('click',e=>{
+  const c=e.target.closest('[data-copy]');
+  if(c){e.preventDefault();e.stopPropagation();const txt=promptText(c.dataset.copy);
+    const fb=()=>{const ta=document.createElement('textarea');ta.value=txt;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+      let ok=false;try{ok=document.execCommand('copy')}catch(_){}ta.remove();showToast(ok?'복사했어요':'길게 눌러 직접 복사해 주세요')};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(()=>showToast('복사했어요'),fb)}else fb();return}
+  const r=e.target.closest('[data-rec]');if(r){openRec(r.dataset.rec)}
+});
+
+/* ---------- record overlay ---------- */
+const rec=document.getElementById('rec'),recStage=document.getElementById('recStage'),bar=document.getElementById('recBar'),hint=document.getElementById('recHint');
+let recSt=null,hideT;
+function showBar(){bar.classList.remove('off');hint.classList.add('off')}
+function hideBar(){bar.classList.add('off');hint.classList.remove('off');clearTimeout(hideT);hideT=setTimeout(()=>hint.classList.add('off'),2500)}
+function openRec(id){
+  live.forEach(s=>s.stop());
+  document.querySelectorAll('.stage').forEach(s=>{if(s._st&&s!==recStage)s._st.stop()});
+  rec.hidden=false;document.body.style.overflow='hidden';
+  recSt=mount(recStage,id);recSt.start();showBar();
+}
+function closeRec(){if(recSt)recSt.stop();recSt=null;recStage.innerHTML='';rec.hidden=true;document.body.style.overflow='';
+  if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});
+  document.querySelectorAll('.stage').forEach(s=>{if(s._st){io.unobserve(s);io.observe(s)}})}
+document.getElementById('recX').onclick=e=>{e.stopPropagation();closeRec()};
+document.getElementById('recRe').onclick=e=>{e.stopPropagation();recSt&&recSt.start()};
+document.getElementById('recFs').onclick=e=>{e.stopPropagation();const p=rec.requestFullscreen?rec.requestFullscreen():null;if(p)p.catch(()=>showToast('이 화면에서는 전체화면을 쓸 수 없어요'))};
+document.getElementById('recGo').onclick=e=>{e.stopPropagation();if(!recSt)return;recSt.stop();hideBar();hint.classList.add('off');
+  const cd=document.createElement('div');cd.className='count';rec.appendChild(cd);let n=3;cd.textContent=n;
+  const iv=setInterval(()=>{n--;if(n>0){cd.textContent=n}else{clearInterval(iv);cd.remove();recSt&&recSt.start()}},1000)};
+rec.addEventListener('click',e=>{if(!e.target.closest('.rec-bar'))bar.classList.contains('off')?showBar():null});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!rec.hidden)closeRec()});
+})();
+</script>
+</body></html>
