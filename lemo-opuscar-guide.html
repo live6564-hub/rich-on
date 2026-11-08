@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>클로드 코드 애니메이션 가이드 | 리치온</title>
+<meta name="description" content="클로드 코드에 lemo-opuscar 스킬을 설치해 66가지 스타일 애니메이션을 만드는 법 — 리치온·에이로그원 세로 숏폼 버전">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+:root{
+  --f:"Pretendard",-apple-system,sans-serif;
+  --bg:#f6f4ef;--card:#ffffff;--line:rgba(26,32,56,.10);
+  --ink:#1a2038;--ink2:#4a5170;--ink3:#8a90a8;
+  --navy:#1a2038;--gold:#d4af37;--gold2:#f5e06e;--coral:#e8553a;
+  --goldbg:rgba(212,175,55,.10);--goldbd:rgba(212,175,55,.40);
+  --redbg:rgba(232,85,58,.08);--redbd:rgba(232,85,58,.35);
+  --grnbg:rgba(34,160,94,.08);--grnbd:rgba(34,160,94,.35);
+  --code:#1a2038;--codeink:#f5e9c8;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#11141f;--card:#1a1f30;--line:rgba(255,255,255,.10);
+    --ink:#eef0f6;--ink2:#b9bed0;--ink3:#7d8399;
+    --goldbg:rgba(212,175,55,.12);--redbg:rgba(232,85,58,.12);--grnbg:rgba(34,160,94,.12);
+    --code:#0b0d15;
+  }
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);font-family:var(--f);color:var(--ink);line-height:1.7;word-break:keep-all;overflow-x:hidden}
+.wrap{max-width:720px;margin:0 auto;padding:0 16px 60px}
+
+/* header */
+.hdr{background:linear-gradient(160deg,#10142a 0%,#1a2038 55%,#2b3460 100%);color:#fff;text-align:center;padding:34px 16px 44px;position:relative;overflow:hidden}
+.hdr::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:28px;background:var(--bg);clip-path:ellipse(55% 100% at 50% 100%)}
+.mk{width:46px;height:46px;margin:0 auto 8px;position:relative}
+.mk i{position:absolute;inset:0;border:1.5px solid rgba(255,255,255,.5);border-radius:50%}
+.mk b{position:absolute;top:50%;left:50%;width:20px;height:20px;background:linear-gradient(135deg,var(--gold2),var(--gold),#b8860b);transform:translate(-50%,-50%) rotate(45deg);border-radius:3px}
+.brand{font-family:Georgia,serif;font-size:10px;letter-spacing:6px;color:rgba(255,255,255,.75);margin-bottom:12px}
+.tag{display:inline-block;font-size:11px;font-weight:700;color:var(--gold2);border:1px solid rgba(245,224,110,.4);border-radius:999px;padding:3px 10px;margin-bottom:12px}
+.hdr h1{font-size:23px;font-weight:900;letter-spacing:-.5px;line-height:1.4;margin-bottom:10px}
+.hdr h1 em{font-style:normal;color:var(--gold2)}
+.hdr p{font-size:13.5px;color:rgba(255,255,255,.8);max-width:520px;margin:0 auto}
+.meta{font-size:11px;color:rgba(255,255,255,.55);margin-top:12px}
+
+/* blocks */
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:20px 18px;margin-top:16px}
+.sec{margin-top:34px}
+.num{font-family:Georgia,serif;font-size:13px;font-weight:700;color:var(--gold);letter-spacing:2px}
+h2{font-size:20px;font-weight:900;letter-spacing:-.4px;margin:2px 0 10px}
+h3{font-size:15px;font-weight:800;margin:16px 0 6px}
+p{font-size:14.5px;color:var(--ink2);margin-bottom:10px}
+strong{color:var(--ink)}
+ul,ol{padding-left:20px;margin-bottom:10px}
+li{font-size:14.5px;color:var(--ink2);margin-bottom:4px}
+.box{border-radius:12px;padding:14px 15px;margin:12px 0;font-size:14px}
+.box p,.box li{font-size:14px;margin-bottom:4px}
+.box .ttl{font-weight:800;color:var(--ink);margin-bottom:6px;display:block}
+.gold{background:var(--goldbg);border:1px solid var(--goldbd)}
+.red{background:var(--redbg);border:1px solid var(--redbd)}
+.grn{background:var(--grnbg);border:1px solid var(--grnbd)}
+
+table{width:100%;border-collapse:collapse;font-size:13.5px;margin:10px 0;display:block;overflow-x:auto}
+th,td{border-bottom:1px solid var(--line);padding:9px 8px;text-align:left;vertical-align:top}
+th{font-size:12.5px;color:var(--ink3);font-weight:700;white-space:nowrap}
+td:first-child{font-weight:700;color:var(--ink);white-space:nowrap}
+
+/* summary steps */
+.steps{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.steps a{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px;font-weight:700;line-height:1.4}
+.steps a span{display:block;font-family:Georgia,serif;color:var(--gold);font-size:12px}
+@media (max-width:380px){.steps{grid-template-columns:1fr}}
+
+/* copy card */
+.cp{background:var(--code);border-radius:12px;margin:12px 0;overflow:hidden}
+.cp-h{display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.08)}
+.cp-h span{font-size:11.5px;color:rgba(255,255,255,.55);font-weight:700}
+.cp button{font-family:var(--f);font-size:12px;font-weight:800;color:var(--navy);background:var(--gold2);border:0;border-radius:8px;padding:5px 11px;cursor:pointer}
+.cp button.done{background:#7ee2a8}
+.cp pre{color:var(--codeink);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;line-height:1.65;padding:12px 14px;white-space:pre-wrap;word-break:break-word}
+
+/* style groups */
+.grp{border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0;background:var(--card)}
+.grp b{font-size:14px}
+.grp small{color:var(--gold);font-weight:800;margin-left:4px}
+.grp div{font-size:13px;color:var(--ink2);margin-top:4px;line-height:1.6}
+.pick{display:grid;gap:8px;margin-top:10px}
+.pick div{border-left:3px solid var(--gold);background:var(--card);border-radius:0 10px 10px 0;padding:10px 12px;font-size:13.5px;color:var(--ink2)}
+.pick div b{color:var(--ink)}
+
+/* partners */
+.pt{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.pt a{display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;font-size:14px;font-weight:800;color:#fff;border-radius:12px;padding:13px 8px}
+.pt .c{background:#e4362b}.pt .t{background:#f57b20}.pt .r{background:#287dfa}.pt .a{background:#c9182b}
+.notice{font-size:11.5px;color:var(--ink3);margin-top:10px;line-height:1.6}
+.src li{font-size:13px}
+.src a{color:var(--ink2)}
+.foot{text-align:center;font-size:12px;color:var(--ink3);margin-top:40px}
+.badge{display:inline-block;font-size:11px;font-weight:800;border-radius:6px;padding:1px 7px;margin-right:4px;vertical-align:1px}
+.b-free{background:var(--grnbg);color:#1f8a52;border:1px solid var(--grnbd)}
+.b-pay{background:var(--redbg);color:var(--coral);border:1px solid var(--redbd)}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="mk"><i></i><b></b></div>
+  <div class="brand">RICH-ON · A-LOG ONE</div>
+  <div class="tag">클로드 · 영상 제작 · 애니메이션 · 스킬</div>
+  <h1>클로드 코드로<br><em>66가지 스타일 애니메이션</em> 만들기</h1>
+  <p>lemo-opuscar [레모 오퍼스카] 스킬 하나로 손그림·수채화·종이팝업 같은 애니메이션을, 이야기·음악·자막까지 코드로 렌더링해 영상 파일로 받는 법. 에이로그원 세로 숏폼용으로 정리했어요.</p>
+  <div class="meta">2026.11.08 · lemo-opuscar 공식 저장소 README · TECHNIQUE · MY-STYLES · AGENTS 문서 기준</div>
+</header>
+
+<main class="wrap">
+
+<!-- 한계 + 무료 체크 -->
+<div class="card">
+  <h3 style="margin-top:0">먼저 알아 둘 점 3가지</h3>
+  <div class="box red">
+    <span class="ttl">⚠️ 한계 먼저 안내</span>
+    <ul>
+      <li><strong>설치는 로아 컴퓨터에서 직접</strong> 해야 해요. 웹·앱 채팅 속 클로드는 로아 컴퓨터에 프로그램을 깔 수 없어요. 클로드 코드(터미널 또는 데스크탑 앱 Code 탭)에서 실행하세요.</li>
+      <li><strong>한국어 기본 음성이 없어요.</strong> 기본 음성 합성은 영어(Kokoro)와 중국어(edge-tts)만 있어요. 한국어는 내 녹음 파일을 넣는 방식이 가장 확실해요 (05번 참고).</li>
+      <li><strong>한 편에 30~60분</strong> 걸리고 토큰을 꽤 써요. 기본 결과물은 1920×1080 가로라서, 숏폼은 <strong>1080×1920 세로</strong>라고 꼭 적어야 해요.</li>
+    </ul>
+  </div>
+  <div class="box grn">
+    <span class="ttl">💸 무료 범위 체크</span>
+    <ul>
+      <li><span class="badge b-free">무료</span>스킬 자체 — MIT [엠아이티] 라이선스 = 누구나 무료로 쓰는 공개 코드</li>
+      <li><span class="badge b-free">무료</span>그림·음악·효과음 — 영상 생성 AI 없이 코드로 그려서 <strong>생성 크레딧이 0</strong>이에요</li>
+      <li><span class="badge b-free">무료</span>내 휴대폰 녹음으로 한국어 나레이션</li>
+      <li><span class="badge b-pay">유료</span>클로드 코드 — 클로드 유료 요금제(Pro 이상) 사용량 안에서 토큰 소모</li>
+      <li><span class="badge b-pay">크레딧</span>피쉬오디오 로아 목소리 — 쓰려면 실행 전 잔액·예상 크레딧 확인 후 로아 허락 필수</li>
+    </ul>
+  </div>
+  <div class="box gold">
+    <span class="ttl">✅ 내 영상은 내 것</span>
+    <p>이 스킬로 만든 영상은 로아 소유예요. 출처 표기 필요 없고 워터마크도 없어요. 단, 공식 갤러리 데모 영상을 가져다 쓸 땐 CC BY 4.0 [씨씨 바이] = 출처(LemoLab)만 밝히면 상업 이용 가능한 라이선스 규칙을 지켜야 해요.</p>
+  </div>
+</div>
+
+<!-- 30초 요약 -->
+<section class="sec">
+  <div class="num">// 30초 요약</div>
+  <h2>7단계로 끝내기</h2>
+  <div class="steps">
+    <a href="#s1"><span>01</span>준비물 확인하기</a>
+    <a href="#s2"><span>02</span>스킬 설치하기</a>
+    <a href="#s3"><span>03</span>첫 애니메이션 주문</a>
+    <a href="#s4"><span>04</span>66가지 스타일 고르기</a>
+    <a href="#s5"><span>05</span>한국어 나레이션 넣기</a>
+    <a href="#s6"><span>06</span>리치온 전용 스타일 만들기</a>
+    <a href="#s7"><span>07</span>업데이트·막혔을 때</a>
+    <a href="#all"><span>★</span>AI에게 통째로 맡기기</a>
+  </div>
+</section>
+
+<!-- 01 -->
+<section class="sec" id="s1">
+  <div class="num">STEP 01</div>
+  <h2>준비물 확인하기</h2>
+  <p>lemo-opuscar는 클로드가 코드로 화면을 그리고, 한 프레임씩 찍어서 소리와 합치는 방식이에요. 그래서 내 컴퓨터에 아래 도구가 있어야 해요. 나머지 패키지는 클로드가 알아서 설치해요.</p>
+  <table>
+    <tr><th>도구</th><th>버전</th><th>하는 일</th></tr>
+    <tr><td>클로드 코드</td><td>유료 요금제</td><td>스킬을 실행하는 곳</td></tr>
+    <tr><td>Node.js [노드제이에스]</td><td>20 이상</td><td>화면을 그려 프레임으로 찍기</td></tr>
+    <tr><td>ffmpeg [에프에프엠펙]</td><td>7 이상</td><td>프레임 + 소리 → 영상 파일로 합치기</td></tr>
+    <tr><td>Python [파이썬]</td><td>3.11 이상 (또는 uv)</td><td>음악·음성 합성, 소리 섞기</td></tr>
+  </table>
+  <p>터미널 [= 글자로 명령을 내리는 검은 창]에 아래 세 줄을 넣으면 지금 버전이 나와요.</p>
+  <div class="cp"><div class="cp-h"><span>버전 확인</span><button data-shield-allow="true">복사</button></div><pre>node -v
+ffmpeg -version
+python3 --version</pre></div>
+  <div class="box red">
+    <span class="ttl">ffmpeg는 꼭 7 이상</span>
+    <p>6.x 버전은 소리 길이를 짧게 잡아서 마지막 합치기 단계(mux.sh)에서 “소리가 잘렸다”며 멈춰요. 우분투 24.04 기본 ffmpeg가 6.1이라 이 경우 공식 문서가 안내하는 static build [스태틱 빌드] = 설치 없이 바로 쓰는 완성본 파일을 받으세요.</p>
+  </div>
+  <p>공식 개발 환경은 macOS [맥오에스]예요. Windows [윈도우]는 WSL [더블유에스엘] = 윈도우 안에서 리눅스를 돌리는 기능에서 쓰라고 안내해요. 3D·셰이더가 많은 스타일은 그래픽카드가 있으면 빨라요.</p>
+</section>
+
+<!-- 02 -->
+<section class="sec" id="s2">
+  <div class="num">STEP 02</div>
+  <h2>스킬 설치하기</h2>
+  <p>클로드 코드가 깔린 터미널에서 두 줄을 차례로 실행하세요. 첫 줄은 플러그인 마켓에 저장소를 추가하고, 둘째 줄이 설치해요.</p>
+  <div class="cp"><div class="cp-h"><span>설치 명령어</span><button data-shield-allow="true">복사</button></div><pre>claude plugin marketplace add lemomo-ai/lemo-opuscar
+claude plugin install lemo-opuscar@lemolab</pre></div>
+  <ul>
+    <li>설치 후엔 <strong>어느 폴더에서든</strong> 쓸 수 있어요.</li>
+    <li>처음 영상을 만들 때 스타일 설명서·도구가 <code>~/lemo-opuscar</code> 폴더로 내려받아져요.</li>
+    <li>영상마다 만드는 파일은 <strong>클로드 코드를 시작한 폴더</strong>에 생겨요 → 바탕화면에 <code>에이로그원-애니</code> 폴더를 만들고 거기서 시작하면 정리가 편해요.</li>
+  </ul>
+  <div class="box gold">
+    <span class="ttl">💡 이렇게 하면 안 막혀요</span>
+    <p>저장소 주소만 주고 “이거 설치해 줘”라고 하면 클로드가 저장소 안 설치 스크립트 실행을 거부할 수 있어요. 위 두 줄로 플러그인부터 설치하고 바로 영상을 주문하세요.</p>
+  </div>
+</section>
+
+<!-- 03 -->
+<section class="sec" id="s3">
+  <div class="num">STEP 03</div>
+  <h2>첫 애니메이션 주문하기</h2>
+  <p>스타일 이름은 <strong>영어 이름 그대로</strong> 넣으세요. &lt; &gt; 안만 바꿔서 붙여넣으면 돼요. 숏폼용 세로 조건을 미리 넣어 둔 리치온 버전이에요.</p>
+  <div class="cp"><div class="cp-h"><span>첫 주문 (세로 숏폼)</span><button data-shield-allow="true">복사</button></div><pre>&lt;Watercolor Brush&gt; 스타일로 &lt;새벽 5시, 동네 빵집이 문을 여는 이야기&gt;를 &lt;30&gt;초 영상으로 만들어 줘.
+- 크기: 1080×1920 세로 (인스타 릴스·유튜브 쇼츠용)
+- 자막: 한국어
+- 나레이션: 없이 음악과 효과음만 (나레이션은 다음 편에서 내 녹음으로 넣을게)
+- 스토리보드를 먼저 보여 줘</pre></div>
+  <p>스타일을 아직 못 정했다면 스킬 이름만 입력하세요. 언어를 묻고 → 무엇을 할지(갤러리 스타일로 영상 / 갤러리 스타일을 바꿔 내 스타일 / 빈 페이지에서 내 스타일) 고르게 해요.</p>
+  <div class="cp"><div class="cp-h"><span>메뉴로 시작</span><button data-shield-allow="true">복사</button></div><pre>/lemo-opuscar:lemo-opuscar</pre></div>
+  <h3>주문하면 클로드가 처음에 한 번 몰아서 물어봐요</h3>
+  <ol>
+    <li>주제에서 스스로 정할 수 없는 부분</li>
+    <li>내 목소리·음악·사진·로고 같은 자료가 있는지</li>
+    <li>스토리보드를 먼저 볼지 → <strong>“예” 추천</strong>. 실제 스타일로 그린 주요 장면을 한 번 보여 주고 멈춰서, 토큰 낭비 없이 방향을 잡을 수 있어요.</li>
+  </ol>
+  <p>그다음 이야기 → 음악 → 화면 렌더링 → 소리 믹싱 → 영상 파일 순서로 자동 진행돼요.</p>
+</section>
+
+<!-- 04 -->
+<section class="sec" id="s4">
+  <div class="num">STEP 04</div>
+  <h2>66가지 스타일 고르기</h2>
+  <p>12개 묶음, 총 66개예요 (2026.10.29 기준). 전체 데모는 <a href="https://lemomo-ai.github.io/lemo-opuscar/" target="_blank" rel="noopener">공식 갤러리</a>에서 볼 수 있어요.</p>
+
+  <div class="grp"><b>🆕 2026.10.29 신규</b><small>7</small><div>Memphis Diorama · Transit Map · Chalkboard · Isometric Picture Book · Printed Long Take · Circuit Board · Desktop Flythrough</div></div>
+  <div class="grp"><b>편집·다큐멘터리</b><small>8</small><div>Caption News · 1920s Newsreel · Live Countdown Split-screen · Time-lapse Symphony · Visual Investigation · Constructivist Montage · Sports Telestrator · Broadcast News Package</div></div>
+  <div class="grp"><b>증거 필름 (실제 자료 기반)</b><small>8</small><div>Satellite Briefing · Engineering Briefing Board · LiDAR Survey · Projection on White Model · Data Physicalization · Exploded Teardown · Microscope Story · Archive Light Table</div></div>
+  <div class="grp"><b>손그림·회화</b><small>7</small><div>Crayon Picture Book · Watercolor Brush · Chinese Ink Wash · Impasto Oil Painting · One-line Drawing · Whiteboard Explainer · Urban Sketch · Pen &amp; Wash</div></div>
+  <div class="grp"><b>동아시아 전통</b><small>4</small><div>Shadow Puppetry · Ukiyo-e · Red Paper-cut · Paper-cut Lightbox</div></div>
+  <div class="grp"><b>판화·인쇄</b><small>5</small><div>Risograph Print · Halftone Dossier · Woodcut Print · Copperplate Engraving · Silkscreen Travel Poster</div></div>
+  <div class="grp"><b>그래픽·타이포</b><small>7</small><div>Swiss Motion Graphics · 60s Spy Title Sequence · Art Deco · Blueprint · Stained Glass · Pictogram Motion · ASCII / CRT Terminal</div></div>
+  <div class="grp"><b>정보·키노트</b><small>5</small><div>Data Storytelling · Isometric Infographic · Dark Tech Keynote · Living Screencast · Sci-fi Hologram HUD</div></div>
+  <div class="grp"><b>카툰·애니</b><small>4</small><div>1930s Rubber Hose Cartoon · 80s Cel Anime · Sci-Fi Sitcom Toon · Mid-century Cartoon</div></div>
+  <div class="grp"><b>게임</b><small>4</small><div>16-bit Pixel RPG · HD-2D · Microgame Frenzy · Game Show Flat</div></div>
+  <div class="grp"><b>영화·시대</b><small>2</small><div>1920s Silent Film · Liminal Found Footage</div></div>
+  <div class="grp"><b>재질·3D</b><small>5</small><div>Brick Toy · Paper Pop-up Book · Tilt-Shift Miniature · Low-poly Isometric Island · Glass Product Render</div></div>
+
+  <h3>🎯 리치온·에이로그원 추천 TOP 6</h3>
+  <div class="pick">
+    <div><b>Whiteboard Explainer</b> — 살림 꿀팁 “왜 이렇게 해야 하는지” 설명형 숏폼</div>
+    <div><b>Isometric Infographic</b> — 상품이 집에 오기까지, 사용 순서 한눈에</div>
+    <div><b>Data Storytelling</b> — 코스트코 vs 쿠팡 가격 비교, 1개당 단가 그래프</div>
+    <div><b>Crayon Picture Book</b> — 아이와 함께 보는 감성 살림 이야기</div>
+    <div><b>Paper Pop-up Book</b> — 상품 소개를 동화책 펼치듯, 브랜드 감성 강화</div>
+    <div><b>Glass Product Render</b> — 텀블러·주방용품 고급 제품 컷 (가상 제품 데모 기준이라 실제 상품은 사진 자료 함께 제공)</div>
+  </div>
+</section>
+
+<!-- 05 -->
+<section class="sec" id="s5">
+  <div class="num">STEP 05</div>
+  <h2>한국어 나레이션 넣기</h2>
+  <p>기본 음성 합성(TTS [티티에스] = 글자를 목소리로 읽어 주는 기술)은 영어·중국어만 있어요. 공식 문서도 “사용자가 녹음 파일이나 목소리를 가져오면 그걸 쓴다”고 되어 있어서, 한국어는 <strong>내 녹음 파일</strong>이 정답이에요.</p>
+  <h3>무료로 녹음하는 순서</h3>
+  <ol>
+    <li>클로드에게 대본만 먼저 받아요 (아래 1번 카드).</li>
+    <li>휴대폰 음성 녹음 앱으로 <strong>한 문장 = 한 파일</strong>로 녹음해요. 조용한 방, 휴대폰은 입에서 한 뼘.</li>
+    <li>파일 이름을 <code>01.m4a, 02.m4a …</code>처럼 순서대로 바꿔 영상 폴더 안 <code>voice</code> 폴더에 넣어요.</li>
+    <li>아래 2번 카드로 영상을 주문해요.</li>
+  </ol>
+  <div class="cp"><div class="cp-h"><span>1. 대본 먼저 받기</span><button data-shield-allow="true">복사</button></div><pre>&lt;Whiteboard Explainer&gt; 스타일로 &lt;수세미를 일주일마다 바꿔야 하는 이유&gt; 30초 세로 영상을 만들 거야.
+영상은 아직 만들지 말고, 내가 직접 녹음할 한국어 나레이션 대본만 먼저 써 줘.
+- 한 문장씩 번호를 붙여서
+- 한 문장은 2~4초 안에 읽을 수 있게 짧게
+- 30대 주부 말투, 친근하게</pre></div>
+  <div class="cp"><div class="cp-h"><span>2. 내 녹음으로 영상 만들기</span><button data-shield-allow="true">복사</button></div><pre>방금 대본으로 영상을 만들어 줘.
+- 나레이션: 기본 음성 합성 대신 voice 폴더의 내 녹음 파일(01~번 순서)을 사용
+- 화면 전환과 자막 타이밍을 내 녹음 길이에 맞춰 줘
+- 자막: 한국어, 대본 그대로
+- 크기: 1080×1920 세로
+- 목소리는 음악보다 또렷하게</pre></div>
+  <div class="box red">
+    <span class="ttl">⛔ 하면 안 되는 것</span>
+    <p>공식 데모 중 6편(Chalkboard, Circuit Board, Desktop Flythrough, Isometric Picture Book, Printed Long Take, Broadcast News Package)의 나레이션은 재사용 금지예요. 내 영상에는 내 목소리나 사용 권한이 있는 목소리만 쓰세요.</p>
+  </div>
+  <div class="box gold">
+    <span class="ttl">피쉬오디오 로아 목소리를 쓰고 싶다면</span>
+    <p>크레딧이 드는 기능이라, 실행 전에 남은 크레딧과 예상 크레딧을 먼저 확인하고 로아가 허락한 뒤에만 생성해요. 무료로 끝내려면 휴대폰 녹음이 가장 좋아요.</p>
+  </div>
+</section>
+
+<!-- 06 -->
+<section class="sec" id="s6">
+  <div class="num">STEP 06</div>
+  <h2>리치온 전용 스타일 만들기</h2>
+  <p>갤러리 스타일을 고쳐서, 또는 빈 페이지에서 내 브랜드 색·로고·캐릭터를 넣은 나만의 스타일을 만들 수 있어요. 이미지 생성 AI 없이 전부 코드로 그려요.</p>
+  <h3>시작하는 두 가지 방법</h3>
+  <ul>
+    <li><strong>갤러리 스타일 고치기</strong> — 전체 목록을 보여 주면 고칠 스타일 이름을 입력해요.</li>
+    <li><strong>빈 페이지에서</strong> — 원하는 느낌을 말로, 또는 좋아하는 사진·영상을 보여 주면 가장 가까운 갤러리 스타일을 바탕으로 골라 줘요.</li>
+  </ul>
+  <h3>그다음 5단계</h3>
+  <ol>
+    <li><strong>한 번에 하나씩 질문</strong> — 용도·플랫폼(세로 숏폼은 1080×1920 또는 1080×1440)·브랜드 색·로고·폰트·캐릭터. 갤러리 스타일은 “바꿔도 안전한 것 / 성격이 바뀌는 것 / 못 바꾸는 것”으로 나눠 보여 줘요. 한 번에 최대 5가지 변경.</li>
+    <li><strong>요약 확인</strong> — 바뀌기 전·후와 비용을 보여 주고, 동의하기 전엔 아무것도 저장 안 해요.</li>
+    <li><strong>스타일 프레임 1장</strong> — 원본(왼쪽)과 내 버전(오른쪽)을 나란히 보여 줘요.</li>
+    <li><strong>15~30초 데모 영상</strong> — 음악·효과음 포함, 한 번 자체 점검 후 전달.</li>
+    <li><strong>저장</strong> — “내 스타일로 저장 / 한 번 더 / 지금은 안 함” 중 선택. 저장하면 <code>~/lemo-my-styles/</code>에 보관되고 업데이트·삭제해도 안 지워져요.</li>
+  </ol>
+  <div class="cp"><div class="cp-h"><span>리치온 브랜드 스타일 만들기</span><button data-shield-allow="true">복사</button></div><pre>&lt;Paper Pop-up Book&gt; 스타일을 내 브랜드 스타일로 바꾸고 싶어.
+- 용도: 살림·생활용품 소개 숏폼 (인스타 릴스, 유튜브 쇼츠)
+- 크기: 1080×1920 세로
+- 브랜드 색: 네이비 #1A2038 바탕, 골드 #D4AF37 포인트
+- 폰트: 한국어가 들어가는 무료 폰트 (예: Pretendard)
+- 로고: 지금은 없음, 마지막 장면에 "리치온" 글자만
+- 느낌: 고급스럽지만 따뜻하게
+스타일 이름은 "Rich-On Pop-up"으로 해 줘.</pre></div>
+  <p>저장 후엔 이렇게 불러요: <em>“내 Rich-On Pop-up 스타일로 &lt;주제&gt; 30초 세로 영상 만들어 줘.”</em> 스타일을 고를 때 내 스타일이 맨 위에 나와요.</p>
+</section>
+
+<!-- 07 -->
+<section class="sec" id="s7">
+  <div class="num">STEP 07</div>
+  <h2>업데이트와 막혔을 때</h2>
+  <div class="cp"><div class="cp-h"><span>업데이트 (실행 후 클로드 코드 재시작)</span><button data-shield-allow="true">복사</button></div><pre>claude plugin marketplace update lemolab &amp;&amp; claude plugin update lemo-opuscar@lemolab</pre></div>
+  <div class="cp"><div class="cp-h"><span>삭제 (그다음 ~/lemo-opuscar 폴더도 삭제)</span><button data-shield-allow="true">복사</button></div><pre>claude plugin uninstall lemo-opuscar@lemolab</pre></div>
+  <p>내 스타일(<code>~/lemo-my-styles/</code>)은 업데이트·삭제해도 남아요. 필요 없으면 직접 지우세요.</p>
+  <table>
+    <tr><th>증상</th><th>해결</th></tr>
+    <tr><td>마지막 합치기에서 멈춤</td><td>ffmpeg 버전 확인 → 7 이상으로 교체 (우분투 24.04는 static build)</td></tr>
+    <tr><td>설치 스크립트 실행 거부</td><td>저장소 주소 대신 02번 플러그인 설치 두 줄로 설치</td></tr>
+    <tr><td>Windows에서 경로 오류·매번 재설치</td><td>WSL에서 실행 + 위 업데이트 명령으로 최신 버전 사용</td></tr>
+    <tr><td>가로 영상이 나옴</td><td>주문에 “1080×1920 세로” 명시</td></tr>
+    <tr><td>계속 같은 단계에서 멈춤</td><td>공식 저장소 Issues [이슈] = 오류 신고 게시판에 문의</td></tr>
+  </table>
+</section>
+
+<!-- 통째로 맡기기 -->
+<section class="sec" id="all">
+  <div class="num">// AI에게 통째로 맡기기</div>
+  <h2>이 카드 하나로 처음부터 끝까지</h2>
+  <p>클로드 코드에 그대로 붙여넣으면, 준비물 점검부터 첫 영상까지 순서대로 같이 진행해요.</p>
+  <div class="cp"><div class="cp-h"><span>전체 진행 프롬프트</span><button data-shield-allow="true">복사</button></div><pre>나는 클로드 코드로 lemo-opuscar 스킬을 써서 숏폼 애니메이션을 만들고 싶어. 아래 순서대로 한 단계씩 같이 진행해 줘. 각 단계가 끝나면 나한테 확인받고 다음으로 넘어가.
+
+1. 준비물 점검: node -v, ffmpeg -version, python3 --version 을 실행해서 Node 20+, ffmpeg 7+, Python 3.11+ 인지 확인하고, 부족한 게 있으면 내 운영체제에 맞는 설치 방법을 알려 줘.
+2. 설치: claude plugin marketplace add lemomo-ai/lemo-opuscar 와 claude plugin install lemo-opuscar@lemolab 를 안내해 줘.
+3. 스타일 추천: 66개 스타일 중 살림 꿀팁·생활용품 소개에 맞는 스타일 3개를 이유와 함께 추천해 줘.
+4. 첫 영상: 내가 고른 스타일로 30초, 1080×1920 세로, 한국어 자막, 스토리보드 먼저 보여 주기.
+5. 한국어 나레이션: 기본 음성은 영어·중국어만 있으니, 내가 녹음할 대본을 문장별 번호로 먼저 주고, 녹음 파일을 받으면 그 길이에 맞춰 영상을 만들어 줘.
+
+규칙: 크레딧이나 결제가 생길 수 있는 도구는 실행 전에 멈추고 나한테 먼저 물어봐. 영어 용어는 "영어 [한글 발음] = 뜻" 형태로 설명해 줘.</pre></div>
+</section>
+
+<!-- 파트너스 -->
+<section class="sec">
+  <div class="num">// 리치온 추천 쇼핑</div>
+  <h2>촬영·녹음 준비물 둘러보기</h2>
+  <p>휴대폰 거치대, 핀마이크, 조명처럼 녹음·촬영 품질을 올려 주는 소품을 찾아보세요.</p>
+  <div class="pt">
+    <a class="c" href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener sponsored">🛒 쿠팡</a>
+    <a class="t" href="https://bitl.bz/qQEIlA" target="_blank" rel="noopener sponsored">🛍️ 테무</a>
+    <a class="r" href="https://kr.trip.com/?Allianceid=8001792&amp;SID=302477743&amp;trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&amp;trip_sub3=D14461428" target="_blank" rel="noopener sponsored">✈️ 트립닷컴</a>
+    <a class="a" href="https://bitl.bz/fjcH9p" target="_blank" rel="noopener sponsored">🛒 알리익스프레스</a>
+  </div>
+  <p class="notice">이 페이지에는 쿠팡 파트너스, 테무·트립닷컴·알리익스프레스 제휴 링크가 포함되어 있으며, 이를 통해 구매 시 리치온이 일정액의 수수료를 받을 수 있습니다. 구매자 가격에는 영향이 없습니다.</p>
+</section>
+
+<!-- 출처 -->
+<section class="sec">
+  <div class="num">// 공식 출처</div>
+  <h2>확인한 자료</h2>
+  <ul class="src">
+    <li><a href="https://github.com/lemomo-ai/lemo-opuscar" target="_blank" rel="noopener">lemo-opuscar 공식 저장소 README</a> — 설치, 66개 스타일, 내 스타일, 준비물, 라이선스</li>
+    <li><a href="https://lemomo-ai.github.io/lemo-opuscar/" target="_blank" rel="noopener">lemo-opuscar 스타일 갤러리</a></li>
+    <li><a href="https://github.com/lemomo-ai/lemo-opuscar/blob/main/TECHNIQUE.md" target="_blank" rel="noopener">TECHNIQUE.md</a> — 준비물, 음성(영어 Kokoro·중국어 edge-tts), ffmpeg 7 이유, macOS 개발·Windows는 WSL</li>
+    <li><a href="https://github.com/lemomo-ai/lemo-opuscar/blob/main/MY-STYLES.md" target="_blank" rel="noopener">MY-STYLES.md</a> — 내 스타일 만드는 과정, 저장 위치</li>
+    <li><a href="https://github.com/lemomo-ai/lemo-opuscar/blob/main/AGENTS.md" target="_blank" rel="noopener">AGENTS.md</a> — 시작 흐름, 사용자 영상엔 워터마크·크레딧 없음</li>
+    <li><a href="https://github.com/lemomo-ai/lemo-opuscar/issues" target="_blank" rel="noopener">lemo-opuscar Issues</a> — 오류 신고·해결 사례</li>
+  </ul>
+  <p class="notice">2026년 11월 8일 기준으로 정리했어요. 스타일 수·메뉴·명령어는 업데이트로 바뀔 수 있으니 공식 저장소를 함께 확인하세요.</p>
+</section>
+
+<div class="foot">© 2026 Rich-On by Roa · A-Log One</div>
+</main>
+
+<script>
+document.querySelectorAll('.cp button').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var text=btn.closest('.cp').querySelector('pre').innerText;
+    var done=function(){btn.textContent='복사됨 ✓';btn.classList.add('done');
+      setTimeout(function(){btn.textContent='복사';btn.classList.remove('done');},1600);};
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done,function(){fallback(text);done();});
+    }else{fallback(text);done();}
+  });
+});
+function fallback(t){var ta=document.createElement('textarea');ta.value=t;ta.setAttribute('data-shield-allow','true');
+  ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+  try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);}
+</script>
+<script src="richon-shield.js"></script>
+</body>
+</html>
