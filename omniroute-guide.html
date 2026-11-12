@@ -3,85 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>옴니라우트 설치 가이드 | 리치온</title>
-<meta name="description" content="클로드 코드 한도 걸려도 자동 전환 — 옴니라우트(OmniRoute) 설치·연결 가이드, 공식 무료 키 제공자 14곳과 약관 주의 12곳">
+<title>옴니라우트 따라하기 | 리치온</title>
+<meta name="description" content="클로드 한도가 끝나면 무료 제미나이로 이어 쓰기 — 윈도우에서 옴니라우트(OmniRoute) 설치부터 바탕화면 아이콘까지, 순서대로 따라 하는 가이드">
 <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 <style>
 :root{
   --f:"Pretendard",-apple-system,sans-serif;
   --bg:#f0f7ff;--card:#ffffff;--bd:rgba(14,165,233,.18);
   --ink:#0c2340;--ink2:#2d5a8a;--ink3:#6b9ab8;
-  --sky:#0ea5e9;--deep:#0c4a6e;--gold:#d4af37;
+  --sky:#0ea5e9;--deep:#0c4a6e;
   --code:#0b1b2e;--codeink:#e6f1ff;
   --okbg:rgba(34,197,94,.08);--okbd:rgba(34,197,94,.35);--okink:#15803d;
   --nobg:rgba(239,68,68,.07);--nobd:rgba(239,68,68,.3);--noink:#b91c1c;
   --tipbg:rgba(212,175,55,.1);--tipbd:rgba(212,175,55,.45);
+  --done:#16a34a;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --bg:#081422;--card:#0f2136;--bd:rgba(14,165,233,.25);
-    --ink:#e6f1ff;--ink2:#9cc3e6;--ink3:#6b8fb0;
+    --ink:#e6f1ff;--ink2:#9cc3e6;--ink3:#7d9fbf;
     --code:#030b15;--okink:#4ade80;--noink:#f87171;
   }
 }
 :root[data-theme="dark"]{
   --bg:#081422;--card:#0f2136;--bd:rgba(14,165,233,.25);
-  --ink:#e6f1ff;--ink2:#9cc3e6;--ink3:#6b8fb0;
+  --ink:#e6f1ff;--ink2:#9cc3e6;--ink3:#7d9fbf;
   --code:#030b15;--okink:#4ade80;--noink:#f87171;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);font-family:var(--f);color:var(--ink);line-height:1.65;overflow-x:hidden}
+body{background:var(--bg);font-family:var(--f);color:var(--ink);line-height:1.7;overflow-x:hidden}
 .wrap{max-width:760px;margin:0 auto;padding:0 16px 48px}
-.hdr{background:linear-gradient(160deg,#0c4a6e 0%,#0369a1 55%,#0ea5e9 100%);color:#fff;
-  padding:34px 16px 40px;text-align:center}
+.hdr{background:linear-gradient(160deg,#0c4a6e 0%,#0369a1 55%,#0ea5e9 100%);color:#fff;padding:34px 16px 40px;text-align:center}
 .hdr .rn{font-family:Georgia,serif;font-size:10px;letter-spacing:6px;opacity:.8;margin-bottom:10px}
 .hdr h1{font-size:clamp(22px,5.6vw,32px);font-weight:800;line-height:1.3;word-break:keep-all}
 .hdr p{margin-top:10px;font-size:15px;opacity:.92;word-break:keep-all}
 .badges{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:14px}
-.badges span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);
-  border-radius:999px;padding:3px 10px;font-size:12px}
-.theme{position:fixed;top:10px;right:10px;z-index:9;background:var(--card);color:var(--ink);
-  border:1px solid var(--bd);border-radius:999px;padding:6px 10px;font-size:13px;cursor:pointer}
-nav.toc{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px 16px;margin:-18px 0 18px;position:relative}
-nav.toc b{font-size:13px;color:var(--ink3)}
-nav.toc ol{margin:6px 0 0 20px;font-size:15px}
-nav.toc a{color:var(--ink2);text-decoration:none}
+.badges span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:3px 10px;font-size:12px}
+.theme{position:fixed;bottom:16px;right:16px;z-index:9;background:var(--card);color:var(--ink);border:1px solid var(--bd);border-radius:999px;padding:6px 10px;font-size:13px;cursor:pointer}
+.progress{position:sticky;top:0;z-index:5;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:10px 14px;margin:-18px 0 16px;display:flex;align-items:center;gap:10px;font-size:14px}
+.bar{flex:1;height:8px;background:var(--bd);border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:var(--done);transition:width .3s}
 section{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px 18px;margin-bottom:16px}
-h2{font-size:20px;font-weight:800;margin-bottom:10px;word-break:keep-all}
+section.step.done{border-color:var(--okbd);background:linear-gradient(0deg,var(--okbg),var(--okbg)),var(--card)}
+h2{font-size:20px;font-weight:800;margin-bottom:10px;word-break:keep-all;display:flex;align-items:flex-start;gap:10px}
+h2 .num{flex:none;width:32px;height:32px;border-radius:50%;background:var(--sky);color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;margin-top:-1px}
+section.done h2 .num{background:var(--done)}
 h3{font-size:16px;font-weight:700;margin:16px 0 6px}
 p,li{font-size:15px;word-break:keep-all}
-ul,ol{padding-left:20px}
+ul,ol{padding-left:22px}
+li{margin:4px 0}
 .term{color:var(--ink2);font-size:13px}
+.small{font-size:13px;color:var(--ink3)}
 .tbl{width:100%;overflow-x:auto;margin-top:8px}
-table{width:100%;border-collapse:collapse;font-size:14px;min-width:460px}
+table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{border-bottom:1px solid var(--bd);padding:9px 8px;text-align:left;vertical-align:top;word-break:keep-all}
 th{font-size:12.5px;color:var(--ink3);font-weight:700}
 .box{border-radius:12px;padding:12px 14px;margin:12px 0;font-size:14.5px}
 .tip{background:var(--tipbg);border:1px solid var(--tipbd)}
 .ok{background:var(--okbg);border:1px solid var(--okbd)}
 .no{background:var(--nobg);border:1px solid var(--nobd)}
-.pill{position:relative;background:var(--code);color:var(--codeink);border-radius:12px;
-  padding:14px 14px 14px;margin:10px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;
-  white-space:pre-wrap;word-break:break-all}
-.pill .lbl{display:block;font-family:var(--f);font-size:11.5px;color:#7fb3e0;margin-bottom:6px}
-.cp{position:absolute;top:8px;right:8px;background:#0ea5e9;color:#fff;border:0;border-radius:8px;
-  padding:4px 10px;font-size:12px;font-family:var(--f);cursor:pointer}
+.where{display:inline-block;font-size:12.5px;font-weight:700;border-radius:8px;padding:2px 9px;margin-bottom:6px}
+.w-ps{background:#012456;color:#fff}
+.w-web{background:#fde68a;color:#78350f}
+.w-cc{background:#3b2a1a;color:#fdba74}
+.pill{position:relative;background:var(--code);color:var(--codeink);border-radius:12px;padding:30px 14px 14px;margin:10px 0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13px;white-space:pre-wrap;word-break:break-all}
+.pill .lbl{position:absolute;top:8px;left:14px;font-family:var(--f);font-size:11.5px;color:#7fb3e0}
+.cp{position:absolute;top:6px;right:8px;background:#0ea5e9;color:#fff;border:0;border-radius:8px;padding:4px 12px;font-size:12.5px;font-family:var(--f);cursor:pointer}
 .cp.done{background:#16a34a}
-.tag{display:inline-block;font-size:11.5px;border-radius:6px;padding:1px 7px;margin-left:4px}
-.t-ok{background:var(--okbg);color:var(--okink);border:1px solid var(--okbd)}
-.t-c{background:var(--tipbg);border:1px solid var(--tipbd)}
-.t-no{background:var(--nobg);color:var(--noink);border:1px solid var(--nobd)}
-.steps{counter-reset:s;list-style:none;padding:0}
-.steps>li{counter-increment:s;position:relative;padding-left:38px;margin:12px 0}
-.steps>li::before{content:counter(s);position:absolute;left:0;top:0;width:26px;height:26px;border-radius:50%;
-  background:var(--sky);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+.check{display:flex;align-items:center;gap:8px;margin-top:14px;padding-top:12px;border-top:1px dashed var(--bd);font-size:14.5px;font-weight:700;cursor:pointer;user-select:none}
+.check input{width:20px;height:20px;accent-color:var(--done);cursor:pointer}
+nav.toc{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px 16px;margin-bottom:16px}
+nav.toc b{font-size:13px;color:var(--ink3)}
+nav.toc ol{margin:6px 0 0 22px;font-size:15px}
+nav.toc a{color:var(--ink2);text-decoration:none}
 .partners{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:10px}
-.partners a{display:block;text-align:center;padding:11px 6px;border-radius:12px;border:1px solid var(--bd);
-  color:var(--ink);text-decoration:none;font-weight:700;font-size:14px;background:var(--bg)}
-.small{font-size:12.5px;color:var(--ink3)}
+.partners a{display:block;text-align:center;padding:11px 6px;border-radius:12px;border:1px solid var(--bd);color:var(--ink);text-decoration:none;font-weight:700;font-size:14px;background:var(--bg)}
 footer{text-align:center;font-size:12.5px;color:var(--ink3);margin-top:20px}
-footer a{color:var(--ink2)}
+kbd{font-family:var(--f);font-size:13px;border:1px solid var(--ink3);border-bottom-width:2px;border-radius:6px;padding:0 6px;background:var(--bg)}
 </style>
 </head>
 <body>
@@ -89,296 +88,413 @@ footer a{color:var(--ink2)}
 
 <header class="hdr">
   <div class="rn">RICH · ON</div>
-  <h1>옴니라우트(OmniRoute) 설치 가이드</h1>
-  <p>클로드 코드 한도 걸려도 자동 전환 + 공식 무료 키 제공자 14곳 · 약관 주의 12곳</p>
-  <div class="badges"><span>무료 오픈소스 · MIT</span><span>제공자 375~380곳</span><span>무료 등급 150곳+</span><span>2026-11-08 기준</span></div>
+  <h1>옴니라우트 따라하기</h1>
+  <p>클로드 한도가 끝나면 → 바탕화면 아이콘 하나로 무료 제미나이 모드로 이어 쓰기</p>
+  <div class="badges"><span>윈도우 기준</span><span>무료만 사용</span><span>12단계</span><span>2026-11-12 실제 설치로 확인</span></div>
 </header>
 
 <div class="wrap">
+<div class="progress"><span id="pText">0 / 12 완료</span><div class="bar"><i id="pBar"></i></div></div>
+
+<section>
+  <h2>📖 먼저 읽기 — 이 가이드로 만드는 것</h2>
+  <div class="tbl"><table>
+    <tr><th>상황</th><th>쓰는 것</th></tr>
+    <tr><td>🟠 평소</td><td>PowerShell에서 <code>claude</code> → <b>진짜 클로드</b></td></tr>
+    <tr><td>🟢 클로드 한도가 끝났을 때</td><td>바탕화면 <b>"제미나이 클로드"</b> 아이콘 더블클릭 → 클로드 코드 화면 그대로, 답은 <b>무료 제미나이</b>가 해요</td></tr>
+  </table></div>
+  <h3>🧩 용어 3개만 알기</h3>
+  <ul>
+    <li><b>옴니라우트(OmniRoute) [옴니라우트]</b> = 내 컴퓨터에서 켜는 "AI 연결 중계소". 클로드 코드가 여기로 말을 걸면, 옴니라우트가 대신 제미나이한테 전해 줘요.</li>
+    <li><b>PowerShell [파워셸]</b> = 글자로 명령을 넣는 까만(파란) 창. 화면에 <code>PS C:\Users\내이름&gt;</code>이 보여요.</li>
+    <li><b>API Key [에이피아이 키]</b> = 프로그램끼리 연결하는 비밀 열쇠.</li>
+  </ul>
+  <h3>🔑 이 가이드에 나오는 열쇠는 딱 2개</h3>
+  <div class="tbl"><table>
+    <tr><th>열쇠</th><th>생김새</th><th>어디서 받나</th><th>어디에 넣나</th></tr>
+    <tr><td>① 제미나이 키</td><td><code>AIza...</code></td><td>구글 AI Studio</td><td>옴니라우트 대시보드 (8단계)</td></tr>
+    <tr><td>② 옴니라우트 키</td><td><code>sk-...</code></td><td>옴니라우트 대시보드</td><td>내 컴퓨터 키 파일 (9단계)</td></tr>
+  </table></div>
+  <div class="box no">🔒 열쇠는 <b>채팅·캡처·카톡으로 절대 보내지 않기.</b> 메모장과 정해진 곳에만 넣어요.</div>
+  <h3>🪟 창이 3종류 나와요 — 헷갈리지 않게 색 딱지</h3>
+  <p><span class="where w-ps">PowerShell 창</span> 명령어를 넣는 곳 · <span class="where w-web">브라우저</span> 크롬 같은 인터넷 창 · <span class="where w-cc">클로드 코드 창</span> AI한테 말하는 곳 (맨 아래 <code>manual mode</code>)</p>
+  <div class="box tip">💡 <b>복사</b> 버튼을 누르면 회색 칸 내용이 통째로 복사돼요. 직접 타이핑하지 말고 꼭 복사·붙여넣기!<br>PowerShell에서 붙여넣기 = <kbd>Ctrl</kbd>+<kbd>V</kbd> 또는 마우스 오른쪽 클릭</div>
+</section>
+
 <nav class="toc">
-  <b>목차</b>
+  <b>순서 (위에서부터 하나씩)</b>
   <ol>
-    <li><a href="#resume">📌 로아 이어하기 (진행 현황)</a></li>
-    <li><a href="#what">한눈에 보기</a></li>
-    <li><a href="#install">설치 — 명령어 한 줄</a></li>
-    <li><a href="#provider">제공자 연결하기</a></li>
-    <li><a href="#safe7">✅ 안전한 7곳 연결법</a></li>
-    <li><a href="#claude">클로드 코드 연결법</a></li>
-    <li><a href="#free14">공식 무료 키 제공자 14곳</a></li>
-    <li><a href="#avoid12">약관 주의 제공자 12곳</a></li>
-    <li><a href="#trouble">자주 막히는 곳</a></li>
+    <li><a href="#s1">Node.js 준비</a></li>
+    <li><a href="#s2">PowerShell 실행 허용</a></li>
+    <li><a href="#s3">옴니라우트 설치 · 첫 실행</a></li>
+    <li><a href="#s4">안전 잠금 파일 만들기</a></li>
+    <li><a href="#s5">대시보드 로그인 · 비밀번호 바꾸기</a></li>
+    <li><a href="#s6">개인정보 마스킹 켜기</a></li>
+    <li><a href="#s7">제미나이 키 받기</a></li>
+    <li><a href="#s8">제미나이 연결 · 테스트</a></li>
+    <li><a href="#s9">옴니라우트 키 만들어 파일에 저장</a></li>
+    <li><a href="#s10">바탕화면 아이콘 만들기</a></li>
+    <li><a href="#s11">아이콘으로 첫 시험</a></li>
+    <li><a href="#s12">매일 쓰는 법</a></li>
   </ol>
 </nav>
 
-<section id="resume" style="border:2px solid var(--sky)">
-  <h2>📌 로아 이어하기 — 진행 현황 (2026-11-12)</h2>
-  <div class="tbl"><table>
-    <tr><th>단계</th><th>내용</th><th>상태</th></tr>
-    <tr><td>1</td><td>Node.js 업데이트 (v24.22.1)</td><td>✅</td></tr>
-    <tr><td>2</td><td>옴니라우트 설치 (v3.8.53) + 윈도우 실행 허용</td><td>✅</td></tr>
-    <tr><td>3</td><td>내 컴퓨터에서만 쓰게 잠금 (127.0.0.1 + 키 필수)</td><td>✅</td></tr>
-    <tr><td>4</td><td>대시보드 비밀번호 변경 (2단계 인증은 꺼 둠)</td><td>✅</td></tr>
-    <tr><td>5</td><td>개인정보 마스킹 켜기 + 휴대폰·주민번호 패턴</td><td>✅</td></tr>
-    <tr><td>6</td><td>Gemini 연결 → 테스트 응답 "2"</td><td>✅</td></tr>
-    <tr><td>A</td><td>클로드 코드 연결 → "Gemini 3 Flash" 응답 확인</td><td>✅</td></tr>
-    <tr><td>B</td><td>예비 제공자 추가 (Groq · OpenRouter)</td><td>⏭ 다음</td></tr>
-    <tr><td>C</td><td>한 번 클릭으로 켜지는 파일 만들기</td><td>⏭ 그다음</td></tr>
-  </table></div>
-
-  <h3>🔁 다음에 옴니라우트 모드로 클로드 코드 켜는 법</h3>
-  <ol class="steps">
-    <li><b>PowerShell 창 1</b>을 열고 아래를 입력해요. 이 창은 닫지 마세요.</li>
-  </ol>
-  <div class="pill"><span class="lbl">창 1 — 옴니라우트 켜기</span><button class="cp">복사</button>omniroute</div>
-  <ol class="steps" start="2">
-    <li><b>PowerShell 창 2</b>를 열고 아래 3줄을 붙여넣고 엔터</li>
-  </ol>
-  <div class="pill"><span class="lbl">창 2 — 설정 3줄</span><button class="cp">복사</button>$env:ANTHROPIC_BASE_URL="http://localhost:20128"
-$env:ANTHROPIC_MODEL="gemini/gemini-3-flash-preview"
-$env:ANTHROPIC_DEFAULT_HAIKU_MODEL="gemini/gemini-3.1-flash-lite"</div>
-  <ol class="steps" start="3">
-    <li>메모장에서 <b>옴니라우트 키(sk-...)</b>를 이어 붙여 한 줄을 완성해요 → 그 줄을 복사 → 창 2에 붙여넣기 → 엔터</li>
-  </ol>
-  <div class="pill"><span class="lbl">메모장에서 완성할 모양 (sk- 부분만 내 키로)</span><button class="cp">복사</button>$env:ANTHROPIC_AUTH_TOKEN="sk-여기에내키"</div>
-  <ol class="steps" start="4">
-    <li>확인 → <b>30 이상 숫자</b>가 나오면 성공</li>
-  </ol>
-  <div class="pill"><span class="lbl">키 확인</span><button class="cp">복사</button>$env:ANTHROPIC_AUTH_TOKEN.Length</div>
-  <ol class="steps" start="5">
-    <li>작업 폴더로 이동 → 클로드 코드 켜기</li>
-  </ol>
-  <div class="pill"><span class="lbl">작업 폴더에서 켜기</span><button class="cp">복사</button>cd C:\Users\pts\omni-work
-claude</div>
-  <div class="box tip">💡 이 설정은 <b>창 2에서만</b> 적용돼요. 다른 창에서 그냥 <code>claude</code>를 치면 원래 진짜 클로드로 켜져요.</div>
-
-  <h3>🛡 B단계 — 예비 제공자 추가 (Gemini 때와 같은 순서)</h3>
-  <p><b>B-1. Groq [그록] 키 받기</b></p>
+<!-- 1 -->
+<section class="step" id="s1" data-step="1">
+  <h2><span class="num">1</span>Node.js 준비</h2>
+  <p><b>Node.js [노드 제이에스]</b> = 옴니라우트를 돌리는 엔진이에요. 버전이 <b>22.22.2 이상</b>이어야 해요.</p>
   <ol>
-    <li><code>console.groq.com/keys</code> 접속 → 가입·로그인</li>
-    <li><b>Create API Key</b> → 이름 <code>omniroute</code></li>
-    <li><code>gsk_...</code> 키를 <b>📋 복사 아이콘</b>으로 복사 → 메모장 저장 (한 번만 보여 줘요)</li>
+    <li>시작 버튼 → <b>PowerShell</b> 입력 → 엔터</li>
+    <li>아래를 붙여넣고 엔터</li>
   </ol>
-  <p><b>B-2. 옴니라우트에 연결</b></p>
-  <ol>
-    <li>대시보드 → 왼쪽 <b>공급자</b> → <b>공급자 검색</b>에 <code>groq</code></li>
-    <li>Groq 카드 제목 클릭 → 주황색 <b>[+ 연결 추가]</b></li>
-    <li>이름 <code>groq-무료</code> · API 키 붙여넣기 · 맞춤 URL 비우기</li>
-    <li><b>[확인]</b> → "유효함" 확인 → <b>무료 모델만 가져오기 🟠 켜기</b> → [저장]</li>
-    <li>연결 줄의 스위치 🟠 켜기 → <b>[/models에서 가져오기]</b> → <b>[무료만]</b> 필터</li>
-    <li>모델 카드의 ▶ 로 하나만 테스트 → "2" 나오면 성공</li>
-  </ol>
-  <p><b>B-3. OpenRouter [오픈라우터] — 같은 방식</b></p>
-  <ol>
-    <li><code>openrouter.ai/keys</code> → <b>Create Key</b> → <code>sk-or-...</code> 저장 (충전 화면은 건너뛰기)</li>
-    <li>공급자 검색 <code>openrouter</code> → 연결 추가 → 이름 <code>openrouter-무료</code></li>
-    <li><b>무료 모델만 가져오기 🟠 반드시 켜기</b> (이름 끝이 <code>:free</code>인 모델만)</li>
-  </ol>
-  <p><b>B-4. 자동 전환 순서</b> — 대시보드 <b>콤보</b>에서 Gemini → Groq → OpenRouter 순으로 묶기</p>
-
-  <h3>🧯 오늘 실제로 겪은 문제와 해결</h3>
+  <span class="where w-ps">PowerShell 창</span>
+  <div class="pill"><span class="lbl">버전 확인</span><button class="cp">복사</button>node -v</div>
   <div class="tbl"><table>
-    <tr><th>증상</th><th>원인 · 해결</th></tr>
-    <tr><td>npm: 스크립트를 실행할 수 없으므로…</td><td>윈도우 보안 설정 → <code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code></td></tr>
-    <tr><td>노란색 SECURITY 경고 (0.0.0.0)</td><td><code>setx OMNIROUTE_SERVER_HOST 127.0.0.1</code> + <code>setx REQUIRE_API_KEY true</code> → 창 새로 열기</td></tr>
-    <tr><td>대시보드 비밀번호?</td><td>처음 비밀번호 <code>CHANGEME</code> → 설정 → 보안에서 바로 변경</td></tr>
-    <tr><td>마스킹 체크했는데 "비활성화됨"</td><td>기능 플래그 <code>PII_REDACTION_ENABLED</code>·<code>PII_RESPONSE_SANITIZATION</code> 켜기</td></tr>
-    <tr><td>Invalid API key</td><td>키가 일부만 복사됨 → AI Studio의 📋 아이콘으로 다시 복사</td></tr>
-    <tr><td>[503] high demand</td><td>키는 정상, 모델이 붐빔 → 다른 모델로 테스트</td></tr>
-    <tr><td>[404] / 모델 "차단"</td><td>구글이 없앤 모델(2.5 계열) → [/models에서 가져오기]로 진짜 목록 받기</td></tr>
-    <tr><td>옴니라우트 키가 oma_가 아니라 sk-</td><td>정상 (v3.8.53은 sk- 형식)</td></tr>
-    <tr><td>키 넣었는데 Length 0</td><td>메모장에서 <code>$env:ANTHROPIC_AUTH_TOKEN="sk-..."</code> 한 줄을 완성해 붙여넣기</td></tr>
-    <tr><td>폴더 신뢰 질문에 C:\Users\pts</td><td>No → <code>omni-work</code> 폴더를 따로 만들어 그 안에서 켜기</td></tr>
-    <tr><td>UserPromptSubmit hook error</td><td>예전에 설치한 훅 오류 (작업은 계속됨) → 나중에 정리</td></tr>
+    <tr><th>나온 결과</th><th>할 일</th></tr>
+    <tr><td><code>v24.○○</code> 또는 <code>v22.22.2</code> 이상</td><td>✅ 통과 → 2단계로</td></tr>
+    <tr><td><code>v22.1</code>처럼 낮은 숫자, 또는 "인식되지 않습니다"</td><td>nodejs.org → 초록색 <b>LTS</b> 버튼 → 받은 파일 설치("다음"만 누르기) → <b>PowerShell 창을 닫고 새로 열어</b> 다시 확인</td></tr>
   </table></div>
-  <div class="box no">🔒 키(AIza... / sk-... / gsk_...)는 채팅·캡처로 절대 보내지 않기. 메모장과 옴니라우트에만.</div>
+  <label class="check"><input type="checkbox"> 1단계 끝!</label>
 </section>
 
-<section id="what">
-  <h2>1. 한눈에 보기</h2>
-  <p>클로드 코드 쓰다가 사용량 한도에 자주 걸리시나요? 옴니라우트는 AI 제공자 수백 곳을 <b>주소 하나</b>로 묶어 주는 내 컴퓨터용 무료 오픈소스 도구예요. 한 곳이 한도에 차면 연결해 둔 다른 모델로 자동으로 넘겨서 작업을 이어 가요.</p>
-  <div class="tbl"><table>
-    <tr><th>항목</th><th>내용</th></tr>
-    <tr><td>무엇</td><td>여러 AI 제공자를 주소 하나(<code>http://localhost:20128/v1</code>)로 묶는 AI 게이트웨이<br><span class="term">Gateway [게이트웨이] = 여러 곳으로 가는 길을 한 문으로 모아 주는 관문</span></td></tr>
-    <tr><td>연결할 수 있는 곳</td><td>제공자 375~380곳 (무료 표시 153곳), 모델 1,400개 이상</td></tr>
-    <tr><td>핵심 기능</td><td>한도·오류가 나면 다음 제공자로 자동 전환<br><span class="term">Quota-aware auto-fallback [쿼터 어웨어 오토 폴백] = 남은 사용량을 보고 알아서 예비로 넘어가기</span></td></tr>
-    <tr><td>비용</td><td>옴니라우트 자체는 무료(MIT). 각 제공자 무료 사용량은 <b>내가 직접 가입해서 받은 만큼</b></td></tr>
-    <tr><td>같이 쓰는 도구</td><td>클로드 코드, Codex, Cursor, Cline, OpenCode 등 39개</td></tr>
-    <tr><td>설치</td><td><code>npm install -g omniroute</code> 한 줄 (Node.js 22.22.2 이상 필요)</td></tr>
-  </table></div>
-  <div class="box no">⚠️ <b>옴니라우트가 토큰을 공짜로 주는 게 아니에요.</b> 공식 문서에도 "제공자마다 직접 가입하고 키를 받아 연결하라, 한도와 약관은 각 제공자가 정한다"고 적혀 있어요. 설치만 하고 아무것도 연결 안 하면 답이 안 나올 수 있어요.</div>
-</section>
-
-<section id="install">
-  <h2>2. 설치 — 명령어 한 줄</h2>
-  <p>먼저 <b>Node.js [노드 제이에스]</b> = 자바스크립트 프로그램을 돌리는 엔진이 깔려 있어야 해요 (버전 22.22.2 이상, 24 LTS 추천). nodejs.org에서 LTS 버전을 받으면 돼요.</p>
-  <h3>1) 설치하고 실행 (README 공식 명령)</h3>
-  <div class="pill"><span class="lbl">터미널에 붙여넣기</span><button class="cp">복사</button>npm install -g omniroute
-omniroute</div>
-  <p>실행하면 브라우저에서 대시보드가 열려요: <code>http://localhost:20128</code><br>
-  <span class="term">-g (global [글로벌] = 전역)로 깔면 어느 폴더에서든 <code>omniroute</code> 명령을 쓸 수 있어요. 이 방법을 기본으로 쓰세요.</span></p>
-  <div class="box ok">✅ 실제 설치 화면 예시 — <code>npm install -g omniroute</code> → <code>added 1331 packages in 1m</code> → 버전 3.8.53 (현재 최신 3.8.54)</div>
-  <h3>2) 처음이라면 도우미 마법사</h3>
-  <div class="pill"><span class="lbl">첫 설정 마법사 · 문제 진단</span><button class="cp">복사</button>omniroute setup
-omniroute doctor</div>
-  <p class="small"><code>setup</code> = 처음 설정 안내, <code>doctor</code> = 제공자·포트·설치 문제 자동 진단.</p>
-</section>
-
-<section id="provider">
-  <h2>3. 제공자 연결하기</h2>
-  <ol class="steps">
-    <li>대시보드(<code>localhost:20128</code>) → 왼쪽 <b>Providers [프로바이더스] = 제공자</b> 클릭</li>
-    <li><b>+ Add Provider</b> → 아래 <a href="#safe7">안전한 7곳</a> 중 하나 선택</li>
-    <li>그 제공자 사이트에서 가입 → <b>API Key [에이피아이 키] = 프로그램끼리 연결하는 비밀 열쇠</b> 발급 → 붙여넣기</li>
-    <li>2~3곳 이상 연결해 두면 한 곳이 막혀도 다음 곳으로 자동 전환</li>
-    <li><b>Dashboard → Endpoints</b>에서 <b>옴니라우트 전용 키</b>를 복사해 둬요 (클로드 코드 연결에 사용)</li>
-  </ol>
-  <div class="box tip">💡 추천 첫 조합: <b>Gemini + Groq + OpenRouter(:free)</b> — 세 곳 다 카드 없이 키 발급 가능.</div>
-</section>
-
-<section id="safe7">
-  <h2>4. ✅ 안전한 7곳 연결법</h2>
-  <p>기준: <b>카드 X · 무료 · 약관에 프록시 금지 조항 없음 · 개인 사용 OK</b>. 걸리는 조건이 "재판매 금지"뿐인 곳까지 넣었어요. 나 혼자 쓰면 해당되지 않는 조건이에요.</p>
-
-  <h3>0단계 · 옴니라우트 켜기</h3>
-  <div class="pill"><span class="lbl">터미널에 입력 (이 창은 켜 두기)</span><button class="cp">복사</button>omniroute</div>
-  <p class="small">브라우저에서 <code>http://localhost:20128</code> 열기 · <span class="term">localhost [로컬호스트] = 내 컴퓨터 자신</span></p>
-
-  <h3>1단계 · 무료 키 받기</h3>
-  <div class="tbl"><table>
-    <tr><th>#</th><th>제공자</th><th>키 받는 곳</th><th>방법</th><th>키 모양</th></tr>
-    <tr><td colspan="5"><b>1순위 — 이 3곳부터</b></td></tr>
-    <tr><td>1</td><td>Google Gemini<br><span class="term">AI Studio [에이아이 스튜디오]</span></td><td>aistudio.google.com/apikey</td><td>구글 로그인 → Create API key</td><td><code>AIza...</code></td></tr>
-    <tr><td>2</td><td>Groq [그록]</td><td>console.groq.com/keys</td><td>가입 → Create API Key<br><span class="small">키는 한 번만 보여 줌 → 바로 메모장에 저장</span></td><td><code>gsk_...</code></td></tr>
-    <tr><td>3</td><td>OpenRouter [오픈라우터]</td><td>openrouter.ai/keys</td><td>가입 → Create Key<br><span class="small">충전 화면은 건너뛰기</span></td><td><code>sk-or-...</code></td></tr>
-    <tr><td colspan="5"><b>2순위 — 예비로 추가</b></td></tr>
-    <tr><td>4</td><td>GitHub Models [깃허브 모델스]</td><td>github.com/settings/tokens</td><td>Fine-grained token [파인 그레인드 토큰] = 권한을 골라 주는 키 생성 → Models = Read만 체크</td><td><code>github_pat_...</code></td></tr>
-    <tr><td>5</td><td>NVIDIA NIM [엔비디아 님]</td><td>build.nvidia.com</td><td>가입 → 아무 모델 클릭 → Get API Key</td><td><code>nvapi-...</code></td></tr>
-    <tr><td>6</td><td>Cloudflare Workers AI</td><td>dash.cloudflare.com</td><td>값 2개 필요: Account ID [어카운트 아이디] = 계정 번호 (대시보드 오른쪽) + My Profile → API Tokens → "Workers AI" 템플릿</td><td>계정 번호 + 토큰</td></tr>
-    <tr><td>7</td><td>Hugging Face [허깅페이스]</td><td>huggingface.co/settings/tokens</td><td>Create new token → Fine-grained → "Make calls to Inference Providers" 체크</td><td><code>hf_...</code></td></tr>
-  </table></div>
-  <p class="small">※ 사이트 메뉴 이름은 바뀔 수 있어요. 화면이 다르면 비슷한 이름의 버튼을 찾으세요.</p>
-
-  <h3>2단계 · 옴니라우트에 키 넣기</h3>
-  <ol class="steps">
-    <li>대시보드 왼쪽 <b>Providers [프로바이더스]</b> 클릭</li>
-    <li><b>+ Add Provider</b> → 검색창에 <code>gemini</code> / <code>groq</code> / <code>openrouter</code> …</li>
-    <li>복사한 키 붙여넣기 → <b>Save</b> → <b>Test</b> 눌러 초록불 확인</li>
-    <li>나머지 제공자도 똑같이 반복</li>
-    <li><b>Endpoints [엔드포인트]</b> → 옴니라우트 전용 키 복사 (v3.8.53은 <code>sk-...</code> 형식)</li>
-  </ol>
-  <div class="box no">⚠️ OpenRouter는 이름 끝이 <b>":free"</b>인 모델만 켜 두세요. 유료 모델이 켜져 있으면 요금이 나갈 수 있어요.</div>
-
-  <h3>3단계 · 자동 전환 순서 정하기</h3>
-  <p>대시보드 → <b>Combos [콤보] = 여러 모델을 묶은 예비 순서</b></p>
-  <div class="pill"><span class="lbl">추천 순서</span><button class="cp">복사</button>1 Gemini → 2 Groq → 3 OpenRouter(:free) → 4 NVIDIA → 5 GitHub Models</div>
-  <p class="small">모델에서 <code>auto</code>를 고르면 연결된 곳 중에서 알아서 골라요. 클로드 코드 연결은 아래 5번을 보세요.</p>
-
-  <h3>4단계 · 잘 되는지 확인</h3>
+<!-- 2 -->
+<section class="step" id="s2" data-step="2">
+  <h2><span class="num">2</span>PowerShell 실행 허용</h2>
+  <p>윈도우는 처음에 설치 명령을 막아 둬요. <b>내 계정에서만</b> 풀어 줄게요. 관리자 권한은 필요 없어요.</p>
+  <span class="where w-ps">PowerShell 창</span>
+  <div class="pill"><span class="lbl">실행 허용</span><button class="cp">복사</button>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</div>
   <ul>
-    <li>클로드 코드에서 "안녕" 입력 → 답이 오면 성공</li>
-    <li>대시보드 → <b>Logs [로그] = 사용 기록</b>에서 어느 제공자로 갔는지 확인</li>
-    <li>안 되면 터미널에 <code>omniroute doctor</code></li>
+    <li>질문이 나오면 <kbd>Y</kbd> → 엔터</li>
+    <li>아무 글자 없이 <code>PS C:\Users\...&gt;</code>만 다시 나와도 성공이에요</li>
   </ul>
-
-  <h3>🚫 이번 목록에서 뺀 곳</h3>
-  <div class="tbl"><table>
-    <tr><th>제공자</th><th>뺀 이유</th></tr>
-    <tr><td>Cerebras · Vertex AI · Scaleway</td><td>카드 등록 필요 → 결제 위험</td></tr>
-    <tr><td>Cohere</td><td>체험 키라 상업 용도 금지</td></tr>
-    <tr><td>Mistral</td><td>약관상 "개인 용도"만 → 사업 작업에는 애매</td></tr>
-    <tr><td>DeepSeek · Z.AI · SiliconFlow</td><td>데이터가 중국 서버에 저장 → 개인정보 주의</td></tr>
-    <tr><td>Kiro · Antigravity 등 12곳</td><td>계정 정지 위험 → 절대 연결 금지 (<a href="#avoid12">7번</a> 참고)</td></tr>
-  </table></div>
-
-  <div class="box tip">🔒 <b>안전하게 쓰는 규칙 3가지</b><br>
-  1. 키는 나 혼자만 쓰기 (공유·판매 금지)<br>
-  2. 한도를 늘리려고 계정을 여러 개 만들지 않기 (약관 위반)<br>
-  3. 무료 등급은 입력한 내용이 학습에 쓰일 수 있음 → 주소·전화번호·통장번호 같은 개인정보는 넣지 않기</div>
-  <p class="small">※ 클로드 코드는 클로드 모델에 맞춰 만들어진 도구라서, 무료 모델로 넘어가면 긴 코딩 작업의 품질이 떨어질 수 있어요.</p>
+  <div class="box tip">💡 이 단계를 안 하면 다음 단계에서 빨간 글씨로 <i>"이 시스템에서 스크립트를 실행할 수 없으므로…"</i>가 나와요.</div>
+  <label class="check"><input type="checkbox"> 2단계 끝!</label>
 </section>
 
-<section id="claude">
-  <h2>5. 클로드 코드 연결법</h2>
-  <h3>방법 A — 가장 쉬운 한 줄 (추천)</h3>
-  <div class="pill"><span class="lbl">주소·키를 알아서 넣고 클로드 코드 실행</span><button class="cp">복사</button>omniroute launch</div>
-  <p class="small">옴니라우트가 켜져 있는지 확인한 뒤 환경 변수를 자동으로 넣고 <code>claude</code>를 실행해 줘요.</p>
-
-  <h3>방법 B — 설정 파일에 직접 넣기</h3>
-  <p>맥은 <code>~/.claude/settings.json</code>, 윈도우는 <code>C:\Users\내이름\.claude\settings.json</code> 파일에 아래를 넣고, <b>클로드 코드를 껐다 켜요</b> (설정은 시작할 때 한 번만 읽어요).</p>
-  <div class="pill"><span class="lbl">~/.claude/settings.json</span><button class="cp">복사</button>{
-  "env": {
-    "ANTHROPIC_BASE_URL": "http://localhost:20128",
-    "ANTHROPIC_AUTH_TOKEN": "여기에-옴니라우트-키-붙여넣기",
-    "CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY": "1"
-  }
-}</div>
-  <div class="box no">⚠️ <code>ANTHROPIC_BASE_URL</code> 끝에 <b>/v1을 붙이지 마세요.</b> 클로드 코드가 알아서 <code>/v1/messages</code>를 붙여요. (Cursor·Cline 같은 다른 도구는 <code>/v1</code>을 붙인 주소를 써요.)</div>
-  <p class="term">Environment variable [인바이런먼트 배리어블] = 프로그램이 시작할 때 읽어 가는 설정값</p>
-
-  <h3>방법 C — 다른 도구 연결 (Cursor·Cline 등)</h3>
-  <div class="pill"><span class="lbl">도구 설정 화면에 입력</span><button class="cp">복사</button>Base URL: http://localhost:20128/v1
-API Key:  (Dashboard → Endpoints에서 복사)
-Model:    auto</div>
-  <p class="small"><code>auto</code> = 연결해 둔 제공자 중에서 알아서 골라 보내기.</p>
+<!-- 3 -->
+<section class="step" id="s3" data-step="3">
+  <h2><span class="num">3</span>옴니라우트 설치 · 첫 실행</h2>
+  <h3>① 설치 (1~3분)</h3>
+  <span class="where w-ps">PowerShell 창</span>
+  <div class="pill"><span class="lbl">설치</span><button class="cp">복사</button>npm install -g omniroute</div>
+  <ul>
+    <li>커서가 돌면서 기다려요. <b>창을 닫거나 <kbd>Ctrl</kbd>+<kbd>C</kbd>를 누르지 않기</b></li>
+    <li>노란 <code>WARN</code>은 괜찮아요</li>
+    <li>끝에 <code>added ○○○○ packages</code>가 나오면 성공</li>
+  </ul>
+  <h3>② 첫 실행 (저장 폴더를 만들기 위해 한 번 켜요)</h3>
+  <div class="pill"><span class="lbl">켜기</span><button class="cp">복사</button>omniroute</div>
+  <ul>
+    <li>초록색 <code>OmniRoute is running!</code>이 나오면 OK</li>
+    <li>노란 경고가 보여도 지금은 괜찮아요 → 4단계에서 고쳐요</li>
+  </ul>
+  <h3>③ 바로 끄기</h3>
+  <p>같은 창에서 <kbd>Ctrl</kbd>+<kbd>C</kbd> → 물어보면 <kbd>Y</kbd> → <code>PS C:\Users\...&gt;</code>가 나오면 꺼진 거예요.</p>
+  <label class="check"><input type="checkbox"> 3단계 끝!</label>
 </section>
 
-<section id="free14">
-  <h2>6. 공식 무료 키 제공자 14곳</h2>
-  <p>제공자 공식 사이트에서 <b>정식으로 API 키를 발급</b>받는 곳만 골랐어요. 한도는 수시로 바뀌니 가입 전에 그 사이트에서 꼭 다시 확인하세요.</p>
+<!-- 4 -->
+<section class="step" id="s4" data-step="4">
+  <h2><span class="num">4</span>안전 잠금 파일 만들기</h2>
+  <p>이 한 번으로 <b>세 가지</b>가 해결돼요.</p>
+  <ul>
+    <li>🔒 <b>내 컴퓨터에서만</b> 옴니라우트를 쓸 수 있게 잠그기 (같은 와이파이의 다른 사람 차단)</li>
+    <li>🔑 <b>옴니라우트 키가 있어야만</b> 들어올 수 있게 하기</li>
+    <li>🧰 윈도우판 버그 해결 — 데이터와 <b>암호 열쇠가 다른 폴더에 떨어지는 문제</b>를 한 폴더로 모으기</li>
+  </ul>
+  <p>옴니라우트가 <b>꺼진 상태</b>에서, 아래 전체를 복사 → 붙여넣기 → 엔터. 고칠 곳은 없어요.</p>
+  <span class="where w-ps">PowerShell 창</span>
+  <div class="pill"><span class="lbl">안전 잠금 (통째로 복사)</span><button class="cp">복사</button>$a = "$HOME\.omniroute"; $b = "$env:APPDATA\omniroute"
+if (Test-Path "$a\storage.sqlite") { $dir = $a } elseif (Test-Path "$b\storage.sqlite") { $dir = $b } else { $dir = $a }
+$other = if ($dir -eq $a) { $b } else { $a }
+$dst = "$dir\.env"
+New-Item -ItemType Directory -Force $dir | Out-Null
+if (Test-Path $dst) { Copy-Item $dst "$dst.backup" -Force }
+$lines = @(Get-Content $dst -ErrorAction SilentlyContinue | Where-Object { $_ -notmatch '^(OMNIROUTE_SERVER_HOST|REQUIRE_API_KEY)=' })
+if (-not ($lines -match '^STORAGE_ENCRYPTION_KEY=.+')) {
+  $lines = @($lines | Where-Object { $_ -notmatch '^STORAGE_ENCRYPTION_KEY=' })
+  $k = Get-Content "$other\.env" -ErrorAction SilentlyContinue | Where-Object { $_ -match '^STORAGE_ENCRYPTION_KEY=.+' } | Select-Object -First 1
+  if ($k) { $lines += $k }
+}
+$lines += 'OMNIROUTE_SERVER_HOST=127.0.0.1'
+$lines += 'REQUIRE_API_KEY=true'
+$lines | Set-Content $dst -Encoding ASCII
+Write-Host "완료: $dst" -ForegroundColor Green
+Get-Content $dst | Where-Object { $_ -match '=' } | ForEach-Object { '  ' + ($_ -split '=')[0] }</div>
+  <div class="box ok">✅ <b>성공 화면</b> — 초록 <code>완료: ...</code> 아래에 이름 3줄이 보여요 (비밀 값은 안 보여요)<br>
+  <code>STORAGE_ENCRYPTION_KEY</code><br><code>OMNIROUTE_SERVER_HOST</code><br><code>REQUIRE_API_KEY</code></div>
+  <h3>다시 켜서 확인</h3>
+  <div class="pill"><span class="lbl">켜기</span><button class="cp">복사</button>omniroute</div>
   <div class="tbl"><table>
-    <tr><th>#</th><th>제공자</th><th>무료 방식</th><th>참고</th></tr>
-    <tr><td>1</td><td>Google Gemini (AI Studio)</td><td>매달 반복 · 카드 X</td><td>모델·프로젝트별 속도 제한</td></tr>
-    <tr><td>2</td><td>Groq [그록]</td><td>매달 반복 · 카드 X</td><td>약 1,500만 토큰/월 추정</td></tr>
-    <tr><td>3</td><td>Mistral [미스트랄]</td><td>매달 반복</td><td>약 10억 토큰/월 · 개인 용도만<span class="tag t-c">주의</span></td></tr>
-    <tr><td>4</td><td>OpenRouter (:free 모델)</td><td>매일 요청 수 제한</td><td>$10 충전 시 한도 상향 (선택)</td></tr>
-    <tr><td>5</td><td>NVIDIA NIM</td><td>토큰 상한 없음</td><td>분당 약 40회</td></tr>
-    <tr><td>6</td><td>Cloudflare Workers AI</td><td>매일 10K 뉴런</td><td>약 3,000만 토큰/월 추정</td></tr>
-    <tr><td>7</td><td>GitHub Models</td><td>매달 반복</td><td>깃허브 계정만 있으면 됨</td></tr>
-    <tr><td>8</td><td>Hugging Face</td><td>매달 소량</td><td>실험용</td></tr>
-    <tr><td>9</td><td>DeepSeek [딥시크]</td><td>가입 시 1회</td><td>500만 토큰</td></tr>
-    <tr><td>10</td><td>SiliconFlow</td><td>무료 등급</td><td>DeepSeek V3.2 / R1</td></tr>
-    <tr><td>11</td><td>Z.AI GLM</td><td>무료 모델</td><td>GLM-4.5-Flash 등</td></tr>
-    <tr><td>12</td><td>Cohere [코히어]</td><td>체험 키</td><td>상업용 금지<span class="tag t-c">주의</span></td></tr>
-    <tr><td>13</td><td>Scaleway</td><td>가입 크레딧</td><td>약관 ok 판정</td></tr>
-    <tr><td>14</td><td>Cerebras [세레브라스]</td><td>1회 $5 · 30일</td><td><b>카드 등록 필요</b><span class="tag t-no">결제주의</span></td></tr>
+    <tr><th>확인할 것</th><th>정상</th></tr>
+    <tr><td>노란 <code>SECURITY: listening on 0.0.0.0</code></td><td>❌ 없어야 함</td></tr>
+    <tr><td>노란 <code>could not decrypt existing data</code></td><td>❌ 없어야 함</td></tr>
+    <tr><td>초록 <code>OmniRoute is running!</code></td><td>✅ 있어야 함</td></tr>
   </table></div>
-  <div class="box tip">💸 <b>무료 약속</b>: 카드 등록이 필요한 곳(Cerebras, Vertex AI 등)은 무료 크레딧이 끝나면 요금이 나갈 수 있어요. 카드 없이 되는 1~11번부터 쓰세요.</div>
+  <div class="box no">⚠️ 이 창은 <b>닫지 말고 켜 둔 채로</b> 다음 단계로 가요. (닫으면 옴니라우트가 꺼져요)</div>
+  <label class="check"><input type="checkbox"> 4단계 끝!</label>
 </section>
 
-<section id="avoid12">
-  <h2>7. 약관 주의 제공자 12곳 — 피하는 게 좋아요</h2>
-  <p>옴니라우트 공식 약관표(FREE_TIERS.md)에서 <b>"프록시·제3자 도구로 쓰지 말라"</b>는 조항이 확인된 곳이에요. 연결하면 <b>계정 정지</b> 위험이 있어요.<br>
-  <span class="term">Proxy [프록시] = 중간에서 대신 요청을 전달해 주는 프로그램 (옴니라우트가 여기에 해당)</span></p>
+<!-- 5 -->
+<section class="step" id="s5" data-step="5">
+  <h2><span class="num">5</span>대시보드 로그인 · 비밀번호 바꾸기</h2>
+  <span class="where w-web">브라우저</span>
+  <p>크롬 <b>주소창</b>(검색창 말고)에 붙여넣고 엔터:</p>
+  <div class="pill"><span class="lbl">대시보드 주소</span><button class="cp">복사</button>http://localhost:20128</div>
+  <ol>
+    <li>처음 비밀번호는 (대문자 그대로) <code>CHANGEME</code></li>
+    <li>로그인되면 <kbd>Ctrl</kbd>+<kbd>K</kbd> → <b>보안</b> 입력 → "보안" 화면 열기</li>
+    <li>현재 비밀번호 <code>CHANGEME</code> → 새 비밀번호(8자 이상) 두 번 → <b>[비밀번호 업데이트]</b></li>
+    <li>새 비밀번호는 <b>메모장에 적어 두기</b></li>
+    <li><b>2단계 인증</b>은 <b>[활성화] 누르지 않기</b> — "비활성화됨" 그대로 (이미 내 컴퓨터만 들어올 수 있게 잠가 둬서 필요 없어요)</li>
+  </ol>
+  <div class="box tip">💡 비밀번호가 자꾸 틀리면: <kbd>한/영</kbd>이 영어인지, <kbd>Caps Lock</kbd> 불이 꺼졌는지 확인.<br>
+  잊어버렸으면 → 옴니라우트 창에서 <kbd>Ctrl</kbd>+<kbd>C</kbd>로 끄고 → 아래 명령 → 새 비밀번호 두 번 → 다시 <code>omniroute</code></div>
+  <div class="pill"><span class="lbl">비밀번호 재설정 (잊어버렸을 때만)</span><button class="cp">복사</button>omniroute reset-password</div>
+  <label class="check"><input type="checkbox"> 5단계 끝!</label>
+</section>
+
+<!-- 6 -->
+<section class="step" id="s6" data-step="6">
+  <h2><span class="num">6</span>개인정보 마스킹 켜기</h2>
+  <p><b>개인정보 마스킹</b> = AI한테 보내기 전에 이메일·전화번호 같은 걸 <code>[EMAIL]</code>처럼 가려 주는 기능이에요.</p>
+  <span class="where w-web">브라우저 (대시보드)</span>
+  <h3>① 스위치 켜기</h3>
+  <ol>
+    <li><kbd>Ctrl</kbd>+<kbd>K</kbd> → <b>기능 플래그</b> 입력 (안 나오면 <code>feature</code>)</li>
+    <li><code>PII_REDACTION_ENABLED</code> 켜기</li>
+    <li><code>PII_RESPONSE_SANITIZATION</code> 켜기</li>
+  </ol>
+  <h3>② 확인</h3>
+  <p><kbd>Ctrl</kbd>+<kbd>K</kbd> → <b>개인정보 마스킹</b> 화면 → 위쪽 배지 2개가 <b>"활성화됨"</b>이면 성공. 기본 유형은 <b>전체 체크</b> 그대로 두기.</p>
+  <h3>③ 한국 정보 패턴 추가</h3>
+  <p>같은 화면 맨 아래 <b>"사용자 지정 패턴"</b>의 <b>이름 / 패턴</b> 칸에 하나씩 넣고 [추가] → 마지막에 [저장].</p>
   <div class="tbl"><table>
-    <tr><th>#</th><th>제공자</th><th>약관 문제</th></tr>
-    <tr><td>1</td><td>Kiro AI</td><td>제3자 하네스 도구와 함께 쓰기 금지 <span class="tag t-no">avoid</span></td></tr>
-    <tr><td>2</td><td>Google Antigravity (agy)</td><td>OAuth로 프록시·제3자 도구 접속 금지 <span class="tag t-no">avoid</span></td></tr>
-    <tr><td>3</td><td>Blackbox</td><td>제3자 제공·재판매·파생 서비스 금지 <span class="tag t-no">avoid</span></td></tr>
-    <tr><td>4</td><td>Coze</td><td>개인·비상업용만, 재배포 금지 <span class="tag t-no">avoid</span></td></tr>
-    <tr><td>5</td><td>DuckDuckGo AI (Duck.ai)</td><td>자동 조회·AI 서비스 제공 금지 <span class="tag t-no">avoid</span></td></tr>
-    <tr><td>6</td><td>T3 Chat (t3-web)</td><td>개인만, 자동·봇 접속 금지 <span class="tag t-no">avoid</span></td></tr>
-    <tr><td>7</td><td>NLP Cloud</td><td>"프록시 설치" 명시적 금지 <span class="tag t-no">avoid</span></td></tr>
-    <tr><td>8</td><td>iFlytek / SparkDesk</td><td>프록시·중계 사용 제한 <span class="tag t-no">avoid</span></td></tr>
-    <tr><td>9</td><td>FriendliAI</td><td>카탈로그 avoid 판정 <span class="tag t-no">avoid</span></td></tr>
-    <tr><td>10</td><td>Muse Spark (웹)</td><td>카탈로그 avoid 판정 <span class="tag t-no">avoid</span></td></tr>
-    <tr><td>11</td><td>Fireworks</td><td>프록시·중개 사용, 키 양도 금지 (§2.1·2.2)</td></tr>
-    <tr><td>12</td><td>AI21</td><td>API 재배포 금지, 체험판은 내부 평가용만</td></tr>
+    <tr><th>이름 칸</th><th>패턴 칸 (복사)</th></tr>
+    <tr><td>휴대폰</td><td><div class="pill" style="margin:0"><span class="lbl">휴대폰</span><button class="cp">복사</button>01[016789]-?\d{3,4}-?\d{4}</div></td></tr>
+    <tr><td>주민번호</td><td><div class="pill" style="margin:0"><span class="lbl">주민번호</span><button class="cp">복사</button>\d{6}-?[1-4]\d{6}</div></td></tr>
   </table></div>
-  <div class="box ok">✅ 안심 포인트: <code>tos: avoid</code> 표시된 곳은 <b>auto 자동 전환에서 기본으로 빠져요.</b> 그래도 처음부터 연결하지 않는 게 제일 안전해요.</div>
-  <p class="small">※ Groq·Gemini·OpenRouter·Mistral 등도 "재판매 금지" 같은 주의(caution) 조항이 있어요. <b>나 혼자 쓰는 용도</b>면 괜찮지만, 키를 남에게 나눠 주거나 서비스로 팔면 안 돼요. 여러 계정을 만들어 한도를 늘리는 것도 금지예요.</p>
+  <div class="box ok">✅ 목록에 🟠 휴대폰 · 🟠 주민번호 두 줄이 보이면 끝. 아래 빈 줄은 비워 두면 돼요.</div>
+  <div class="box tip">✋ 패턴으로 못 막는 것(실명, 집 주소, 한국 계좌번호, 비밀번호)은 <b>애초에 입력하지 않기.</b> 실명 대신 "A씨", "고객1".</div>
+  <label class="check"><input type="checkbox"> 6단계 끝!</label>
+</section>
+
+<!-- 7 -->
+<section class="step" id="s7" data-step="7">
+  <h2><span class="num">7</span>제미나이 키 받기</h2>
+  <span class="where w-web">브라우저 (새 탭)</span>
+  <div class="pill"><span class="lbl">구글 AI Studio 키 화면</span><button class="cp">복사</button>aistudio.google.com/apikey</div>
+  <ol>
+    <li>구글 계정으로 로그인</li>
+    <li>오른쪽 위 <b>[🔑 API 키 만들기]</b> → 이름 <code>omniroute</code> → 프로젝트는 기본값(없으면 새로 만들기) → [키 만들기]</li>
+    <li>목록의 <b>"결제 등급"</b> 칸이 <b>"무료 등급"</b>인지 확인</li>
+    <li>파란 <b>"키 1개"</b> 클릭 → 키 옆 <b>📋 복사 아이콘</b>으로 복사 → 메모장에 붙여넣어 저장</li>
+  </ol>
+  <div class="box no">🚫 파란 글씨 <b>"결제 설정"</b>, 왼쪽 <b>"결제"·"지출"</b>은 누르지 않기 (카드 등록 → 유료로 바뀔 수 있어요)<br>
+  ⚠️ 키는 마우스로 드래그하지 말고 <b>📋 아이콘</b>으로 복사 (일부만 복사되면 나중에 "Invalid API key"가 나와요)</div>
+  <label class="check"><input type="checkbox"> 7단계 끝!</label>
+</section>
+
+<!-- 8 -->
+<section class="step" id="s8" data-step="8">
+  <h2><span class="num">8</span>제미나이 연결 · 테스트</h2>
+  <span class="where w-web">브라우저 (대시보드)</span>
+  <h3>① 연결 추가</h3>
+  <ol>
+    <li><kbd>Ctrl</kbd>+<kbd>K</kbd> → <b>공급자</b> 입력 → "공급자" 화면 ("할당량"이 붙은 것 말고)</li>
+    <li>왼쪽 위 <b>공급자 검색</b>에 <code>gemini</code></li>
+    <li><b>Gemini (Google AI Studio)</b> 카드의 <b>제목 글자</b> 클릭<br><span class="small">❌ Vertex AI · Gemini CLI · Antigravity · Google Jules는 고르지 않기</span></li>
+    <li>가운데 주황색 <b>[+ 연결 추가]</b></li>
+  </ol>
+  <h3>② 입력 창 채우기</h3>
+  <div class="tbl"><table>
+    <tr><th>칸</th><th>넣을 것</th></tr>
+    <tr><td>이름</td><td><code>gemini-무료</code></td></tr>
+    <tr><td>API 키</td><td>메모장의 <code>AIza...</code> (까만 점 ●●●로 보이면 정상)</td></tr>
+    <tr><td>무료 모델만 가져오기</td><td>🟠 <b>켜기</b></td></tr>
+    <tr><td>맞춤 URL · 고급 설정 · 검증 모델 · 우선순위</td><td>건드리지 않기</td></tr>
+  </table></div>
+  <p>[확인] → <b>"유효함"</b>이 나오면 → <b>[저장]</b></p>
+  <h3>③ 켜고 진짜 모델 목록 받기</h3>
+  <ol>
+    <li>"연결" 목록의 <b>gemini-무료</b> 줄 오른쪽 <b>스위치</b>를 🟠 켜기 (빨간 🗑 휴지통은 누르지 않기)</li>
+    <li>아래 "사용 가능한 모델"에서 <b>[/models에서 가져오기]</b> → <b>[무료만]</b> 필터</li>
+  </ol>
+  <h3>④ 하나만 테스트</h3>
+  <p>이름에 <code>flash-lite</code>가 들어간 카드(예: <code>gemini-3.1-flash-lite</code>)의 <b>▶</b> 클릭. 또는 연결 줄의 <b>📨 테스트 메시지</b>에서 그 모델을 골라 [보내기].</p>
+  <div class="tbl"><table>
+    <tr><th>결과</th><th>뜻</th><th>할 일</th></tr>
+    <tr><td>✅ 초록 체크 / 모델 응답 <code>2</code></td><td>성공</td><td>9단계로</td></tr>
+    <tr><td><code>[503] high demand</code></td><td>키는 정상, 모델이 붐빔</td><td>다른 flash 모델로 다시</td></tr>
+    <tr><td><code>[404]</code> / 🚫 차단</td><td>구글이 없앤 모델</td><td>무시 (옴니라우트가 알아서 건너뜀)</td></tr>
+    <tr><td><code>Invalid API key</code></td><td>키가 잘못 들어감</td><td>✏️ 연필 → 키 지우고 📋로 다시 복사해 붙여넣기</td></tr>
+  </table></div>
+  <div class="box no">🚫 빨간 <b>[모든 모델 삭제]</b>, <b>[모든 모델 테스트]</b>(무료 사용량 낭비)는 누르지 않기</div>
+  <label class="check"><input type="checkbox"> 8단계 끝!</label>
+</section>
+
+<!-- 9 -->
+<section class="step" id="s9" data-step="9">
+  <h2><span class="num">9</span>옴니라우트 키 만들어 파일에 저장</h2>
+  <p>클로드 코드가 옴니라우트에 들어올 때 쓰는 열쇠예요. <b>파일에 한 번 저장</b>해 두면 아이콘이 알아서 꺼내 써요.</p>
+  <h3>① 명령어 먼저 붙여 두기 (엔터 ❌)</h3>
+  <p>옴니라우트 창 말고 <b>PowerShell 창을 하나 더</b> 열어요. 아래 줄을 붙여넣고 <b>엔터는 아직 누르지 않기!</b></p>
+  <span class="where w-ps">새 PowerShell 창</span>
+  <div class="pill"><span class="lbl">키 파일 저장 (끝이 -Value: 로 끝나요)</span><button class="cp">복사</button>Set-Content -Path $HOME\.omni-key.txt -Encoding ASCII -Value:</div>
+  <h3>② 대시보드에서 키 만들기</h3>
+  <span class="where w-web">브라우저 (대시보드)</span>
+  <ol>
+    <li><kbd>Ctrl</kbd>+<kbd>K</kbd> → <b>API 키</b> → <b>[+ API 키 생성]</b></li>
+    <li>이름 <code>클로드코드</code> → [만들기]</li>
+    <li><code>sk-...</code> 옆 <b>📋</b> 클릭 (v3.8.53은 <code>oma_</code>가 아니라 <code>sk-</code>로 시작해요. 정상!)</li>
+  </ol>
+  <div class="box no">⚠️ 이 키는 창을 닫으면 <b>다시 볼 수 없어요.</b> 바로 ③으로!</div>
+  <h3>③ 키 붙이고 엔터</h3>
+  <p>PowerShell 창 클릭 → <kbd>Ctrl</kbd>+<kbd>V</kbd> → 줄 끝 <code>-Value:</code> 바로 뒤에 키가 붙었는지 확인 → 엔터</p>
+  <div class="pill"><span class="lbl">이렇게 보이면 엔터 (예시)</span><button class="cp">복사</button>Set-Content -Path $HOME\.omni-key.txt -Encoding ASCII -Value:sk-xxxxxxxxxxxx</div>
+  <h3>④ 확인</h3>
+  <div class="pill"><span class="lbl">키 앞 3글자만 보기</span><button class="cp">복사</button>(Get-Content $HOME\.omni-key.txt).Substring(0,3)</div>
+  <div class="box ok">✅ <code>sk-</code>가 나오면 성공! (키를 잃어버려도 ②~④를 다시 하면 새 키로 바뀌어요)</div>
+  <label class="check"><input type="checkbox"> 9단계 끝!</label>
+</section>
+
+<!-- 10 -->
+<section class="step" id="s10" data-step="10">
+  <h2><span class="num">10</span>바탕화면 아이콘 만들기</h2>
+  <p>아래 전체를 복사 → PowerShell에 붙여넣기 → 엔터. 고칠 곳은 없어요.</p>
+  <span class="where w-ps">PowerShell 창</span>
+  <div class="pill"><span class="lbl">아이콘 만들기 (통째로 복사)</span><button class="cp">복사</button>New-Item -ItemType Directory -Force "$HOME\omni-work" | Out-Null
+$s = @'
+$Host.UI.RawUI.WindowTitle = "GEMINI 모드 - 옴니라우트"
+$up = $false
+try { $c = New-Object Net.Sockets.TcpClient('127.0.0.1',20128); $c.Close(); $up = $true } catch {}
+if (-not $up) {
+  Write-Host "옴니라우트를 켜는 중... (최대 30초)" -ForegroundColor Yellow
+  Start-Process powershell -ArgumentList '-NoExit','-Command','omniroute'
+  for ($i=0; $i -lt 30 -and -not $up; $i++) { Start-Sleep 1; try { $c = New-Object Net.Sockets.TcpClient('127.0.0.1',20128); $c.Close(); $up = $true } catch {} }
+}
+$env:ANTHROPIC_BASE_URL = "http://localhost:20128"
+$env:ANTHROPIC_MODEL = "gemini/gemini-3-flash-preview"
+$env:ANTHROPIC_DEFAULT_HAIKU_MODEL = "gemini/gemini-3.1-flash-lite"
+$env:ANTHROPIC_AUTH_TOKEN = (Get-Content "$HOME\.omni-key.txt").Trim()
+Set-Location "$HOME\omni-work"
+Write-Host ""
+Write-Host "  ================================" -ForegroundColor Green
+Write-Host "    GEMINI 모드 (무료 · 옴니라우트)" -ForegroundColor Green
+Write-Host "  ================================" -ForegroundColor Green
+Write-Host ""
+claude --permission-mode default
+'@
+Set-Content -Path "$HOME\omni-work\gemini-claude.ps1" -Value $s -Encoding UTF8
+$w = New-Object -ComObject WScript.Shell
+$lnk = $w.CreateShortcut("$([Environment]::GetFolderPath('Desktop'))\제미나이 클로드.lnk")
+$lnk.TargetPath = "powershell.exe"
+$lnk.Arguments = "-NoExit -ExecutionPolicy Bypass -File `"$HOME\omni-work\gemini-claude.ps1`""
+$lnk.WorkingDirectory = "$HOME\omni-work"
+$lnk.Save()
+Write-Host "아이콘 완성! 바탕화면을 확인하세요" -ForegroundColor Green</div>
+  <div class="box ok">✅ 초록 <code>아이콘 완성!</code> → 바탕화면에 <b>"제미나이 클로드"</b> 아이콘이 생겨요. 아이콘이 <b>파란색</b>(PowerShell 모양)인 건 정상이에요.</div>
+  <h3>이 아이콘이 알아서 해 주는 일</h3>
+  <ol>
+    <li>옴니라우트가 꺼져 있으면 → 새 창으로 켜기</li>
+    <li>키 파일에서 키 꺼내기 + 주소·모델 설정 넣기</li>
+    <li>작업용 폴더 <code>omni-work</code>로 이동 (내 다른 파일과 분리)</li>
+    <li>창 제목과 초록 글씨로 <b>"GEMINI 모드"</b> 표시</li>
+    <li>클로드 코드를 <b>할 때마다 물어보는 모드(manual)</b>로 켜기</li>
+  </ol>
+  <label class="check"><input type="checkbox"> 10단계 끝!</label>
+</section>
+
+<!-- 11 -->
+<section class="step" id="s11" data-step="11">
+  <h2><span class="num">11</span>아이콘으로 첫 시험</h2>
+  <ol>
+    <li>바탕화면 <b>"제미나이 클로드"</b> 더블클릭</li>
+    <li>처음 한 번 나오는 질문들:
+      <div class="tbl"><table>
+        <tr><th>화면</th><th>누를 것</th></tr>
+        <tr><td>색깔 고르기 (Dark mode …)</td><td>그대로 엔터</td></tr>
+        <tr><td>Security notes … Press Enter</td><td>엔터</td></tr>
+        <tr><td>Accessing workspace: <code>…\omni-work</code></td><td><kbd>↓</kbd> → <b>Yes, I trust this folder</b> → 엔터<br><span class="small">폴더가 <code>C:\Users\내이름</code>(전체)으로 나오면 No → 아이콘으로 다시 켜기</span></td></tr>
+        <tr><td>Change effort level?</td><td><b>No, go back</b> → 엔터</td></tr>
+      </table></div>
+    </li>
+    <li>클로드 코드 창 입력칸(<code>&gt;</code>)에 입력:</li>
+  </ol>
+  <span class="where w-cc">클로드 코드 창</span>
+  <div class="pill"><span class="lbl">시험 질문</span><button class="cp">복사</button>너는 어떤 모델이야?</div>
+  <div class="box ok">✅ <b>"gemini-3-flash-preview"</b>로 답하고, 맨 아래에 <code>⏸ manual mode on</code>이 보이면 <b>완성!</b> 🎉</div>
+  <h3>화면에 보이지만 괜찮은 것</h3>
+  <div class="tbl"><table>
+    <tr><th>보이는 것</th><th>뜻</th></tr>
+    <tr><td><code>Model "gemini/…" isn't recognized</code></td><td>클로드 코드가 제미나이 이름을 몰라서 띄우는 안내. 작동은 정상</td></tr>
+    <tr><td><code>API Usage Billing</code>, <code>$0.12</code> 같은 금액</td><td>클로드 코드가 클로드 가격표로 계산한 <b>예상 금액</b>일 뿐. 클로드 결제 키도 없고 구글도 무료 등급이라 <b>실제 결제는 0원</b> (무료 한도를 넘으면 돈이 나가는 대신 멈춰요)</td></tr>
+    <tr><td>회색 <code>hook error … non-blocking</code></td><td>예전에 설치해 둔 다른 기능의 알림. 작업은 계속돼요</td></tr>
+  </table></div>
+  <label class="check"><input type="checkbox"> 11단계 끝!</label>
+</section>
+
+<!-- 12 -->
+<section class="step" id="s12" data-step="12">
+  <h2><span class="num">12</span>매일 쓰는 법</h2>
+  <div class="tbl"><table>
+    <tr><th>상황</th><th>할 일</th></tr>
+    <tr><td>🟠 평소</td><td>PowerShell에서 <code>claude</code> → 진짜 클로드</td></tr>
+    <tr><td>⏳ 한도가 가까워질 때</td><td>클로드에게 <b>"지금까지 한 일 요약해 줘"</b> → 요약을 메모장에 저장<br><span class="small">두 모드는 대화가 이어지지 않아요</span></td></tr>
+    <tr><td>🛑 "한도 도달" 메시지</td><td><code>/exit</code> → 바탕화면 <b>"제미나이 클로드"</b> 더블클릭 → 저장한 요약 붙여넣고 이어서 작업</td></tr>
+    <tr><td>🔁 클로드 한도가 풀리면</td><td>제미나이 창 <code>/exit</code> → 다시 <code>claude</code></td></tr>
+  </table></div>
+  <h3>📌 기억할 규칙 5가지</h3>
+  <ol>
+    <li><b>명령어는 PowerShell 창</b>(<code>PS C:\…&gt;</code>)에, <b>질문은 클로드 코드 창</b>(<code>&gt;</code>)에</li>
+    <li>옴니라우트 창(<code>OmniRoute is running!</code>)은 쓰는 동안 닫지 않기</li>
+    <li>맨 아래가 <code>manual mode</code>인지 확인. 바뀌었으면 <kbd>Shift</kbd>를 누른 채 <kbd>Tab</kbd>을 톡 → 노란 auto 표시가 없어질 때까지</li>
+    <li>열쇠(<code>AIza…</code> / <code>sk-…</code>)와 개인정보는 보내지 않기</li>
+    <li>무료 모델은 진짜 클로드보다 실수가 많아요 → 파일 수정·실행 허락 전에 내용 읽어 보기</li>
+  </ol>
+  <label class="check"><input type="checkbox"> 12단계 끝! 🎉</label>
 </section>
 
 <section id="trouble">
-  <h2>8. 자주 막히는 곳</h2>
+  <h2>🧯 막혔을 때</h2>
   <div class="tbl"><table>
     <tr><th>증상</th><th>해결</th></tr>
-    <tr><td>클로드 코드가 옴니라우트를 안 거침</td><td>주소 끝 <code>/v1</code> 지우기 → 클로드 코드 재시작</td></tr>
-    <tr><td>인증 오류 (401)</td><td><code>ANTHROPIC_AUTH_TOKEN</code>에 옴니라우트 키 넣었는지 확인, 또는 <code>omniroute launch</code> 사용</td></tr>
-    <tr><td><code>400 Ambiguous model</code></td><td>Claude 제공자가 2개 연결됨 → <code>ANTHROPIC_MODEL=cc/모델명</code>처럼 앞에 이름 붙이기</td></tr>
-    <tr><td>auto인데 답이 안 옴</td><td>제공자를 하나도 안 연결한 상태 → <a href="#safe7">4번 안전한 7곳</a>에서 2~3곳 연결</td></tr>
-    <tr><td>설치 오류</td><td><code>node -v</code>로 22.22.2 이상인지 확인 → <code>omniroute doctor</code></td></tr>
+    <tr><td><code>npm : 이 시스템에서 스크립트를 실행할 수 없으므로…</code></td><td>2단계 다시</td></tr>
+    <tr><td>노란 <code>SECURITY: listening on 0.0.0.0</code> 또는 <code>could not decrypt</code></td><td>옴니라우트 끄고(<kbd>Ctrl</kbd>+<kbd>C</kbd>) 4단계 다시</td></tr>
+    <tr><td>브라우저에서 "연결할 수 없음 / 페이지 없음"</td><td>옴니라우트가 꺼진 것 → PowerShell에서 <code>omniroute</code></td></tr>
+    <tr><td>클로드 코드에 <code>Connection refused (ECONNREFUSED)</code></td><td>위와 같음 → <code>omniroute</code> 켜면 클로드가 알아서 다시 연결</td></tr>
+    <tr><td>비밀번호가 틀림</td><td><kbd>한/영</kbd>·<kbd>Caps Lock</kbd> 확인 → 안 되면 5단계의 <code>omniroute reset-password</code></td></tr>
+    <tr><td>마스킹 체크했는데 "비활성화됨"</td><td>6단계 ① 기능 플래그 켜기</td></tr>
+    <tr><td><code>Invalid API key</code> (제미나이)</td><td>키 일부만 복사됨 → 📋 아이콘으로 다시 복사</td></tr>
+    <tr><td><code>[503]</code> / <code>[404]</code></td><td>503 = 붐빔(잠시 후 다시), 404 = 없어진 모델(무시)</td></tr>
+    <tr><td>키 확인에서 <code>sk-</code> 대신 이상한 글자(예: "오후")</td><td>메모장에서 <kbd>F5</kbd>를 누르면 시간이 써져요 → 9단계 방법(메모장 없이)으로 다시</td></tr>
+    <tr><td>명령어를 클로드 코드 창에 붙여넣음</td><td><kbd>Esc</kbd>로 취소 → PowerShell 창에 다시</td></tr>
+    <tr><td><code>'oma' 용어가 인식되지 않습니다</code></td><td>안내 글자가 명령어로 들어간 것. 무시하고 다시</td></tr>
   </table></div>
-  <p class="small" style="margin-top:10px">공식 저장소: github.com/cheaper-inference/OmniRoute · 문서 기준 v3.8.54 (2026-11-08 확인)</p>
+</section>
+
+<section id="later">
+  <h2>🛡 나중에: 예비 제공자 추가 (선택)</h2>
+  <p>제미나이가 붐빌 때(503) 자동으로 넘어갈 곳을 더 연결할 수 있어요. 방법은 <b>7~8단계와 똑같아요</b> (키 받기 → 공급자 검색 → 연결 추가 → 무료 모델만 가져오기 🟠 → 테스트).</p>
+  <h3>✅ 안전한 무료 제공자 (카드 없음 · 개인 사용 OK)</h3>
+  <div class="tbl"><table>
+    <tr><th>순서</th><th>제공자</th><th>키 받는 곳</th><th>키 모양</th></tr>
+    <tr><td>✅ 연결됨</td><td>Google Gemini</td><td>aistudio.google.com/apikey</td><td><code>AIza…</code></td></tr>
+    <tr><td>다음 1</td><td>Groq [그록]</td><td>console.groq.com/keys</td><td><code>gsk_…</code></td></tr>
+    <tr><td>다음 2</td><td>OpenRouter (<code>:free</code> 모델만, 충전 X)</td><td>openrouter.ai/keys</td><td><code>sk-or-…</code></td></tr>
+    <tr><td>예비</td><td>GitHub Models</td><td>github.com/settings/tokens (Models = Read만)</td><td><code>github_pat_…</code></td></tr>
+    <tr><td>예비</td><td>NVIDIA NIM</td><td>build.nvidia.com</td><td><code>nvapi-…</code></td></tr>
+    <tr><td>예비</td><td>Cloudflare Workers AI</td><td>dash.cloudflare.com</td><td>계정 번호 + 토큰</td></tr>
+    <tr><td>예비</td><td>Hugging Face</td><td>huggingface.co/settings/tokens</td><td><code>hf_…</code></td></tr>
+  </table></div>
+  <h3>🚫 연결하지 않을 곳</h3>
+  <ul>
+    <li><b>계정 정지 위험</b> (약관상 프록시 금지): Kiro, Google Antigravity, Gemini CLI 계정 로그인, Blackbox, Coze, DuckDuckGo AI, T3 Chat, NLP Cloud, iFlytek/SparkDesk, FriendliAI, Muse Spark, Fireworks, AI21</li>
+    <li><b>결제 위험</b> (카드 등록 필요): Cerebras, Vertex AI, Scaleway / 유료 키: OpenAI, Anthropic</li>
+    <li><b>기타 주의</b>: Cohere(상업 금지), Mistral(개인 용도만), DeepSeek·Z.AI·SiliconFlow(중국 서버), 가입 없는 무료 목록(AI Horde 등 — 온보딩의 "검토했으며…" 체크 ❌)</li>
+  </ul>
+  <div class="box tip">💡 <b>구글 AI Pro 구독</b>은 이 API 키와 별개예요. 구독 혜택(Flow 영상 크레딧, Gemini 앱, NotebookLM)은 공식 사이트에서 직접 쓰고, 옴니라우트에 구글 계정으로 로그인해 연결하지 마세요 — 유튜브 채널이 있는 계정이 정지될 수 있어요.</div>
+  <p class="small">출처: 옴니라우트 공식 저장소 github.com/cheaper-inference/OmniRoute (v3.8.53~54 문서) · 2026-11-12 윈도우 11 실제 설치로 확인</p>
 </section>
 
 <section>
@@ -400,15 +516,32 @@ document.querySelectorAll('.cp').forEach(function(b){
   b.addEventListener('click',function(){
     var t=b.parentElement.cloneNode(true);
     t.querySelectorAll('.cp,.lbl').forEach(function(x){x.remove()});
-    var txt=t.textContent.replace(/^\s+/,'');
+    var txt=t.textContent.replace(/^\s+|\s+$/g,'');
     var done=function(){b.textContent='복사됨 ✓';b.classList.add('done');setTimeout(function(){b.textContent='복사';b.classList.remove('done')},1500)};
-    if(navigator.clipboard){navigator.clipboard.writeText(txt).then(done,function(){fallback(txt);done()})}else{fallback(txt);done()}
+    if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(txt).then(done,function(){fallback(txt);done()})}else{fallback(txt);done()}
   });
 });
-function fallback(s){var a=document.createElement('textarea');a.value=s;document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()}
+function fallback(s){var a=document.createElement('textarea');a.value=s;a.style.position='fixed';a.style.opacity='0';document.body.appendChild(a);a.select();try{document.execCommand('copy')}catch(e){}a.remove()}
 (function(){
+  var KEY='omni-guide-steps-v2',state={};
+  try{state=JSON.parse(localStorage.getItem(KEY)||'{}')||{}}catch(e){state={}}
+  var steps=document.querySelectorAll('section.step'),total=steps.length;
+  function render(){
+    var n=0;
+    steps.forEach(function(s){var on=!!state[s.dataset.step];s.classList.toggle('done',on);s.querySelector('.check input').checked=on;if(on)n++});
+    document.getElementById('pText').textContent=n+' / '+total+' 완료';
+    document.getElementById('pBar').style.width=(n/total*100)+'%';
+  }
+  steps.forEach(function(s){
+    s.querySelector('.check input').addEventListener('change',function(e){
+      state[s.dataset.step]=e.target.checked;
+      try{localStorage.setItem(KEY,JSON.stringify(state))}catch(err){}
+      render();
+    });
+  });
+  render();
   var r=document.documentElement,k='omni-theme';
-  try{var s=localStorage.getItem(k);if(s)r.setAttribute('data-theme',s)}catch(e){}
+  try{var t=localStorage.getItem(k);if(t)r.setAttribute('data-theme',t)}catch(e){}
   document.getElementById('themeBtn').addEventListener('click',function(){
     var dark=r.getAttribute('data-theme')==='dark'||(!r.getAttribute('data-theme')&&matchMedia('(prefers-color-scheme: dark)').matches);
     var n=dark?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem(k,n)}catch(e){}
