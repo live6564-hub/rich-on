@@ -101,6 +101,7 @@ footer a{color:var(--ink2)}
     <li><a href="#what">한눈에 보기</a></li>
     <li><a href="#install">설치 — 명령어 한 줄</a></li>
     <li><a href="#provider">제공자 연결하기</a></li>
+    <li><a href="#safe7">✅ 안전한 7곳 연결법</a></li>
     <li><a href="#claude">클로드 코드 연결법</a></li>
     <li><a href="#free14">공식 무료 키 제공자 14곳</a></li>
     <li><a href="#avoid12">약관 주의 제공자 12곳</a></li>
@@ -142,7 +143,7 @@ omniroute doctor</div>
   <h2>3. 제공자 연결하기</h2>
   <ol class="steps">
     <li>대시보드(<code>localhost:20128</code>) → 왼쪽 <b>Providers [프로바이더스] = 제공자</b> 클릭</li>
-    <li><b>+ Add Provider</b> → 아래 14곳 중 하나 선택</li>
+    <li><b>+ Add Provider</b> → 아래 <a href="#safe7">안전한 7곳</a> 중 하나 선택</li>
     <li>그 제공자 사이트에서 가입 → <b>API Key [에이피아이 키] = 프로그램끼리 연결하는 비밀 열쇠</b> 발급 → 붙여넣기</li>
     <li>2~3곳 이상 연결해 두면 한 곳이 막혀도 다음 곳으로 자동 전환</li>
     <li><b>Dashboard → Endpoints</b>에서 <b>옴니라우트 전용 키</b>를 복사해 둬요 (클로드 코드 연결에 사용)</li>
@@ -150,14 +151,76 @@ omniroute doctor</div>
   <div class="box tip">💡 추천 첫 조합: <b>Gemini + Groq + OpenRouter(:free)</b> — 세 곳 다 카드 없이 키 발급 가능.</div>
 </section>
 
+<section id="safe7">
+  <h2>4. ✅ 안전한 7곳 연결법</h2>
+  <p>기준: <b>카드 X · 무료 · 약관에 프록시 금지 조항 없음 · 개인 사용 OK</b>. 걸리는 조건이 "재판매 금지"뿐인 곳까지 넣었어요. 나 혼자 쓰면 해당되지 않는 조건이에요.</p>
+
+  <h3>0단계 · 옴니라우트 켜기</h3>
+  <div class="pill"><span class="lbl">터미널에 입력 (이 창은 켜 두기)</span><button class="cp">복사</button>omniroute</div>
+  <p class="small">브라우저에서 <code>http://localhost:20128</code> 열기 · <span class="term">localhost [로컬호스트] = 내 컴퓨터 자신</span></p>
+
+  <h3>1단계 · 무료 키 받기</h3>
+  <div class="tbl"><table>
+    <tr><th>#</th><th>제공자</th><th>키 받는 곳</th><th>방법</th><th>키 모양</th></tr>
+    <tr><td colspan="5"><b>1순위 — 이 3곳부터</b></td></tr>
+    <tr><td>1</td><td>Google Gemini<br><span class="term">AI Studio [에이아이 스튜디오]</span></td><td>aistudio.google.com/apikey</td><td>구글 로그인 → Create API key</td><td><code>AIza...</code></td></tr>
+    <tr><td>2</td><td>Groq [그록]</td><td>console.groq.com/keys</td><td>가입 → Create API Key<br><span class="small">키는 한 번만 보여 줌 → 바로 메모장에 저장</span></td><td><code>gsk_...</code></td></tr>
+    <tr><td>3</td><td>OpenRouter [오픈라우터]</td><td>openrouter.ai/keys</td><td>가입 → Create Key<br><span class="small">충전 화면은 건너뛰기</span></td><td><code>sk-or-...</code></td></tr>
+    <tr><td colspan="5"><b>2순위 — 예비로 추가</b></td></tr>
+    <tr><td>4</td><td>GitHub Models [깃허브 모델스]</td><td>github.com/settings/tokens</td><td>Fine-grained token [파인 그레인드 토큰] = 권한을 골라 주는 키 생성 → Models = Read만 체크</td><td><code>github_pat_...</code></td></tr>
+    <tr><td>5</td><td>NVIDIA NIM [엔비디아 님]</td><td>build.nvidia.com</td><td>가입 → 아무 모델 클릭 → Get API Key</td><td><code>nvapi-...</code></td></tr>
+    <tr><td>6</td><td>Cloudflare Workers AI</td><td>dash.cloudflare.com</td><td>값 2개 필요: Account ID [어카운트 아이디] = 계정 번호 (대시보드 오른쪽) + My Profile → API Tokens → "Workers AI" 템플릿</td><td>계정 번호 + 토큰</td></tr>
+    <tr><td>7</td><td>Hugging Face [허깅페이스]</td><td>huggingface.co/settings/tokens</td><td>Create new token → Fine-grained → "Make calls to Inference Providers" 체크</td><td><code>hf_...</code></td></tr>
+  </table></div>
+  <p class="small">※ 사이트 메뉴 이름은 바뀔 수 있어요. 화면이 다르면 비슷한 이름의 버튼을 찾으세요.</p>
+
+  <h3>2단계 · 옴니라우트에 키 넣기</h3>
+  <ol class="steps">
+    <li>대시보드 왼쪽 <b>Providers [프로바이더스]</b> 클릭</li>
+    <li><b>+ Add Provider</b> → 검색창에 <code>gemini</code> / <code>groq</code> / <code>openrouter</code> …</li>
+    <li>복사한 키 붙여넣기 → <b>Save</b> → <b>Test</b> 눌러 초록불 확인</li>
+    <li>나머지 제공자도 똑같이 반복</li>
+    <li><b>Endpoints [엔드포인트]</b> → 옴니라우트 전용 키(<code>oma_...</code>) 복사</li>
+  </ol>
+  <div class="box no">⚠️ OpenRouter는 이름 끝이 <b>":free"</b>인 모델만 켜 두세요. 유료 모델이 켜져 있으면 요금이 나갈 수 있어요.</div>
+
+  <h3>3단계 · 자동 전환 순서 정하기</h3>
+  <p>대시보드 → <b>Combos [콤보] = 여러 모델을 묶은 예비 순서</b></p>
+  <div class="pill"><span class="lbl">추천 순서</span><button class="cp">복사</button>1 Gemini → 2 Groq → 3 OpenRouter(:free) → 4 NVIDIA → 5 GitHub Models</div>
+  <p class="small">모델에서 <code>auto</code>를 고르면 연결된 곳 중에서 알아서 골라요. 클로드 코드 연결은 아래 5번을 보세요.</p>
+
+  <h3>4단계 · 잘 되는지 확인</h3>
+  <ul>
+    <li>클로드 코드에서 "안녕" 입력 → 답이 오면 성공</li>
+    <li>대시보드 → <b>Logs [로그] = 사용 기록</b>에서 어느 제공자로 갔는지 확인</li>
+    <li>안 되면 터미널에 <code>omniroute doctor</code></li>
+  </ul>
+
+  <h3>🚫 이번 목록에서 뺀 곳</h3>
+  <div class="tbl"><table>
+    <tr><th>제공자</th><th>뺀 이유</th></tr>
+    <tr><td>Cerebras · Vertex AI · Scaleway</td><td>카드 등록 필요 → 결제 위험</td></tr>
+    <tr><td>Cohere</td><td>체험 키라 상업 용도 금지</td></tr>
+    <tr><td>Mistral</td><td>약관상 "개인 용도"만 → 사업 작업에는 애매</td></tr>
+    <tr><td>DeepSeek · Z.AI · SiliconFlow</td><td>데이터가 중국 서버에 저장 → 개인정보 주의</td></tr>
+    <tr><td>Kiro · Antigravity 등 12곳</td><td>계정 정지 위험 → 절대 연결 금지 (<a href="#avoid12">7번</a> 참고)</td></tr>
+  </table></div>
+
+  <div class="box tip">🔒 <b>안전하게 쓰는 규칙 3가지</b><br>
+  1. 키는 나 혼자만 쓰기 (공유·판매 금지)<br>
+  2. 한도를 늘리려고 계정을 여러 개 만들지 않기 (약관 위반)<br>
+  3. 무료 등급은 입력한 내용이 학습에 쓰일 수 있음 → 주소·전화번호·통장번호 같은 개인정보는 넣지 않기</div>
+  <p class="small">※ 클로드 코드는 클로드 모델에 맞춰 만들어진 도구라서, 무료 모델로 넘어가면 긴 코딩 작업의 품질이 떨어질 수 있어요.</p>
+</section>
+
 <section id="claude">
-  <h2>4. 클로드 코드 연결법</h2>
+  <h2>5. 클로드 코드 연결법</h2>
   <h3>방법 A — 가장 쉬운 한 줄 (추천)</h3>
   <div class="pill"><span class="lbl">주소·키를 알아서 넣고 클로드 코드 실행</span><button class="cp">복사</button>omniroute launch</div>
   <p class="small">옴니라우트가 켜져 있는지 확인한 뒤 환경 변수를 자동으로 넣고 <code>claude</code>를 실행해 줘요.</p>
 
   <h3>방법 B — 설정 파일에 직접 넣기</h3>
-  <p><code>~/.claude/settings.json</code> 파일에 아래를 넣고, <b>클로드 코드를 껐다 켜요</b> (설정은 시작할 때 한 번만 읽어요).</p>
+  <p>맥은 <code>~/.claude/settings.json</code>, 윈도우는 <code>C:\Users\내이름\.claude\settings.json</code> 파일에 아래를 넣고, <b>클로드 코드를 껐다 켜요</b> (설정은 시작할 때 한 번만 읽어요).</p>
   <div class="pill"><span class="lbl">~/.claude/settings.json</span><button class="cp">복사</button>{
   "env": {
     "ANTHROPIC_BASE_URL": "http://localhost:20128",
@@ -176,7 +239,7 @@ Model:    auto</div>
 </section>
 
 <section id="free14">
-  <h2>5. 공식 무료 키 제공자 14곳</h2>
+  <h2>6. 공식 무료 키 제공자 14곳</h2>
   <p>제공자 공식 사이트에서 <b>정식으로 API 키를 발급</b>받는 곳만 골랐어요. 한도는 수시로 바뀌니 가입 전에 그 사이트에서 꼭 다시 확인하세요.</p>
   <div class="tbl"><table>
     <tr><th>#</th><th>제공자</th><th>무료 방식</th><th>참고</th></tr>
@@ -199,7 +262,7 @@ Model:    auto</div>
 </section>
 
 <section id="avoid12">
-  <h2>6. 약관 주의 제공자 12곳 — 피하는 게 좋아요</h2>
+  <h2>7. 약관 주의 제공자 12곳 — 피하는 게 좋아요</h2>
   <p>옴니라우트 공식 약관표(FREE_TIERS.md)에서 <b>"프록시·제3자 도구로 쓰지 말라"</b>는 조항이 확인된 곳이에요. 연결하면 <b>계정 정지</b> 위험이 있어요.<br>
   <span class="term">Proxy [프록시] = 중간에서 대신 요청을 전달해 주는 프로그램 (옴니라우트가 여기에 해당)</span></p>
   <div class="tbl"><table>
@@ -222,13 +285,13 @@ Model:    auto</div>
 </section>
 
 <section id="trouble">
-  <h2>7. 자주 막히는 곳</h2>
+  <h2>8. 자주 막히는 곳</h2>
   <div class="tbl"><table>
     <tr><th>증상</th><th>해결</th></tr>
     <tr><td>클로드 코드가 옴니라우트를 안 거침</td><td>주소 끝 <code>/v1</code> 지우기 → 클로드 코드 재시작</td></tr>
     <tr><td>인증 오류 (401)</td><td><code>ANTHROPIC_AUTH_TOKEN</code>에 옴니라우트 키 넣었는지 확인, 또는 <code>omniroute launch</code> 사용</td></tr>
     <tr><td><code>400 Ambiguous model</code></td><td>Claude 제공자가 2개 연결됨 → <code>ANTHROPIC_MODEL=cc/모델명</code>처럼 앞에 이름 붙이기</td></tr>
-    <tr><td>auto인데 답이 안 옴</td><td>제공자를 하나도 안 연결한 상태 → 5번 표에서 2~3곳 연결</td></tr>
+    <tr><td>auto인데 답이 안 옴</td><td>제공자를 하나도 안 연결한 상태 → <a href="#safe7">4번 안전한 7곳</a>에서 2~3곳 연결</td></tr>
     <tr><td>설치 오류</td><td><code>node -v</code>로 22 이상인지 확인 → <code>omniroute doctor</code></td></tr>
   </table></div>
   <p class="small" style="margin-top:10px">공식 저장소: github.com/cheaper-inference/OmniRoute · 문서 기준 v3.8.54 (2026-11-08 확인)</p>
