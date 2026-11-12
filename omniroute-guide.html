@@ -98,6 +98,7 @@ footer a{color:var(--ink2)}
 <nav class="toc">
   <b>목차</b>
   <ol>
+    <li><a href="#resume">📌 로아 이어하기 (진행 현황)</a></li>
     <li><a href="#what">한눈에 보기</a></li>
     <li><a href="#install">설치 — 명령어 한 줄</a></li>
     <li><a href="#provider">제공자 연결하기</a></li>
@@ -109,6 +110,89 @@ footer a{color:var(--ink2)}
   </ol>
 </nav>
 
+<section id="resume" style="border:2px solid var(--sky)">
+  <h2>📌 로아 이어하기 — 진행 현황 (2026-11-12)</h2>
+  <div class="tbl"><table>
+    <tr><th>단계</th><th>내용</th><th>상태</th></tr>
+    <tr><td>1</td><td>Node.js 업데이트 (v24.22.1)</td><td>✅</td></tr>
+    <tr><td>2</td><td>옴니라우트 설치 (v3.8.53) + 윈도우 실행 허용</td><td>✅</td></tr>
+    <tr><td>3</td><td>내 컴퓨터에서만 쓰게 잠금 (127.0.0.1 + 키 필수)</td><td>✅</td></tr>
+    <tr><td>4</td><td>대시보드 비밀번호 변경 (2단계 인증은 꺼 둠)</td><td>✅</td></tr>
+    <tr><td>5</td><td>개인정보 마스킹 켜기 + 휴대폰·주민번호 패턴</td><td>✅</td></tr>
+    <tr><td>6</td><td>Gemini 연결 → 테스트 응답 "2"</td><td>✅</td></tr>
+    <tr><td>A</td><td>클로드 코드 연결 → "Gemini 3 Flash" 응답 확인</td><td>✅</td></tr>
+    <tr><td>B</td><td>예비 제공자 추가 (Groq · OpenRouter)</td><td>⏭ 다음</td></tr>
+    <tr><td>C</td><td>한 번 클릭으로 켜지는 파일 만들기</td><td>⏭ 그다음</td></tr>
+  </table></div>
+
+  <h3>🔁 다음에 옴니라우트 모드로 클로드 코드 켜는 법</h3>
+  <ol class="steps">
+    <li><b>PowerShell 창 1</b>을 열고 아래를 입력해요. 이 창은 닫지 마세요.</li>
+  </ol>
+  <div class="pill"><span class="lbl">창 1 — 옴니라우트 켜기</span><button class="cp">복사</button>omniroute</div>
+  <ol class="steps" start="2">
+    <li><b>PowerShell 창 2</b>를 열고 아래 3줄을 붙여넣고 엔터</li>
+  </ol>
+  <div class="pill"><span class="lbl">창 2 — 설정 3줄</span><button class="cp">복사</button>$env:ANTHROPIC_BASE_URL="http://localhost:20128"
+$env:ANTHROPIC_MODEL="gemini/gemini-3-flash-preview"
+$env:ANTHROPIC_DEFAULT_HAIKU_MODEL="gemini/gemini-3.1-flash-lite"</div>
+  <ol class="steps" start="3">
+    <li>메모장에서 <b>옴니라우트 키(sk-...)</b>를 이어 붙여 한 줄을 완성해요 → 그 줄을 복사 → 창 2에 붙여넣기 → 엔터</li>
+  </ol>
+  <div class="pill"><span class="lbl">메모장에서 완성할 모양 (sk- 부분만 내 키로)</span><button class="cp">복사</button>$env:ANTHROPIC_AUTH_TOKEN="sk-여기에내키"</div>
+  <ol class="steps" start="4">
+    <li>확인 → <b>30 이상 숫자</b>가 나오면 성공</li>
+  </ol>
+  <div class="pill"><span class="lbl">키 확인</span><button class="cp">복사</button>$env:ANTHROPIC_AUTH_TOKEN.Length</div>
+  <ol class="steps" start="5">
+    <li>작업 폴더로 이동 → 클로드 코드 켜기</li>
+  </ol>
+  <div class="pill"><span class="lbl">작업 폴더에서 켜기</span><button class="cp">복사</button>cd C:\Users\pts\omni-work
+claude</div>
+  <div class="box tip">💡 이 설정은 <b>창 2에서만</b> 적용돼요. 다른 창에서 그냥 <code>claude</code>를 치면 원래 진짜 클로드로 켜져요.</div>
+
+  <h3>🛡 B단계 — 예비 제공자 추가 (Gemini 때와 같은 순서)</h3>
+  <p><b>B-1. Groq [그록] 키 받기</b></p>
+  <ol>
+    <li><code>console.groq.com/keys</code> 접속 → 가입·로그인</li>
+    <li><b>Create API Key</b> → 이름 <code>omniroute</code></li>
+    <li><code>gsk_...</code> 키를 <b>📋 복사 아이콘</b>으로 복사 → 메모장 저장 (한 번만 보여 줘요)</li>
+  </ol>
+  <p><b>B-2. 옴니라우트에 연결</b></p>
+  <ol>
+    <li>대시보드 → 왼쪽 <b>공급자</b> → <b>공급자 검색</b>에 <code>groq</code></li>
+    <li>Groq 카드 제목 클릭 → 주황색 <b>[+ 연결 추가]</b></li>
+    <li>이름 <code>groq-무료</code> · API 키 붙여넣기 · 맞춤 URL 비우기</li>
+    <li><b>[확인]</b> → "유효함" 확인 → <b>무료 모델만 가져오기 🟠 켜기</b> → [저장]</li>
+    <li>연결 줄의 스위치 🟠 켜기 → <b>[/models에서 가져오기]</b> → <b>[무료만]</b> 필터</li>
+    <li>모델 카드의 ▶ 로 하나만 테스트 → "2" 나오면 성공</li>
+  </ol>
+  <p><b>B-3. OpenRouter [오픈라우터] — 같은 방식</b></p>
+  <ol>
+    <li><code>openrouter.ai/keys</code> → <b>Create Key</b> → <code>sk-or-...</code> 저장 (충전 화면은 건너뛰기)</li>
+    <li>공급자 검색 <code>openrouter</code> → 연결 추가 → 이름 <code>openrouter-무료</code></li>
+    <li><b>무료 모델만 가져오기 🟠 반드시 켜기</b> (이름 끝이 <code>:free</code>인 모델만)</li>
+  </ol>
+  <p><b>B-4. 자동 전환 순서</b> — 대시보드 <b>콤보</b>에서 Gemini → Groq → OpenRouter 순으로 묶기</p>
+
+  <h3>🧯 오늘 실제로 겪은 문제와 해결</h3>
+  <div class="tbl"><table>
+    <tr><th>증상</th><th>원인 · 해결</th></tr>
+    <tr><td>npm: 스크립트를 실행할 수 없으므로…</td><td>윈도우 보안 설정 → <code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code></td></tr>
+    <tr><td>노란색 SECURITY 경고 (0.0.0.0)</td><td><code>setx OMNIROUTE_SERVER_HOST 127.0.0.1</code> + <code>setx REQUIRE_API_KEY true</code> → 창 새로 열기</td></tr>
+    <tr><td>대시보드 비밀번호?</td><td>처음 비밀번호 <code>CHANGEME</code> → 설정 → 보안에서 바로 변경</td></tr>
+    <tr><td>마스킹 체크했는데 "비활성화됨"</td><td>기능 플래그 <code>PII_REDACTION_ENABLED</code>·<code>PII_RESPONSE_SANITIZATION</code> 켜기</td></tr>
+    <tr><td>Invalid API key</td><td>키가 일부만 복사됨 → AI Studio의 📋 아이콘으로 다시 복사</td></tr>
+    <tr><td>[503] high demand</td><td>키는 정상, 모델이 붐빔 → 다른 모델로 테스트</td></tr>
+    <tr><td>[404] / 모델 "차단"</td><td>구글이 없앤 모델(2.5 계열) → [/models에서 가져오기]로 진짜 목록 받기</td></tr>
+    <tr><td>옴니라우트 키가 oma_가 아니라 sk-</td><td>정상 (v3.8.53은 sk- 형식)</td></tr>
+    <tr><td>키 넣었는데 Length 0</td><td>메모장에서 <code>$env:ANTHROPIC_AUTH_TOKEN="sk-..."</code> 한 줄을 완성해 붙여넣기</td></tr>
+    <tr><td>폴더 신뢰 질문에 C:\Users\pts</td><td>No → <code>omni-work</code> 폴더를 따로 만들어 그 안에서 켜기</td></tr>
+    <tr><td>UserPromptSubmit hook error</td><td>예전에 설치한 훅 오류 (작업은 계속됨) → 나중에 정리</td></tr>
+  </table></div>
+  <div class="box no">🔒 키(AIza... / sk-... / gsk_...)는 채팅·캡처로 절대 보내지 않기. 메모장과 옴니라우트에만.</div>
+</section>
+
 <section id="what">
   <h2>1. 한눈에 보기</h2>
   <p>클로드 코드 쓰다가 사용량 한도에 자주 걸리시나요? 옴니라우트는 AI 제공자 수백 곳을 <b>주소 하나</b>로 묶어 주는 내 컴퓨터용 무료 오픈소스 도구예요. 한 곳이 한도에 차면 연결해 둔 다른 모델로 자동으로 넘겨서 작업을 이어 가요.</p>
@@ -119,14 +203,14 @@ footer a{color:var(--ink2)}
     <tr><td>핵심 기능</td><td>한도·오류가 나면 다음 제공자로 자동 전환<br><span class="term">Quota-aware auto-fallback [쿼터 어웨어 오토 폴백] = 남은 사용량을 보고 알아서 예비로 넘어가기</span></td></tr>
     <tr><td>비용</td><td>옴니라우트 자체는 무료(MIT). 각 제공자 무료 사용량은 <b>내가 직접 가입해서 받은 만큼</b></td></tr>
     <tr><td>같이 쓰는 도구</td><td>클로드 코드, Codex, Cursor, Cline, OpenCode 등 39개</td></tr>
-    <tr><td>설치</td><td><code>npm install -g omniroute</code> 한 줄 (Node.js 22 이상 필요)</td></tr>
+    <tr><td>설치</td><td><code>npm install -g omniroute</code> 한 줄 (Node.js 22.22.2 이상 필요)</td></tr>
   </table></div>
   <div class="box no">⚠️ <b>옴니라우트가 토큰을 공짜로 주는 게 아니에요.</b> 공식 문서에도 "제공자마다 직접 가입하고 키를 받아 연결하라, 한도와 약관은 각 제공자가 정한다"고 적혀 있어요. 설치만 하고 아무것도 연결 안 하면 답이 안 나올 수 있어요.</div>
 </section>
 
 <section id="install">
   <h2>2. 설치 — 명령어 한 줄</h2>
-  <p>먼저 <b>Node.js [노드 제이에스]</b> = 자바스크립트 프로그램을 돌리는 엔진이 깔려 있어야 해요 (버전 22 이상). nodejs.org에서 LTS 버전을 받으면 돼요.</p>
+  <p>먼저 <b>Node.js [노드 제이에스]</b> = 자바스크립트 프로그램을 돌리는 엔진이 깔려 있어야 해요 (버전 22.22.2 이상, 24 LTS 추천). nodejs.org에서 LTS 버전을 받으면 돼요.</p>
   <h3>1) 설치하고 실행 (README 공식 명령)</h3>
   <div class="pill"><span class="lbl">터미널에 붙여넣기</span><button class="cp">복사</button>npm install -g omniroute
 omniroute</div>
@@ -180,7 +264,7 @@ omniroute doctor</div>
     <li><b>+ Add Provider</b> → 검색창에 <code>gemini</code> / <code>groq</code> / <code>openrouter</code> …</li>
     <li>복사한 키 붙여넣기 → <b>Save</b> → <b>Test</b> 눌러 초록불 확인</li>
     <li>나머지 제공자도 똑같이 반복</li>
-    <li><b>Endpoints [엔드포인트]</b> → 옴니라우트 전용 키(<code>oma_...</code>) 복사</li>
+    <li><b>Endpoints [엔드포인트]</b> → 옴니라우트 전용 키 복사 (v3.8.53은 <code>sk-...</code> 형식)</li>
   </ol>
   <div class="box no">⚠️ OpenRouter는 이름 끝이 <b>":free"</b>인 모델만 켜 두세요. 유료 모델이 켜져 있으면 요금이 나갈 수 있어요.</div>
 
@@ -292,7 +376,7 @@ Model:    auto</div>
     <tr><td>인증 오류 (401)</td><td><code>ANTHROPIC_AUTH_TOKEN</code>에 옴니라우트 키 넣었는지 확인, 또는 <code>omniroute launch</code> 사용</td></tr>
     <tr><td><code>400 Ambiguous model</code></td><td>Claude 제공자가 2개 연결됨 → <code>ANTHROPIC_MODEL=cc/모델명</code>처럼 앞에 이름 붙이기</td></tr>
     <tr><td>auto인데 답이 안 옴</td><td>제공자를 하나도 안 연결한 상태 → <a href="#safe7">4번 안전한 7곳</a>에서 2~3곳 연결</td></tr>
-    <tr><td>설치 오류</td><td><code>node -v</code>로 22 이상인지 확인 → <code>omniroute doctor</code></td></tr>
+    <tr><td>설치 오류</td><td><code>node -v</code>로 22.22.2 이상인지 확인 → <code>omniroute doctor</code></td></tr>
   </table></div>
   <p class="small" style="margin-top:10px">공식 저장소: github.com/cheaper-inference/OmniRoute · 문서 기준 v3.8.54 (2026-11-08 확인)</p>
 </section>
