@@ -59,20 +59,30 @@ def main():
         sys.exit(f"'{a.src}' 는 링크도 아니고 파일도 아니에요.\n→ https:// 로 시작하는 실제 유튜브 주소나, 있는 영상 파일 경로를 따옴표 안에 넣어 주세요.")
     sub_text = ""
     if re.match(r"https?://", a.src):
+        for old in glob.glob(str(out/"video.*")): os.remove(old)
         meta = run(["yt-dlp", "-J", "--no-playlist", a.src])
         if meta.returncode == 0:
             info = json.loads(meta.stdout)
             (out/"info.txt").write_text(f"제목: {info.get('title')}\n채널: {info.get('uploader')}\n길이: {hms(info.get('duration') or 0)}\n\n{info.get('description','')}", encoding="utf-8")
-        r = run(["yt-dlp", "--no-playlist", "-f", "bv*[height<=720]+ba/b[height<=720]/b", "--merge-output-format", "mp4", "--ffmpeg-location", FFMPEG,
-                 "--write-subs", "--write-auto-subs", "--sub-langs", f"{a.lang}.*,{a.lang},en", "--sub-format", "vtt",
+        # 1) 영상만 먼저 받기 (자막 실패가 영상 다운로드를 막지 않게 분리)
+        r = run(["yt-dlp", "--no-playlist", "-f", "bv*[height<=720]+ba/b[height<=720]/b",
+                 "--merge-output-format", "mp4", "--ffmpeg-location", FFMPEG,
                  "-o", str(out/"video.%(ext)s"), a.src])
-        if r.returncode != 0:
+        vids = [p for p in glob.glob(str(out/"video.*")) if p.endswith((".mp4", ".webm", ".mkv"))]
+        if r.returncode != 0 or not vids:
             sys.exit("다운로드 실패:\n" + r.stderr[-1500:])
-        vids = [p for p in glob.glob(str(out/"video.*")) if not p.endswith(".vtt")]
         video = vids[0]
-        vtts = sorted(glob.glob(str(out/"*.vtt")), key=lambda p: (f".{a.lang}." not in p, "orig" not in p))
-        if vtts:
-            sub_text = vtt_to_text(vtts[0])
+        # 2) 자막은 따로 시도 — 실패(429 등)해도 그냥 넘어가고 받아쓰기로 대체
+        for lang in [a.lang, "en"]:
+            run(["yt-dlp", "--no-playlist", "--skip-download", "--write-subs", "--write-auto-subs",
+                 "--sub-langs", f"{lang}.*,{lang}", "--sub-format", "vtt", "--sleep-subtitles", "2",
+                 "-o", str(out/"video.%(ext)s"), a.src])
+            vtts = sorted(glob.glob(str(out/"*.vtt")), key=lambda p: "orig" not in p)
+            if vtts:
+                sub_text = vtt_to_text(vtts[0]); print(f"자막 사용: {os.path.basename(vtts[0])}")
+                break
+        else:
+            print("유튜브 자막 못 받음 → 받아쓰기로 대체")
     dur = duration(video)
     if not sub_text:
         print("자막 없음 → faster-whisper 받아쓰기 중...")

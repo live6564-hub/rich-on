@@ -33,7 +33,8 @@ winget install Python.Python.3.12
 ```
 → PowerShell 창 닫고 다시 열기 → 확인: `python --version`
 ```
-pip install -U yt-dlp faster-whisper Pillow imageio-ffmpeg
+pip install -U "yt-dlp[default,curl-cffi]" faster-whisper Pillow imageio-ffmpeg
+winget install DenoLand.Deno
 ```
 (ffmpeg는 imageio-ffmpeg 패키지 안에 들어 있어서 따로 설치·PATH 설정 필요 없음. PATH에 ffmpeg가 있으면 그걸 우선 사용)
 (winget 없으면 python.org/downloads 에서 설치, "Add Python to PATH" 체크 필수)
@@ -42,10 +43,13 @@ pip install -U yt-dlp faster-whisper Pillow imageio-ffmpeg
 ```
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew install python ffmpeg
-pip3 install -U yt-dlp faster-whisper Pillow imageio-ffmpeg
+pip3 install -U "yt-dlp[default,curl-cffi]" faster-whisper Pillow imageio-ffmpeg
+brew install deno
 ```
 → 확인: `python3 --version`, `ffmpeg -version`, `yt-dlp --version`
 
 ## 문제 해결
 - 유튜브 다운로드 에러 → `pip install -U yt-dlp` (유튜브가 자주 바뀌어서 최신판 필요)
 - 클라우드 세션(claude.ai/code)은 네트워크 정책상 youtube.com·huggingface.co 가 막혀 있을 수 있음 → 로아 PC의 Claude Code에서 실행하거나, 영상 파일을 직접 올려서 사용(파일은 프레임 보드 정상 작동).
+- `HTTP Error 429 Too Many Requests` (자막) → 스크립트가 자막 실패를 건너뛰고 받아쓰기로 대체함. 영상 다운로드와 자막은 분리되어 있음.
+- `No supported JavaScript runtime` 경고 → deno 설치(윈도우 `winget install DenoLand.Deno`, 맥 `brew install deno`) 후 창 다시 열기.
