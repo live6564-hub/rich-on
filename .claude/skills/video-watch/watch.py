@@ -6,7 +6,7 @@ import argparse, glob, json, os, re, subprocess, sys
 from pathlib import Path
 
 def run(cmd):
-    return subprocess.run(cmd, capture_output=True, text=True)
+    return subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
 
 def find_ffmpeg():
     """PATH에 ffmpeg가 있으면 그걸, 없으면 pip 패키지 imageio-ffmpeg 안의 ffmpeg를 쓴다."""
@@ -24,7 +24,7 @@ FFMPEG = find_ffmpeg()
 
 def duration(video):
     r = run([FFMPEG, "-i", video])
-    m = re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", r.stderr)
+    m = re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", r.stderr or "")
     return int(m[1])*3600 + int(m[2])*60 + float(m[3]) if m else 0.0
 
 def hms(t):
@@ -55,6 +55,8 @@ def main():
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     video = a.src
+    if not re.match(r"https?://", a.src) and not os.path.isfile(a.src):
+        sys.exit(f"'{a.src}' 는 링크도 아니고 파일도 아니에요.\n→ https:// 로 시작하는 실제 유튜브 주소나, 있는 영상 파일 경로를 따옴표 안에 넣어 주세요.")
     sub_text = ""
     if re.match(r"https?://", a.src):
         meta = run(["yt-dlp", "-J", "--no-playlist", a.src])
