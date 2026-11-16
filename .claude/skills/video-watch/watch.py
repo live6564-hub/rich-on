@@ -8,6 +8,25 @@ from pathlib import Path
 def run(cmd):
     return subprocess.run(cmd, capture_output=True, text=True)
 
+def find_ffmpeg():
+    """PATH에 ffmpeg가 있으면 그걸, 없으면 pip 패키지 imageio-ffmpeg 안의 ffmpeg를 쓴다."""
+    import shutil
+    exe = shutil.which("ffmpeg")
+    if exe:
+        return exe
+    try:
+        import imageio_ffmpeg
+        return imageio_ffmpeg.get_ffmpeg_exe()
+    except ImportError:
+        sys.exit("ffmpeg를 찾을 수 없어요 → 이 명령을 먼저 실행하세요:  pip install imageio-ffmpeg")
+
+FFMPEG = find_ffmpeg()
+
+def duration(video):
+    r = run([FFMPEG, "-i", video])
+    m = re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", r.stderr)
+    return int(m[1])*3600 + int(m[2])*60 + float(m[3]) if m else 0.0
+
 def hms(t):
     t = int(t); return f"{t//3600:02d}:{t%3600//60:02d}:{t%60:02d}"
 
@@ -42,7 +61,7 @@ def main():
         if meta.returncode == 0:
             info = json.loads(meta.stdout)
             (out/"info.txt").write_text(f"제목: {info.get('title')}\n채널: {info.get('uploader')}\n길이: {hms(info.get('duration') or 0)}\n\n{info.get('description','')}", encoding="utf-8")
-        r = run(["yt-dlp", "--no-playlist", "-f", "bv*[height<=720]+ba/b[height<=720]/b", "--merge-output-format", "mp4",
+        r = run(["yt-dlp", "--no-playlist", "-f", "bv*[height<=720]+ba/b[height<=720]/b", "--merge-output-format", "mp4", "--ffmpeg-location", FFMPEG,
                  "--write-subs", "--write-auto-subs", "--sub-langs", f"{a.lang}.*,{a.lang},en", "--sub-format", "vtt",
                  "-o", str(out/"video.%(ext)s"), a.src])
         if r.returncode != 0:
@@ -52,7 +71,7 @@ def main():
         vtts = sorted(glob.glob(str(out/"*.vtt")), key=lambda p: (f".{a.lang}." not in p, "orig" not in p))
         if vtts:
             sub_text = vtt_to_text(vtts[0])
-    dur = float(run(["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", video]).stdout.strip() or 0)
+    dur = duration(video)
     if not sub_text:
         print("자막 없음 → faster-whisper 받아쓰기 중...")
         try:
@@ -67,7 +86,7 @@ def main():
     every = a.every or (1 if dur <= 60 else 2 if dur <= 180 else 5 if dur <= 600 else 15)
     fdir = out/"frames"; fdir.mkdir(exist_ok=True)
     for f in fdir.glob("*.jpg"): f.unlink()
-    run(["ffmpeg", "-y", "-loglevel", "error", "-i", video, "-vf", f"fps=1/{every},scale=360:-2", str(fdir/"f_%05d.jpg")])
+    run([FFMPEG, "-y", "-loglevel", "error", "-i", video, "-vf", f"fps=1/{every},scale=360:-2", str(fdir/"f_%05d.jpg")])
     frames = sorted(fdir.glob("*.jpg"))
     from PIL import Image, ImageDraw, ImageFont
     try: font = ImageFont.truetype("DejaVuSans-Bold.ttf", 22)

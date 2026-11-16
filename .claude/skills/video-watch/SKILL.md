@@ -30,19 +30,19 @@ python .claude/skills/video-watch/watch.py "<유튜브링크 또는 영상파일
 ### 윈도우 (PowerShell)
 ```
 winget install Python.Python.3.12
-winget install Gyan.FFmpeg
 ```
-→ PowerShell 창 닫고 다시 열기 → 확인: `python --version`, `ffmpeg -version`
+→ PowerShell 창 닫고 다시 열기 → 확인: `python --version`
 ```
-pip install -U yt-dlp faster-whisper Pillow
+pip install -U yt-dlp faster-whisper Pillow imageio-ffmpeg
 ```
+(ffmpeg는 imageio-ffmpeg 패키지 안에 들어 있어서 따로 설치·PATH 설정 필요 없음. PATH에 ffmpeg가 있으면 그걸 우선 사용)
 (winget 없으면 python.org/downloads 에서 설치, "Add Python to PATH" 체크 필수)
 
 ### 맥 (터미널)
 ```
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew install python ffmpeg
-pip3 install -U yt-dlp faster-whisper Pillow
+pip3 install -U yt-dlp faster-whisper Pillow imageio-ffmpeg
 ```
 → 확인: `python3 --version`, `ffmpeg -version`, `yt-dlp --version`
 
