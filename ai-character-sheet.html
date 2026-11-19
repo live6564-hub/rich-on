@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>3칸 캐릭터 시트</title>
+<meta name="description" content="얼굴이 컷마다 바뀌지 않게 만드는 3칸 캐릭터 시트 — 로아 3D 픽사 3인 구도·구글 플로우 버전">
+<style>
+:root{--bg:#f6f3ec;--card:#fff;--ink:#1f2a33;--muted:#6c7780;--line:#dfd9cc;--accent:#c4673f;--accent2:#2f6b5a;--pill:#1f2a33;--pillink:#fff;--pill2:#eef0e8;--pill2ink:#1f2a33;--warn:#fff4e5;--warnline:#e9b872}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15191d;--card:#1e242a;--ink:#e8e4da;--muted:#9aa4ac;--line:#30383f;--accent:#e08a5f;--accent2:#6fbfa4;--pill:#e8e4da;--pillink:#15191d;--pill2:#28313a;--pill2ink:#e8e4da;--warn:#2b2418;--warnline:#7a5a2a}}
+:root[data-theme="dark"]{--bg:#15191d;--card:#1e242a;--ink:#e8e4da;--muted:#9aa4ac;--line:#30383f;--accent:#e08a5f;--accent2:#6fbfa4;--pill:#e8e4da;--pillink:#15191d;--pill2:#28313a;--pill2ink:#e8e4da;--warn:#2b2418;--warnline:#7a5a2a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR",Arial,sans-serif;line-height:1.6;font-size:15px}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 40px}
+header{padding:28px 0 12px}
+h1{font-size:24px;margin:0 0 6px;letter-spacing:-.5px}
+h2{font-size:18px;margin:0 0 10px;padding-top:4px}
+h3{font-size:15px;margin:16px 0 6px}
+.lead{color:var(--muted);font-size:14px;margin:0}
+.bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:12px}
+.counter{font-size:13px;color:var(--muted)}
+.btn{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:999px;padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+nav{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line)}
+nav::-webkit-scrollbar{display:none}
+nav a{flex:0 0 auto;font-size:13px;text-decoration:none;color:var(--ink);border:1px solid var(--line);background:var(--card);border-radius:999px;padding:5px 11px}
+section{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 16px;margin-top:16px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{border-bottom:1px solid var(--line);padding:8px 6px;text-align:left;vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:13px}
+.sheet{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr);gap:8px;margin:10px 0}
+.panel{border:2px dashed var(--line);border-radius:10px;aspect-ratio:3/5;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-size:12px;color:var(--muted);padding:6px}
+.panel b{color:var(--ink);font-size:13px}
+.panel.face{border-color:var(--accent)}
+.note{background:var(--warn);border:1px solid var(--warnline);border-radius:10px;padding:10px 12px;font-size:14px;margin:10px 0}
+.tag{display:inline-block;font-size:11px;font-weight:700;border-radius:6px;padding:1px 7px;margin-right:4px;background:var(--pill2);color:var(--pill2ink)}
+.pillbox{margin:10px 0}
+.pillhead{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:var(--muted);margin-bottom:4px}
+.pill{position:relative;border-radius:12px;padding:12px 14px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;white-space:pre-wrap;word-break:break-word;cursor:pointer;line-height:1.55}
+.pill.dark{background:var(--pill);color:var(--pillink)}
+.pill.light{background:var(--pill2);color:var(--pill2ink)}
+.pill.used{opacity:.45}
+.pill .ok{position:absolute;top:8px;right:10px;font-family:sans-serif;font-size:11px;font-weight:700}
+ul,ol{padding-left:20px;margin:6px 0}
+li{margin:3px 0}
+.check li{list-style:none;margin-left:-20px}
+.check input{margin-right:6px}
+.links{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.links a{display:block;text-align:center;text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:14px;background:var(--bg)}
+footer{font-size:12px;color:var(--muted);margin-top:16px}
+@media (max-width:420px){.links{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>🧩 3칸 캐릭터 시트 — 얼굴 안 바뀌는 AI 캐릭터</h1>
+  <p class="lead">원칙은 하나: <b>얼굴은 딱 한 번만 넣는다.</b> 로아의 3D 픽사(Pixar [픽사]) 3인 구도 + 구글 플로우(Flow [플로우]) 영상에 맞춰 다시 정리했어요.</p>
+  <div class="bar">
+    <span class="counter" id="counter">복사 0 / 0</span>
+    <button class="btn" id="reset">✓ 체크 초기화</button>
+    <button class="btn" id="theme">🌓 다크모드</button>
+  </div>
+</header>
+
+<nav>
+  <a href="#why">왜?</a><a href="#sheet">3칸 구성</a><a href="#s1">STEP 1</a><a href="#s2">STEP 2</a><a href="#s3">STEP 3</a><a href="#s4">STEP 4</a><a href="#s5">STEP 5 플로우</a><a href="#cast">3인 세트</a><a href="#free">무료 루트</a><a href="#check">체크</a>
+</nav>
+
+<section id="why">
+  <h2>1. 사진을 많이 넣으면 왜 얼굴이 바뀔까?</h2>
+  <table>
+    <tr><th>원인</th><th>무슨 일이 생기냐면</th></tr>
+    <tr><td>사진마다 얼굴이 미세하게 다름</td><td>AI가 눈매·턱선을 <b>평균</b> 내서 “닮았는데 묘하게 다른 얼굴”을 만듦</td></tr>
+    <tr><td>작은 얼굴이 기준을 흐림</td><td>전신 사진 속 작은 얼굴까지 얼굴 정보로 들어가 진짜 기준(정면 얼굴)이 약해짐</td></tr>
+    <tr><td>표정 칸이 얼굴을 바꿈</td><td>웃는 칸·놀란 칸이 있으면 무표정 장면에도 흔적이 남음</td></tr>
+  </table>
+  <div class="note">👉 표정·옷은 시트에 넣지 않아요. 표정은 <b>영상 프롬프트</b>로, 옷은 <b>의상 이미지</b>로 따로 줍니다.</div>
+</section>
+
+<section id="sheet">
+  <h2>2. 3칸 시트 구성</h2>
+  <div class="sheet">
+    <div class="panel face"><b>1칸 · 정면 얼굴</b>크게 · 무표정<br>얼굴 기준은 여기 하나</div>
+    <div class="panel"><b>2칸 · 전신 앞</b>목 위는 흰색으로 지움<br>키·비율·체형만</div>
+    <div class="panel"><b>3칸 · 전신 뒤</b>뒷머리·뒷모습 기준</div>
+  </div>
+  <table>
+    <tr><th>방법</th><th>이럴 때</th><th>특징</th></tr>
+    <tr><td><span class="tag">A</span>직접 찍기</td><td>흰 벽·단색 벽이 있을 때</td><td>내 얼굴 그대로 → 가장 정확</td></tr>
+    <tr><td><span class="tag">B</span>AI로 정리</td><td>셀카·일상 사진뿐일 때</td><td>흰 배경 스튜디오 사진으로 변환 (얼굴 미세 변화 가능)</td></tr>
+    <tr><td><span class="tag">C</span>새 캐릭터</td><td>에이로그원 3D 픽사 캐릭터 등</td><td>글로 외모를 적어 새로 생성 ← <b>로아 시리즈 추천</b></td></tr>
+  </table>
+</section>
+
+<section id="s1">
+  <h2>3. STEP 1 — 정면 얼굴 1장</h2>
+  <h3><span class="tag">A</span>직접 찍을 때</h3>
+  <ul>
+    <li>카메라 정면 + 무표정, 머리 꼭대기~어깨까지</li>
+    <li>흰 벽/연한 단색 벽, 그림자 없이 밝은 곳</li>
+    <li>앞머리·점·귀걸이 등 특징이 잘 보이게, 최고 화질 (확대해서 자르지 말고 다시 찍기)</li>
+  </ul>
+  <h3><span class="tag">B</span>내 사진을 AI로 정리 (실사)</h3>
+  <div class="pillbox"><div class="pillhead"><span>B-1 · 실사 헤드샷 정리</span></div>
+<div class="pill dark">Use my photo as the reference and keep my face exactly the same: same eye shape, nose, lips, jawline, skin tone and hairstyle. Do not beautify or change my features. Recreate it as a photorealistic studio headshot with a calm neutral face, eyes looking directly into the lens, cropped from the top of the head down to the shoulders, wearing a plain black tank top, pure white background, soft and even studio light, high resolution, fine detail</div></div>
+  <h3><span class="tag">C</span>3D 픽사 캐릭터 새로 만들기 (로아 시리즈용)</h3>
+  <div class="pillbox"><div class="pillhead"><span>C-1 · 3D 픽사 헤드샷 — [ ]만 바꾸기</span></div>
+<div class="pill dark">3D Pixar-style animated character headshot of a fictional Korean [woman / man] in [her / his] [early 30s], [APPEARANCE — e.g. shoulder-length straight black hair with soft see-through bangs, gentle double eyelids, small round nose, warm smile lines, a small mole under the left eye], calm neutral face with mouth closed, eyes looking directly into the camera, front view, cropped from the top of the head down to the shoulders, wearing a plain black tank top, pure white seamless background, soft even studio lighting, no shadows on the background, high resolution, clean render, single character only, no text, no logo, no watermark</div></div>
+  <div class="note">💡 외모 설명은 한국어로 써서 챗GPT에 “영어로 바꿔줘” 해도 돼요. 머리 모양·눈매·얼굴형·점처럼 <b>눈에 띄는 특징</b>을 구체적으로 적을수록 일관성↑</div>
+</section>
+
+<section id="s2">
+  <h2>4. STEP 2 — 전신 앞모습 1장 (얼굴 지우기)</h2>
+  <ul>
+    <li>머리~발끝, 팔 자연스럽게 내린 차렷 자세 · 체형 드러나는 무늬 없는 옷 · STEP 1과 같은 장소·조명</li>
+  </ul>
+  <div class="pillbox"><div class="pillhead"><span>B-2 · 실사 (1번=STEP1 사진, 2번=내 전신 사진)</span></div>
+<div class="pill dark">Keep the face and hairstyle from the first reference image. Use the second reference image for my real height and body shape. Full-body photo of the same person standing upright and facing the camera, arms hanging naturally at the sides, feet close together, whole body visible from head to toe with a little margin above and below, wearing a simple fitted black tank top and black shorts, barefoot, neutral face, realistic natural body proportions, pure white background, same soft and even studio light, photorealistic</div></div>
+  <div class="pillbox"><div class="pillhead"><span>C-2 · 3D 픽사 (STEP1 이미지 1장만 첨부)</span></div>
+<div class="pill dark">Keep the face, hairstyle and art style from the reference image. Full-body 3D Pixar-style render of the same character standing upright and facing the camera, arms hanging naturally at the sides, feet close together, whole body visible from head to toe with a little margin above and below, wearing a simple fitted black tank top and black shorts, barefoot, calm neutral face with mouth closed, natural believable body proportions for an adult Korean [woman / man], pure white seamless background, same soft even studio lighting, single character only, no text, no logo</div></div>
+  <div class="note">✂️ <b>얼굴 지우기</b> — 완성되면 <b>목 윗부분 전체를 흰색으로</b> 덮어요 (머리카락 같이 덮여도 OK, 머리 모양은 1칸을 따라감).<br>무료 도구: 휴대폰 사진 앱 → 편집 → 마크업(Markup [마크업] = 그리기) 흰 펜 굵게 / 캔바(Canva [캔바]) 흰색 네모 얹기</div>
+</section>
+
+<section id="s3">
+  <h2>5. STEP 3 — 전신 뒷모습 1장</h2>
+  <ul><li>STEP 2와 같은 자세·옷·장소에서 정확히 뒤돌기, 뒷머리 잘 보이게 (얼굴 안 보이니 지울 필요 없음)</li></ul>
+  <div class="pillbox"><div class="pillhead"><span>B·C-3 · 뒷모습 (STEP1 + STEP2[지우기 전] 첨부)</span></div>
+<div class="pill dark">Keep the hairstyle, body and art style from the reference images. Full-body image of the same character viewed straight from behind, standing upright, arms hanging naturally at the sides, feet close together, identical pose, identical black tank top and shorts, and identical lighting as the front full-body image, back of the head and hairstyle clearly visible, face not visible, whole body visible from head to toe, pure white seamless background, single character only, no text</div></div>
+  <div class="note">실사로 할 땐 마지막에 <code>, photorealistic</code>, 픽사로 할 땐 <code>, 3D Pixar-style render</code>를 붙여주세요. <b>viewed straight from behind</b> = 고개 살짝 돌린 모습 말고 완전히 등만.</div>
+</section>
+
+<section id="s4">
+  <h2>6. STEP 4 — 한 장으로 붙이기 (캔바 무료)</h2>
+  <ol>
+    <li>캔바 → 흰 배경 디자인 (가로형, 예: 1920×1080)</li>
+    <li>왼쪽 <b>얼굴</b> → 가운데 <b>앞모습</b> → 오른쪽 <b>뒷모습</b> 순서</li>
+    <li>세 장 <b>위아래 길이 통일</b> · 사진 사이 살짝 띄우기</li>
+    <li><b>이름표·설명 글씨 절대 금지</b> (글씨도 AI가 정보로 읽어요)</li>
+    <li>파일 이름만 <code>sheet_로아.png</code>처럼 저장 · 캔바 왕관(유료) 요소는 쓰지 않기</li>
+  </ol>
+</section>
+
+<section id="s5">
+  <h2>7. STEP 5 — 구글 플로우 영상 프롬프트 앞에 붙일 문장</h2>
+  <p class="lead">시트만 넣으면 머리·옷이 조금씩 바뀔 수 있어요. 플로우에 시트를 참고 이미지(Ingredients [인그리디언츠] = 재료 이미지)로 넣을 때 프롬프트 <b>맨 앞</b>에 붙이세요.</p>
+  <div class="pillbox"><div class="pillhead"><span>5-1 · 1인 캐릭터용 머리말</span></div>
+<div class="pill dark">Take the face only from the large face panel on the left. The full-body panels without a face are for body shape only. Do not copy the clothes from the sheet. Appearance: [ONE LINE — e.g. shoulder-length straight black hair with see-through bangs, gentle double eyelids, small mole under the left eye]</div></div>
+  <table>
+    <tr><th>문장</th><th>하는 일</th></tr>
+    <tr><td>Take the face only from the large face panel</td><td>얼굴은 왼쪽 큰 사진만 따라 하기</td></tr>
+    <tr><td>The full-body panels … body shape only</td><td>나머지 두 칸은 몸매 참고용</td></tr>
+    <tr><td>Do not copy the clothes from the sheet</td><td>영상 속 옷이 계속 민소매로 나오는 것 방지</td></tr>
+    <tr><td>Appearance: …</td><td>글로 한 번 더 외모 확인</td></tr>
+  </table>
+  <h3>로아 고정 원칙까지 붙인 완성형 예시 (6초 컷)</h3>
+<div class="pillbox"><div class="pillhead"><span>5-2 · 플로우 완성형 템플릿</span></div>
+<div class="pill light">Take the face only from the large face panel on the left. The full-body panels without a face are for body shape only. Do not copy the clothes from the sheet. Appearance: [ONE LINE].
+Outfit: follow the separate outfit reference image only.
+9:16 vertical, 3D Pixar-style animation, full-body / medium shot, EYE-LEVEL locked static camera.
+[SCENE — e.g. In the same bright Korean apartment kitchen with the white fridge on the left and the window on the right, the character opens a drawer and looks pleasantly surprised.]
+Expression: [smiling / surprised / calm].
+Dialogue (Korean, only this character lip-syncs, others keep mouths closed): "[짧은 한국어 대사]"
+Audio: foley and SFX ONLY, NO music. No subtitles.
+Static camera, Keep exact facial features, No morphing, Maintain original image details, Consistent character</div></div>
+  <div class="note">👗 <b>보너스</b> — 옷은 시트에 넣지 말고, 사람 없이 옷만 펼쳐 둔 <b>의상 이미지</b>를 따로 참고 이미지로 넣으세요. 옷을 바꿀 땐 시트는 그대로, 의상 이미지만 교체!</div>
+</section>
+
+<section id="cast">
+  <h2>8. 로아 3인 구도 세트 (행동자 / 반응자 / 공감자)</h2>
+  <p class="lead">한 시트에 3명을 섞으면 얼굴이 서로 섞여요. <b>1인 1시트 × 3장</b>으로 만드세요.</p>
+  <table>
+    <tr><th>역할</th><th>시트 파일</th><th>머리말 Appearance 예시</th></tr>
+    <tr><td>행동자</td><td>sheet_A_행동자.png</td><td>[행동자 외모 한 줄]</td></tr>
+    <tr><td>반응자</td><td>sheet_B_반응자.png</td><td>[반응자 외모 한 줄]</td></tr>
+    <tr><td>공감자</td><td>sheet_C_공감자.png</td><td>[공감자 외모 한 줄]</td></tr>
+  </table>
+  <div class="pillbox"><div class="pillhead"><span>8-1 · 3인 동시 등장 머리말 (시트 3장 첨부 순서 = A, B, C)</span></div>
+<div class="pill dark">Reference image 1 is Character A (the actor), reference image 2 is Character B (the reactor), reference image 3 is Character C (the empathizer). In each sheet, take the face only from the large face panel on the left; the faceless full-body panels are for body shape only. Do not copy the clothes from the sheets. Never mix faces between characters. Exactly three characters in the scene, no extra people.
+A: [ONE LINE]. B: [ONE LINE]. C: [ONE LINE].</div></div>
+  <div class="note">⚠️ 플로우는 참고 이미지 슬롯 수가 정해져 있어요(화면에서 확인). 3명 시트를 넣으면 의상 이미지 자리가 부족할 수 있으니, 3인 장면에선 <b>옷은 글로</b> 짧게 적고 의상 이미지는 1인 장면에서만 쓰는 걸 추천해요.</div>
+</section>
+
+<section id="free">
+  <h2>9. 💸 무료 루트 (크레딧 안 쓰기)</h2>
+  <table>
+    <tr><th>작업</th><th>무료 방법</th><th>주의</th></tr>
+    <tr><td>STEP 1~3 이미지</td><td>A 직접 촬영 / 챗GPT 무료 이미지 생성(하루 횟수 제한)</td><td>힉스필드(Higgsfield [힉스필드])·어도비 파이어플라이(Firefly [파이어플라이])는 크레딧 차감 → 실행 전 잔액 확인 후 승인</td></tr>
+    <tr><td>얼굴 지우기</td><td>휴대폰 마크업 / 캔바 흰 네모</td><td>캔바 왕관 요소·AI 생성 X</td></tr>
+    <tr><td>3칸 합치기</td><td>캔바 무료</td><td>글씨 넣지 않기</td></tr>
+    <tr><td>영상 생성</td><td>—</td><td>구글 플로우는 크레딧 사용 → 잔액·예상 크레딧 확인 후 로아 승인 받고 실행</td></tr>
+  </table>
+</section>
+
+<section id="check">
+  <h2>10. ✅ 한 번에 체크</h2>
+  <ul class="check">
+    <li><label><input type="checkbox">얼굴은 1칸에만 들어가 있다</label></li>
+    <li><label><input type="checkbox">전신 앞모습은 목 위를 지웠다</label></li>
+    <li><label><input type="checkbox">세 장 모두 같은 배경·조명·자세다</label></li>
+    <li><label><input type="checkbox">시트에 글자·표정 칸·옷 정보가 없다</label></li>
+    <li><label><input type="checkbox">3인 구도면 1인 1시트로 따로 만들었다</label></li>
+    <li><label><input type="checkbox">영상 프롬프트 앞에 칸 역할 문장을 적었다</label></li>
+    <li><label><input type="checkbox">끝에 방어 태그를 붙였다</label></li>
+  </ul>
+</section>
+
+<section id="links">
+  <h2>🛍️ 리치온 추천 쇼핑</h2>
+  <div class="links">
+    <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener sponsored">🛒 쿠팡</a>
+    <a href="https://bitl.bz/qQEIlA" target="_blank" rel="noopener sponsored">🛍️ 테무</a>
+    <a href="https://kr.trip.com/?Allianceid=8001792&amp;SID=302477743&amp;trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&amp;trip_sub3=D14461428" target="_blank" rel="noopener sponsored">✈️ 트립닷컴</a>
+    <a href="https://bitl.bz/fjcH9p" target="_blank" rel="noopener sponsored">🛒 알리익스프레스</a>
+  </div>
+  <footer>이 페이지의 링크는 파트너스 활동의 일환으로, 구매 시 일정액의 수수료를 제공받을 수 있습니다.</footer>
+</section>
+</div>
+
+<script>
+(function(){
+  var KEY='richon-charsheet-used';
+  var pills=[].slice.call(document.querySelectorAll('.pill'));
+  var used={};
+  try{used=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){used={}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(used))}catch(e){}}
+  function render(){
+    var n=0;
+    pills.forEach(function(p,i){
+      var on=!!used[i];p.classList.toggle('used',on);
+      var ok=p.querySelector('.ok');
+      if(on){n++;if(!ok){ok=document.createElement('span');ok.className='ok';ok.textContent='✓ 사용';p.appendChild(ok)}}
+      else if(ok){ok.remove()}
+    });
+    document.getElementById('counter').textContent='복사 '+n+' / '+pills.length;
+  }
+  function textOf(p){var c=p.cloneNode(true);var ok=c.querySelector('.ok');if(ok)ok.remove();return c.textContent.trim()}
+  function copy(t){
+    if(navigator.clipboard&&navigator.clipboard.writeText){return navigator.clipboard.writeText(t)}
+    var ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();
+    try{document.execCommand('copy')}catch(e){}ta.remove();return Promise.resolve();
+  }
+  pills.forEach(function(p,i){
+    p.title='누르면 복사';
+    p.addEventListener('click',function(){copy(textOf(p)).then(function(){used[i]=true;save();render()})});
+  });
+  document.getElementById('reset').onclick=function(){used={};save();render()};
+  document.getElementById('theme').onclick=function(){
+    var r=document.documentElement;var cur=r.getAttribute('data-theme');
+    var dark=cur?cur==='dark':matchMedia('(prefers-color-scheme: dark)').matches;
+    r.setAttribute('data-theme',dark?'light':'dark');
+  };
+  render();
+})();
+</script>
+</body>
+</html>
