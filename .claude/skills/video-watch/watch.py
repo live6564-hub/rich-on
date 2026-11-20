@@ -5,6 +5,13 @@
 import argparse, glob, json, os, re, subprocess, sys
 from pathlib import Path
 
+# 한글 윈도우(cp949)에서 ✅·⚠️ 같은 이모지 출력 시 멈추지 않게 UTF-8로 고정
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
 def run(cmd):
     return subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8", errors="replace")
 
