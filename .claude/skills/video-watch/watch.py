@@ -27,6 +27,27 @@ def duration(video):
     m = re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", r.stderr or "")
     return int(m[1])*3600 + int(m[2])*60 + float(m[3]) if m else 0.0
 
+def to_sec(x):
+    parts = [float(p) for p in x.strip().split(":")]
+    sec = 0.0
+    for p in parts:
+        sec = sec*60 + p
+    return sec
+
+def zoom(video, times, out):
+    """돋보기: 지정 시간의 프레임을 원본 해상도로 저장"""
+    paths = []
+    for t in times:
+        sec = to_sec(t)
+        p = out/f"zoom_{hms(sec).replace(':','')}.png"
+        run([FFMPEG, "-y", "-loglevel", "error", "-ss", str(sec), "-i", video, "-frames:v", "1", str(p)])
+        if p.exists():
+            paths.append(p)
+    for p in paths:
+        print(f"돋보기: {p}")
+    if not paths:
+        print("돋보기 실패: 시간이 영상 길이를 넘었는지 확인하세요")
+
 def hms(t):
     t = int(t); return f"{t//3600:02d}:{t%3600//60:02d}:{t%60:02d}"
 
@@ -52,12 +73,29 @@ def main():
     ap.add_argument("src"); ap.add_argument("--every", type=float, default=0)
     ap.add_argument("--out", default="video-watch-out"); ap.add_argument("--whisper", default="small")
     ap.add_argument("--lang", default="ko")
+    ap.add_argument("--at", default="", help="돋보기: 원본 크기로 뽑을 시간들, 예) 16,20 또는 00:16,1:02")
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     video = a.src
     if not re.match(r"https?://", a.src) and not os.path.isfile(a.src):
         sys.exit(f"'{a.src}' 는 링크도 아니고 파일도 아니에요.\n→ https:// 로 시작하는 실제 유튜브 주소나, 있는 영상 파일 경로를 따옴표 안에 넣어 주세요.")
     sub_text = ""
+    if a.at:
+        cached = [p for p in glob.glob(str(out/"video.*")) if p.endswith((".mp4", ".webm", ".mkv"))]
+        if not re.match(r"https?://", a.src):
+            video = a.src
+        elif cached:
+            video = cached[0]
+        else:
+            print("돋보기용 영상이 없어 먼저 다운로드합니다...", flush=True)
+            r = run(["yt-dlp", "--no-playlist", "-f", "bv*+ba/b", "--merge-output-format", "mp4",
+                     "--ffmpeg-location", FFMPEG, "-o", str(out/"video.%(ext)s"), a.src])
+            cached = [p for p in glob.glob(str(out/"video.*")) if p.endswith((".mp4", ".webm", ".mkv"))]
+            if not cached:
+                sys.exit("다운로드 실패:\n" + r.stderr[-1500:])
+            video = cached[0]
+        zoom(video, [t for t in a.at.split(",") if t.strip()], out)
+        return
     if re.match(r"https?://", a.src):
         for old in glob.glob(str(out/"video.*")): os.remove(old)
         print("1/4 영상 정보 확인 중...", flush=True)
