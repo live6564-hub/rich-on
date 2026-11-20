@@ -60,10 +60,12 @@ def main():
     sub_text = ""
     if re.match(r"https?://", a.src):
         for old in glob.glob(str(out/"video.*")): os.remove(old)
+        print("1/4 영상 정보 확인 중...", flush=True)
         meta = run(["yt-dlp", "-J", "--no-playlist", a.src])
         if meta.returncode == 0:
             info = json.loads(meta.stdout)
             (out/"info.txt").write_text(f"제목: {info.get('title')}\n채널: {info.get('uploader')}\n길이: {hms(info.get('duration') or 0)}\n\n{info.get('description','')}", encoding="utf-8")
+        print("2/4 영상 다운로드 중... (30초~2분)", flush=True)
         # 1) 영상만 먼저 받기 (자막 실패가 영상 다운로드를 막지 않게 분리)
         r = run(["yt-dlp", "--no-playlist", "-f", "bv*[height<=720]+ba/b[height<=720]/b",
                  "--merge-output-format", "mp4", "--ffmpeg-location", FFMPEG,
@@ -72,6 +74,7 @@ def main():
         if r.returncode != 0 or not vids:
             sys.exit("다운로드 실패:\n" + r.stderr[-1500:])
         video = vids[0]
+        print("3/4 자막 받는 중...", flush=True)
         # 2) 자막은 따로 시도 — 실패(429 등)해도 그냥 넘어가고 받아쓰기로 대체
         for lang in [a.lang, "en"]:
             run(["yt-dlp", "--no-playlist", "--skip-download", "--write-subs", "--write-auto-subs",
@@ -96,6 +99,7 @@ def main():
             sub_text = "(받아쓰기 실패 — 화면 보드만 참고)"
     (out/"transcript.txt").write_text(sub_text or "(말소리 없음)", encoding="utf-8")
     every = a.every or (1 if dur <= 60 else 2 if dur <= 180 else 5 if dur <= 600 else 15)
+    print("4/4 프레임 보드 만드는 중...", flush=True)
     fdir = out/"frames"; fdir.mkdir(exist_ok=True)
     for f in fdir.glob("*.jpg"): f.unlink()
     run([FFMPEG, "-y", "-loglevel", "error", "-i", video, "-vf", f"fps=1/{every},scale=360:-2", str(fdir/"f_%05d.jpg")])
