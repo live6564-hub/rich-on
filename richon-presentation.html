@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  리치온(Rich-On) HTML 발표 틀 v1 — PPT 대신 살아 움직이는 발표자료
+  ============================================================
+  [여는 법]  이 파일을 더블클릭 → 브라우저로 열림
+  [키]  → / ← / PageDown / PageUp : 장 넘기기
+        스페이스 : 4장 흐름 다음 단계 (다른 장에서는 다음 장)
+        F : 전체화면   T : 밝게/어둡게   H : 이 장을 만든 방법
+        휴대폰 : 화면을 좌우로 밀어서 넘기기
+  [고치는 법 — 숫자·글만 바꾸면 됩니다]
+   1) 2장 숫자 : 파일 맨 아래 [숫자 데이터] 줄
+   2) 3장 차트 : 파일 맨 아래 [차트 데이터] 줄
+   3) 4장 흐름 : 파일 맨 아래 [흐름 데이터] 줄
+   4) 5장 링크 : 파일 맨 아래 [파트너스 링크] 줄
+  ※ 3장 차트 숫자는 '예시 값'입니다. 실제 클릭·판매 수로 바꿔 쓰세요.
+  ============================================================
+-->
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>리치온 발표자료</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;1,500;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#14201A; --bg2:#1F3D1A; --ink:#FFFCF7; --sub:#C9C2B2; --line:rgba(255,252,247,.14);
+  --gold:#C9A961; --gold2:#B8895A; --navy:#1E2D4A; --sage:#5C7A6A; --card:#1B2B22; --term:#0C1410;
+}
+:root[data-theme="light"]{
+  --bg:#FFFCF7; --bg2:#F5E5CC; --ink:#1F3D1A; --sub:#5C6B5F; --line:rgba(31,61,26,.16);
+  --card:#FFFFFF; --term:#1F2A22;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--ink);
+  font-family:'Pretendard',-apple-system,'Apple SD Gothic Neo','Malgun Gothic',sans-serif;transition:background .4s,color .4s}
+.serif{font-family:'Cormorant Garamond',serif;font-style:italic}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;transform-origin:center center}
+.slide{position:absolute;inset:0;padding:110px 140px;opacity:0;visibility:hidden;transition:opacity .5s}
+.slide.on{opacity:1;visibility:visible}
+.kicker{font-size:22px;letter-spacing:.3em;color:var(--gold);font-weight:700}
+h1{font-size:104px;line-height:1.12;font-weight:800;letter-spacing:-.02em}
+h2{font-size:64px;font-weight:800;letter-spacing:-.02em;margin-top:18px}
+.lead{font-size:30px;color:var(--sub);line-height:1.6;margin-top:28px}
+.foot{position:absolute;left:140px;right:140px;bottom:56px;display:flex;justify-content:space-between;
+  font-size:18px;color:var(--sub);border-top:1px solid var(--line);padding-top:18px}
+
+/* 장 전환 카드 */
+#chapter{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--bg);z-index:5;opacity:0;pointer-events:none;transition:opacity .35s}
+#chapter.on{opacity:1}
+#chapter .n{font-size:30px;color:var(--gold);letter-spacing:.3em}
+#chapter .t{font-size:150px;font-weight:800;margin-top:10px;transform:scale(.92);transition:transform .9s cubic-bezier(.2,.8,.2,1)}
+#chapter.on .t{transform:scale(1)}
+
+/* 1장 표지 */
+.cover{display:grid;grid-template-columns:1fr 820px;height:100%;align-items:center}
+.fan{position:relative;height:720px;perspective:1600px}
+.fan-in{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .15s ease-out}
+.pcard{position:absolute;left:290px;top:120px;width:250px;height:420px;border-radius:26px;
+  transform-origin:50% 120%;display:flex;flex-direction:column;justify-content:flex-end;padding:26px;
+  color:#FFFCF7;box-shadow:0 30px 60px rgba(0,0,0,.35);opacity:0;transition:transform 1s cubic-bezier(.2,.8,.2,1),opacity .6s}
+.slide.on .pcard{opacity:1}
+.pcard .em{font-size:84px;position:absolute;top:40px;left:0;right:0;text-align:center}
+.pcard b{font-size:28px}.pcard span{font-size:17px;opacity:.85;margin-top:4px}
+
+/* 2장 숫자 */
+.rule{height:3px;background:var(--gold);width:0;margin:46px 0 0;transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+.slide.on .rule{width:100%}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin-top:60px}
+.stat{padding:0 34px;border-left:1px solid var(--line)}.stat:first-child{border-left:0;padding-left:0}
+.num{display:flex;font-size:150px;font-weight:800;line-height:1;height:150px;overflow:hidden;letter-spacing:-.03em}
+.num.hi{color:#7FB0D6}
+:root[data-theme="light"] .num.hi{color:#2F6FA3}
+.reel{display:flex;flex-direction:column;transition:transform 1.6s cubic-bezier(.15,.85,.25,1)}
+.reel i{font-style:normal;height:150px}
+.comma{height:150px}
+.stat p{font-size:28px;margin-top:22px;font-weight:700}.stat small{display:block;font-size:20px;color:var(--sub);margin-top:6px;font-weight:400}
+
+/* 3장 차트 */
+.chartwrap{display:grid;grid-template-columns:1fr 560px;gap:70px;margin-top:56px;height:640px}
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:22px;align-items:end}
+.ccard{height:430px;border-radius:22px;cursor:pointer;position:relative;padding:22px;display:flex;flex-direction:column;
+  justify-content:flex-end;color:#FFFCF7;filter:grayscale(1) brightness(.75);border:4px solid transparent;
+  transition:transform .4s cubic-bezier(.2,.8,.2,1),filter .4s,border-color .4s}
+.ccard.sel{filter:none;transform:translateY(-34px);border-color:#7FB0D6}
+.ccard .em{font-size:64px;position:absolute;top:30px;left:0;right:0;text-align:center}
+.ccard .rk{position:absolute;top:14px;left:16px;font-size:20px;font-weight:800}
+.ccard b{font-size:23px}
+.bars{grid-column:1/-1;display:grid;grid-template-columns:repeat(5,1fr);gap:22px;align-self:start}
+.bar{height:10px;border-radius:5px;background:var(--line);overflow:hidden}.bar div{height:100%;background:var(--gold);transition:width 1s}
+.big{border-left:1px solid var(--line);padding-left:60px;display:flex;flex-direction:column;justify-content:center}
+.big .v{font-size:180px;font-weight:800;line-height:1;letter-spacing:-.04em}
+.big .l{font-size:34px;font-weight:700;margin-top:18px}.big .s{font-size:22px;color:var(--sub);margin-top:10px;line-height:1.5}
+.tag{display:inline-block;font-size:16px;border:1px solid var(--gold);color:var(--gold);border-radius:99px;padding:4px 14px;margin-bottom:22px;width:max-content}
+
+/* 4장 흐름 */
+.flow{position:relative;height:430px;margin-top:20px}
+.flow svg{position:absolute;inset:0}
+.node{position:absolute;width:120px;height:120px;margin:-60px 0 0 -60px;border-radius:50%;border:3px solid var(--line);
+  background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:800;cursor:pointer;transition:all .4s}
+.node.done{border-color:var(--gold);background:var(--gold);color:#1F3D1A}
+.node.lock{border-style:dashed}
+.node em{position:absolute;top:132px;white-space:nowrap;font-style:normal;font-size:24px;font-weight:700;color:var(--ink)}
+.term{background:var(--term);border-radius:18px;padding:28px 36px;height:250px;font-family:ui-monospace,Menlo,Consolas,monospace;
+  font-size:25px;line-height:1.6;color:#D9E8D0;white-space:pre-wrap;overflow:hidden;margin-top:10px}
+.term .p{color:var(--gold)}.cursor{display:inline-block;width:12px;height:28px;background:#D9E8D0;vertical-align:-5px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+
+/* 5장 링크 */
+.links{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;margin-top:70px}
+.lk{display:block;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:26px;
+  padding:44px 34px;transition:transform .3s,border-color .3s}
+.lk:hover{transform:translateY(-8px);border-color:var(--gold)}
+.lk .em{font-size:64px}.lk b{display:block;font-size:36px;margin-top:20px}.lk span{display:block;font-size:20px;color:var(--sub);margin-top:8px}
+.notice{margin-top:60px;font-size:20px;color:var(--sub);line-height:1.7}
+
+/* H 도움말 */
+#help{position:absolute;inset:0;background:#0C1410;color:#FFFCF7;z-index:8;padding:110px 140px;display:none}
+#help.on{display:block}
+#help h3{font-size:56px;margin-top:16px}#help .what{font-size:28px;line-height:1.7;margin-top:30px;color:#D6D0C0}
+#help pre{margin-top:40px;background:#000;border-left:6px solid var(--gold);padding:34px 40px;font-size:28px;line-height:1.7;
+  font-family:'Pretendard',sans-serif;white-space:pre-wrap;border-radius:12px}
+#hud{position:fixed;right:18px;bottom:14px;font-size:13px;color:var(--sub);opacity:.7;z-index:9}
+#prog{position:fixed;left:0;top:0;height:4px;background:var(--gold);z-index:9;transition:width .4s}
+</style>
+</head>
+<body>
+<div id="prog"></div>
+<div id="stage">
+
+  <!-- 1장 표지 -->
+  <section class="slide" data-title="표지">
+    <div class="cover">
+      <div>
+        <div class="kicker">RICH-ON × A-LOG ONE</div>
+        <h1 style="margin-top:26px">안 깨지고,<br>안 썩고,<br>안 입어보는 <span class="serif" style="color:var(--gold)">Rich</span></h1>
+        <p class="lead">무자본·무재고 콘텐츠 커머스 리치온 소개<br>50년 살림 비법을 30대 감성으로</p>
+      </div>
+      <div class="fan"><div class="fan-in" id="fan"></div></div>
+    </div>
+    <div class="foot"><span>리치온 by 로아</span><span>→ 다음 장 · T 밝기 · H 만든 방법</span></div>
+  </section>
+
+  <!-- 2장 숫자 -->
+  <section class="slide" data-title="올라가는 숫자">
+    <div class="kicker">01 · NUMBERS</div>
+    <h2>리치온이 지금까지 만든 것</h2>
+    <div class="rule"></div>
+    <div class="stats" id="stats"></div>
+    <div class="foot"><span>숫자는 이 저장소(rich-on) 파일 기준 · 맨 아래 [숫자 데이터]에서 수정</span><span>2 / 5</span></div>
+  </section>
+
+  <!-- 3장 차트 -->
+  <section class="slide" data-title="눌러서 보는 차트">
+    <div class="kicker">02 · TOP 5</div>
+    <h2>카드를 눌러 보세요</h2>
+    <div class="chartwrap">
+      <div class="cards" id="cards"></div>
+      <div class="big" id="big"></div>
+    </div>
+    <div class="foot"><span>※ 예시 값 — 실제 클릭·판매 수로 바꿔 쓰세요 (맨 아래 [차트 데이터])</span><span>3 / 5</span></div>
+  </section>
+
+  <!-- 4장 흐름 -->
+  <section class="slide" data-title="클릭하면 움직이는 흐름">
+    <div class="kicker">03 · WORKFLOW</div>
+    <h2>숏폼 제작 6단계 <span style="font-size:30px;color:var(--sub);font-weight:500">— 원을 누르거나 스페이스</span></h2>
+    <div class="flow" id="flow"><svg viewBox="0 0 1640 430" preserveAspectRatio="none">
+      <path id="pathBg" fill="none" stroke="var(--line)" stroke-width="6"/>
+      <path id="pathFg" fill="none" stroke="var(--gold)" stroke-width="6" stroke-linecap="round"/></svg></div>
+    <div class="term" id="term"></div>
+  </section>
+
+  <!-- 5장 링크 -->
+  <section class="slide" data-title="파트너스 링크">
+    <div class="kicker">04 · SHOP</div>
+    <h2>리치온이 고른 상품, 여기서 만나요</h2>
+    <div class="links" id="links"></div>
+    <p class="notice">이 자료에는 쿠팡 파트너스·테무·트립닷컴·알리익스프레스 제휴 링크가 포함되어 있으며,<br>링크를 통해 구매 시 일정액의 수수료를 제공받을 수 있습니다. 구매자에게 추가 비용은 없습니다.</p>
+    <div class="foot"><span>리치온 by 로아</span><span>5 / 5</span></div>
+  </section>
+
+  <div id="chapter"><div class="n" id="chN"></div><div class="t" id="chT"></div></div>
+  <div id="help"><div class="kicker">H · 이 장은 이렇게 만들었어요</div><h3 id="hT"></h3><p class="what" id="hW"></p><pre id="hP"></pre></div>
+</div>
+<div id="hud">← → 넘기기 · F 전체화면 · T 밝기 · H 만든 방법</div>
+
+<script>
+/* ===================== [숫자 데이터] 숫자·글만 바꾸세요 ===================== */
+const STATS = [
+  { n: 18, label: '상품 소개 페이지', sub: '코스트코·생활용품', hi: true },
+  { n: 4,  label: '생활 퀴즈',       sub: '패션·푸드·헬스·여행' },
+  { n: 6,  label: '살림 가이드',     sub: '세탁·청소·레시피·여행' },
+  { n: 4,  label: '파트너스 채널',   sub: '쿠팡·테무·트립·알리' }
+];
+/* ===================== [차트 데이터] 예시 값 — 실제 숫자로 바꾸세요 ===================== */
+const CHART = [
+  { name: '세탁세제팟',   em: '🫧', v: 1240, unit: '클릭', note: '안 깨지고 안 썩는 대용량 소모품', c: '#5C7A6A' },
+  { name: '올리브유',     em: '🫒', v: 980,  unit: '클릭', note: '매일 쓰는 주방 필수품',          c: '#3D5E3A' },
+  { name: '종이호일',     em: '📜', v: 760,  unit: '클릭', note: '에어프라이어 짝꿍',              c: '#B8895A' },
+  { name: '지퍼락',       em: '🧊', v: 540,  unit: '클릭', note: '냉동 보관 살림템',               c: '#1E2D4A' },
+  { name: '화장지',       em: '🧻', v: 410,  unit: '클릭', note: '재구매율 높은 생필품',           c: '#B07A60' }
+];
+/* ===================== [흐름 데이터] 단계 이름·결과만 바꾸세요 ===================== */
+const FLOW = [
+  { t: '기획',        out: '시작 6초 / 전개 6초 / 완성 6초 스토리보드\n+ 짧은 한국어 대사 완성' },
+  { t: '이미지 3종',  out: 'Start / Middle / End 영문 이미지 프롬프트 3개\n9:16 · 3D Pixar · 3인 구도 · 환경 고정' },
+  { t: '승인 대기',   out: '⛔ 시작 이미지 1장만 생성 → 로아 승인 대기\n승인 없이 다음 단계 진입 금지', lock: true },
+  { t: '영상 4종',    out: '6초 ×3 + 10초 통합 프롬프트\nStatic camera, Keep exact facial features, No morphing' },
+  { t: '영상 실행',   out: '"영상 만들어줘" 명령 시에만 생성\n크레딧 잔액·예상 비용 먼저 안내', lock: true },
+  { t: '출력 완성',   out: '이미지 3 + 영상 4 + 편집용 한국어 자막\n전부 복사 카드로 최종 출력 ✅' }
+];
+/* ===================== [파트너스 링크] ===================== */
+const LINKS = [
+  { em: '🛒', name: '쿠팡',           sub: '로켓배송 생활용품', url: 'https://link.coupang.com/a/ek5cwF' },
+  { em: '🛍️', name: '테무',           sub: '가성비 살림 아이템', url: 'https://bitl.bz/qQEIlA' },
+  { em: '✈️', name: '트립닷컴',       sub: '호텔·항공 특가',    url: 'https://kr.trip.com/?Allianceid=8001792&SID=302477743&trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&trip_sub3=D14461428' },
+  { em: '🛒', name: '알리익스프레스', sub: '해외직구 소품',     url: 'https://bitl.bz/fjcH9p' }
+];
+/* ===================== [H 화면] 장마다 클로드에게 한 말 ===================== */
+const HELP = [
+  { t: '표지 · 마우스 따라 기우는 부채꼴', w: 'HTML은 마우스 위치를 읽어서 카드 묶음을 3D로 기울여요. PPT에서는 안 되는 움직임이에요.',
+    p: '리치온 표지 만들어줘.\n팔레트는 #1F3D1A #C9A961 #FFFCF7 #1E2D4A.\n오른쪽엔 대표 상품 카드 5장 부채꼴,\n마우스 방향으로 3D 기울기.' },
+  { t: '올라가는 숫자 · 슬롯 카운터', w: '장이 열릴 때마다 자리마다 숫자가 굴러서 멈춰요. 숫자만 바꾸면 매달 성과 보고에 그대로 써요.',
+    p: '숫자 4개를 잡지 레이아웃으로.\n슬라이드 열리면 자리마다\n숫자가 슬롯처럼 굴러 멈추게.\n제일 강조할 숫자만 하늘색.' },
+  { t: '눌러서 보는 차트', w: '카드를 누르면 컬러로 떠오르고 오른쪽 큰 숫자가 바뀌어요. 막대 길이는 실제 값 비율이에요.',
+    p: '상품 TOP 5 카드.\n기본은 흑백 반, 누르면 컬러로\n떠오르고 테두리 하늘색.\n오른쪽 큰 숫자가 그 상품으로 바뀌게.' },
+  { t: '클릭하면 움직이는 흐름', w: '원을 누르면 선이 그 단계까지 그어지고, 아래 창에 결과물이 타이핑돼요. 점선 원은 로아 승인이 필요한 단계예요.',
+    p: '제작 6단계를 곡선 위 원으로.\n누르면 선이 그 단계까지 그어지고,\n아래 터미널에 결과물 타이핑.\n승인 단계는 점선 원으로.' },
+  { t: '파트너스 링크 카드', w: '발표 중에 카드를 누르면 바로 쇼핑 페이지가 새 탭으로 열려요. 표시광고법 고지문도 함께 넣었어요.',
+    p: '마지막 장에 파트너스 링크 4개를\n카드로 넣고, 누르면 새 탭으로 열리게.\n아래에 제휴 고지문 넣어줘.' }
+];
+/* ========================================================================== */
+
+const $ = s => document.querySelector(s);
+const slides = [...document.querySelectorAll('.slide')];
+let cur = 0, step = 0, sel = 0, busy = false;
+
+/* 화면 맞춤 */
+function fit(){ const k = Math.min(innerWidth/1920, innerHeight/1080);
+  $('#stage').style.transform = `translate(-50%,-50%) scale(${k})`; }
+addEventListener('resize', fit); fit();
+
+/* 1장 부채꼴 */
+const fan = $('#fan');
+CHART.forEach((d,i)=>{ const el=document.createElement('div'); el.className='pcard';
+  el.style.background=`linear-gradient(160deg, ${d.c}, #14201A)`;
+  el.innerHTML=`<div class="em">${d.em}</div><b>${d.name}</b><span>${d.note}</span>`;
+  el.dataset.r=(i-2)*13; fan.appendChild(el); });
+function spreadFan(open){ fan.querySelectorAll('.pcard').forEach((el,i)=>{
+  el.style.transform = open ? `rotate(${el.dataset.r}deg) translateZ(${i*6}px)` : 'rotate(0deg)';
+  el.style.transitionDelay = open ? `${i*.08}s` : '0s'; }); }
+addEventListener('mousemove', e=>{ if(cur!==0) return;
+  const x=(e.clientX/innerWidth-.5)*2, y=(e.clientY/innerHeight-.5)*2;
+  fan.style.transform=`rotateY(${x*16}deg) rotateX(${-y*12}deg)`; });
+
+/* 2장 슬롯 숫자 */
+$('#stats').innerHTML = STATS.map(s=>{
+  const digits = s.n.toLocaleString('ko-KR').split('').map(ch=> /\d/.test(ch)
+    ? `<span class="reel" data-d="${ch}">${'0123456789'.repeat(2).split('').map(n=>`<i>${n}</i>`).join('')}</span>`
+    : `<span class="comma">${ch}</span>`).join('');
+  return `<div class="stat"><div class="num ${s.hi?'hi':''}">${digits}</div><p>${s.label}<small>${s.sub}</small></p></div>`; }).join('');
+function rollStats(on){ document.querySelectorAll('.reel').forEach((r,i)=>{
+  r.style.transitionDelay = on ? `${.2+i*.09}s` : '0s';
+  r.style.transitionDuration = on ? '1.6s' : '0s';
+  r.style.transform = on ? `translateY(-${(10+ +r.dataset.d)*150}px)` : 'translateY(0)'; }); }
+
+/* 3장 차트 */
+const max = Math.max(...CHART.map(d=>d.v));
+$('#cards').innerHTML = CHART.map((d,i)=>`<div class="ccard" data-i="${i}" style="background:linear-gradient(165deg,${d.c},#14201A)">
+  <span class="rk">${i+1}</span><div class="em">${d.em}</div><b>${d.name}</b></div>`).join('')
+  + `<div class="bars">${CHART.map(d=>`<div class="bar"><div style="width:0" data-w="${d.v/max*100}"></div></div>`).join('')}</div>`;
+function pick(i){ sel=i; document.querySelectorAll('.ccard').forEach((c,j)=>c.classList.toggle('sel',j===i));
+  const d=CHART[i];
+  $('#big').innerHTML=`<span class="tag">${i+1}위 · 예시 값</span><div class="v">${d.v.toLocaleString('ko-KR')}</div>
+    <div class="l">${d.em} ${d.name} · ${d.unit}</div><div class="s">${d.note}</div>`; }
+$('#cards').addEventListener('click', e=>{ const c=e.target.closest('.ccard'); if(c) pick(+c.dataset.i); });
+function growBars(on){ document.querySelectorAll('.bar div').forEach(b=>b.style.width = on ? b.dataset.w+'%' : '0'); }
+pick(0);
+
+/* 4장 흐름 */
+const W=1640, H=430, P=FLOW.map((_,i)=>{ const x=80+i*(W-160)/(FLOW.length-1); return [x, 215 - Math.sin(i/(FLOW.length-1)*Math.PI*1.6)*120]; });
+let dPath=`M${P[0][0]},${P[0][1]}`; for(let i=1;i<P.length;i++){ const [x0,y0]=P[i-1],[x1,y1]=P[i], mx=(x0+x1)/2;
+  dPath+=` C${mx},${y0} ${mx},${y1} ${x1},${y1}`; }
+$('#pathBg').setAttribute('d',dPath); $('#pathFg').setAttribute('d',dPath);
+const fg=$('#pathFg'), total=fg.getTotalLength(); fg.style.strokeDasharray=total;
+fg.style.transition='stroke-dashoffset .8s cubic-bezier(.2,.8,.2,1)';
+const segLen=[0]; { const tmp=document.createElementNS('http://www.w3.org/2000/svg','path');
+  for(let i=1;i<P.length;i++){ tmp.setAttribute('d', dPath.split(' C').slice(0,i).join(' C')); segLen.push(tmp.getTotalLength()); } }
+FLOW.forEach((f,i)=>{ const n=document.createElement('div'); n.className='node'+(f.lock?' lock':'');
+  n.style.left=(P[i][0]/W*100)+'%'; n.style.top=(P[i][1]/H*100)+'%';
+  n.innerHTML=`${i+1}<em>${f.t}</em>`; n.onclick=()=>goStep(i+1); $('#flow').appendChild(n); });
+let typer;
+function goStep(s){ step=Math.max(0,Math.min(FLOW.length,s));
+  document.querySelectorAll('.node').forEach((n,i)=>n.classList.toggle('done', i<step));
+  fg.style.strokeDashoffset = step<=1 ? total : total - segLen[step-1];
+  clearInterval(typer);
+  if(!step){ $('#term').innerHTML='<span class="p">rich-on $</span> 원을 누르거나 스페이스를 눌러 시작하세요<span class="cursor"></span>'; return; }
+  const txt=`STEP ${step} · ${FLOW[step-1].t}\n${FLOW[step-1].out}`; let k=0;
+  typer=setInterval(()=>{ k+=2; $('#term').innerHTML=`<span class="p">rich-on $</span> `+txt.slice(0,k).replace(/</g,'&lt;')+'<span class="cursor"></span>';
+    if(k>=txt.length) clearInterval(typer); },22); }
+fg.style.strokeDashoffset=total; goStep(0);
+
+/* 5장 링크 */
+$('#links').innerHTML = LINKS.map(l=>`<a class="lk" href="${l.url}" target="_blank" rel="noopener sponsored">
+  <div class="em">${l.em}</div><b>${l.name}</b><span>${l.sub}</span></a>`).join('');
+
+/* 장 이동 + 전환 카드 */
+function enter(i){ spreadFan(i===0); rollStats(i===1); growBars(i===2); if(i!==3) goStep(0); }
+function show(i, withCard=true){
+  if(busy || i<0 || i>=slides.length || i===cur) return;
+  $('#help').classList.remove('on');
+  const go=()=>{ slides[cur].classList.remove('on'); rollStats(false); cur=i; slides[cur].classList.add('on'); enter(cur);
+    $('#prog').style.width=((cur+1)/slides.length*100)+'%'; };
+  if(!withCard || i===0){ go(); return; }
+  busy=true; $('#chN').textContent=String(i).padStart(2,'0'); $('#chT').textContent=slides[i].dataset.title;
+  $('#chapter').classList.add('on');
+  setTimeout(()=>{ go(); setTimeout(()=>{ $('#chapter').classList.remove('on'); busy=false; },380); },850);
+}
+function toggleHelp(){ const h=HELP[cur]; $('#hT').textContent=h.t; $('#hW').textContent=h.w; $('#hP').textContent=h.p;
+  $('#help').classList.toggle('on'); }
+
+addEventListener('keydown', e=>{
+  const k=e.key;
+  if(k==='ArrowRight'||k==='PageDown') show(cur+1);
+  else if(k==='ArrowLeft'||k==='PageUp') show(cur-1, false);
+  else if(k===' '){ e.preventDefault(); if(cur===3 && step<FLOW.length) goStep(step+1); else show(cur+1); }
+  else if(k==='f'||k==='F'){ document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.(); }
+  else if(k==='t'||k==='T'){ const r=document.documentElement; r.dataset.theme = r.dataset.theme==='light' ? 'dark' : 'light'; }
+  else if(k==='h'||k==='H') toggleHelp();
+  else if(k==='Escape') $('#help').classList.remove('on');
+  else if(cur===2 && /^[1-5]$/.test(k)) pick(+k-1);
+});
+/* 휴대폰: 좌우로 밀어서 넘기기 */
+let sx=null; addEventListener('touchstart',e=>sx=e.touches[0].clientX,{passive:true});
+addEventListener('touchend',e=>{ if(sx===null) return; const dx=e.changedTouches[0].clientX-sx;
+  if(Math.abs(dx)>50) dx<0 ? show(cur+1) : show(cur-1,false); sx=null; });
+
+slides[0].classList.add('on'); $('#prog').style.width=(100/slides.length)+'%';
+requestAnimationFrame(()=>setTimeout(()=>enter(0),200));
+</script>
+</body>
+</html>
