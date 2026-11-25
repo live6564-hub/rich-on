@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>세포랩 소개 영상 장면</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+/* 1080×1920 (9:16). render(t)가 t초의 화면을 그린다. 영상은 render.py가 프레임마다 찍어 이어 붙인다 */
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#fff}
+body{font-family:"Noto Sans KR",sans-serif;color:#221C15;word-break:keep-all}
+.serif{font-family:"Noto Serif KR",serif}
+.scene{position:absolute;inset:0;overflow:hidden}
+.abs{position:absolute}
+
+/* 장면 A — 사진 */
+#A{background:#fff}
+#A .top{left:72px;right:72px;top:110px;display:flex;justify-content:space-between;font-size:30px;letter-spacing:.08em;color:#9A9083;border-bottom:1px solid #DDD4C6;padding-bottom:22px}
+#A h1{left:72px;top:250px;font-size:104px;font-weight:700;line-height:1.3;letter-spacing:-.03em}
+#A h1 span{display:block}
+#A .photo{left:0;top:720px;width:1080px;height:900px;overflow:hidden}
+#A .photo img{width:1080px;display:block;transform-origin:50% 52%}
+#A .cap{left:0;right:0;bottom:0;height:220px;border-top:2px solid #221C15;display:flex;justify-content:space-between;align-items:center;padding:0 72px;font-size:34px;background:#fff}
+#A .cap b{font-size:44px}
+
+/* 장면 B — 92.8% */
+#B{background:#F6F1E8}
+#B .kick{left:72px;top:170px;font-size:34px;color:#A8681A;letter-spacing:.06em;display:flex;align-items:center;gap:20px}
+#B .kick::after{content:"";width:80px;height:2px;background:#A8681A;opacity:.6}
+#B .num{left:56px;top:240px;font-size:330px;font-weight:900;color:#A8681A;letter-spacing:-.05em;line-height:1}
+#B .num sup{font-size:120px;vertical-align:top;margin-left:8px;position:relative;top:30px}
+#B h2{left:72px;top:620px;font-size:84px;font-weight:700;line-height:1.32;letter-spacing:-.03em}
+#B .chips{left:72px;top:900px;display:flex;gap:16px}
+#B .chips span{border:2px solid #221C15;border-radius:999px;padding:12px 28px;font-size:32px;font-weight:500}
+#B .photo{left:140px;top:1030px;width:800px;mix-blend-mode:multiply;-webkit-mask-image:radial-gradient(ellipse 52% 54% at 50% 50%,#000 70%,transparent 100%);mask-image:radial-gradient(ellipse 52% 54% at 50% 50%,#000 70%,transparent 100%)}
+#B .src{left:72px;bottom:80px;font-size:26px;color:#9A9083}
+
+/* 장면 C — 상세페이지 스크롤 */
+#C{background:#F6F1E8}
+#C .head{left:72px;right:72px;top:110px;height:250px}
+#C .head div{position:absolute;left:0;top:0;width:100%}
+#C .head small{display:block;font-size:32px;color:#A8681A;letter-spacing:.06em;margin-bottom:20px}
+#C .head p{font-size:76px;font-weight:700;line-height:1.28;letter-spacing:-.03em}
+#C .head p em{font-style:normal;color:#A8681A}
+#C .card{left:90px;top:400px;width:900px;height:1330px;overflow:hidden;border-radius:28px;background:#fff;
+  box-shadow:0 0 0 2px #E4DACB}
+#C .card img{width:900px;display:block}
+#C .foot{left:72px;right:72px;bottom:70px;display:flex;justify-content:space-between;font-size:28px;color:#9A9083;letter-spacing:.04em}
+
+/* 끝 화면 */
+#E{background:#221C15;color:#F3EDE3;display:flex;flex-direction:column;justify-content:center;padding:0 90px}
+#E p{font-size:92px;font-weight:700;line-height:1.3;letter-spacing:-.03em}
+#E p em{font-style:normal;color:#E2B56A}
+#E small{display:block;margin-top:60px;font-size:32px;color:#8C8274;letter-spacing:.1em}
+</style>
+</head>
+<body>
+
+<div class="scene" id="A">
+  <div class="abs top"><span>FIRST ESSENCE</span><span>155 ml</span></div>
+  <h1 class="abs serif"><span id="a1">세수하고 30초,</span><span id="a2">당기기 전에 한 겹</span></h1>
+  <div class="abs photo"><img id="aimg" src="assets/product_hd.jpg" alt=""></div>
+  <div class="abs cap"><b class="serif">cepoLAB</b><span>Biogenic Essence 90% · 155ml</span></div>
+</div>
+
+<div class="scene" id="B">
+  <div class="abs kick">이름 속 90%의 뜻</div>
+  <div class="abs num serif"><span id="bn">0.0</span><sup>%</sup></div>
+  <h2 class="abs serif" id="bh">수분이 아니라<br>원료 함량이에요</h2>
+  <div class="abs chips" id="bc"><span>전성분 5가지</span><span>인공 색소·향료 없음</span></div>
+  <img class="abs photo" id="bimg" src="assets/product_hd.jpg" alt="">
+  <div class="abs src" id="bs">출처 · 세포랩 공식몰 · 상품정보제공고시</div>
+</div>
+
+<div class="scene" id="C">
+  <div class="abs head">
+    <div id="c1"><small>한 장으로 정리했어요</small><p>성분부터 가격까지<br><em>한 번에</em></p></div>
+    <div id="c2"><small>같은 155ml인데</small><p>최저 <em>63,450원</em><br>최고 <em>129,000원</em></p></div>
+  </div>
+  <div class="abs card"><img id="cimg" src="assets/page.png" alt=""></div>
+  <div class="abs foot"><span>2026.11 판매처 화면 기준</span><span>RICH-ON</span></div>
+</div>
+
+<div class="scene" id="E">
+  <p class="serif">가장 싼 곳보다<br><em>정품 판매처</em>에서<br>오늘 가격 확인하세요</p>
+  <small>RICH-ON · 리치온 소개 영상 · 제휴 링크 포함</small>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
+const ease=x=>{x=clamp(x);return x<.5?4*x*x*x:1-Math.pow(-2*x+2,3)/2};
+const span=(t,a,b)=>ease((t-a)/(b-a));           // a~b초 사이 0→1
+const show=(el,p,dy=40)=>{el.style.opacity=p;el.style.transform=`translateY(${(1-p)*dy}px)`};
+
+// 상세페이지 이미지: 860px 폭 기준 가격 섹션 시작 9065px → 카드 폭 900px로 환산
+const PRICE_TOP=9065*900/860;
+
+window.render=function(t){
+  // 장면 투명도 (겹치며 넘어감)
+  $('A').style.opacity=1-span(t,5.6,6.3);
+  $('B').style.opacity=span(t,5.6,6.3)*(1-span(t,11.6,12.3));
+  $('C').style.opacity=span(t,11.6,12.3)*(1-span(t,16.5,17.1));
+  $('E').style.opacity=span(t,16.5,17.1);
+
+  // A: 0~6초
+  show($('a1'),span(t,0.3,1.1));
+  show($('a2'),span(t,1.2,2.0));
+  $('aimg').style.transform=`scale(${1+0.28*span(t,0,6.3)})`;
+
+  // B: 6~12초
+  const n=92.8*span(t,6.4,8.2);
+  $('bn').textContent=n.toFixed(1);
+  show($('bh'),span(t,8.2,9.0));
+  show($('bc'),span(t,9.2,9.9));
+  show($('bs'),span(t,9.6,10.2),10);
+  $('bimg').style.transform=`translateY(${(1-span(t,6.0,7.4))*120}px) scale(${0.96+0.06*span(t,6,12)})`;
+
+  // C: 12~17초 — 위에서 가격 섹션까지 스크롤 후 멈춤
+  const s=span(t,12.4,15.4);
+  $('cimg').style.transform=`translateY(${-s*(PRICE_TOP-30)}px)`;
+  const sw=span(t,15.2,15.8);
+  show($('c1'),1-sw,-30); show($('c2'),sw,30);
+};
+window.render(0);
+</script>
+</body>
+</html>
