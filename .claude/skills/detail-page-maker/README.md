@@ -9,6 +9,7 @@
 - 작은 사진은 **무료 EDSR 모델로 4배 선명하게**
 - 스마트스토어(860px)·쿠팡(780px) 이미지 조각으로 잘라 저장
 - **사진 한 장으로 9:16 소개 영상 18초**까지 무료로 (크레딧 0)
+- **플로우 고급 버전**: 플로우 실사 장면 2개를 받으면 정확한 한글 자막·숫자를 얹어 완성본으로 합성 (합성은 무료)
 - 판매 링크는 기본 **쿠팡 파트너스 1개 + 규정 고지문**
 - 말 한마디로 그 섹션만 고쳐요 (v02, v03…)
 - 가격·후기처럼 확인 못 한 정보는 지어내지 않고 `open-items.md`에 남겨요
@@ -44,6 +45,12 @@
 ```
 → 자료 검색 → 상세페이지 → 이미지 조각 → 소개 영상까지 한 번에 나와요.
 
+플로우 고급 버전:
+```
+플로우로 영상 만들 준비해 줘.          ← 시작 이미지 + 프롬프트 2개
+(플로우에서 만든 영상 2개 첨부) 합쳐 줘. ← 한글 자막·숫자 얹어 완성본
+```
+
 ## 쓰는 법 (자료를 직접 줄 때)
 폴더 하나에 상품 사진(`assets/`)과 상품 설명(`product-info.md` 또는 아무 텍스트 파일)을 넣고, 그 폴더에서 붙여 넣기:
 ```
@@ -78,10 +85,13 @@ detail-page-maker/
 ├─ templates/editorial.html        기본 상세페이지 틀(잡지형, 12섹션)
 ├─ templates/page.html             예전 기본형(풀블리드·큰 글자) — --basic
 ├─ templates/video/scene.html      사진 한 장 소개 영상 장면 틀(9:16·18초)
+├─ templates/video/flow-prompts.md 플로우 장면 2개 프롬프트 틀
+├─ templates/video/flow-overlay.html 플로우 영상 위 한글 자막 틀(투명 배경)
 ├─ templates/product-info.example.md  상품 설명 양식
 └─ scripts/
    ├─ new_version.py               out/v01, v02 … 버전 폴더 만들기
    ├─ export_slices.py             HTML → 판매처별 이미지 조각 + 섹션 위치(sections.json)
    ├─ upscale_photo.py             작은 사진 무료 4배 선명화(EDSR)
-   └─ make_video.py                사진 + 상세페이지 → 9:16 MP4 (무료)
+   ├─ make_video.py                사진 + 상세페이지 → 9:16 MP4 (무료)
+   └─ flow_compose.py              플로우 시작 이미지 준비 + 플로우 장면·자막 합성 (합성 무료)
 ```

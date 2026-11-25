@@ -25,6 +25,7 @@
 
 - 로아가 "OOO 상세페이지"라고 하면 `.claude/skills/detail-page-maker` 스킬의 STEP 1~9를 그대로 한다:
   자료 검색(출처 필수) → 사진 무료 선명화 → AI 티 안 나는 잡지형 상세페이지 → 판매처 이미지 조각 → 사진 한 장 9:16 영상.
+- "플로우로" 요청이면 STEP 7-B: 시작 이미지·프롬프트 준비 → 로아가 크레딧 승인 후 플로우 생성 → 받은 MP4 2개에 한글 자막 무료 합성.
 - 판매 링크는 기본 쿠팡 파트너스 1개(https://link.coupang.com/a/ek5cwF) + 쿠팡 파트너스 규정 고지문.
   상품 전용 판매 링크는 로아가 나중에 준다.
 - 결과는 `detail-pages/<제품-슬러그>/`에 둔다. 기준 예시: `detail-pages/cepolab-biogenic-essence/`.
