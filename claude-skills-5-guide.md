@@ -7,6 +7,27 @@
 
 ---
 
+## ✅ 0. 이 저장소에 이미 설정 완료 (2026-11-25)
+
+| 스킬 | 설정 방식 | 저장 위치 |
+|---|---|---|
+| taste-skill | 플러그인 (프로젝트 범위) | `.claude/settings.json` |
+| hyperframes | 플러그인 (프로젝트 범위) | `.claude/settings.json` |
+| grill-me (mattpocock-skills 묶음) | 플러그인 (프로젝트 범위) | `.claude/settings.json` |
+| agent-browser | 스킬 파일 | `.claude/skills/agent-browser/` |
+| find-skills | 스킬 파일 | `.claude/skills/find-skills/` |
+
+→ rich-on 폴더에서 클로드 코드를 열면 "이 프로젝트의 플러그인 설치할까요?" 창이 뜸 → **허용(Trust)** 누르면 끝.
+
+로아 컴퓨터에서 딱 한 번만 더 할 것 (터미널):
+```bash
+npm install -g agent-browser
+agent-browser install
+```
+(영상 만들 때 FFmpeg 없으면 맥: `brew install ffmpeg`)
+
+---
+
 ## 1. 한눈에 — 로아가 어디에 쓰나
 
 | 스킬 | 하는 일 | 리치온·에이로그원 활용 | 무료 규칙 체크 |
