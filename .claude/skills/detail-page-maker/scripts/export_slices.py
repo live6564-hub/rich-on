@@ -138,6 +138,12 @@ def main() -> None:
             piece.save(d / f"{n:02d}.jpg", quality=a.quality, optimize=True, progressive=True)
         report.append(f"  {name}: {w}px × {len(cuts)}장 → {d}")
 
+    # 영상 만들기(make_video.py)가 쓰는 섹션 위치 (860px 기준 CSS px)
+    import json
+    (out_root / "sections.json").write_text(
+        json.dumps({s["name"]: {"top": round(s["top"]), "bottom": round(s["bottom"])} for s in info["secs"]},
+                   ensure_ascii=False, indent=1), encoding="utf-8")
+
     print("✅ 내보내기 완료")
     print("\n".join(report))
     print(f"  섹션 {len(info['secs'])}개: " + " → ".join(s["name"] for s in info["secs"]))

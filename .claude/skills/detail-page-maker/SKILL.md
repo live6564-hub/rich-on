@@ -1,131 +1,121 @@
 ---
 name: detail-page-maker
 description: >-
-  상품 사진 폴더와 상품 설명(product-info.md 또는 아무 텍스트 파일)만으로 잘 팔리는 모바일 상세페이지를
-  만드는 스킬. 잘 팔리는 판매 페이지의 섹션 순서·제목 모양을 따라 상품 정보로 채우고, 풀블리드 사진과
-  큰 글자의 단일 HTML을 만든 뒤 스마트스토어(860px)·쿠팡(780px) 폭 이미지 조각으로 잘라 저장한다.
-  받지 못한 정보(가격·후기·인증 등)는 지어내지 않고 open-items.md 빈칸 목록으로 남긴다. 만든 뒤에는
-  말 한마디로 그 섹션만 고쳐 v02, v03…으로 새 버전을 만든다. 발동 — "detail-page-maker", "상세페이지
-  만들어 줘", "이 폴더 상품 상세페이지", "스마트스토어용 이미지", "쿠팡 상세 이미지", "상세페이지 잘라 줘",
-  "첫 화면 제목 바꿔 줘", "이 섹션만 고쳐 줘". (리치온 9컷 화보는 richon-9cut-detail-page, 9:16 단일
-  상품소개 페이지는 richon-product-page가 우선이다.)
-argument-hint: "[상품 폴더] [참고 페이지 링크] [수정 요청]"
+  제품명 하나(+사진 1장)만 주면 AI 티 안 나는 잡지형 모바일 상세페이지와 사진 한 장 소개 영상(9:16·18초)까지
+  무료로 한 번에 만드는 리치온 고정 워크플로우. 공식몰·공식스토어·언론을 검색해 출처 붙은 사실만 쓰고,
+  상품정보고시를 채우고, 최저가~최고가 가격 섹션과 단점을 먼저 말하는 솔직 섹션을 넣는다. 작은 사진은
+  무료 EDSR 모델로 선명하게 키우고, 스마트스토어 860px·쿠팡 780px 이미지 조각으로 자르며, 판매 링크는
+  기본 쿠팡 파트너스 1개 + 규정 고지문. 받지 못한 정보는 지어내지 않고 open-items.md에 남기고, 수정은
+  v02·v03 새 버전으로 섹션만 고친다. 발동 — "상세페이지", "OOO 상세페이지 만들어 줘", "제품명만 바꿔서",
+  "AI 티 안 나게", "detail-page-maker", "사진 한 장으로 영상", "소개 영상", "스마트스토어용 이미지",
+  "쿠팡 상세 이미지", "이 섹션만 고쳐 줘", "가격 최저 최고". (9컷 화보는 richon-9cut-detail-page,
+  9:16 단일 소개 카드는 richon-product-page가 우선.)
+argument-hint: "[제품명] [사진 경로] [참고 링크] [수정 요청]"
 ---
 
-# detail-page-maker — 잘 팔리는 상세페이지 자동 제작
+# detail-page-maker — 리치온 상세페이지 + 사진 한 장 영상 고정 워크플로우
 
-요청: `$ARGUMENTS` (비어 있으면 대화에서 요청을 읽는다)
+요청: `$ARGUMENTS` (비어 있으면 대화에서 읽는다)
+스킬 폴더 = `${CLAUDE_SKILL_DIR}` (펼쳐지지 않았으면 "Base directory for this skill" 경로)
+기준 결과물(이대로 만든다): 리치온 저장소 `detail-pages/cepolab-biogenic-essence/` — v02 상세페이지 + video/
 
-이 스킬 폴더 = `${CLAUDE_SKILL_DIR}` (펼쳐지지 않았으면 Claude Code가 알려 준 "Base directory for this skill"을 쓴다).
+> **로아님이 제품명만 바꿔 말하면 아래 STEP 1~9를 처음부터 끝까지 그대로 한다.** 중간에 묻지 않는다.
+> 예외: 사진이 하나도 없을 때만 "사진 1장만 주세요"라고 한 번 묻는다(그동안 글·표로 먼저 만든다).
 
-## 0. 절대 규칙 (매번 지킨다)
+## 0. 절대 규칙
+1. **지어내지 않는다.** 가격·후기·별점·판매량·인증·효능 수치는 출처가 있는 것만. 출처는 각주로 단다.
+2. **효능 과장 금지.** 치료·예방·완치·100% 금지(화장품법·식품표시광고법). 브랜드 시험 결과는 "브랜드 인체적용시험" 같이 주체를 밝힌다.
+3. **참고 글은 흐름만.** 남의 문장·사진·로고 디자인 복사 금지. 사진은 로아님이 준 것만 쓴다.
+4. **무료만.** 이 워크플로우 전체가 크레딧 0이다. 크레딧이 드는 도구(플로우·Higgsfield·vidIQ·fish.audio·Firefly·Canva AI)는
+   쓰지 않는다. 로아님이 따로 원하면 → 잔액 확인 → 예상 소모량 안내 → 명확한 허락 후에만.
+5. **AI 티 금지.** `references/no-ai-look.md`를 매번 지킨다(로아님이 말하지 않아도).
+6. **판매 링크 = 쿠팡 파트너스 1개 기본.** 상품 전용 링크는 로아님이 나중에 준다. 받으면 href만 바꾼다.
+7. **이전 버전은 건드리지 않는다.** 수정은 항상 새 vNN.
 
-1. **지어내지 않는다.** 가격·할인율·후기·별점·판매량·인증·수상·성분 수치·효능은 입력 파일에 있는 것만 쓴다.
-   없는 칸은 페이지에 `[확인 필요: 가격]`처럼 회색 빈칸으로 두고 `open-items.md`에 적는다.
-2. **효능 과장 금지.** 식품·화장품·건강 제품은 "치료·예방·완치·100%" 같은 표현을 쓰지 않는다
-   (식품표시광고법·화장품법). 애매하면 open-items.md에 "표현 확인 필요"로 남긴다.
-3. **참고 페이지는 구조만 빌린다.** 섹션 순서·제목 길이·리듬만 따른다. 로고·상표·문장·원본 이미지는 절대 복사하지 않는다.
-4. **무료 범위만.** 이미지 생성(Firefly·Canva AI·fish.audio·vidIQ·Google Flow 등)처럼 크레딧이 들 수 있는
-   도구는 실행 전에 멈추고 → 남은 크레딧 확인 → 예상 소모량 안내 → 사용자가 "허락"한 뒤에만 쓴다.
-   이미지 생성 도구가 없거나 허락이 없으면 연출컷을 만들지 않고, 그 자리에 "사진 필요" 빈칸을 둔다.
-5. **이전 버전은 건드리지 않는다.** 수정은 항상 새 폴더(v02, v03…)에서 한다.
-
-## 1. 입력 읽기
-
-현재 폴더(또는 사용자가 말한 폴더)에서:
-
-- 상품 설명: `product-info.md` → 없으면 `*.md`, `*.txt` 중 상품 설명으로 보이는 파일
-- 사진: `assets/` → 없으면 폴더 안의 `*.jpg, *.jpeg, *.png, *.webp`
-- 사진은 하나씩 직접 열어 본다(Read 도구로 이미지 확인). 무엇이 찍혔는지·밝기·여백·세로/가로를 메모해
-  어느 섹션에 맞는지 정한다. 파일 이름만 보고 추측하지 않는다.
-
-입력이 너무 적으면(상품명조차 없음) 그때만 짧게 물어본다. 나머지 빈 정보는 묻지 말고 open-items.md로 넘긴다.
-양식은 `${CLAUDE_SKILL_DIR}/templates/product-info.example.md`를 참고(사용자에게 보여 줘도 된다).
-
-## 2. 참고 페이지 정하기
-
-- 사용자가 링크를 줬으면 그 페이지를 읽고(web-fetch 등), **섹션 순서와 제목 모양만** 뽑는다.
-- 링크가 없으면 같은 카테고리의 잘 팔리는 상세페이지 2~3개를 웹 검색으로 찾아 공통 흐름을 뽑는다.
-  검색이 막히면 `${CLAUDE_SKILL_DIR}/references/section-patterns.md`의 카테고리별 기본 흐름을 쓴다.
-- 뽑은 결과를 `out/vNN/reference-notes.md`에 적는다: 참고 URL, 섹션 순서, 제목 글자 수, 강조 방식.
-
-## 3. 섹션 설계
-
-`references/section-patterns.md`의 섹션 사전에서 골라 8~12개 섹션으로 순서를 정한다. 기본 뼈대:
-
-`hero → pain → solution → point-1 → point-2 → point-3 → proof → how-to → review → compare → spec → faq → cta`
-
-- 정보가 없는 섹션은 빼거나(예: 후기 0개면 review 삭제) 빈칸으로 둔다. 빈칸이 페이지의 30%를 넘으면 빼는 쪽을 택한다.
-- 제목은 **한 줄 12자 안팎, 최대 2줄**. 숫자·대비("당김은 빼고 촉촉함만")·질문형을 섞는다.
-- 본문은 섹션당 2~3줄. 스크롤하며 읽히게 큰 글자(본문 30px 이상, 제목 56px 이상 — 860px 기준).
-
-## 4. HTML 만들기
-
-1. 버전 폴더 만들기:
-   ```bash
-   python3 "${CLAUDE_SKILL_DIR}/scripts/new_version.py" out
-   ```
-   → `out/v01/`(이미 있으면 다음 번호) 경로를 출력한다. 첫 버전이면 템플릿이 `index.html`로 복사된다.
-2. `out/vNN/index.html`을 템플릿(`templates/page.html`) 규칙대로 채운다.
-   - 모든 섹션은 `<section class="sec" data-section="이름">` — 이 이름이 수정·자르기의 기준이다.
-   - 사진은 `assets/`를 상대 경로로 참조하지 말고 **`out/vNN/img/`로 복사**한 뒤 `img/파일명`으로 쓴다
-     (버전 폴더만 따로 옮겨도 깨지지 않게).
-   - 풀블리드 사진: `class="bleed"` (좌우 여백 0). 사진 위 글자는 `.over` + 어두운 그라데이션.
-   - 색은 `:root`의 `--brand`, `--brand-soft`, `--ink`만 바꿔 테마를 맞춘다(색 바꾸기 요청도 여기만 수정).
-   - 빈 정보: `<span class="todo">[확인 필요: 항목]</span>`, 빈 사진: `<div class="ph" data-need="설명">사진 필요 · 설명</div>`.
-3. 리치온(Rich-On) 상품이면 마지막 cta 섹션에 파트너스 링크 4개와 고지문을 넣는다
-   (`references/platform-specs.md`의 "리치온 파트너스 블록"). 일반 상품이면 넣지 않는다.
-
-## 5. open-items.md 쓰기
-
-`out/vNN/open-items.md`에 체크박스 목록으로:
-
-```markdown
-# 채워야 할 빈칸 (vNN)
-## 정보
-- [ ] 판매가 / 할인가 — 섹션: cta
-- [ ] 실제 구매 후기 3개 이상 — 섹션: review (지금은 섹션 삭제됨)
-## 사진
-- [ ] 사용 장면 컷(손+제품, 세로) — 섹션: how-to
-## 표현 확인
-- [ ] "피부 장벽 강화" — 실증 자료 있으면 유지, 없으면 "피부 보습"으로
+## STEP 1. 작업 폴더
+리치온 저장소 안이면 `detail-pages/<영문-제품-슬러그>/`를 만들고 그 안에서 작업한다.
+```
+detail-pages/<slug>/
+├─ assets/            로아님이 준 원본 사진
+├─ product-info.md    STEP 2에서 내가 만든다(출처 포함)
+└─ out/v01/ …         결과
 ```
 
-## 6. 이미지로 자르기 (판매처별)
+## STEP 2. 자료 찾기 → product-info.md
+`references/research.md` 순서대로 웹 검색(여러 검색을 한 번에 보낸다):
+① 공식몰 설명 ② 네이버 브랜드 공식스토어 상품정보고시(제조업자·사용기한) ③ 언론 숫자 ④ 단점(구입 전 참고사항·Q&A)
+⑤ 같은 브랜드 다른 라인 비교 ⑥ 단품 가격 최저·공식 최저·공식몰·최고(정가).
+로아님이 참고 링크를 줬으면 그 글의 흐름(섹션 순서)만 `reference-notes.md`에 적는다.
+양식: `templates/product-info.example.md`. 모든 줄 끝에 출처.
 
+## STEP 3. 사진 준비 (무료 선명화)
+1. 사진을 Read로 직접 열어 본다: 무엇이 찍혔는지, 배경색, 크기.
+2. `python3 "${CLAUDE_SKILL_DIR}/scripts/new_version.py" out` → `out/v01/` (에디토리얼 템플릿 복사)
+3. `python3 "${CLAUDE_SKILL_DIR}/scripts/upscale_photo.py" assets/<사진> out/v01/img/product_hd.jpg`
+   - 1600px 미만이면 EDSR ×4(무료 공개 모델, 약 1분). 필요: `pip install "opencv-contrib-python-headless<5" pillow`
+   - 실패해도 자동으로 기본 확대로 대체된다. 결과 로고 부분을 열어 선명한지 확인.
+4. 사진에서 대표색 1개를 뽑아 `:root --brand`에 넣는다(예: 원액 호박색 #A8681A).
+
+## STEP 4. 상세페이지 HTML (out/v01/index.html)
+템플릿 `templates/editorial.html`의 `{{ }}`를 product-info.md 사실로 채운다. 섹션 순서 고정:
+
+| 섹션 | 내용 | 자료 없으면 |
+|---|---|---|
+| hero | 장면형 후킹 2줄(명조) + 흰 배경 사진 | 필수 |
+| pain | 불편 장면 3개(행동으로) | 필수 |
+| solution | 어디에 쓰는지 + 루틴 4칸 | 필수 |
+| point-1 | 핵심 숫자 1개를 크게 + 그 숫자의 진짜 뜻 | 숫자 없으면 삭제 |
+| point-2 | 전성분/구성/소재 번호 목록 | 필수 |
+| proof | 숫자 3개(판매량·재구매율·시험) + 출처 | 출처 없으면 삭제 |
+| honest | 단점·오해·처음 쓰는 요령 3줄 | 필수 |
+| how-to | 4단계 | 필수 |
+| compare | 같은 브랜드 다른 라인 비교표 | 없으면 삭제 |
+| price | 최저~최고 막대 + 4줄 표 + 정품 확인 안내 | 필수 |
+| spec | 상품정보고시(공식스토어 표기 우선) | 필수 |
+| cta | 쿠팡 파트너스 버튼 1개 + 규정 고지문 + RICH-ON | 필수 |
+
+- 다 채운 뒤 `grep -n "{{" out/v01/index.html` 결과가 비어 있어야 한다.
+- 문장 규칙·금지 단어: `references/no-ai-look.md`. 판매 링크 블록: `references/platform-specs.md` 3절.
+
+## STEP 5. open-items.md + reference-notes.md
+`out/vNN/open-items.md`: 정보 / 사진 / 표현 확인으로 나눈 체크박스. 채운 것은 `[x]`, 남은 것은 `[ ]`.
+항상 넣을 것: "가격은 올리기 직전 다시 확인", "쿠팡 링크를 상품 전용 링크로 교체(로아님 요청 대기)".
+
+## STEP 6. 판매처 이미지 조각
 ```bash
-python3 "${CLAUDE_SKILL_DIR}/scripts/export_slices.py" out/vNN/index.html
+python3 "${CLAUDE_SKILL_DIR}/scripts/export_slices.py" out/v01/index.html
 ```
+→ `export/smartstore/`(860px) · `export/coupang/`(780px) · `full.png` · `sections.json`(영상용 섹션 위치).
+조각 2~3장(hero·price·spec)을 직접 열어 확인: 글자 잘림, □□□ 폰트 깨짐, 흐린 사진, `[확인 필요]` 남음.
 
-- 결과: `out/vNN/export/smartstore/01.jpg …` (860px), `out/vNN/export/coupang/01.jpg …` (780px),
-  각 폴더의 `full.png`(통이미지).
-- 섹션 경계에서 자르고, 한 조각이 너무 길면(기본 2000px) 그 안에서 나눈다. 옵션은 `--help`.
-- Playwright가 없다는 오류가 나면: `pip install playwright pillow && playwright install chromium`.
-  설치가 막힌 환경이면 HTML까지만 넘기고 그 사실을 알린다.
-- 자른 뒤 **조각 1~2장을 직접 열어 확인**한다: 글자 잘림, 폰트 깨짐(□□□), 사진 비율 깨짐, 빈 화면.
-  문제가 있으면 고치고 다시 자른다.
-
-## 7. 고치기 (말 한마디 수정)
-
-사용자가 "첫 화면 제목을 '당김은 빼고 촉촉함만'으로 바꾸고 색은 피치로" 같이 말하면:
-
-1. `python3 "${CLAUDE_SKILL_DIR}/scripts/new_version.py" out` → 최신 버전을 통째로 복사한 `vNN+1` 생성.
-2. 요청이 가리키는 섹션(`data-section`)만 수정한다. "첫 화면"=hero, "후기"=review, "사용법"=how-to,
-   "색"=`:root` 변수(피치 예: `--brand:#F28C6B; --brand-soft:#FFE9DF`). 나머지 섹션 HTML은 한 글자도 바꾸지 않는다.
-3. 다시 자르고, `out/vNN/changes.md`에 "무엇을 / 어느 섹션 / 왜"를 3줄로 남긴다.
-4. 이전 버전 폴더는 그대로 둔다.
-
-## 8. 끝낼 때 보고
-
-마크다운 코드 블록 안에 정리해서 알려 준다:
-
+## STEP 7. 사진 한 장 소개 영상 (9:16 · 18초 · 무료)
+```bash
+python3 "${CLAUDE_SKILL_DIR}/scripts/make_video.py" out/v01 <slug>-intro   # 1회차: video/scene.html 생성 후 멈춤
+# scene.html의 {{ }}를 상세페이지와 같은 문장으로 채움 (hero 2줄, point-1 숫자·제목, 칩 2개, 출처, 최저·최고가, 날짜)
+python3 "${CLAUDE_SKILL_DIR}/scripts/make_video.py" out/v01 <slug>-intro   # 2회차: MP4 생성 (약 1분)
 ```
-✅ 상세페이지 vNN 완료
-- HTML: out/vNN/index.html
-- 스마트스토어 860px: N장 / 쿠팡 780px: N장 (out/vNN/export/)
-- 섹션: hero → … → cta (총 N개)
-- 빈칸: 정보 N개 · 사진 N개 · 표현확인 N개 → out/vNN/open-items.md
-- 주의: 860·780px은 일반 권장값 — 올리기 전에 판매자센터 기준 한 번 확인
-```
+장면: [0~6초] 사진 천천히 확대 + 후킹 자막 → [6~12초] 핵심 숫자 카운트업 + 칩 → [12~17초] 상세페이지가
+가격 섹션까지 스크롤, 최저·최고가 → [17~18초] "정품 판매처에서 오늘 가격 확인하세요 · 제휴 링크 포함".
+- 색은 scene.html의 `#A8681A`·`#E2B56A`를 상세페이지 --brand에 맞춰 바꾼다.
+- ffmpeg로 프레임 3~5장 뽑아 직접 확인(사진 뒤 흰 네모, 자막 겹침).
+- 소리 없음(무음 트랙 포함). 목소리·음악은 넣지 않는다 → 올릴 때 앱 무료 음악 안내.
 
-그리고 다음에 할 수 있는 수정 예시 2개를 한 줄씩 제안한다.
+## STEP 8. 고치기 (말 한마디 수정)
+1. `new_version.py out` → 최신 버전 통째 복사(영상·export 제외)한 vNN+1
+2. 요청한 섹션(`data-section`)만 수정. "첫 화면"=hero, "가격"=price, "색"=`:root`. 나머지는 한 글자도 안 바꾼다.
+3. STEP 6 다시, 영상에 영향 있으면 STEP 7 다시(scene.html은 새 버전 폴더로 복사돼 있음).
+4. `changes.md`에 무엇을/어느 섹션/왜 3줄.
+
+## STEP 9. 보고 (코드 블록으로)
+```
+✅ <제품명> 상세페이지 vNN + 소개 영상 완료 (크레딧 0)
+- HTML: …/out/vNN/index.html
+- 스마트스토어 860px N장 / 쿠팡 780px N장
+- 영상: …/out/vNN/video/<slug>-intro.mp4 (9:16 · 18초)
+- 섹션: hero → … → cta
+- 채운 정보 출처: 공식몰 / 공식스토어 고시 / 언론(날짜)
+- 가격: 최저 …원(판매처) ~ 최고 …원(정가) · 기준 연월
+- 남은 할 일: open-items.md (가격 재확인, 쿠팡 상품 전용 링크)
+```
+보낸 뒤 hero 조각·price 조각·영상을 SendUserFile로 보여 주고, 다음 수정 예시 2개를 제안한다.
+리치온 저장소 안이면 지정된 브랜치에 커밋·푸시한다.

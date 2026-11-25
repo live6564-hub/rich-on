@@ -21,7 +21,11 @@
 - Google Flow 영상 생성.
 - 그 밖에 크레딧·결제가 생길 수 있는 모든 도구.
 
-## 🛍️ 상세페이지 스킬
+## 🛍️ 상세페이지 스킬 (고정 워크플로우)
 
-- `.claude/skills/detail-page-maker` — 상품 사진 폴더 + 상품 설명 → 모바일 상세페이지 HTML + 스마트스토어(860px)·쿠팡(780px) 이미지 조각.
-- 다른 컴퓨터·코덱스에 설치할 때는 루트의 `detail-page-maker.zip`을 받아 `~/.claude/skills/` 또는 `~/.codex/skills/`에 풀면 된다. 설치법은 스킬 폴더의 README.md.
+- 로아가 "OOO 상세페이지"라고 하면 `.claude/skills/detail-page-maker` 스킬의 STEP 1~9를 그대로 한다:
+  자료 검색(출처 필수) → 사진 무료 선명화 → AI 티 안 나는 잡지형 상세페이지 → 판매처 이미지 조각 → 사진 한 장 9:16 영상.
+- 판매 링크는 기본 쿠팡 파트너스 1개(https://link.coupang.com/a/ek5cwF) + 쿠팡 파트너스 규정 고지문.
+  상품 전용 판매 링크는 로아가 나중에 준다.
+- 결과는 `detail-pages/<제품-슬러그>/`에 둔다. 기준 예시: `detail-pages/cepolab-biogenic-essence/`.
+- 다른 컴퓨터·코덱스 설치: 루트의 `detail-page-maker.zip`을 `~/.claude/skills/` 또는 `~/.codex/skills/`에 풀기.

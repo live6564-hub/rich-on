@@ -1,0 +1,50 @@
+{
+ "hero": {
+  "top": 0,
+  "bottom": 1331
+ },
+ "pain": {
+  "top": 1331,
+  "bottom": 2320
+ },
+ "solution": {
+  "top": 2320,
+  "bottom": 3132
+ },
+ "point-1": {
+  "top": 3132,
+  "bottom": 3994
+ },
+ "point-2": {
+  "top": 3994,
+  "bottom": 5205
+ },
+ "proof": {
+  "top": 5205,
+  "bottom": 6023
+ },
+ "honest": {
+  "top": 6023,
+  "bottom": 6996
+ },
+ "how-to": {
+  "top": 6996,
+  "bottom": 7990
+ },
+ "compare": {
+  "top": 7990,
+  "bottom": 9065
+ },
+ "price": {
+  "top": 9065,
+  "bottom": 10443
+ },
+ "spec": {
+  "top": 10443,
+  "bottom": 12122
+ },
+ "cta": {
+  "top": 12122,
+  "bottom": 13105
+ }
+}

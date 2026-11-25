@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>세포랩 바이오제닉 에센스 90% 155ml</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+/* 테마 — 원액의 호박색과 종이색에서 뽑았다. 색 바꾸기는 여기만 */
+:root{
+  --brand:#A8681A;      /* 원액 호박색 */
+  --brand-soft:#F6F1E8; /* 종이색 */
+  --ink:#221C15;        /* 먹색 */
+  --muted:#6E655A;
+  --line:#DDD4C6;
+  --u:calc(min(100vw, 860px) / 860);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#fff}
+body{font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:var(--ink);
+  word-break:keep-all;-webkit-font-smoothing:antialiased}
+.page{width:100%;max-width:860px;margin:0 auto;overflow:hidden;background:#fff}
+img{display:block;max-width:100%;height:auto}
+
+.sec{position:relative;padding:calc(130*var(--u)) calc(72*var(--u)) calc(120*var(--u))}
+.sec.soft{background:var(--brand-soft)}
+.sec.dark{background:var(--ink);color:#F3EDE3}
+
+/* 제목은 명조, 본문은 고딕 — 잡지처럼 */
+.kicker{display:flex;align-items:center;gap:calc(16*var(--u));font-size:calc(22*var(--u));font-weight:500;
+  letter-spacing:.08em;color:var(--brand);margin-bottom:calc(34*var(--u))}
+.kicker::after{content:"";flex:none;width:calc(60*var(--u));height:1px;background:currentColor;opacity:.6}
+h1,h2{font-family:"Noto Serif KR",serif;font-weight:700;line-height:1.32;letter-spacing:-.025em}
+h1{font-size:calc(72*var(--u))}
+h2{font-size:calc(56*var(--u))}
+h2 .hl{color:var(--brand)}
+.lead{font-size:calc(31*var(--u));line-height:1.7;color:var(--muted);margin-top:calc(36*var(--u))}
+.dark .lead{color:#C9BFB1}
+.note{font-size:calc(21*var(--u));line-height:1.6;color:#9A9083;margin-top:calc(40*var(--u))}
+.dark .note{color:#8C8274}
+
+/* hero: 흰 배경 사진을 그대로 살린다 */
+.hero{padding-top:calc(110*var(--u));padding-bottom:0;background:#fff}
+.hero .top{display:flex;justify-content:space-between;font-size:calc(21*var(--u));color:#9A9083;letter-spacing:.06em;
+  border-bottom:1px solid var(--line);padding-bottom:calc(20*var(--u));margin-bottom:calc(70*var(--u))}
+.hero h1 span{display:block}
+.hero .shot{width:calc(760*var(--u));margin:calc(40*var(--u)) auto 0}
+.hero .cap{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid var(--ink);
+  margin:0 calc(-72*var(--u));padding:calc(28*var(--u)) calc(72*var(--u)) calc(60*var(--u));font-size:calc(24*var(--u))}
+.hero .cap b{font-family:"Noto Serif KR",serif;font-size:calc(30*var(--u))}
+
+/* 고민 — 손글씨 메모 대신 줄 노트처럼 */
+.memo{list-style:none;margin-top:calc(56*var(--u));border-top:1px solid var(--ink)}
+.memo li{display:flex;gap:calc(26*var(--u));font-size:calc(31*var(--u));line-height:1.55;padding:calc(30*var(--u)) 0;border-bottom:1px solid var(--line)}
+.memo li i{font-style:normal;flex:none;width:calc(54*var(--u));color:var(--brand);font-family:"Noto Serif KR",serif;font-weight:700}
+
+/* 루틴 위치 그림 */
+.routine{display:grid;grid-template-columns:repeat(4,1fr);margin-top:calc(64*var(--u));border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.routine div{padding:calc(34*var(--u)) calc(10*var(--u));text-align:center;font-size:calc(25*var(--u));color:var(--muted);border-right:1px solid var(--line)}
+.routine div:last-child{border-right:0}
+.routine small{display:block;font-size:calc(19*var(--u));letter-spacing:.08em;margin-bottom:calc(10*var(--u))}
+.routine .on{background:var(--ink);color:#fff}
+.routine .on small{color:#E2B56A}
+
+/* 큰 숫자 */
+.split{display:grid;grid-template-columns:1fr calc(300*var(--u));gap:calc(40*var(--u));align-items:end;margin-top:calc(20*var(--u))}
+.big{font-family:"Noto Serif KR",serif;font-weight:900;font-size:calc(200*var(--u));line-height:.9;letter-spacing:-.04em;color:var(--brand)}
+.big sup{font-size:.36em;vertical-align:top;margin-left:calc(6*var(--u))}
+.split img{width:100%;mix-blend-mode:multiply}
+
+/* 전성분 목록 */
+.inci{counter-reset:n;list-style:none;margin-top:calc(56*var(--u));border-top:1px solid var(--ink)}
+.inci li{counter-increment:n;display:flex;align-items:baseline;gap:calc(24*var(--u));padding:calc(26*var(--u)) 0;border-bottom:1px solid var(--line);font-size:calc(29*var(--u))}
+.inci li::before{content:"0" counter(n);font-family:"Noto Serif KR",serif;font-size:calc(22*var(--u));color:var(--brand);flex:none;width:calc(40*var(--u))}
+.inci li em{font-style:normal;margin-left:auto;font-size:calc(21*var(--u));color:#9A9083;white-space:nowrap}
+.inci li:first-child{font-weight:700}
+
+/* 숫자 3개 */
+.facts{display:grid;grid-template-columns:1fr 1fr 1fr;margin-top:calc(60*var(--u));border-top:1px solid #4A4237}
+.facts div{padding:calc(40*var(--u)) calc(14*var(--u)) 0;border-right:1px solid #4A4237}
+.facts div:last-child{border-right:0}
+.facts b{display:block;font-family:"Noto Serif KR",serif;font-size:calc(58*var(--u));font-weight:700;color:#E2B56A;line-height:1.1}
+.facts b small{font-size:.45em;margin-left:2px}
+.facts span{display:block;font-size:calc(23*var(--u));line-height:1.5;color:#C9BFB1;margin-top:calc(14*var(--u))}
+
+/* 솔직 노트 */
+.honest{margin-top:calc(56*var(--u))}
+.honest dl{display:grid;grid-template-columns:calc(170*var(--u)) 1fr;border-top:1px solid var(--ink)}
+.honest dt,.honest dd{padding:calc(30*var(--u)) 0;border-bottom:1px solid var(--line);font-size:calc(28*var(--u));line-height:1.6}
+.honest dt{font-family:"Noto Serif KR",serif;font-weight:700}
+.honest dd{color:var(--muted)}
+.swatch{display:inline-block;width:calc(26*var(--u));height:calc(26*var(--u));border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#E9B866,#B87A22);vertical-align:-3px;margin-right:8px}
+
+/* 사용 순서 */
+.steps{margin-top:calc(56*var(--u));border-left:2px solid var(--brand);padding-left:calc(40*var(--u))}
+.step{position:relative;padding-bottom:calc(46*var(--u))}
+.step:last-child{padding-bottom:0}
+.step::before{content:"";position:absolute;left:calc(-51*var(--u));top:calc(12*var(--u));width:calc(20*var(--u));height:calc(20*var(--u));
+  border-radius:50%;background:#fff;border:2px solid var(--brand)}
+.step small{font-size:calc(21*var(--u));letter-spacing:.08em;color:var(--brand)}
+.step p{font-size:calc(31*var(--u));line-height:1.55;margin-top:calc(6*var(--u))}
+.step p span{color:var(--muted);font-size:.85em}
+
+/* 비교표 */
+table{width:100%;border-collapse:collapse;margin-top:calc(56*var(--u));font-size:calc(26*var(--u))}
+th,td{padding:calc(26*var(--u)) calc(14*var(--u));border-bottom:1px solid var(--line);text-align:left;vertical-align:top;line-height:1.5}
+thead th{border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);font-family:"Noto Serif KR",serif;font-size:calc(27*var(--u))}
+thead th.me{color:var(--brand)}
+tbody th{color:var(--muted);font-weight:500;width:28%}
+.spec tbody th{width:34%}
+
+
+/* 가격 범위 */
+.range{margin-top:calc(60*var(--u))}
+.range .bar{position:relative;height:calc(8*var(--u));background:linear-gradient(90deg,#E8DCC8,var(--brand))}
+.range .bar i{position:absolute;top:50%;width:calc(26*var(--u));height:calc(26*var(--u));border-radius:50%;background:var(--ink);transform:translate(-50%,-50%);border:3px solid var(--brand-soft)}
+.range .bar i.o{background:var(--brand)}
+.range .ends{display:flex;justify-content:space-between;margin-top:calc(24*var(--u));font-size:calc(22*var(--u));color:var(--muted)}
+.range .ends b{display:block;font-family:"Noto Serif KR",serif;font-size:calc(40*var(--u));color:var(--ink)}
+.range .ends span:last-child{text-align:right}
+.prices td small{display:block;font-size:.8em;color:#9A9083}
+.prices tbody th{width:22%}
+.prices tr.me th,.prices tr.me td:first-child{color:var(--brand);font-weight:700}
+.todo{display:inline-block;background:#F1EEE9;color:#A39A8E;border:1px dashed #CFC6B8;padding:0 .35em;font-size:.9em}
+
+/* 마무리 */
+.cta h2{color:#fff}
+.partners{display:grid;grid-template-columns:1fr;gap:1px;background:#4A4237;margin-top:calc(60*var(--u));border:1px solid #4A4237}
+.partners a{display:block;padding:calc(38*var(--u)) calc(24*var(--u));background:var(--ink);color:#F3EDE3;text-decoration:none;font-size:calc(32*var(--u));text-align:center;font-weight:700}
+.partners a::after{content:" →";color:#E2B56A}
+.disclosure{font-size:calc(20*var(--u));color:#8C8274;margin-top:calc(30*var(--u));line-height:1.6}
+.sign{margin-top:calc(70*var(--u));font-size:calc(21*var(--u));color:#8C8274;letter-spacing:.06em}
+</style>
+</head>
+<body>
+<main class="page">
+
+  <section class="sec hero" data-section="hero">
+    <div class="top"><span>FIRST ESSENCE</span><span>155 ml</span></div>
+    <h1><span>세수하고 30초,</span><span>당기기 전에 한 겹</span></h1>
+    <p class="lead">토너 다음, 크림 전에 바르는 퍼스트 에센스.<br>세포랩 바이오제닉 에센스 하이드레이션 90%</p>
+    <img class="shot" src="img/product_hd.jpg" alt="세포랩 바이오제닉 에센스 155ml 유리병">
+    <div class="cap"><b>cepoLAB</b><span>Biogenic Essence 90% · 155ml</span></div>
+  </section>
+
+  <section class="sec soft" data-section="pain">
+    <div class="kicker">혹시 이런 아침인가요</div>
+    <h2>얼굴이 먼저<br>말할 때가 있어요</h2>
+    <ul class="memo">
+      <li><i>①</i>수건 내려놓기도 전에 볼이 땅긴다</li>
+      <li><i>②</i>토너를 두세 번 발라도 금방 마른 느낌</li>
+      <li><i>③</i>오후만 되면 파운데이션이 들떠 보인다</li>
+    </ul>
+    <p class="lead">크림을 더 두껍게 바르기 전에,<br>그 앞 단계를 먼저 살펴보는 것도 방법이에요.</p>
+  </section>
+
+  <section class="sec" data-section="solution">
+    <div class="kicker">어디에 쓰는 제품인가요</div>
+    <h2>토너와 크림 사이,<br><span class="hl">딱 한 단계</span></h2>
+    <p class="lead">세안 직후 가장 먼저 바르는 물 같은 에센스예요.<br>뒤에 오는 세럼·크림은 평소 쓰던 그대로 두면 돼요.</p>
+    <div class="routine">
+      <div><small>STEP 0</small>세안</div>
+      <div class="on"><small>STEP 1</small>이 에센스</div>
+      <div><small>STEP 2</small>세럼</div>
+      <div><small>STEP 3</small>크림</div>
+    </div>
+  </section>
+
+  <section class="sec" data-section="point-1" style="padding-top:calc(50*var(--u))">
+    <div class="kicker">이름 속 90%의 뜻</div>
+    <div class="split">
+      <div>
+        <div class="big">92.8<sup>%</sup></div>
+        <h2 style="margin-top:calc(30*var(--u))">수분이 아니라<br>원료 함량이에요</h2>
+      </div>
+      <img src="img/product_hd.jpg" alt="">
+    </div>
+    <p class="lead">미생물 세리포리아 배양액에서 얻은 원료 CLEPS®(클렙스)가 한 병의 92.8%를 차지해요. 제품명의 ‘90%’는 이 숫자를 줄여 부른 거예요.</p>
+    <p class="note">출처 · 세포랩 공식몰 제품 소개(cepolab.com)</p>
+  </section>
+
+  <section class="sec soft" data-section="point-2">
+    <div class="kicker">전성분, 이게 다예요</div>
+    <h2>뒷면에 적힌 성분<br><span class="hl">다섯 줄</span></h2>
+    <ol class="inci">
+      <li>케리포리아 라케라타세포외소포 <em>CLEPS®</em></li>
+      <li>부틸렌글라이콜 <em>보습 베이스</em></li>
+      <li>1,2-헥산다이올 <em>보습·보존 보조</em></li>
+      <li>하이드록시아세토페논 <em>보존 보조</em></li>
+      <li>소듐하이알루로네이트 <em>보습</em></li>
+    </ol>
+    <p class="lead">인공 색소와 향료는 넣지 않았어요. 그래서 색도 향도 원료 그대로예요.</p>
+    <p class="note">출처 · 상품정보제공고시 「화장품법」 전성분 표기</p>
+  </section>
+
+  <section class="sec dark" data-section="proof">
+    <div class="kicker" style="color:#E2B56A">숫자로 보면</div>
+    <h2 style="color:#fff">먼저 써 본 사람이<br>꽤 많아요</h2>
+    <div class="facts">
+      <div><b>510<small>만 병</small></b><span>누적 판매<br>(2025년 8월까지)</span></div>
+      <div><b>52<small>%</small></b><span>재구매율<br>(브랜드 발표)</span></div>
+      <div><b>14<small>개</small></b><span>4주간 개선된<br>피부 지표 수</span></div>
+    </div>
+    <p class="note">출처 · 약업신문 2025.11.24 「히트상품톺아보기㉜」, 세포랩 공식몰(브랜드 인체적용시험). 개인에 따라 결과는 다를 수 있어요.</p>
+  </section>
+
+  <section class="sec" data-section="honest">
+    <div class="kicker">사기 전에 알아 두세요</div>
+    <h2>좋은 점만<br>말하진 않을게요</h2>
+    <div class="honest">
+      <dl>
+        <dt>향</dt><dd>인공 향료가 없어서 원료 특유의 쿰쿰한 냄새가 나요. 향에 예민하면 먼저 알고 고르세요.</dd>
+        <dt>색</dt><dd><span class="swatch"></span>노란빛은 색소가 아니라 원액 본래의 색이에요.</dd>
+        <dt>피부</dt><dd>처음이라면 턱선에 조금 발라 하루 지켜본 뒤 얼굴 전체에 쓰세요.</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="sec soft" data-section="how-to">
+    <div class="kicker">바르는 법</div>
+    <h2>한 번에 많이보다<br><span class="hl">얇게 여러 번</span></h2>
+    <div class="steps">
+      <div class="step"><small>01</small><p>세안 후 물기를 가볍게 눌러 닦아요</p></div>
+      <div class="step"><small>02</small><p>손바닥에 덜어 얼굴 전체에 펴 발라요 <span>(화장솜도 OK)</span></p></div>
+      <div class="step"><small>03</small><p>흡수되면 한 번 더 — 건조한 날은 세 번까지</p></div>
+      <div class="step"><small>04</small><p>평소 쓰던 세럼·크림으로 마무리</p></div>
+    </div>
+  </section>
+
+  <section class="sec" data-section="compare">
+    <div class="kicker">90%랑 50%, 뭐가 달라요?</div>
+    <h2>같은 브랜드,<br>두 가지 에센스</h2>
+    <table>
+      <thead><tr><th></th><th class="me">90% 하이드레이션</th><th>50% 블렌디드</th></tr></thead>
+      <tbody>
+        <tr><th>CLEPS® 함량</th><td>92.8%</td><td>50%</td></tr>
+        <tr><th>용량</th><td>155ml</td><td>100ml</td></tr>
+        <tr><th>이런 분께</th><td>건조함이 신경 쓰여 첫 단계를 진하게 가고 싶을 때</td><td>처음 써 보거나 가벼운 데일리용을 찾을 때</td></tr>
+      </tbody>
+    </table>
+    <p class="note">공식몰 판매 용량 기준. 피부 타입만으로 정답이 갈리진 않아요 — 지금 쓰는 제품과 취향을 같이 보세요.</p>
+  </section>
+
+  <section class="sec soft" data-section="price">
+    <div class="kicker">가격, 어디까지 보셨어요?</div>
+    <h2>같은 155ml인데<br><span class="hl">가격은 제각각</span></h2>
+    <div class="range">
+      <div class="bar"><i style="left:4.9%"></i><i class="o" style="left:41.4%"></i><i class="o" style="left:55.7%"></i><i style="left:98.6%"></i></div>
+      <div class="ends"><span><b>63,450원</b>최저</span><span><b>129,000원</b>최고</span></div>
+    </div>
+    <table class="prices">
+      <tbody>
+        <tr><th>최저</th><td>63,450원 <small>+배송비 3,000원</small></td><td>11번가 일반 판매자</td></tr>
+        <tr class="me"><th>공식 최저</th><td>89,000원 <small>무료배송</small></td><td>네이버 세포랩 공식스토어</td></tr>
+        <tr><th>공식몰</th><td>99,000원 <small>4만 원 이상 무료배송</small></td><td>cepolab.com</td></tr>
+        <tr><th>최고</th><td>129,000원</td><td>공식몰 정가(소비자가)</td></tr>
+      </tbody>
+    </table>
+    <p class="lead">가장 싼 곳은 공식 판매처가 아니에요. 오픈마켓에서 살 땐 판매자가 정품을 파는 곳인지 꼭 확인하세요.</p>
+    <p class="note">2026년 10~11월 각 판매처 화면 기준 · 단품 155ml 1병 · 가격은 매일 바뀌어요.</p>
+  </section>
+
+  <section class="sec spec" data-section="spec">
+    <div class="kicker">상품 정보 고시</div>
+    <h2 style="font-size:calc(46*var(--u))">상품 정보</h2>
+    <table>
+      <tbody>
+        <tr><th>제품명</th><td>세포랩 바이오제닉 에센스 하이드레이션 90%</td></tr>
+        <tr><th>용량</th><td>155ml</td></tr>
+        <tr><th>피부 타입</th><td>모든 피부용</td></tr>
+        <tr><th>사용 기한</th><td>개봉 후 6개월</td></tr>
+        <tr><th>사용 방법</th><td>세안 후 스킨케어 첫 단계에 얼굴 전체에 고르게 펴 바릅니다</td></tr>
+        <tr><th>제조업자</th><td>(주)한국코스모</td></tr>
+        <tr><th>책임판매업자</th><td>(주)퓨젠바이오</td></tr>
+        <tr><th>제조국</th><td>대한민국</td></tr>
+        <tr><th>기능성 심사</th><td>해당 없음</td></tr>
+        <tr><th>주의사항</th><td>사용 중 붉은 반점·부어오름·가려움 등이 있으면 사용을 멈추고 전문의와 상담하세요. 상처 부위에는 사용하지 마세요. 어린이 손이 닿지 않는 곳, 직사광선을 피해 보관하세요.</td></tr>
+        <tr><th>소비자 상담</th><td>1644-4673 (세포랩 고객센터)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="sec dark cta" data-section="cta">
+    <div class="kicker" style="color:#E2B56A">마무리</div>
+    <h2>크림을 바꾸기 전에,<br>첫 단계부터</h2>
+    <p class="lead">가격은 판매처와 시기마다 달라요.<br>아래에서 오늘 가격을 확인해 보세요.</p>
+    <div class="partners">
+      <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener">쿠팡에서 오늘 가격 보기</a>
+    </div>
+    <p class="disclosure">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다. 브랜드 공식 페이지가 아닌 리치온의 소개 페이지예요.</p>
+    <p class="sign">RICH-ON · 2026.11</p>
+  </section>
+
+</main>
+</body>
+</html>

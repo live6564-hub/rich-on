@@ -20,17 +20,22 @@
 
 모르는 칸은 `[확인 필요]`로 두고 open-items.md에 적는다.
 
-## 3. 리치온 파트너스 블록 (리치온 상품일 때만 cta 섹션 끝에)
+## 3. 리치온 판매 링크 블록 (cta 섹션 끝에 항상)
+
+**기본 = 쿠팡 파트너스 1개.** 로아님이 상품 전용 판매 링크를 주면 그때 href만 바꾸거나 버튼을 더한다.
+(테무·알리·트립닷컴 링크는 로아님이 요청할 때만 넣는다.)
 
 ```html
 <div class="partners">
-  <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener">🛒 쿠팡에서 보기</a>
-  <a href="https://bitl.bz/qQEIlA" target="_blank" rel="noopener">🛍️ 테무에서 보기</a>
-  <a href="https://bitl.bz/fjcH9p" target="_blank" rel="noopener">🛒 알리익스프레스에서 보기</a>
-  <a href="https://kr.trip.com/?Allianceid=8001792&amp;SID=302477743&amp;trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&amp;trip_sub3=D14461428" target="_blank" rel="noopener">✈️ 트립닷컴</a>
+  <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener">쿠팡에서 오늘 가격 보기</a>
 </div>
-<p class="disclosure">이 페이지는 쿠팡 파트너스·제휴 마케팅 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다.</p>
+<p class="disclosure">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다. 브랜드 공식 페이지가 아닌 리치온의 소개 페이지예요.</p>
 ```
 
-- 이미지로 자른 조각에서는 링크가 눌리지 않는다. 판매처에 올리는 이미지에는 파트너스 블록을 빼고
-  (`export_slices.py --skip partners`), 블로그·리틀리용 HTML에만 남긴다.
+- 고지 문구 첫 문장은 쿠팡 파트너스 규정 문구 그대로 쓴다(바꾸지 않는다).
+- 이미지 조각 안의 버튼은 눌리지 않는다. 블로그·리틀리에 올릴 때는 이미지 아래에 같은 링크를 글자로 한 번 더 단다.
+- 판매처(스마트스토어·쿠팡 판매자센터)에 상세 이미지로 올릴 때는 `export_slices.py --skip partners,disclosure`.
+
+### 나중에 쓸 다른 제휴 링크 (요청 시에만)
+- 테무 https://bitl.bz/qQEIlA · 알리익스프레스 https://bitl.bz/fjcH9p
+- 트립닷컴 https://kr.trip.com/?Allianceid=8001792&SID=302477743&trip_sub1=https%3A%2F%2Flitt.ly%2Flive.6564&trip_sub3=D14461428

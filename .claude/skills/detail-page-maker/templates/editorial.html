@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{상품명}}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+/* 테마 — 상품 사진에서 직접 뽑은 색 1개(--brand) + 종이색 + 먹색만 쓴다. 색 바꾸기는 여기만 */
+:root{
+  --brand:#A8681A;      /* 상품 사진에서 뽑은 대표색 (예: 원액 호박색) */
+  --brand-soft:#F6F1E8; /* 종이색 */
+  --ink:#221C15;        /* 먹색 */
+  --muted:#6E655A;
+  --line:#DDD4C6;
+  --u:calc(min(100vw, 860px) / 860);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#fff}
+body{font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:var(--ink);
+  word-break:keep-all;-webkit-font-smoothing:antialiased}
+.page{width:100%;max-width:860px;margin:0 auto;overflow:hidden;background:#fff}
+img{display:block;max-width:100%;height:auto}
+
+.sec{position:relative;padding:calc(130*var(--u)) calc(72*var(--u)) calc(120*var(--u))}
+.sec.soft{background:var(--brand-soft)}
+.sec.dark{background:var(--ink);color:#F3EDE3}
+
+/* 제목은 명조, 본문은 고딕 — 잡지처럼 */
+.kicker{display:flex;align-items:center;gap:calc(16*var(--u));font-size:calc(22*var(--u));font-weight:500;
+  letter-spacing:.08em;color:var(--brand);margin-bottom:calc(34*var(--u))}
+.kicker::after{content:"";flex:none;width:calc(60*var(--u));height:1px;background:currentColor;opacity:.6}
+h1,h2{font-family:"Noto Serif KR",serif;font-weight:700;line-height:1.32;letter-spacing:-.025em}
+h1{font-size:calc(72*var(--u))}
+h2{font-size:calc(56*var(--u))}
+h2 .hl{color:var(--brand)}
+.lead{font-size:calc(31*var(--u));line-height:1.7;color:var(--muted);margin-top:calc(36*var(--u))}
+.dark .lead{color:#C9BFB1}
+.note{font-size:calc(21*var(--u));line-height:1.6;color:#9A9083;margin-top:calc(40*var(--u))}
+.dark .note{color:#8C8274}
+
+/* hero: 흰 배경 사진을 그대로 살린다 */
+.hero{padding-top:calc(110*var(--u));padding-bottom:0;background:#fff}
+.hero .top{display:flex;justify-content:space-between;font-size:calc(21*var(--u));color:#9A9083;letter-spacing:.06em;
+  border-bottom:1px solid var(--line);padding-bottom:calc(20*var(--u));margin-bottom:calc(70*var(--u))}
+.hero h1 span{display:block}
+.hero .shot{width:calc(760*var(--u));margin:calc(40*var(--u)) auto 0}
+.hero .cap{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid var(--ink);
+  margin:0 calc(-72*var(--u));padding:calc(28*var(--u)) calc(72*var(--u)) calc(60*var(--u));font-size:calc(24*var(--u))}
+.hero .cap b{font-family:"Noto Serif KR",serif;font-size:calc(30*var(--u))}
+
+/* 고민 — 손글씨 메모 대신 줄 노트처럼 */
+.memo{list-style:none;margin-top:calc(56*var(--u));border-top:1px solid var(--ink)}
+.memo li{display:flex;gap:calc(26*var(--u));font-size:calc(31*var(--u));line-height:1.55;padding:calc(30*var(--u)) 0;border-bottom:1px solid var(--line)}
+.memo li i{font-style:normal;flex:none;width:calc(54*var(--u));color:var(--brand);font-family:"Noto Serif KR",serif;font-weight:700}
+
+/* 루틴 위치 그림 */
+.routine{display:grid;grid-template-columns:repeat(4,1fr);margin-top:calc(64*var(--u));border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
+.routine div{padding:calc(34*var(--u)) calc(10*var(--u));text-align:center;font-size:calc(25*var(--u));color:var(--muted);border-right:1px solid var(--line)}
+.routine div:last-child{border-right:0}
+.routine small{display:block;font-size:calc(19*var(--u));letter-spacing:.08em;margin-bottom:calc(10*var(--u))}
+.routine .on{background:var(--ink);color:#fff}
+.routine .on small{color:#E2B56A}
+
+/* 큰 숫자 */
+.split{display:grid;grid-template-columns:1fr calc(300*var(--u));gap:calc(40*var(--u));align-items:end;margin-top:calc(20*var(--u))}
+.big{font-family:"Noto Serif KR",serif;font-weight:900;font-size:calc(200*var(--u));line-height:.9;letter-spacing:-.04em;color:var(--brand)}
+.big sup{font-size:.36em;vertical-align:top;margin-left:calc(6*var(--u))}
+.split img{width:100%;mix-blend-mode:multiply}
+
+/* 전성분 목록 */
+.inci{counter-reset:n;list-style:none;margin-top:calc(56*var(--u));border-top:1px solid var(--ink)}
+.inci li{counter-increment:n;display:flex;align-items:baseline;gap:calc(24*var(--u));padding:calc(26*var(--u)) 0;border-bottom:1px solid var(--line);font-size:calc(29*var(--u))}
+.inci li::before{content:"0" counter(n);font-family:"Noto Serif KR",serif;font-size:calc(22*var(--u));color:var(--brand);flex:none;width:calc(40*var(--u))}
+.inci li em{font-style:normal;margin-left:auto;font-size:calc(21*var(--u));color:#9A9083;white-space:nowrap}
+.inci li:first-child{font-weight:700}
+
+/* 숫자 3개 */
+.facts{display:grid;grid-template-columns:1fr 1fr 1fr;margin-top:calc(60*var(--u));border-top:1px solid #4A4237}
+.facts div{padding:calc(40*var(--u)) calc(14*var(--u)) 0;border-right:1px solid #4A4237}
+.facts div:last-child{border-right:0}
+.facts b{display:block;font-family:"Noto Serif KR",serif;font-size:calc(58*var(--u));font-weight:700;color:#E2B56A;line-height:1.1}
+.facts b small{font-size:.45em;margin-left:2px}
+.facts span{display:block;font-size:calc(23*var(--u));line-height:1.5;color:#C9BFB1;margin-top:calc(14*var(--u))}
+
+/* 솔직 노트 */
+.honest{margin-top:calc(56*var(--u))}
+.honest dl{display:grid;grid-template-columns:calc(170*var(--u)) 1fr;border-top:1px solid var(--ink)}
+.honest dt,.honest dd{padding:calc(30*var(--u)) 0;border-bottom:1px solid var(--line);font-size:calc(28*var(--u));line-height:1.6}
+.honest dt{font-family:"Noto Serif KR",serif;font-weight:700}
+.honest dd{color:var(--muted)}
+.swatch{display:inline-block;width:calc(26*var(--u));height:calc(26*var(--u));border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#E9B866,#B87A22);vertical-align:-3px;margin-right:8px}
+
+/* 사용 순서 */
+.steps{margin-top:calc(56*var(--u));border-left:2px solid var(--brand);padding-left:calc(40*var(--u))}
+.step{position:relative;padding-bottom:calc(46*var(--u))}
+.step:last-child{padding-bottom:0}
+.step::before{content:"";position:absolute;left:calc(-51*var(--u));top:calc(12*var(--u));width:calc(20*var(--u));height:calc(20*var(--u));
+  border-radius:50%;background:#fff;border:2px solid var(--brand)}
+.step small{font-size:calc(21*var(--u));letter-spacing:.08em;color:var(--brand)}
+.step p{font-size:calc(31*var(--u));line-height:1.55;margin-top:calc(6*var(--u))}
+.step p span{color:var(--muted);font-size:.85em}
+
+/* 비교표 */
+table{width:100%;border-collapse:collapse;margin-top:calc(56*var(--u));font-size:calc(26*var(--u))}
+th,td{padding:calc(26*var(--u)) calc(14*var(--u));border-bottom:1px solid var(--line);text-align:left;vertical-align:top;line-height:1.5}
+thead th{border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);font-family:"Noto Serif KR",serif;font-size:calc(27*var(--u))}
+thead th.me{color:var(--brand)}
+tbody th{color:var(--muted);font-weight:500;width:28%}
+.spec tbody th{width:34%}
+
+
+/* 가격 범위 */
+.range{margin-top:calc(60*var(--u))}
+.range .bar{position:relative;height:calc(8*var(--u));background:linear-gradient(90deg,#E8DCC8,var(--brand))}
+.range .bar i{position:absolute;top:50%;width:calc(26*var(--u));height:calc(26*var(--u));border-radius:50%;background:var(--ink);transform:translate(-50%,-50%);border:3px solid var(--brand-soft)}
+.range .bar i.o{background:var(--brand)}
+.range .ends{display:flex;justify-content:space-between;margin-top:calc(24*var(--u));font-size:calc(22*var(--u));color:var(--muted)}
+.range .ends b{display:block;font-family:"Noto Serif KR",serif;font-size:calc(40*var(--u));color:var(--ink)}
+.range .ends span:last-child{text-align:right}
+.prices td small{display:block;font-size:.8em;color:#9A9083}
+.prices tbody th{width:22%}
+.prices tr.me th,.prices tr.me td:first-child{color:var(--brand);font-weight:700}
+.todo{display:inline-block;background:#F1EEE9;color:#A39A8E;border:1px dashed #CFC6B8;padding:0 .35em;font-size:.9em}
+
+/* 마무리 */
+.cta h2{color:#fff}
+.partners{display:grid;grid-template-columns:1fr;gap:1px;background:#4A4237;margin-top:calc(60*var(--u));border:1px solid #4A4237}
+.partners a{display:block;padding:calc(38*var(--u)) calc(24*var(--u));background:var(--ink);color:#F3EDE3;text-decoration:none;font-size:calc(32*var(--u));text-align:center;font-weight:700}
+.partners a::after{content:" →";color:#E2B56A}
+.disclosure{font-size:calc(20*var(--u));color:#8C8274;margin-top:calc(30*var(--u));line-height:1.6}
+.sign{margin-top:calc(70*var(--u));font-size:calc(21*var(--u));color:#8C8274;letter-spacing:.06em}
+</style>
+</head>
+<body>
+<!--
+  에디토리얼 템플릿 (AI 티 안 나는 기본형) — references/no-ai-look.md 규칙을 따른다.
+  · {{ }} 칸을 채운다. 출처 없는 숫자는 쓰지 않는다. 채울 자료가 없는 섹션은 통째로 지운다.
+  · 섹션 순서: hero → pain → solution → point-1 → point-2 → proof → honest → how-to → compare → price → spec → cta
+  · 사진은 img/product_hd.jpg (scripts/upscale_photo.py 결과)
+-->
+<main class="page">
+
+  <section class="sec hero" data-section="hero">
+    <div class="top"><span>{{영문 카테고리 예: FIRST ESSENCE}}</span><span>{{용량}}</span></div>
+    <h1><span>{{후킹 1줄 — 장면·시간 (예: 세수하고 30초,)}}</span><span>{{후킹 2줄 (예: 당기기 전에 한 겹)}}</span></h1>
+    <p class="lead">{{어디에 쓰는 물건인지 한 줄}}<br>{{정식 상품명}}</p>
+    <img class="shot" src="img/product_hd.jpg" alt="{{상품명}}">
+    <div class="cap"><b>{{브랜드 영문}}</b><span>{{영문 제품명 · 용량}}</span></div>
+  </section>
+
+  <section class="sec soft" data-section="pain">
+    <div class="kicker">혹시 이런 {{아침/저녁/순간}}인가요</div>
+    <h2>{{공감 제목 1줄}}<br>{{공감 제목 2줄}}</h2>
+    <ul class="memo">
+      <li><i>①</i>{{구체적인 불편 장면 1 — 행동으로}}</li>
+      <li><i>②</i>{{불편 장면 2}}</li>
+      <li><i>③</i>{{불편 장면 3}}</li>
+    </ul>
+    <p class="lead">{{해결 방향을 부드럽게 한 줄}}</p>
+  </section>
+
+  <section class="sec" data-section="solution">
+    <div class="kicker">어디에 쓰는 제품인가요</div>
+    <h2>{{위치·역할 제목}}<br><span class="hl">{{강조 단어}}</span></h2>
+    <p class="lead">{{무엇인지 2줄 설명}}</p>
+    <div class="routine">
+      <div><small>STEP 0</small>{{앞 단계}}</div>
+      <div class="on"><small>STEP 1</small>이 제품</div>
+      <div><small>STEP 2</small>{{다음 단계}}</div>
+      <div><small>STEP 3</small>{{마지막 단계}}</div>
+    </div>
+  </section>
+
+  <section class="sec" data-section="point-1" style="padding-top:calc(50*var(--u))">
+    <div class="kicker">{{숫자 이야기 라벨 (예: 이름 속 90%의 뜻)}}</div>
+    <div class="split">
+      <div>
+        <div class="big">{{핵심 숫자}}<sup>{{단위}}</sup></div>
+        <h2 style="margin-top:calc(30*var(--u))">{{숫자의 진짜 뜻 1줄}}<br>{{2줄}}</h2>
+      </div>
+      <img src="img/product_hd.jpg" alt="">
+    </div>
+    <p class="lead">{{숫자 설명 2~3줄}}</p>
+    <p class="note">출처 · {{출처}}</p>
+  </section>
+
+  <section class="sec soft" data-section="point-2">
+    <div class="kicker">{{목록 라벨 (예: 전성분, 이게 다예요 / 구성품 / 소재)}}</div>
+    <h2>{{제목}}<br><span class="hl">{{강조}}</span></h2>
+    <ol class="inci">
+      <li>{{항목 1}} <em>{{짧은 설명}}</em></li>
+      <li>{{항목 2}} <em>{{짧은 설명}}</em></li>
+      <li>{{항목 3}} <em>{{짧은 설명}}</em></li>
+    </ol>
+    <p class="lead">{{목록이 말해 주는 것 한 줄}}</p>
+    <p class="note">출처 · {{출처}}</p>
+  </section>
+
+  <section class="sec dark" data-section="proof">
+    <div class="kicker" style="color:#E2B56A">숫자로 보면</div>
+    <h2 style="color:#fff">{{제목 1줄}}<br>{{제목 2줄}}</h2>
+    <div class="facts">
+      <div><b>{{숫자}}<small>{{단위}}</small></b><span>{{설명}}<br>({{기준 시점}})</span></div>
+      <div><b>{{숫자}}<small>{{단위}}</small></b><span>{{설명}}<br>({{기준}})</span></div>
+      <div><b>{{숫자}}<small>{{단위}}</small></b><span>{{설명}}</span></div>
+    </div>
+    <p class="note">출처 · {{매체·날짜}}. 개인에 따라 결과는 다를 수 있어요.</p>
+  </section>
+
+  <section class="sec" data-section="honest">
+    <div class="kicker">사기 전에 알아 두세요</div>
+    <h2>좋은 점만<br>말하진 않을게요</h2>
+    <div class="honest">
+      <dl>
+        <dt>{{단점 1 이름}}</dt><dd>{{실제 단점 — 판매처 '구입 전 참고사항'·Q&A에서}}</dd>
+        <dt>{{특징 2}}</dt><dd>{{오해하기 쉬운 점 설명}}</dd>
+        <dt>{{주의 3}}</dt><dd>{{처음 쓸 때 요령}}</dd>
+      </dl>
+    </div>
+  </section>
+
+  <section class="sec soft" data-section="how-to">
+    <div class="kicker">{{쓰는 법 / 조리법 / 사용법}}</div>
+    <h2>{{요령 제목 1줄}}<br><span class="hl">{{강조}}</span></h2>
+    <div class="steps">
+      <div class="step"><small>01</small><p>{{단계 1}}</p></div>
+      <div class="step"><small>02</small><p>{{단계 2}} <span>({{보충}})</span></p></div>
+      <div class="step"><small>03</small><p>{{단계 3}}</p></div>
+      <div class="step"><small>04</small><p>{{단계 4}}</p></div>
+    </div>
+  </section>
+
+  <section class="sec" data-section="compare">
+    <div class="kicker">{{A랑 B, 뭐가 달라요?}}</div>
+    <h2>{{비교 제목}}<br>{{2줄}}</h2>
+    <table>
+      <thead><tr><th></th><th class="me">{{이 상품}}</th><th>{{비교 대상 — 같은 브랜드 다른 라인 우선}}</th></tr></thead>
+      <tbody>
+        <tr><th>{{기준 1}}</th><td>{{값}}</td><td>{{값}}</td></tr>
+        <tr><th>{{기준 2}}</th><td>{{값}}</td><td>{{값}}</td></tr>
+        <tr><th>이런 분께</th><td>{{추천 상황}}</td><td>{{추천 상황}}</td></tr>
+      </tbody>
+    </table>
+    <p class="note">{{기준 출처}}. {{정답이 하나가 아니라는 한 줄}}</p>
+  </section>
+
+  <section class="sec soft" data-section="price">
+    <div class="kicker">가격, 어디까지 보셨어요?</div>
+    <h2>같은 {{용량}}인데<br><span class="hl">가격은 제각각</span></h2>
+    <div class="range">
+      <!-- left(%) = (가격 - 막대시작값) / (막대끝값 - 막대시작값) × 100. 진한 점=최저·최고, 호박색 점=공식 판매처 -->
+      <div class="bar"><i style="left:{{최저%}}%"></i><i class="o" style="left:{{공식최저%}}%"></i><i class="o" style="left:{{공식몰%}}%"></i><i style="left:{{최고%}}%"></i></div>
+      <div class="ends"><span><b>{{최저가}}원</b>최저</span><span><b>{{최고가}}원</b>최고</span></div>
+    </div>
+    <table class="prices">
+      <tbody>
+        <tr><th>최저</th><td>{{가격}}원 <small>{{배송비}}</small></td><td>{{판매처}}</td></tr>
+        <tr class="me"><th>공식 최저</th><td>{{가격}}원 <small>{{배송비}}</small></td><td>{{공식 판매처}}</td></tr>
+        <tr><th>공식몰</th><td>{{가격}}원 <small>{{배송비}}</small></td><td>{{공식몰 주소}}</td></tr>
+        <tr><th>최고</th><td>{{가격}}원</td><td>{{정가/소비자가 출처}}</td></tr>
+      </tbody>
+    </table>
+    <p class="lead">{{최저가가 공식 판매처가 아니면: 정품 확인 안내 한 줄}}</p>
+    <p class="note">{{조사 연월}} 각 판매처 화면 기준 · {{단품 기준}} · 가격은 매일 바뀌어요.</p>
+  </section>
+
+  <section class="sec spec" data-section="spec">
+    <div class="kicker">상품 정보 고시</div>
+    <h2 style="font-size:calc(46*var(--u))">상품 정보</h2>
+    <table>
+      <tbody>
+        <tr><th>제품명</th><td>{{정식 상품명}}</td></tr>
+        <tr><th>용량</th><td>{{용량}}</td></tr>
+        <!-- 카테고리별 필수 항목은 references/platform-specs.md. 공식스토어 표기 우선 -->
+        <tr><th>{{항목}}</th><td>{{값}}</td></tr>
+        <tr><th>소비자 상담</th><td>{{전화번호}}</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="sec dark cta" data-section="cta">
+    <div class="kicker" style="color:#E2B56A">마무리</div>
+    <h2>{{마무리 1줄}}<br>{{마무리 2줄}}</h2>
+    <p class="lead">가격은 판매처와 시기마다 달라요.<br>아래에서 오늘 가격을 확인해 보세요.</p>
+    <!-- 기본은 쿠팡 파트너스 1개. 로아님이 상품 전용 링크를 주면 href만 바꾼다 -->
+    <div class="partners">
+      <a href="https://link.coupang.com/a/ek5cwF" target="_blank" rel="noopener">쿠팡에서 오늘 가격 보기</a>
+    </div>
+    <p class="disclosure">이 포스팅은 쿠팡 파트너스 활동의 일환으로, 이에 따른 일정액의 수수료를 제공받습니다. 브랜드 공식 페이지가 아닌 리치온의 소개 페이지예요.</p>
+    <p class="sign">RICH-ON · {{YYYY.MM}}</p>
+  </section>
+
+</main>
+</body>
+</html>
